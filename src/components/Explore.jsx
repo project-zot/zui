@@ -38,76 +38,7 @@ function Explore ({ host, username, password, keywords, data, updateData }) {
     const [filteredData, setFilteredData] = useState([]);
     const classes = useStyles();
 
-    // static data
-    // useEffect(() => {
-    //     const apiData = [
-    //         {
-    //             name: 'test-package',
-    //             latestVersion: 'v2.1.0',
-    //             tags: 'ACI',
-    //             description: 'lorem ipsum lorem ipsum loren ipsum',
-    //             licenses: '',
-    //             size: '55660',
-    //             vendor: 'Omnia',
-    //             path: 'test-package-04',
-    //         },
-    //         {
-    //             name: 'test-package/1/2/3/4',
-    //             latestVersion: 'v2.4.0',
-    //             tags: 'ACI',
-    //             description: 'lorem ipsum lorem ipsum loren ipsum',
-    //             licenses: '',
-    //             size: '55660',
-    //             vendor: 'Onyx',
-    //             path: 'test-package-04',
-    //         },
-    //         {
-    //             name: 'test-package-04',
-    //             latestVersion: '0.4.1',
-    //             tags: 'ACI',
-    //             description: 'lorem ipsum lorem ipsum loren ipsum',
-    //             licenses: '',
-    //             size: '55660',
-    //             vendor: 'Oural',
-    //             path: 'test-package-04',
-    //         },
-    //         {
-    //             name: 'test-package',
-    //             latestVersion: 'v2.1.0',
-    //             tags: 'ACI',
-    //             description: 'lorem ipsum lorem ipsum loren ipsum',
-    //             licenses: '',
-    //             size: '55660',
-    //             vendor: 'Omnia',
-    //             path: 'test-package-04',
-    //         },
-    //         {
-    //             name: 'test-package/1/2/3/4',
-    //             latestVersion: 'v2.4.0',
-    //             tags: 'ACI',
-    //             description: 'lorem ipsum lorem ipsum loren ipsum',
-    //             licenses: '',
-    //             size: '55660',
-    //             vendor: 'Onyx',
-    //             path: 'test-package-04',
-    //         },
-    //         {
-    //             name: 'test-package-04',
-    //             latestVersion: '0.4.1',
-    //             tags: 'ACI',
-    //             description: 'lorem ipsum lorem ipsum loren ipsum',
-    //             licenses: '',
-    //             size: '55660',
-    //             vendor: 'Oural',
-    //             path: 'test-package-04',
-    //         },
-    //     ];
-    //
-    //     updateData(apiData);
-    // }, []);
-
     useEffect(() => {
-        // const token = btoa("test:test123");
         const token = btoa(username + ':' + password);
         const cfg = {
           headers: {
