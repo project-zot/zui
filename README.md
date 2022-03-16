@@ -1,4 +1,4 @@
-# Zot UI
+# ZUI
 A graphical user interface to interact with a [zot](https://github.com/project-zot/zot) server instance.
 
 Built with [React JS](https://reactjs.org/) and [Material UI](https://mui.com/).
