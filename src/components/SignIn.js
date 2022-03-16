@@ -75,8 +75,6 @@ export default function SignIn({ host, updateHost, username, updateUsername, pas
     event.preventDefault();
     setRequestProcessing(true);
 
-    // todo: get credentials from global state
-    // const token = btoa("test:test123");
     const token = btoa(username + ':' + password);
 
     const cfg = {
@@ -88,21 +86,6 @@ export default function SignIn({ host, updateHost, username, updateUsername, pas
     axios.get(`${host}/query?query={ImageListWithLatestTag(){Name%20Latest%20Description%20Vendor%20Licenses%20Labels%20Size%20LastUpdated}}`, cfg)
       .then(response => {
         if (response.data && response.data.data) {
-            // let imageList = response.data.data.ImageListWithLatestTag;
-            // let imagesData = imageList.map((image) => {
-            //     return {
-            //         name: image.Name,
-            //         latestVersion: image.Latest,
-            //         tags: image.Labels,
-            //         description: image.Descri    ption,
-            //         licenses: image.Licenses,
-            //         size: image.Size,
-            //         vendor: image.Vendor
-            //     };
-            // });
-            // setData(imagesData);
-            // setIsLoading(false);
-
             localStorage.setItem('host', host);
             localStorage.setItem('username', username);
             localStorage.setItem('password', password);
@@ -120,19 +103,6 @@ export default function SignIn({ host, updateHost, username, updateUsername, pas
          setRequestProcessing(false);
       })
   }
-
-  // static data
-  // const handleClick = (event) => {
-  //   event.preventDefault();
-  //   setRequestProcessing(true);
-  //
-  //   localStorage.setItem('host', host);
-  //   window.location.reload(true);
-  //
-  //   setRequestProcessing(false);
-  //   setRequestError(false);
-  //   navigate("/home");
-  // }
 
   const  handleChange = (event, type) => {
     event.preventDefault();

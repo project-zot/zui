@@ -52,7 +52,6 @@ function ImageDetails (props) {
   useEffect(() => {
       const {name, version} = myData;
 
-      // const token = btoa("test:test123");
       const token = btoa(username + ':' + password);
       const cfg = {
         headers: {
