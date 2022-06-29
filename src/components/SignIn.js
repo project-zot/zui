@@ -24,8 +24,8 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 
 // styling
-import { makeStyles } from '@material-ui/core/styles';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { makeStyles } from '@mui/styles';
+import { createTheme, ThemeProvider, StyledEngineProvider } from '@mui/material/styles';
 import { useGradientBtnStyles } from '@mui-treasury/styles/button/gradient';
 import { usePushingGutterStyles } from '@mui-treasury/styles/gutter/pushing';
 

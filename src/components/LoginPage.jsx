@@ -4,11 +4,10 @@ import React, { useEffect, useState } from 'react';
 // components
 import Header from './Header.jsx'
 import SignIn from './SignIn.js'
-import {Grid} from '@material-ui/core';
-import {Container, Typography} from '@material-ui/core';
+import {Grid} from '@mui/material';
+import {Container, Typography} from '@mui/material';
 
-// styling
-import {makeStyles} from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import logo from '../assets/zot_1T.png';
 
 const useStyles = makeStyles((theme) => ({

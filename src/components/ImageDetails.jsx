@@ -9,10 +9,9 @@ import axios from 'axios';
 import Header from './Header.jsx'
 import ImageTile from './ImageTile.jsx'
 import Tags from './Tags.jsx'
-import {Container, Typography, Box, Grid} from '@material-ui/core';
+import {Container, Typography, Box, Grid} from '@mui/material';
 
-// styling
-import {makeStyles} from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
     pageWrapper: {
@@ -59,10 +58,10 @@ function ImageDetails (props) {
         }
       };
 
-      axios.get(`${host}/query?query={DetailedRepoInfo(repo:\%22${name}\%22){Manifests%20{Digest%20Tag%20Layers%20{Size%20Digest}}}}`, cfg)
+      axios.get(`${host}/query?query={ExpandedRepoInfo(repo:\%22${name}\%22){Manifests%20{Digest%20Tag%20Layers%20{Size%20Digest}}}}`, cfg)
         .then(response => {
           if (response.data && response.data.data) {
-              let imageList = response.data.data.DetailedRepoInfo;
+              let imageList = response.data.data.ExpandedRepoInfo;
               let imageData = {
                 name: name,
                 tags: imageList.Manifests

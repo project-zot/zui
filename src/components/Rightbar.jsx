@@ -1,10 +1,9 @@
 // components
-import {Container, Typography} from '@material-ui/core';
+import {Container, Typography} from '@mui/material';
 import Home from '@mui/icons-material/Home';
 import Explore from './Explore.jsx';
 
-// styling
-import {makeStyles} from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   container: {

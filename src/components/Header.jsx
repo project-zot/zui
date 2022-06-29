@@ -4,13 +4,14 @@ import {Link, useLocation, useNavigate} from "react-router-dom";
 
 // components
 import ExploreHeader from "./ExploreHeader";
-import {Typography, Badge, AppBar, Toolbar, InputBase, Button, Popper, MenuList, MenuItem, ClickAwayListener, Paper, Grow} from '@material-ui/core';
+import {Typography, Badge, AppBar, Toolbar, InputBase, Button, Popper, MenuList, MenuItem, ClickAwayListener, Paper, Grow} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Avatar from '@mui/material/Avatar';
 
 // styling
-import {makeStyles, alpha} from '@material-ui/core/styles';
+import { alpha } from '@mui/material/styles';
+import makeStyles from '@mui/styles/makeStyles';
 import logo from '../assets/zot_1T.png';
 
 

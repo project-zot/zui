@@ -5,11 +5,10 @@ import {Link, useParams} from "react-router-dom";
 import api from '../api.js';
 
 // components
-import {Button, Card, CardActions, CardActionArea, CardMedia, CardContent, Typography} from '@material-ui/core';
+import {Button, Card, CardActions, CardActionArea, CardMedia, CardContent, Typography} from '@mui/material';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 
-// styling
-import {makeStyles} from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
 import avatar from '../avatar.svg';
 
 const useStyles = makeStyles((theme) => ({
