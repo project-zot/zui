@@ -8,7 +8,9 @@ import ImageTile from './ImageTile.jsx';
 import Loading from "./Loading";
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
-import {Container, Grid, makeStyles} from '@material-ui/core';
+import { Container, Grid } from '@mui/material';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 // utility
 import axios from 'axios';

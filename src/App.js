@@ -3,8 +3,8 @@ import HomePage from './components/HomePage.jsx'
 import LoginPage from './components/LoginPage.jsx'
 import ImageDetails from './components/ImageDetails.jsx'
 
-import {Grid} from '@material-ui/core';
-import {makeStyles} from '@material-ui/core';
+import {Grid} from '@mui/material';
+import makeStyles from '@mui/styles/makeStyles';
 
 import './App.css';
 

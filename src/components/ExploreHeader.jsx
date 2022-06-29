@@ -2,13 +2,15 @@
 import {Link, useLocation} from "react-router-dom";
 
 // components
-import {Typography, Badge, AppBar, Toolbar, InputBase, Breadcrumbs} from '@material-ui/core';
+import {Typography, Badge, AppBar, Toolbar, InputBase, Breadcrumbs} from '@mui/material';
 import {Tabs, Tab} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 // styling
-import {makeStyles, alpha} from '@material-ui/core/styles';
+import { alpha } from '@mui/material/styles';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => {
     console.log("theme", theme)

@@ -4,9 +4,8 @@ import ExploreHeader from './ExploreHeader.jsx'
 import Leftbar from './Leftbar.jsx'
 import Rightbar from './Rightbar.jsx'
 
-// styling
-import {makeStyles} from '@material-ui/core';
-import {Container, Typography, Grid} from '@material-ui/core';
+import makeStyles from '@mui/styles/makeStyles';
+import {Container, Typography, Grid} from '@mui/material';
 
 
 const useStyles = makeStyles((theme) => ({
