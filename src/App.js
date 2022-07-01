@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
-import HomePage from './components/HomePage.jsx'
-import LoginPage from './components/LoginPage.jsx'
+import HomePage from './pages/HomePage.jsx'
+import LoginPage from './pages/LoginPage.jsx'
 import ImageDetails from './components/ImageDetails.jsx'
 
 import {Grid} from '@mui/material';
@@ -15,7 +15,6 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 function App() {
-  const [host, setHost] = useState(null);
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
   const [hostFromStorage, setHostFromStorage] = useState(null);
@@ -29,7 +28,6 @@ function App() {
     const localStoragePassword = localStorage.getItem('password');
 
     if (localStorageHost) {
-      setHost(localStorageHost);
       setHostFromStorage(localStorageHost)
       setUsername(localStorageUsername);
       setPassword(localStoragePassword);
@@ -45,13 +43,13 @@ function App() {
           (hostFromStorage) ? (
               <Routes>
                 <Route path="*" element={<Navigate to="/home"/>} />
-                <Route path="/home" element={<HomePage host={host} username={username} password={password} keywords={searchKeywords} updateKeywords={setSearchKeywords} data={data} updateData={setData}/>} />
-                <Route path="/image/:name*" element={<ImageDetails host={host} username={username} password={password}/>} />
+                <Route path="/home" element={<HomePage username={username} password={password} keywords={searchKeywords} updateKeywords={setSearchKeywords} data={data} updateData={setData}/>} />
+                <Route path="/image/:name*" element={<ImageDetails username={username} password={password}/>} />
               </Routes>
           ) : (
               <Routes>
                 <Route path="*" element={<Navigate to="/login" />} />
-                <Route path="/login" element={<LoginPage host={host} username={username} password={password} updateUsername={setUsername} updatePassword={setPassword} updateHost={setHost} updateData={setData}/>} />
+                <Route path="/login" element={<LoginPage username={username} password={password} updateUsername={setUsername} updatePassword={setPassword} updateData={setData}/>} />
               </Routes>
           )
       )}
