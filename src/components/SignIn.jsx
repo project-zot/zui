@@ -16,7 +16,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import TermsOfService from './TermsOfService';
 
 // styling
-import { makeStyles } from '@mui/styles';
+import { makeStyles, propsToClassKey } from '@mui/styles';
 import { usePushingGutterStyles } from '@mui-treasury/styles/gutter/pushing';
 import { Card, CardContent } from '@mui/material';
 
@@ -44,45 +44,54 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function SignIn({ username, updateUsername, password, updatePassword }) {
+export default function SignIn({ username, updateUsername, password, updatePassword, isAuthEnabled, setIsAuthEnabled, isLoggedIn, setIsLoggedIn }) {
   const [usernameError, setUsernameError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
   const [requestProcessing, setRequestProcessing] = useState(false);
   const [requestError, setRequestError] = useState(false);
-  const [isAuthEnabled, setIsAuthEnabled] = useState(true);
   const navigate = useNavigate();
   const classes = useStyles();
 
   useEffect(() => {
-    api.get(`${host}/v2`)
+    if(isAuthEnabled && isLoggedIn ) {
+      navigate("/home");
+    } else {
+    api.get(`${host}/v2/`)
       .then(response => {
         if (response.status === 200) {
           setIsAuthEnabled(false);
+          setIsLoggedIn(true);
         }
       })
       .catch(e => {
         setIsAuthEnabled(true);
       })
+    }
   }, []);
 
   const handleClick = (event) => {
     event.preventDefault();
     setRequestProcessing(true);
-
-    const token = btoa(username + ':' + password);
-    const cfg = {
-      headers: {
-        'Authorization': `Basic ${token}`,
-      }
-    };
+    let cfg = {};
+    if(isAuthEnabled) {
+      const token = btoa(username + ':' + password);
+      cfg = {
+        headers: {
+          'Authorization': `Basic ${token}`,
+        }
+      };
+    }
     api.get(`${host}/query?query={ImageListWithLatestTag(){Name%20Latest%20Description%20Vendor%20Licenses%20Labels%20Size%20LastUpdated}}`,cfg)
       .then(response => {
         if (response.data && response.data.data) {
-          localStorage.setItem('username', username);
-          localStorage.setItem('password', password);
+          if(isAuthEnabled) {
+            localStorage.setItem('username', username);
+            localStorage.setItem('password', password);
 
-          setRequestProcessing(false);
-          setRequestError(false);
+            setRequestProcessing(false);
+            setRequestError(false);
+            setIsLoggedIn(true);
+          }
           navigate("/home");
         }
       })
@@ -121,7 +130,6 @@ export default function SignIn({ username, updateUsername, password, updatePassw
     }
   }
 
-  const gutterStyles = usePushingGutterStyles({ cssProp: 'marginBottom', space: 2 });
 
   return (
     <Box className={classes.cardContainer}>
@@ -179,11 +187,11 @@ export default function SignIn({ username, updateUsername, password, updatePassw
                       </div>
                     </Box>
                   </>) : (
-                    <div className={gutterStyles.parent}>
+                    <div>
                       <Button
                         fullWidth
                         variant="outlined"
-                        sx={{ mt: 3, mb: 2, color: "#fff", background: "#7C4DFF", border: 'white' }}
+                        sx={{ mt: 3, mb: 2}}
                         onClick={handleClick}
                       > Continue as Guest
                       </Button>

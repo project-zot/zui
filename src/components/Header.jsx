@@ -117,12 +117,11 @@ function Header({ updateKeywords }) {
                 </div>
              </Link>
            </div>
-           {path !== '/login' && path !== '/' &&
+           {path !== '/' &&
             <div className={classes.search}>
               <SearchIcon className={classes.searchIcon}/>
-              <InputBase style={{height: 46}} placeholder="Search packages..." className={classes.input} onChange={e => updateKeywords(e.target.value)} disabled={path == '/' || path == '/login'}/>
+              <InputBase style={{height: 46}} placeholder="Search packages..." className={classes.input} onChange={e => updateKeywords(e.target.value)} disabled={path === '/'}/>
             </div>}
-            {path !== '/login' &&
             <div>
                 <Button
                   className={classes.icons}
@@ -167,7 +166,7 @@ function Header({ updateKeywords }) {
                     </Grow>
                   )}
                 </Popper>
-            </div>}
+            </div>
         </Toolbar>
         { path !== '/login' && path !== '/' && path !== '/home' && <ExploreHeader /> }
       </AppBar>

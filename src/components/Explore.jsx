@@ -59,7 +59,7 @@ function Explore ({ keywords, data, updateData }) {
           .catch(() => {
 
           })
-    }, [])
+    },[])
 
     useEffect(() => {
       setIsLoading(false);

@@ -15,13 +15,13 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LoginPage({username, updateUsername, password, updatePassword }) {
+function LoginPage({username, updateUsername, password, updatePassword, isAuthEnabled, setIsAuthEnabled, isLoggedIn,setIsLoggedIn }) {
   const classes = useStyles();
 
   return (
         <Grid container spacing={0} className={classes.container}>
           <Grid item xs={6}>
-            <SignIn username={username} updateUsername={updateUsername} password={password} updatePassword={updatePassword} />
+            <SignIn username={username} updateUsername={updateUsername} password={password} updatePassword={updatePassword} isAuthEnabled={isAuthEnabled} setIsAuthEnabled={setIsAuthEnabled} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
           </Grid>
           <Grid item xs={6}>
             <SigninPresentation/>
