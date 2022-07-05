@@ -16,8 +16,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import TermsOfService from './TermsOfService';
 
 // styling
-import { makeStyles, propsToClassKey } from '@mui/styles';
-import { usePushingGutterStyles } from '@mui-treasury/styles/gutter/pushing';
+import { makeStyles } from '@mui/styles';
 import { Card, CardContent } from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
