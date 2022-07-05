@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState } from 'react'
 import HomePage from './pages/HomePage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import ImageDetails from './components/ImageDetails.jsx'
@@ -23,7 +23,7 @@ function App() {
   const [password, setPassword] = useState(null);
   const [searchKeywords, setSearchKeywords] = useState(null);
   const [data, setData] = useState(null);
-  const [isAuthEnabled, setIsAuthEnabled] = useState(false)
+  const [isAuthEnabled, setIsAuthEnabled] = useState(true)
   const [isLoggedIn, setIsLoggedIn] = useState(isUsername())
   const classes = useStyles();
 
@@ -33,13 +33,13 @@ function App() {
     <div className="App">
       <Router>
         <Routes>
-          <Route element={<AuthWrapper  isAuthEnabled={isAuthEnabled} isLoggedIn={isLoggedIn} redirect="/login" />}>
-            <Route path="/" element={<Navigate to="/login" />} />
-            <Route path="/login" element={<LoginPage isLoggedIn={isLoggedIn} username={username} password={password} updateUsername={setUsername} updatePassword={setPassword} isAuthEnabled={isAuthEnabled} setIsAuthEnabled={setIsAuthEnabled} setIsLoggedIn={setIsLoggedIn} />} />
+          <Route element={<AuthWrapper isLoggedIn={isLoggedIn} redirect="/login" />}>
+            <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<HomePage keywords={searchKeywords} updateKeywords={setSearchKeywords} data={data} updateData={setData} />} />
             <Route path="/image/:name" element={<ImageDetails username={username} password={password} />} />
           </Route>
-          <Route element={<AuthWrapper isAuthEnabled={isAuthEnabled} isLoggedIn={!isLoggedIn} redirect="/"/>}>
+          <Route element={<AuthWrapper isLoggedIn={!isLoggedIn} redirect="/"/>}>
+            <Route path="/login" element={<LoginPage username={username} password={password} updateUsername={setUsername} updatePassword={setPassword} isAuthEnabled={isAuthEnabled} setIsAuthEnabled={setIsAuthEnabled} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
             <Route path="*" element={<Navigate to="/login" />} />
           </Route>
         </Routes>

@@ -1,10 +1,7 @@
 import React from 'react';
 import { Navigate, Outlet } from 'react-router-dom';
 
-const AuthWrapper = ({isAuthEnabled,isLoggedIn, redirect}) => {
-  if(!isAuthEnabled) {
-    return <Outlet/>
-  }
+const AuthWrapper = ({isLoggedIn, redirect}) => {
   return  isLoggedIn  ? <Outlet />: <Navigate to={redirect} replace={true} />;
 };
 
