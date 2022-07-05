@@ -5,10 +5,23 @@ import {isEmpty} from 'lodash';
 const api = {
     // This method returns the generic request configuration for axios
     getRequestCfg: () => {
-        let genericHeaders = {
+        const genericHeaders = {
             Accept: 'application/json',
             'Content-Type': 'application/json',
         };
+        const username = localStorage.getItem('username');
+        if(username) {
+            const password = localStorage.getItem('password');
+            const token = btoa(username + ':' + password);
+            const authHeaders = {
+                Accept: 'application/json',
+                'Content-Type': 'application/json',
+                'Authorization': `Basic ${token}`,
+            };
+            return {
+                headers: authHeaders
+            };
+        }
 
         return {
             headers: genericHeaders,
@@ -42,9 +55,9 @@ const api = {
         return axios.put(urli, payload, this.getRequestCfg());
     },
 
-    delete(urli, payload, cfg) {
+    delete(urli, cfg) {
         let requestCfg = isEmpty(cfg) ? this.getRequestCfg() : cfg;
-        return axios.delete(urli, {data: payload, requestCfg});
+        return axios.delete(urli, requestCfg);
     },
 
 };

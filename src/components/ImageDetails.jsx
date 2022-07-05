@@ -9,7 +9,7 @@ import axios from 'axios';
 import Header from './Header.jsx'
 import ImageTile from './ImageTile.jsx'
 import Tags from './Tags.jsx'
-import {Container, Typography, Box, Grid} from '@mui/material';
+import {Container, Box, Grid} from '@mui/material';
 
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -18,8 +18,8 @@ const useStyles = makeStyles((theme) => ({
         backgroundColor: "#f2f2f2a1",
     },
     container: {
-        paddingTop: theme.spacing(5),
-        paddingBottom: theme.spacing(5),
+        paddingTop: 5,
+        paddingBottom: 5,
         marginTop: 100,
         backgroundColor: "#f2f2f2a1",
     },
@@ -27,8 +27,8 @@ const useStyles = makeStyles((theme) => ({
         height: '100vh',
     },
     gridWrapper: {
-        paddingTop: theme.spacing(10),
-        paddingBottom: theme.spacing(10),
+        paddingTop: 10,
+        paddingBottom: 10,
         backgroundColor: "#fff",
         border: "1px #f2f2f2 dashed",
     },
@@ -78,7 +78,7 @@ function ImageDetails (props) {
 
   return (
       <div className={classes.pageWrapper}>
-        <Header></Header>
+        <Header updateKeywords={props.updateKeywords}></Header>
         <Container maxWidth="md" className={classes.container}>
           <div className={classes.parentWrapper}>
             <Grid container className={classes.gridWrapper}>

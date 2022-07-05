@@ -2,15 +2,13 @@
 import {Link, useLocation} from "react-router-dom";
 
 // components
-import {Typography, Badge, AppBar, Toolbar, InputBase, Breadcrumbs} from '@mui/material';
-import {Tabs, Tab} from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
+import {Typography, Breadcrumbs} from '@mui/material';
 import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 
 // styling
-import { alpha } from '@mui/material/styles';
 
 import makeStyles from '@mui/styles/makeStyles';
+import React from "react";
 
 const useStyles = makeStyles((theme) => {
     console.log("theme", theme)
@@ -18,7 +16,7 @@ const useStyles = makeStyles((theme) => {
         exploreHeader: {
             backgroundColor: "#fafafa",
             minHeight: 50,
-            paddingLeft: theme.spacing(5),
+            paddingLeft: 5,
             display: "flex",
             alignItems: "center",
         },

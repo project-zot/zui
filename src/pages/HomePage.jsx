@@ -9,8 +9,8 @@ import {Container, Grid} from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
     container: {
-        paddingTop: theme.spacing(5),
-        paddingBottom: theme.spacing(5),
+        paddingTop: 5,
+        paddingBottom: 5,
         height: '100vh',
     },
     gridWrapper: {
@@ -25,7 +25,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function HomePage({ host, username, password, data, updateData, keywords, updateKeywords }) {
+function HomePage({ data, updateData, keywords, updateKeywords }) {
   const classes = useStyles();
 
   return (
@@ -34,7 +34,7 @@ function HomePage({ host, username, password, data, updateData, keywords, update
         <Container maxWidth="md" className={classes.container}>
             <Grid container className={classes.gridWrapper}>
                 <Grid item className={classes.tile}>
-                    <Rightbar host={host} username={username} password={password} keywords={keywords} data={data} updateData={updateData}/>
+                    <Rightbar keywords={keywords} data={data} updateData={updateData}/>
                 </Grid>
             </Grid>
         </Container>

@@ -1,10 +1,10 @@
 // react global
-import React, { useState} from 'react';
+import React from 'react';
 import {Link, useLocation, useNavigate} from "react-router-dom";
 
 // components
 import ExploreHeader from "./ExploreHeader";
-import {Typography, Badge, AppBar, Toolbar, InputBase, Button, Popper, MenuList, MenuItem, ClickAwayListener, Paper, Grow} from '@mui/material';
+import {Badge, AppBar, Toolbar, InputBase, Button, Popper, MenuList, MenuItem, ClickAwayListener, Paper, Grow} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Avatar from '@mui/material/Avatar';
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     },
     input: {
       color: "#464141",
-      marginLeft: theme.spacing(1),
+      marginLeft: 1,
     },
 
     icons: {
@@ -78,7 +78,7 @@ function Header({ updateKeywords }) {
       localStorage.removeItem('host');
       localStorage.removeItem('username');
       localStorage.removeItem('password');
-      window.location.reload(true);
+      window.location.reload();
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
     }
