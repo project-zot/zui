@@ -1,9 +1,8 @@
-import { useState, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import HomePage from './pages/HomePage.jsx'
 import LoginPage from './pages/LoginPage.jsx'
 import ImageDetails from './components/ImageDetails.jsx'
 
-import {Grid} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 import './App.css';
@@ -43,13 +42,13 @@ function App() {
           (hostFromStorage) ? (
               <Routes>
                 <Route path="*" element={<Navigate to="/home"/>} />
-                <Route path="/home" element={<HomePage username={username} password={password} keywords={searchKeywords} updateKeywords={setSearchKeywords} data={data} updateData={setData}/>} />
+                <Route path="/home" element={<HomePage keywords={searchKeywords} updateKeywords={setSearchKeywords} data={data} updateData={setData}/>} />
                 <Route path="/image/:name*" element={<ImageDetails username={username} password={password}/>} />
               </Routes>
           ) : (
               <Routes>
                 <Route path="*" element={<Navigate to="/login" />} />
-                <Route path="/login" element={<LoginPage username={username} password={password} updateUsername={setUsername} updatePassword={setPassword} updateData={setData}/>} />
+                <Route path="/login" element={<LoginPage username={username} password={password} updateUsername={setUsername} updatePassword={setPassword}/>} />
               </Routes>
           )
       )}

@@ -1,22 +1,22 @@
 // react global
-import {Link, useParams} from "react-router-dom";
+import {Link} from "react-router-dom";
 
 // utility
-import api from '../api.js';
 
 // components
-import {Button, Card, CardActions, CardActionArea, CardMedia, CardContent, Typography} from '@mui/material';
+import {Card, CardActionArea, CardMedia, CardContent, Typography} from '@mui/material';
 import VerifiedUserIcon from '@mui/icons-material/VerifiedUser';
 
 import makeStyles from '@mui/styles/makeStyles';
 import avatar from '../avatar.svg';
+import React from "react";
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   card: {
-      marginBottom: theme.spacing(2),
+      marginBottom: 2,
   },
   cardLg: {
-      marginBottom: theme.spacing(2),
+      marginBottom: 2,
       height: 200,
   },
   avatar: {
@@ -26,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     height: "100%",
   },
   media: {
-    padding: theme.spacing(2),
+    padding: 2,
     maxWidth: 150,
     borderRadius: '50px',
     marginTop: 20,
@@ -49,7 +49,7 @@ const useStyles = makeStyles((theme) => ({
 
 function ImageTile(props) {
   const classes = useStyles();
-  const {name, description, version, vendor, size, tags, licenses, shown} = props;
+  const {name, version, vendor, shown} = props;
 
   let style = {};
   if (!shown) {

@@ -1,7 +1,5 @@
 // react global
 import React, { useEffect, useState } from 'react';
-import PropTypes from 'prop-types';
-import {Link} from "react-router-dom";
 
 // components
 import ImageTile from './ImageTile.jsx';
@@ -13,14 +11,12 @@ import { Container, Grid } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 // utility
-import axios from 'axios';
 import api from '../api.js';
-import {URL} from '../constants';
+import {host} from '../constants';
 import {isEmpty} from 'lodash';
 //
-import {SESSION} from '../session'
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
     gridWrapper: {
         backgroundColor: "#fff",
     },
@@ -35,20 +31,13 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function Explore ({ host, username, password, keywords, data, updateData }) {
+function Explore ({ keywords, data, updateData }) {
     const [isLoading, setIsLoading] = useState(true);
     const [filteredData, setFilteredData] = useState([]);
     const classes = useStyles();
 
     useEffect(() => {
-        const token = btoa(username + ':' + password);
-        const cfg = {
-          headers: {
-            'Authorization': `Basic ${token}`,
-          }
-        };
-
-        axios.get(`${host}/query?query={ImageListWithLatestTag(){Name%20Latest%20Description%20Vendor%20Licenses%20Labels%20Size%20LastUpdated}}`, cfg)
+        api.get(`${host}/query?query={ImageListWithLatestTag(){Name%20Latest%20Description%20Vendor%20Licenses%20Labels%20Size%20LastUpdated}}`)
           .then(response => {
             if (response.data && response.data.data) {
                 let imageList = response.data.data.ImageListWithLatestTag;
@@ -67,7 +56,7 @@ function Explore ({ host, username, password, keywords, data, updateData }) {
                 setIsLoading(false);
             }
           })
-          .catch(e => {
+          .catch(() => {
 
           })
     }, [])
