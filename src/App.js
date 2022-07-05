@@ -7,52 +7,43 @@ import makeStyles from '@mui/styles/makeStyles';
 
 import './App.css';
 
-import {BrowserRouter as Router, Routes, Route, Navigate} from "react-router-dom";
+import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import { AuthWrapper } from 'utilities/AuthWrapper.jsx';
 
 const useStyles = makeStyles((theme) => ({
 
 }));
 
 function App() {
+  const isUsername = () => {
+    const localStorageUsername = localStorage.getItem('username');
+    return localStorageUsername ? true : false;
+  };
   const [username, setUsername] = useState(null);
   const [password, setPassword] = useState(null);
-  const [hostFromStorage, setHostFromStorage] = useState(null);
   const [searchKeywords, setSearchKeywords] = useState(null);
   const [data, setData] = useState(null);
+  const [isAuthEnabled, setIsAuthEnabled] = useState(false)
+  const [isLoggedIn, setIsLoggedIn] = useState(isUsername())
   const classes = useStyles();
 
-  useEffect(() => {
-    const localStorageHost = localStorage.getItem('host');
-    const localStorageUsername = localStorage.getItem('username');
-    const localStoragePassword = localStorage.getItem('password');
 
-    if (localStorageHost) {
-      setHostFromStorage(localStorageHost)
-      setUsername(localStorageUsername);
-      setPassword(localStoragePassword);
-    } else {
-      setHostFromStorage("")
-    }
-  }, [])
 
   return (
     <div className="App">
-    <Router>
-      { hostFromStorage !== null && (
-          (hostFromStorage) ? (
-              <Routes>
-                <Route path="*" element={<Navigate to="/home"/>} />
-                <Route path="/home" element={<HomePage keywords={searchKeywords} updateKeywords={setSearchKeywords} data={data} updateData={setData}/>} />
-                <Route path="/image/:name*" element={<ImageDetails username={username} password={password}/>} />
-              </Routes>
-          ) : (
-              <Routes>
-                <Route path="*" element={<Navigate to="/login" />} />
-                <Route path="/login" element={<LoginPage username={username} password={password} updateUsername={setUsername} updatePassword={setPassword}/>} />
-              </Routes>
-          )
-      )}
-    </Router>
+      <Router>
+        <Routes>
+          <Route element={<AuthWrapper  isAuthEnabled={isAuthEnabled} isLoggedIn={isLoggedIn} redirect="/login" />}>
+            <Route path="/" element={<Navigate to="/login" />} />
+            <Route path="/login" element={<LoginPage isLoggedIn={isLoggedIn} username={username} password={password} updateUsername={setUsername} updatePassword={setPassword} isAuthEnabled={isAuthEnabled} setIsAuthEnabled={setIsAuthEnabled} setIsLoggedIn={setIsLoggedIn} />} />
+            <Route path="/home" element={<HomePage keywords={searchKeywords} updateKeywords={setSearchKeywords} data={data} updateData={setData} />} />
+            <Route path="/image/:name" element={<ImageDetails username={username} password={password} />} />
+          </Route>
+          <Route element={<AuthWrapper isAuthEnabled={isAuthEnabled} isLoggedIn={!isLoggedIn} redirect="/"/>}>
+            <Route path="*" element={<Navigate to="/login" />} />
+          </Route>
+        </Routes>
+      </Router>
     </div>
   );
 }
