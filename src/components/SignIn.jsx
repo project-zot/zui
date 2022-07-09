@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { host } from '../constants';
 // utility
 import api from '../api';
+import { URL } from '../constants';
 
 // components
 import Button from '@mui/material/Button';
@@ -59,7 +60,6 @@ export default function SignIn({ username, updateUsername, password, updatePassw
       .then(response => {
         if (response.status === 200) {
           setIsAuthEnabled(false);
-          setIsLoggedIn(true);
         }
       })
       .catch(e => {
@@ -80,7 +80,7 @@ export default function SignIn({ username, updateUsername, password, updatePassw
         }
       };
     }
-    api.get(`${host}/query?query={ImageListWithLatestTag(){Name%20Latest%20Description%20Vendor%20Licenses%20Labels%20Size%20LastUpdated}}`,cfg)
+    api.get(`${host}${URL.imageList}`,cfg)
       .then(response => {
         if (response.data && response.data.data) {
           if(isAuthEnabled) {
@@ -89,8 +89,8 @@ export default function SignIn({ username, updateUsername, password, updatePassw
 
             setRequestProcessing(false);
             setRequestError(false);
-            setIsLoggedIn(true);
           }
+          setIsLoggedIn(true);
           navigate("/home");
         }
       })
