@@ -7,10 +7,10 @@ import axios from 'axios';
 
 // components
 import Header from './Header.jsx'
-import ImageTile from './ImageTile.jsx'
+import RepoCard from './RepoCard.jsx'
 import Tags from './Tags.jsx'
 import {Container, Box, Grid} from '@mui/material';
-
+import { URL } from '../constants';
 import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
@@ -58,7 +58,7 @@ function ImageDetails (props) {
         }
       };
 
-      axios.get(`${host}/query?query={ExpandedRepoInfo(repo:\%22${name}\%22){Manifests%20{Digest%20Tag%20Layers%20{Size%20Digest}}}}`, cfg)
+      axios.get(`${host}${URL.imageList}`, cfg)
         .then(response => {
           if (response.data && response.data.data) {
               let imageList = response.data.data.ExpandedRepoInfo;
@@ -85,7 +85,7 @@ function ImageDetails (props) {
                 <Grid item md={1} ></Grid>
                 <Grid item md={10}>
                     <Box>
-                        <ImageTile className={classes.tile}
+                        <RepoCard className={classes.tile}
                            name={myData.name}
                            version={myData.latestVersion}
                            description={myData.description}

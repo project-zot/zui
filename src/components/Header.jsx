@@ -65,7 +65,6 @@ const useStyles = makeStyles((theme) => ({
 function Header({ updateKeywords }) {
   const classes = useStyles();
   const path = useLocation().pathname;
-  const navigate = useNavigate();
 
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -93,7 +92,7 @@ function Header({ updateKeywords }) {
   // };
 
   return (
-      <AppBar position="fixed">
+      <AppBar sx={{position:"sticky"}}>
         <Toolbar className={classes.header}>
            <div>
              <Link to="/home" className={classes.icons}>
