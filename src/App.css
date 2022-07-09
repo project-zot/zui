@@ -1,5 +1,6 @@
 .App {
   text-align: center;
+  height: 100vh;
 }
 
 .App-logo {
@@ -43,10 +44,4 @@
   to {
     transform: rotate(360deg);
   }
-}
-
-.card-link {
-  display: block;
-  height: 200px;
-  margin-bottom: 30px;
 }

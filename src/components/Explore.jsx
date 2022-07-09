@@ -2,23 +2,24 @@
 import React, { useEffect, useState } from 'react';
 
 // components
-import ImageTile from './ImageTile.jsx';
+import RepoCard from './RepoCard.jsx';
 import Loading from "./Loading";
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
-import { Container, Grid } from '@mui/material';
+import { Container, FormControl, Grid, InputLabel, Select, Stack } from '@mui/material';
 
 import makeStyles from '@mui/styles/makeStyles';
 
 // utility
 import api from '../api.js';
+import {URL} from '../constants';
 import {host} from '../constants';
 import {isEmpty} from 'lodash';
 //
 
 const useStyles = makeStyles(() => ({
     gridWrapper: {
-        backgroundColor: "#fff",
+        // backgroundColor: "#fff",
     },
     nodataWrapper: {
       backgroundColor: "#fff",
@@ -28,6 +29,10 @@ const useStyles = makeStyles(() => ({
       color: '#C0C0C0',
       display: "flex",
       alignItems: "left",
+    },
+    resultsRow: {
+      justifyContent:"space-between",
+      alignItems:"center"
     }
 }));
 
@@ -37,7 +42,7 @@ function Explore ({ keywords, data, updateData }) {
     const classes = useStyles();
 
     useEffect(() => {
-        api.get(`${host}/query?query={ImageListWithLatestTag(){Name%20Latest%20Description%20Vendor%20Licenses%20Labels%20Size%20LastUpdated}}`)
+        api.get(`${host}${URL.imageList}`)
           .then(response => {
             if (response.data && response.data.data) {
                 let imageList = response.data.data.ImageListWithLatestTag;
@@ -49,15 +54,16 @@ function Explore ({ keywords, data, updateData }) {
                         description: image.Description,
                         licenses: image.Licenses,
                         size: image.Size,
-                        vendor: image.Vendor
+                        vendor: image.Vendor,
+                        lastUpdated: image.LastUpdated
                     };
                 });
                 updateData(imagesData);
                 setIsLoading(false);
             }
           })
-          .catch(() => {
-
+          .catch((e) => {
+            console.error(e);
           })
     },[])
 
@@ -80,10 +86,10 @@ function Explore ({ keywords, data, updateData }) {
 
     const filterStr = keywords && keywords.toLocaleLowerCase();
 
-    const renderImages = () => {
+    const renderRepoCards = () => {
         return filteredData && filteredData.map((item, index) => {
             return (
-                <ImageTile
+                <RepoCard
                     name={item.name}
                     version={item.latestVersion}
                     description={item.description}
@@ -93,6 +99,7 @@ function Explore ({ keywords, data, updateData }) {
                     licenses={item.licenses}
                     key={index}
                     data={item}
+                    lastUpdated={item.lastUpdated}
                     shown={true}
                 />
             );
@@ -112,12 +119,19 @@ function Explore ({ keywords, data, updateData }) {
                       </Grid>
                     ) : (
                       <Grid container className={classes.gridWrapper}>
+                        <Grid item xs={12}>
+                          <Stack direction="row" className={classes.resultsRow}>
+                            <Typography variant="body2">Results {filteredData.length}</Typography>
+                            <FormControl  sx={{m:'1', minWidth:"75px"}}>
+                              <InputLabel>Sort</InputLabel>
+                              <Select label="Sort">                                
+                              </Select>
+                            </FormControl>
+                          </Stack>
                           <div style={{marginTop: 20}}>
-                            <div>
-                              <Typography className={classes.exploreText}>{`Displaying ${filteredData.length} of ${filteredData.length} packages served from ${host}...`}</Typography>
-                              <div style={{marginTop: 20}}>{renderImages()}</div>
-                            </div>
+                              <Stack direction="column" spacing={2}>{renderRepoCards()}</Stack>
                           </div>
+                        </Grid>
                       </Grid>
                     )
                   }
