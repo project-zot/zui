@@ -15,6 +15,7 @@ import api from '../api.js';
 import {URL} from '../constants';
 import {host} from '../constants';
 import {isEmpty} from 'lodash';
+import FilterCard from './FilterCard.jsx';
 //
 
 const useStyles = makeStyles(() => ({
@@ -32,7 +33,8 @@ const useStyles = makeStyles(() => ({
     },
     resultsRow: {
       justifyContent:"space-between",
-      alignItems:"center"
+      alignItems:"center",
+      color:"#00000099"
     }
 }));
 
@@ -106,9 +108,21 @@ function Explore ({ keywords, data, updateData }) {
         });
     }
 
+    const renderFilterCards = () => {
+      return (
+        <Stack spacing={2}>
+          <FilterCard title="Products" filters={["Images","Plugins"]}/>
+          <FilterCard title="Images" filters={["Verified publisher","Official images"]}/>
+          <FilterCard title="Operating system" filters={["Windows","Linux"]}/>
+          <FilterCard title="Architectures" filters={["ARM", "ARM 64", "IBM POWER", "IBM Z", "PowerPC 64 LE", "x86", "x86-64"]}/>
+        </Stack>
+      );
+    };
+
     return (
-        <Container maxWidth="md">
+        <Container maxWidth="lg">
             { isLoading && <Loading /> }
+            
                 { !(filteredData && filteredData.length) ? (
                       <Grid container className={classes.nodataWrapper}>
                           <div style={{marginTop: 20}}>
@@ -119,18 +133,27 @@ function Explore ({ keywords, data, updateData }) {
                       </Grid>
                     ) : (
                       <Grid container className={classes.gridWrapper}>
-                        <Grid item xs={12}>
-                          <Stack direction="row" className={classes.resultsRow}>
-                            <Typography variant="body2">Results {filteredData.length}</Typography>
-                            <FormControl  sx={{m:'1', minWidth:"75px"}}>
-                              <InputLabel>Sort</InputLabel>
-                              <Select label="Sort">                                
-                              </Select>
-                            </FormControl>
-                          </Stack>
-                          <div style={{marginTop: 20}}>
-                              <Stack direction="column" spacing={2}>{renderRepoCards()}</Stack>
-                          </div>
+                        <Grid container item xs={12}>
+                          <Grid item xs={3}>
+                          </Grid>
+                          <Grid item xs={9}>
+                            <Stack direction="row" className={classes.resultsRow}>
+                                <Typography variant="body2" >Results {filteredData.length}</Typography>
+                                <FormControl  sx={{m:'1', minWidth:"75px"}} size="small">
+                                  <InputLabel>Sort</InputLabel>
+                                  <Select label="Sort">                                
+                                  </Select>
+                                </FormControl>
+                            </Stack>
+                          </Grid>
+                        </Grid>
+                        <Grid container item xs={12} spacing={5} pt={1}>
+                          <Grid item xs={3}>
+                            {renderFilterCards()}
+                          </Grid>
+                          <Grid item xs={9}>
+                           <Stack  direction="column" spacing={2}>{renderRepoCards()}</Stack>
+                          </Grid>
                         </Grid>
                       </Grid>
                     )

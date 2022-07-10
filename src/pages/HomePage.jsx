@@ -9,9 +9,10 @@ import {Container, Grid, Stack} from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
     container: {
-        paddingTop: 5,
+        paddingTop: 30,
         paddingBottom: 5,
-        height: '100%'
+        height: '100%',
+        minWidth:'60%'
     },
     gridWrapper: {
         // backgroundColor: "#fff",
@@ -31,7 +32,7 @@ function HomePage({ data, updateData, keywords, updateKeywords }) {
   return (
       <Stack className={classes.pageWrapper} direction="column">
         <Header updateKeywords={updateKeywords}></Header>
-        <Container maxWidth="md" className={classes.container} >
+        <Container className={classes.container} >
             <Grid container className={classes.gridWrapper}>
                 <Grid item className={classes.tile}>
                     <Rightbar keywords={keywords} data={data} updateData={updateData}/>
