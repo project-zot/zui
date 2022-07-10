@@ -1,10 +1,10 @@
 // react global
 import React from 'react';
-import {Link, useLocation, useNavigate} from "react-router-dom";
+import {Link, useLocation} from "react-router-dom";
 
 // components
 import ExploreHeader from "./ExploreHeader";
-import {Badge, AppBar, Toolbar, InputBase, Button, Popper, MenuList, MenuItem, ClickAwayListener, Paper, Grow} from '@mui/material';
+import {Badge, AppBar, Toolbar, InputBase, Button, Popper, MenuList, MenuItem, ClickAwayListener, Paper, Grow, Stack} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import LogoutIcon from '@mui/icons-material/Logout';
 import Avatar from '@mui/material/Avatar';
@@ -20,21 +20,22 @@ const useStyles = makeStyles((theme) => ({
       display: "flex",
       paddingLeft: 0,
       justifyContent: "space-between",
-      backgroundColor: "#fff"
+      backgroundColor: "#fff",
+      height:"100%"
     },
     search: {
       display: "flex",
       alignItems: "center",
-      backgroundColor: alpha('#464141', 0.05),
-      '&:hover': {
-        backgroundColor: alpha('#464141', 0.15),
-      },
-      borderRadius: theme.shape.borderRadius,
-      width: "52%",
+      backgroundColor: "#FFFFFF",
+      boxShadow:"0px 5px 10px rgba(131, 131, 131, 0.08)",
+      borderRadius: "40px",
+      border:"2px solid #E7E7E7",
+      minWidth: "35%",
       marginLeft: 16,
     },
     searchIcon: {
-      paddingLeft: 10,
+      color:"#A53692",
+      paddingRight:"3%"
     },
     input: {
       color: "#464141",
@@ -92,7 +93,7 @@ function Header({ updateKeywords }) {
   // };
 
   return (
-      <AppBar sx={{position:"sticky"}}>
+      <AppBar sx={{position:"sticky", minHeight:"9%"}}>
         <Toolbar className={classes.header}>
            <div>
              <Link to="/home" className={classes.icons}>
@@ -102,7 +103,7 @@ function Header({ updateKeywords }) {
                       src={logo}
                       className={classes.logo}
                       variant="square"
-                      sx={{ height: 36, width: 40 }}
+                      sx={{ height: 60, width: 64 }}
                   />
                    {
                    // <Typography className={classes.appName}
@@ -117,10 +118,10 @@ function Header({ updateKeywords }) {
              </Link>
            </div>
            {path !== '/' &&
-            <div className={classes.search}>
-              <SearchIcon className={classes.searchIcon}/>
-              <InputBase style={{height: 46}} placeholder="Search packages..." className={classes.input} onChange={e => updateKeywords(e.target.value)} disabled={path === '/'}/>
-            </div>}
+            <Stack className={classes.search} direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
+              <InputBase style={{paddingLeft:10,height: 46, color:"rgba(0, 0, 0, 0.6)"}} placeholder="Search for content..." className={classes.input} disabled={path === '/'}/>
+              <SearchIcon className={classes.searchIcon} />
+            </Stack>}
             <div>
                 <Button
                   className={classes.icons}

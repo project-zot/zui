@@ -19,9 +19,9 @@ function FilterCard(props) {
 
   const getFilterRows = () => {
     const filterRows = filters ||  ["ARM", "ARM 64", "IBM POWER", "IBM Z", "PowerPC 64 LE", "x86", "x86-64"];
-    return filterRows.map((filter) => {
+    return filterRows.map((filter, index) => {
       return (
-        <FormControlLabel componentsProps={{typography:{variant:"body2"}}} control={<Checkbox />} label={filter}/>
+        <FormControlLabel key={index} componentsProps={{typography:{variant:"body2"}}} control={<Checkbox />} label={filter}/>
       )
     })
   }
