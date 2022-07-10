@@ -19,12 +19,12 @@ import repocube4 from '../assets/repocube-4.png';
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min)
-}
+};
 
 const randomImage = () => {
   const imageArray = [repocube1,repocube2,repocube3,repocube4];
   return imageArray[randomIntFromInterval(0,3)];
-}
+};
 
 const useStyles = makeStyles(() => ({
   card: {
