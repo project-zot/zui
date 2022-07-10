@@ -70,7 +70,7 @@ function RepoCard(props) {
   const navigate = useNavigate();
   const {name, vendor, description, lastUpdated, downloads, rating} = props;
 
-  const goToCard = () => {
+  const goToDetails = () => {
     navigate(`/image/${name}`);
   }
 
@@ -93,7 +93,7 @@ function RepoCard(props) {
 
   return (
     <Card variant="outlined" className={classes.card}>
-        <CardActionArea onClick={() => goToCard()} className={classes.cardBtn}>
+        <CardActionArea onClick={() => goToDetails()} className={classes.cardBtn}>
             <CardContent className={classes.content}>
               <Grid container>
                 <Grid item xs={10}>
