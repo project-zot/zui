@@ -1,6 +1,6 @@
 // react global
 import React from 'react';
-import {Link, useLocation} from "react-router-dom";
+import {Link, useLocation, useNavigate} from "react-router-dom";
 
 // components
 import ExploreHeader from "./ExploreHeader";
@@ -66,6 +66,7 @@ const useStyles = makeStyles((theme) => ({
 function Header({ updateKeywords }) {
   const classes = useStyles();
   const path = useLocation().pathname;
+  const navigate = useNavigate();
 
   const [open, setOpen] = React.useState(false);
   const anchorRef = React.useRef(null);
@@ -86,11 +87,9 @@ function Header({ updateKeywords }) {
     setOpen(false);
   };
 
-  // onSearch = (event) => {
-  //     this.setState({
-  //         searchValue: event.target.value
-  //     });
-  // };
+  const goToExplore = () => {
+    navigate(`/explore`);
+  }
 
   return (
       <AppBar sx={{position:"sticky", minHeight:"9%"}}>
@@ -105,22 +104,17 @@ function Header({ updateKeywords }) {
                       variant="square"
                       sx={{ height: 60, width: 64 }}
                   />
-                   {
-                   // <Typography className={classes.appName}
-                   //   variant="h6"
-                   //   noWrap
-                   //   component="div"
-                   //   color="secondary"
-                   //   sx={{ mr: 2, display: { xs: 'none', md: 'flex' } }}>zot
-                   // </Typography>
-                   }
                 </div>
              </Link>
            </div>
            {path !== '/' &&
             <Stack className={classes.search} direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
-              <InputBase style={{paddingLeft:10,height: 46, color:"rgba(0, 0, 0, 0.6)"}} placeholder="Search for content..." className={classes.input} disabled={path === '/'}/>
-              <SearchIcon className={classes.searchIcon} />
+              <InputBase style={{paddingLeft:10,height: 46, color:"rgba(0, 0, 0, 0.6)"}} 
+                        placeholder="Search for content..." 
+                        className={classes.input} 
+                        onKeyDown={() => goToExplore()}
+                        />
+              <SearchIcon className={classes.searchIcon}/>
             </Stack>}
             <div>
                 <Button

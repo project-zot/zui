@@ -39,7 +39,7 @@ const useStyles = makeStyles(() => ({
       alignSelf:"stretch",
       flexGrow:0,
       order:0,
-      width:"100%"
+      width:"100%",
   },
   avatar: {
       height:"23px",
@@ -55,7 +55,6 @@ const useStyles = makeStyles(() => ({
   content: {
      textAlign: "left",
      color: "#606060",
-     padding: "2% 3% 2% 3%"
   },
   signedBadge: {
     color: '#9ccc65',
