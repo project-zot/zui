@@ -43,9 +43,11 @@ const useStyles = makeStyles((theme) => ({
 
 
 
-export default function SignIn({ username, updateUsername, password, updatePassword, isAuthEnabled, setIsAuthEnabled, isLoggedIn, setIsLoggedIn }) {
+export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, setIsLoggedIn }) {
   const [usernameError, setUsernameError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
+  const [username, setUsername] = useState(null);
+  const [password, setPassword] = useState(null);
   const [requestProcessing, setRequestProcessing] = useState(false);
   const [requestError, setRequestError] = useState(false);
   const navigate = useNavigate();
@@ -83,9 +85,8 @@ export default function SignIn({ username, updateUsername, password, updatePassw
       .then(response => {
         if (response.data && response.data.data) {
           if(isAuthEnabled) {
-            localStorage.setItem('username', username);
-            localStorage.setItem('password', password);
-
+            const token = btoa(username + ':' + password);
+            localStorage.setItem('token',token);
             setRequestProcessing(false);
             setRequestError(false);
           }
@@ -108,7 +109,7 @@ export default function SignIn({ username, updateUsername, password, updatePassw
 
     switch (type) {
       case 'username':
-        updateUsername(val);
+        setUsername(val);
         if (isEmpty) {
           setUsernameError('Please enter a username');
         } else {
@@ -116,7 +117,7 @@ export default function SignIn({ username, updateUsername, password, updatePassw
         }
         break;
       case 'password':
-        updatePassword(val);
+        setPassword(val);
         if (isEmpty) {
           setPasswordError('Please enter a password');
         } else {
