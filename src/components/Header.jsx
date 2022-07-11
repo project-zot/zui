@@ -168,7 +168,6 @@ function Header({ updateKeywords }) {
                 </Popper>
             </div>
         </Toolbar>
-        { path !== '/login' && path !== '/' && path !== '/home' && <ExploreHeader /> }
       </AppBar>
   );
 }

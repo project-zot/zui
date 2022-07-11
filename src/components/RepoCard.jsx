@@ -70,8 +70,8 @@ function RepoCard(props) {
   const navigate = useNavigate();
   const {name, vendor, description, lastUpdated, downloads, rating} = props;
 
-  const goToDetails = () => {
-    navigate(`/image/${name}`);
+  const goToDetails = (repo) => {
+    navigate(`/image/${name}`, {state: {lastDate: (lastUpdated? DateTime.fromISO(lastUpdated) : DateTime.now().minus({days:1})).toRelative({unit:'days'})}});
   }
 
   const verifiedCheck = () => {

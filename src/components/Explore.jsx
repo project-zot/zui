@@ -11,8 +11,7 @@ import { Container, FormControl, Grid, InputLabel, Select, Stack } from '@mui/ma
 import makeStyles from '@mui/styles/makeStyles';
 
 // utility
-import api from '../api.js';
-import {URL} from '../constants';
+import {api, endpoints} from '../api';
 import {host} from '../constants';
 import {isEmpty} from 'lodash';
 import FilterCard from './FilterCard.jsx';
@@ -44,7 +43,7 @@ function Explore ({ keywords, data, updateData }) {
     const classes = useStyles();
 
     useEffect(() => {
-        api.get(`${host}${URL.imageList}`)
+        api.get(`${host}${endpoints.imageList}`)
           .then(response => {
             if (response.data && response.data.data) {
                 let imageList = response.data.data.ImageListWithLatestTag;

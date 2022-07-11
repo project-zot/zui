@@ -5,102 +5,88 @@ import PropTypes from 'prop-types';
 // components
 import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
-import IconButton from '@mui/material/IconButton';
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
-import TableContainer from '@mui/material/TableContainer';
+import TableCell, {tableCellClasses} from '@mui/material/TableCell';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
-import Paper from '@mui/material/Paper';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import transform from 'utilities/transform';
+import { Card, CardContent, Divider } from '@mui/material';
+import { makeStyles } from '@mui/styles';
+
+const useStyles = makeStyles(() => ({
+  card: {
+    marginBottom: 2,
+    display:"flex",
+    flexDirection:"row",
+    alignItems:"center",
+    background:"#FFFFFF",
+    boxShadow:"0px 5px 10px rgba(131, 131, 131, 0.08)",
+    borderRadius:"30px",
+    flex:"none",
+    alignSelf:"stretch",
+    flexGrow:0,
+    order:0,
+    width:"100%"
+  },
+  content: {
+    textAlign: "left",
+    color: "#606060",
+    padding: "2% 3% 2% 3%",
+    width:"100%"
+  }
+}));
 
 
-// takes raw # of bytes and decimal value to be returned;
-// returns bytes with nearest human-readable unit
-function formatBytes(bytes) {
-    if (isNaN(bytes) || bytes === 0) {
-        return 0;
-    }
-
-    const DATA_UNITS = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-    const k = 1000;
-
-    const unitIdx = Math.floor(Math.log10(bytes) / 3); // log10(1000) = 3
-    let value = bytes / Math.pow(k, unitIdx);
-
-    // minimum 2 significant digits
-    value = value < 10 ? value.toPrecision(2) : Math.round(value);
-
-    return value + ' ' + DATA_UNITS[unitIdx];
-}
-
-function Row(props) {
+function TagCard(props) {
   const {data, row} = props;
   const tags = data && data.tags;
   const [open, setOpen] = React.useState(false);
+  const classes = useStyles();
 
   return (
-    <React.Fragment>
-      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-        <TableCell component="th" scope="row" style={{color: "#696969"}}>
-          <IconButton
-            aria-label="expand row"
-            size="medium"
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-          {row.Tag}
-        </TableCell>
-        <TableCell />
-      </TableRow>
-      <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-          <Collapse in={open} timeout="auto" unmountOnExit>
-            <Box sx={{ margin: 1 }}>
-              <Typography variant="h7" gutterBottom component="div">
-                {
-                  // Layers
-                }
-              </Typography>
-              <Table size="small" aria-label="purchases">
-                <TableHead>
-                  <TableRow>
-                    <TableCell style={{color: "#696969"}}>Size</TableCell>
-                    <TableCell style={{color: "#696969"}}>Digest</TableCell>
+    <Card className={classes.card} raised>
+      <CardContent className={classes.content}>
+        <Typography variant="body1" align="left" sx={{color:"#828282"}}>{row.Tag}</Typography>
+        <Typography variant="caption">Last pushed {row.lastUpdated || '----'} by {row.vendor || '----'}</Typography>
+        <Typography sx={{color:"#7C4DFF", cursor:'pointer'}} onClick={() => setOpen(!open)}>{!open? 'See layers' : 'Hide layers'}</Typography>
+        <Collapse in={open} timeout="auto" unmountOnExit>
+          <Box>
+            <Typography variant="h6" gutterBottom component="div">
+              {
+                // Layers
+              }
+            </Typography>
+            <Table size="small" padding="none" sx={{[`& .${tableCellClasses.root}`]: {borderBottom: "none"}}}>
+              <TableHead>
+                <TableRow>
+                  <TableCell style={{color: "#696969"}}><Typography variant="body1">Digest</Typography></TableCell>
+                  <TableCell style={{color: "#696969"}}><Typography variant="body1">OS/ARCH</Typography></TableCell>
+                  <TableCell style={{color: "#696969"}}><Typography variant="body1">Size</Typography></TableCell>
+                </TableRow>
+              </TableHead>
+              <TableBody>
+                {row.Layers.map((layer) => (
+                  <TableRow key={layer.Digest} onClick={() => {navigator.clipboard.writeText(layer.Digest)}}>
+                    <TableCell style={{color: "#696969"}}><Typography variant="body1">{layer.Digest?.substr(0,12)}</Typography></TableCell>
+                    <TableCell style={{color: "#696969"}}><Typography variant="body1">-----------</Typography></TableCell>
+                    <TableCell component="th" scope="row" style={{color: "#696969"}}>
+                      <Typography variant="body1">{transform.formatBytes(layer.Size)}</Typography>
+                    </TableCell>
                   </TableRow>
-                </TableHead>
-                <TableBody>
-                  {row.Layers.map((layer) => (
-                    <TableRow key={layer.Digest}>
-                      <TableCell component="th" scope="row" style={{color: "#696969"}}>
-                        {formatBytes(layer.Size)}
-                      </TableCell>
-                      <TableCell style={{color: "#696969"}}>{layer.Digest}</TableCell>
-                      <TableCell style={{color: "#696969"}}>
-                          <ContentCopyIcon sx={{height: 16, width: 16}} onClick={() => {navigator.clipboard.writeText(layer.Digest)}} />
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
-            </Box>
-          </Collapse>
-        </TableCell>
-      </TableRow>
-    </React.Fragment>
+                ))}
+              </TableBody>
+            </Table>
+          </Box>
+        </Collapse>
+      </CardContent>
+    </Card>
   );
 }
 
-Row.propTypes = {
+TagCard.propTypes = {
   row: PropTypes.shape({
-    calories: PropTypes.number.isRequired,
-    carbs: PropTypes.number.isRequired,
-    fat: PropTypes.number.isRequired,
     Layers: PropTypes.arrayOf(
       PropTypes.shape({
         amount: PropTypes.number.isRequired,
@@ -109,8 +95,6 @@ Row.propTypes = {
       }),
     ).isRequired,
     Tag: PropTypes.string.isRequired,
-    price: PropTypes.number.isRequired,
-    protein: PropTypes.number.isRequired,
   }).isRequired,
 };
 
@@ -118,7 +102,7 @@ Row.propTypes = {
 const renderTags = (tags) => {
   const cmp = tags && tags.map((tag, index) => {
       return (
-          <Row key={tag.Tag} row={tag} />
+          <TagCard key={tag.Tag} row={tag} />
       );
   });
   return cmp;
@@ -126,22 +110,17 @@ const renderTags = (tags) => {
 
 
 export default function CollapsibleTable(props) {
+  const classes = useStyles();
   const {data} = props;
   const {tags} = data;
 
   return (
-    <TableContainer component={Paper}>
-      <Table aria-label="collapsible table">
-        <TableHead>
-          <TableRow>
-            <TableCell>  <Typography variant="h7" gutterBottom component="div" style={{color: "#696969"}}>Tags</Typography></TableCell>
-            <TableCell />
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {renderTags(tags)}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Card className={classes.card}>
+      <CardContent className={classes.content}>
+        <Typography variant="h4" gutterBottom component="div" align="left" style={{color: "rgba(0, 0, 0, 0.87)"}}>Tags</Typography>
+        <Divider variant="fullWidth" sx={{margin:"5% 0% 5% 0%", background:"rgba(0, 0, 0, 0.38)", height:"1px", width:"100%"}}/>
+        {renderTags(tags)}
+      </CardContent>
+    </Card>
   );
 }

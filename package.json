@@ -7,6 +7,7 @@
     "@emotion/styled": "^11.9.3",
     "@mui-treasury/styles": "^1.13.1",
     "@mui/icons-material": "^5.2.5",
+    "@mui/lab": "^5.0.0-alpha.89",
     "@mui/material": "^5.8.6",
     "@mui/styles": "^5.8.6",
     "@testing-library/jest-dom": "^5.16.1",
