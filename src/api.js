@@ -9,10 +9,8 @@ const api = {
             Accept: 'application/json',
             'Content-Type': 'application/json',
         };
-        const username = localStorage.getItem('username');
-        if(username) {
-            const password = localStorage.getItem('password');
-            const token = btoa(username + ':' + password);
+        const token = localStorage.getItem('token');
+        if(token) {
             const authHeaders = {
                 Accept: 'application/json',
                 'Content-Type': 'application/json',

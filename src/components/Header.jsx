@@ -76,9 +76,7 @@ function Header({ updateKeywords }) {
   };
 
   const handleClose = (event) => {
-      localStorage.removeItem('host');
-      localStorage.removeItem('username');
-      localStorage.removeItem('password');
+      localStorage.removeItem('token');
       window.location.reload();
     if (anchorRef.current && anchorRef.current.contains(event.target)) {
       return;
