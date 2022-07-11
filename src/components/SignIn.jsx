@@ -3,8 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { host } from '../constants';
 // utility
-import api from '../api';
-import { URL } from '../constants';
+import {api, endpoints} from '../api';
 
 // components
 import Button from '@mui/material/Button';
@@ -80,7 +79,7 @@ export default function SignIn({ username, updateUsername, password, updatePassw
         }
       };
     }
-    api.get(`${host}${URL.imageList}`,cfg)
+    api.get(`${host}${endpoints.imageList}`,cfg)
       .then(response => {
         if (response.data && response.data.data) {
           if(isAuthEnabled) {

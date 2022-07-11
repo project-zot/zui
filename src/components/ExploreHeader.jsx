@@ -14,14 +14,16 @@ const useStyles = makeStyles((theme) => {
     console.log("theme", theme)
     return {
         exploreHeader: {
-            backgroundColor: "#fafafa",
+            backgroundColor: "#FFFFFF",
             minHeight: 50,
             paddingLeft: 5,
             display: "flex",
             alignItems: "center",
+            justifyContent: "center"
         },
         explore: {
-            color: 'gray'
+            color: '#00000099',
+            letterSpacing: "0.15px"
         }
     }
 });
@@ -33,9 +35,9 @@ function ExploreHeader() {
 
   return (
       <div className={classes.exploreHeader}>
-          <Breadcrumbs separator={<NavigateNextIcon fontSize="small" />} aria-label="breadcrumb">
-              <Link to="/"><Typography className={classes.explore}>Explore Packages</Typography></Link>
-              { path.includes('/image/') && <Typography>{path.replace('/image/', '')}</Typography> }
+          <Breadcrumbs separator="/" aria-label="breadcrumb">
+              <Link to="/"><Typography variant="body1" className={classes.explore}>Home</Typography></Link>
+              { path.includes('/image/') && <Typography className={classes.explore} variant="body1">{path.replace('/image/', '')}</Typography> }
           </Breadcrumbs>
       </div>
   );
