@@ -5,7 +5,6 @@ import Rightbar from '../components/Rightbar.jsx'
 
 import makeStyles from '@mui/styles/makeStyles';
 import {Container, Grid, Stack} from '@mui/material';
-import Home from 'components/Home.jsx';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -27,7 +26,7 @@ const useStyles = makeStyles((theme) => ({
     }
 }));
 
-function HomePage({ data, updateData, keywords, updateKeywords }) {
+function ExplorePage({ data, updateData, keywords, updateKeywords }) {
   const classes = useStyles();
 
   return (
@@ -36,7 +35,7 @@ function HomePage({ data, updateData, keywords, updateKeywords }) {
         <Container className={classes.container} >
             <Grid container className={classes.gridWrapper}>
                 <Grid item className={classes.tile}>
-                  <Home  keywords={keywords} data={data} updateData={updateData}/>
+                    <Rightbar keywords={keywords} data={data} updateData={updateData}/>
                 </Grid>
             </Grid>
         </Container>
@@ -44,4 +43,4 @@ function HomePage({ data, updateData, keywords, updateKeywords }) {
   );
 }
 
-export default HomePage;
+export default ExplorePage;
