@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { host } from '../constants';
 // utility
-import {api, endpoints} from '../api';
+import { api, endpoints } from '../api';
 
 // components
 import Button from '@mui/material/Button';
@@ -21,23 +21,39 @@ import { Card, CardContent } from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
   cardContainer: {
-    display:"flex",
-    alignItems:"center",
-    justifyContent:"center",
-    marginTop:"20%"
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center"
   },
   loginCard: {
     display: 'flex',
     flexDirection: 'column',
-    alignItems: 'flex-start',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: "20%",
     width: "60%",
+    height: "60%",
     background: '#FFFFFF',
     gap: '10px',
     boxShadow: '0px 5px 10px rgba(131, 131, 131, 0.08)',
     borderRadius: '24px'
   },
+  loginCardContent: {
+    alignItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
+    flexDirection: 'column',
+    border: '3px black',
+    maxWidth: '73%',
+    height: '90%'
+  },
   text: {
     color: "#383838",
+    width: "100%"
+  },
+  subtext: {
+    color: "rgba(0, 0, 0, 0.6)",
+    width: "100%"
   }
 }));
 
@@ -54,18 +70,18 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
   const classes = useStyles();
 
   useEffect(() => {
-    if(isAuthEnabled && isLoggedIn ) {
+    if (isAuthEnabled && isLoggedIn) {
       navigate("/home");
     } else {
-    api.get(`${host}/v2/`)
-      .then(response => {
-        if (response.status === 200) {
-          setIsAuthEnabled(false);
-        }
-      })
-      .catch(e => {
-        setIsAuthEnabled(true);
-      })
+      api.get(`${host}/v2/`)
+        .then(response => {
+          if (response.status === 200) {
+            setIsAuthEnabled(false);
+          }
+        })
+        .catch(e => {
+          setIsAuthEnabled(true);
+        })
     }
   }, []);
 
@@ -73,7 +89,7 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
     event.preventDefault();
     setRequestProcessing(true);
     let cfg = {};
-    if(isAuthEnabled) {
+    if (isAuthEnabled) {
       const token = btoa(username + ':' + password);
       cfg = {
         headers: {
@@ -81,12 +97,12 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
         }
       };
     }
-    api.get(`${host}${endpoints.imageList}`,cfg)
+    api.get(`${host}${endpoints.imageList}`, cfg)
       .then(response => {
         if (response.data && response.data.data) {
-          if(isAuthEnabled) {
+          if (isAuthEnabled) {
             const token = btoa(username + ':' + password);
-            localStorage.setItem('token',token);
+            localStorage.setItem('token', token);
             setRequestProcessing(false);
             setRequestError(false);
           }
@@ -132,75 +148,51 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
 
   return (
     <Box className={classes.cardContainer}>
-        <Card className={classes.loginCard} >
-          <CardContent>
-              <CssBaseline />
-              <Box
-                sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  alignItems: 'center',
-                  border: '3px black',
-                }}
-              >
-                {isAuthEnabled ?
-                  (<>
-                    <Typography align="left" className={classes.text} component="h1" variant="h4">
-                      Sign in
-                    </Typography><Typography className={classes.text} variant="subtitle1" gutterBottom component="div">
-                      Welcome back! Please enter your details.
-                    </Typography><Box component="form" onSubmit={null} noValidate sx={{ mt: 1 }}>
-                      <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        id="username"
-                        label="Username"
-                        name="username"
-                        autoComplete="username"
-                        onInput={(e) => handleChange(e, 'username')}
-                        error={usernameError != null}
-                        helperText={usernameError} />
-                      <TextField
-                        margin="normal"
-                        required
-                        fullWidth
-                        name="password"
-                        label="Password"
-                        type="password"
-                        id="password"
-                        autoComplete="current-password"
-                        onInput={(e) => handleChange(e, 'password')}
-                        error={passwordError != null}
-                        helperText={passwordError} />
-                      {requestProcessing && <CircularProgress style={{ marginTop: 20 }} color="secondary" />}
-                      {requestError && <Alert style={{ marginTop: 20 }} severity="error">Authentication Failed. Please try again.</Alert>}
-                      <div>
-                        <Button
-                          fullWidth
-                          variant="contained"
-                          sx={{ mt: 3, mb: 2, background: "#7C4DFF",  border: 'white' }}
-                          onClick={handleClick}
-                        > Continue
-                        </Button>
-                      </div>
-                    </Box>
-                  </>) : (
-                    <div>
-                      <Button
-                        fullWidth
-                        variant="outlined"
-                        sx={{ mt: 3, mb: 2}}
-                        onClick={handleClick}
-                      > Continue as Guest
-                      </Button>
-                    </div>
-                  )
-                }
-              </Box>
-              <TermsOfService sx={{ mt: 2, mb: 4 }} />
-          </CardContent>
-        </Card>
+      <Card className={classes.loginCard} >
+        <CardContent className={classes.loginCardContent}>
+          <CssBaseline />
+          <Typography align="left" className={classes.text} component="h1" variant="h4">
+            Sign in
+          </Typography>
+          <Typography align="left" className={classes.subtext} variant="body1" gutterBottom>
+            Welcome back! Please enter your details.
+          </Typography><Box component="form" onSubmit={null} noValidate autoComplete='off' sx={{ mt: 1 }}>
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              id="username"
+              label="Username"
+              name="username"
+              onInput={(e) => handleChange(e, 'username')}
+              error={usernameError != null}
+              helperText={usernameError} />
+            <TextField
+              margin="normal"
+              required
+              fullWidth
+              name="password"
+              label="Enter password"
+              type="password"
+              id="password"
+              onInput={(e) => handleChange(e, 'password')}
+              error={passwordError != null}
+              helperText={passwordError} />
+            {requestProcessing && <CircularProgress style={{ marginTop: 20 }} color="secondary" />}
+            {requestError && <Alert style={{ marginTop: 20 }} severity="error">Authentication Failed. Please try again.</Alert>}
+            <div>
+              <Button
+                fullWidth
+                variant="contained"
+                sx={{ mt: 3, mb: 2, background: "#7C4DFF", border: 'white' }}
+                onClick={handleClick}
+              > Continue
+              </Button>
+            </div>
+          </Box>
+          <TermsOfService sx={{ mt: 2, mb: 4 }} />
+        </CardContent>
+      </Card>
     </Box>
   );
 }
