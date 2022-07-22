@@ -77,6 +77,8 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
         .then(response => {
           if (response.status === 200) {
             setIsAuthEnabled(false);
+            setIsLoggedIn(true);
+            navigate("/home");
           }
         })
         .catch(e => {
