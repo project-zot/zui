@@ -11,7 +11,7 @@ import ExploreHeader from 'components/ExploreHeader';
 
 const useStyles = makeStyles((theme) => ({
   pageWrapper: {
-    backgroundColor: "#FFFFFF",
+    height:"100%"
   },
   container: {
       paddingTop: 5,
