@@ -1,18 +1,17 @@
 import { Grid, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { Container } from '@mui/system';
 import { api, endpoints } from 'api';
 import { host } from '../constants';
 import {isEmpty} from 'lodash';
 import React, { useEffect, useState } from 'react';
-import Loading from './Loading';
 import PreviewCard from './PreviewCard';
 import RepoCard from './RepoCard';
+import { Container } from '@mui/system';
 
 
 const useStyles = makeStyles(() => ({
   gridWrapper: {
-      // backgroundColor: "#fff",
+      marginTop:10
   },
   nodataWrapper: {
     backgroundColor: "#fff",
@@ -30,16 +29,22 @@ const useStyles = makeStyles(() => ({
   },
   title: {
     fontWeight:"700",
-    textAlign:"center",
-    color:"#000000DE"
+    color:"#000000DE",
+    width:"100%",
+  },
+  sectionTitle:{
+    fontWeight:"700",
+    color:"#000000DE",
+    width:"100%"
   },
   subtitle: {
     color:"#00000099",
     fontWeight:400,
     fontSize:"16px",
     textAlign:"center",
+    lineHeight:"150%",
     letterSpacing:"0.15px",
-    maxWidth:"40%"
+    width:"65%",
   }
 }));
 
@@ -137,19 +142,19 @@ function Home ({ keywords, data, updateData }) {
   }
 
   return (
-    <Stack spacing={5} alignItems="center">
+    <Stack spacing={4} alignItems="center" className={classes.gridWrapper}>
       <Grid container item xs={12}>
-        <Stack direction="column" alignItems="center">
-          <Typography variant="h3" className={classes.title}>Most popular repositories</Typography>
+        <Stack direction="column" alignItems="center" spacing={4}>
+            <Typography variant="h3" className={classes.title}>Most popular repositories</Typography> 
           <Typography variant="body1" className={classes.subtitle} align="center">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Amet, dis pellentesque posuere nulla tortor ac eu arcu nunc. A potenti ridiculus vitae, ut venenatis in ut interdum eros.</Typography>
         </Stack>
       </Grid>
-      <Grid container spacing={2}>
+      <Grid container spacing={1}>
           {renderPreviewCards()}
       </Grid>
-      <Typography variant="h4" align="left" className={classes.title}>Bookmarks</Typography>
+      <Typography variant="h4" align="left" className={classes.sectionTitle}>Bookmarks</Typography>
       {renderBookmarks()}
-      <Typography variant="h4" align="left" className={classes.title}>Recently updated repositories</Typography>
+      <Typography variant="h4" align="left" className={classes.sectionTitle}>Recently updated repositories</Typography>
       {renderRecentlyUpdated()}
     </Stack>
   );
