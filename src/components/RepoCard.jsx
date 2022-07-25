@@ -40,6 +40,7 @@ const useStyles = makeStyles(() => ({
       flexGrow:0,
       order:0,
       width:"100%",
+      maxWidth:"1152px"
   },
   avatar: {
       height:"23px",
@@ -55,6 +56,10 @@ const useStyles = makeStyles(() => ({
   content: {
      textAlign: "left",
      color: "#606060",
+     maxHeight:"148px"
+  },
+  contentRight: {
+    height:"100%"
   },
   signedBadge: {
     color: '#9ccc65',
@@ -121,10 +126,12 @@ function RepoCard(props) {
                   </Typography>
                 </Grid>
                 <Grid item xs={2} >
-                  <Stack justifyContent="end">
-                    <Typography variant="body2">Downloads • {downloads || '-'}</Typography>
-                    <Typography variant="body2">Rating • {rating || '-'}</Typography>
-                    <BookmarkIcon sx={{marginTop:"55%", marginLeft:"70%"}}/>
+                  <Stack alignItems="flex-end" justifyContent="space-between" direction="column" className={classes.contentRight}>
+                    <Stack direction="column" alignItems="flex-end">
+                      <Typography variant="body2">Downloads • {downloads || '-'}</Typography>
+                      <Typography variant="body2">Rating • {rating || '-'}</Typography>
+                    </Stack>
+                    <BookmarkIcon />
                   </Stack>                  
                 </Grid>
               </Grid>
