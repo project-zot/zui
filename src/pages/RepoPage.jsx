@@ -11,12 +11,12 @@ import ExploreHeader from 'components/ExploreHeader';
 
 const useStyles = makeStyles((theme) => ({
   pageWrapper: {
-    backgroundColor: "#f2f2f2a1",
+    backgroundColor: "#FFFFFF",
   },
   container: {
       paddingTop: 5,
       paddingBottom: 5,
-      backgroundColor: "#f2f2f2a1",
+      backgroundColor: "#FFFFFF",
   },
   parentWrapper: {
       height: '100vh',
@@ -26,7 +26,6 @@ const useStyles = makeStyles((theme) => ({
       paddingBottom: 10,
       backgroundColor: "#fff",
       width:"100%",
-      border: "1px #f2f2f2 dashed",
   },
 }));
 
