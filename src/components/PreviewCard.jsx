@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, CardMedia, Chip, Grid, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, CardMedia, Chip, Grid, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -17,28 +17,30 @@ const randomIntFromInterval = (min, max) => {
 };
 
 const randomImage = () => {
-  const imageArray = [repocube1,repocube2,repocube3,repocube4];
-  return imageArray[randomIntFromInterval(0,3)];
+  const imageArray = [repocube1, repocube2, repocube3, repocube4];
+  return imageArray[randomIntFromInterval(0, 3)];
 };
 
 const useStyles = makeStyles(() => ({
   card: {
-      marginBottom: 2,
-      display:"flex",
-      flexDirection:"row",
-      alignItems:"center",
-      background:"#FFFFFF",
-      boxShadow:"0px 5px 10px rgba(131, 131, 131, 0.08)",
-      borderRadius:"24px",
-      flex:"none",
-      alignSelf:"stretch",
-      flexGrow:0,
-      order:0,
-      width:"100%",
+    marginBottom: 2,
+    display: "flex",
+    flexDirection: "row",
+    alignItems: "center",
+    background: "#FFFFFF",
+    boxShadow: "0px 5px 10px rgba(131, 131, 131, 0.08)",
+    borderRadius: "24px",
+    flex: "none",
+    alignSelf: "stretch",
+    flexGrow: 0,
+    order: 0,
+    width: "100%",
+    maxWidth:"270px",
+    maxHeight:"138PX"
   },
   avatar: {
-      height:"23px",
-      width:"23px"
+    height: "23px",
+    width: "23px"
   },
   cardBtn: {
     height: "100%",
@@ -48,8 +50,8 @@ const useStyles = makeStyles(() => ({
     borderRadius: '50px',
   },
   content: {
-     textAlign: "left",
-     color: "#606060",
+    textAlign: "left",
+    color: "#606060",
   },
   signedBadge: {
     color: '#9ccc65',
@@ -62,46 +64,48 @@ const useStyles = makeStyles(() => ({
 function RepoCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const {name, lastUpdated} = props;
+  const { name, lastUpdated } = props;
 
   const goToDetails = (repo) => {
-    navigate(`/image/${name}`, {state: {lastDate: (lastUpdated? DateTime.fromISO(lastUpdated) : DateTime.now().minus({days:1})).toRelative({unit:'days'})}});
+    navigate(`/image/${name}`, { state: { lastDate: (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({ unit: 'days' }) } });
   };
 
   const verifiedCheck = () => {
-    return (<CheckCircleOutlineOutlinedIcon sx={{color:"#388E3C!important"}}/>);
+    return (<CheckCircleOutlineOutlinedIcon sx={{ color: "#388E3C!important", height:"32px", width:"32px" }} />);
   }
 
   return (
     <Card variant="outlined" className={classes.card}>
-        <CardActionArea onClick={() => goToDetails()} className={classes.cardBtn}>
-            <CardContent className={classes.content}>
-              <Grid container spacing={1}>
-                <Grid container item xs={12}>
-                  <CardMedia classes={{
-                      root: classes.media,
-                      img: classes.avatar,
-                  }}
-                    component="img"
-                    image={randomImage()}
-                    alt="icon"
-                  />
-                  <Typography variant="h5" component="div">
-                    {name}
-                  </Typography>
-                  {verifiedCheck()}
-                </Grid>
-                <Grid container item xs={12}>
-                  <Typography variant="body2">Official*PH</Typography>
-                </Grid>
-                <Grid container item xs={12}>
-                </Grid>
-                <Grid container item xs={12}>
-                  <Typography variant="subtitle2" sx={{color:"#7C4DFF"}}>Discover more</Typography>
-                </Grid>
-              </Grid>
-            </CardContent>
-        </CardActionArea>
+      <CardActionArea onClick={() => goToDetails()} className={classes.cardBtn}>
+        <CardContent className={classes.content}>
+          <Grid container spacing={1}>
+            <Grid container item xs={12}>
+              <Stack direction="row" spacing={3} sx={{display:"flex",alignItems:"center", flexWrap:"wrap"}}>
+                <CardMedia classes={{
+                  root: classes.media,
+                  img: classes.avatar,
+                }}
+                  component="img"
+                  image={randomImage()}
+                  alt="icon"
+                />
+                <Typography variant="h5" component="div" sx={{size:"24px", lineHeight:"32px", color:"#220052"}}>
+                  {name}
+                </Typography>
+                {verifiedCheck()}
+              </Stack>
+            </Grid>
+            <Grid container item xs={12} mt={2}>
+              <Typography variant="body2" sx={{fontSize:"14px", lineHeight:"143%", letterSpacing:"0.17px"}}>Official*PH</Typography>
+            </Grid>
+            <Grid container item xs={12}>
+            </Grid>
+            <Grid container item xs={12}>
+              <Typography variant="subtitle2" sx={{ color: "#7C4DFF" }}>Discover more</Typography>
+            </Grid>
+          </Grid>
+        </CardContent>
+      </CardActionArea>
     </Card>
   );
 };
