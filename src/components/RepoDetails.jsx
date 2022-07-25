@@ -13,6 +13,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../constants';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
 
 // placeholder images
 import repocube1 from '../assets/repocube-1.png';
@@ -26,6 +27,7 @@ import RepoDetailsMetadata from './RepoDetailsMetadata';
 const useStyles = makeStyles((theme) => ({
     pageWrapper: {
         backgroundColor: "#FFFFFF",
+        height: '100vh',
     },
     container: {
         paddingTop: 5,
@@ -33,14 +35,10 @@ const useStyles = makeStyles((theme) => ({
         marginTop: 100,
         backgroundColor: "#FFFFFF",
     },
-    parentWrapper: {
-        height: '100vh',
-    },
-    gridWrapper: {
-        paddingTop: 10,
-        paddingBottom: 10,
-        backgroundColor: "#FFFFFF",
-        border: "1px #f2f2f2 dashed",
+    repoName: {
+      fontWeight:"400",
+      fontSize:"48px",
+      color:"#220052"
     },
     avatar: {
       height:"48px",
@@ -59,9 +57,11 @@ const useStyles = makeStyles((theme) => ({
       borderColor: 'divider',
       padding:"8px",
       boxShadow: "0px 5px 10px rgba(131, 131, 131, 0.08)",
-      background:"#EDE7F6",
       borderRadius:"32px",
       height: "100%"
+    },
+    tabContent:{
+      height:"100%"
     },
     selectedTab: {
       background:"#A53692",
@@ -104,7 +104,7 @@ function RepoDetails (props) {
   const [repoDetailData, setRepoDetailData] = useState({});
   // @ts-ignore
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("Readme");
+  const [selectedTab, setSelectedTab] = useState("Overview");
 
   // get url param from <Route here (i.e. image name)
   const {name} = useParams();
@@ -112,7 +112,7 @@ function RepoDetails (props) {
   // @ts-ignore
   const {lastDate} = state;
   const classes = useStyles();
-  const {description, readmeTitle, dependencies, dependents} = props;
+  const {description, overviewTitle, dependencies, dependents} = props;
 
   useEffect(() => {
       api.get(`${host}${endpoints.detailedRepoInfo(name)}`)
@@ -161,12 +161,12 @@ function RepoDetails (props) {
     setSelectedTab(newValue);
   };
 
-  const renderReadme = () => {
+  const renderOverview = () => {
     return (
       <Card className={classes.card}>
         <CardContent>
-          <Typography variant="h4" align="left">{readmeTitle || 'Quickstart'}</Typography>
-          <Typography variant="body1">{description || mockData.loremIpsum}</Typography>
+          <Typography variant="h4" align="left">{overviewTitle || 'Quickstart'}</Typography>
+          <Typography variant="body1" sx={{color:"rgba(0, 0, 0, 0.6)", fontSize:"16px",lineHeight:"150%", marginTop:"5%"}}>{description || mockData.loremIpsum}</Typography>
         </CardContent>
       </Card>
     );
@@ -199,8 +199,7 @@ function RepoDetails (props) {
 
   return (
       <div className={classes.pageWrapper}>
-          <div className={classes.parentWrapper}>
-            <Card variant="outlined">
+            <Card>
               <CardContent>
                 <Grid container>
                   <Grid item xs={7}>
@@ -213,12 +212,13 @@ function RepoDetails (props) {
                         image={randomImage()}
                         alt="icon"
                       />
-                      <Typography variant="h5" component="div">
+                      <Typography variant="h3" className={classes.repoName}>
                         {name}
                       </Typography>
                       <Chip label="Verified license" sx={{backgroundColor:"#E8F5E9", color:"#388E3C"}} variant="filled" onDelete={() => {return}} deleteIcon={verifiedCheck()}/>
+                      <BookmarkIcon/>
                     </Stack>
-                    <Typography pt={1} sx={{ fontSize: 12 }} gutterBottom align="left">
+                    <Typography pt={1} sx={{ fontSize: 16,lineHeight:"24px", color:"rgba(0, 0, 0, 0.6)" }} gutterBottom align="left">
                       {description || 'The complete solution for node.js command-line programs'}
                     </Typography>
                     <Stack alignItems="center" direction="row" spacing={2} pt={1}>
@@ -226,7 +226,7 @@ function RepoDetails (props) {
                     </Stack>
                   </Grid>
                   <Grid item xs={5} pt={2}>
-                      <Typography variant="body1">Copy and pull to pull this image</Typography>
+                      <Typography variant="body1" sx={{color:"rgba(0, 0, 0, 0.6)"}}>Copy and pull to pull this image</Typography>
                       <FormControl sx={{ m: 1, width: '25ch' }} variant="outlined">
                         <OutlinedInput
                           value={`Pull ${name}`}
@@ -247,20 +247,24 @@ function RepoDetails (props) {
                 </Grid>
                 <TabContext value={selectedTab}>
                   <Box className={classes.tabs}>
-                    <TabList  onChange={handleTabChange} TabIndicatorProps={{ className: classes.selectedTab }} >
-                        <Tab value="Readme" label="Read me"/>
-                        <Tab value="Tags" label="Tags"/>
-                        <Tab value="Dependencies" label={`${dependencies || 0} dependencies`}/>
-                        <Tab value="Dependents" label={`${dependents || 0} dependents`}/>
-                        <Tab value="Vulnerabilities" label="Vulnerabilities"/>
-                        <Tab value="6" label="Tab 6"/>
-                        <Tab value="7" label="Tab 7"/>
-                        <Tab value="8" label="Tab 8"/>
+                    <TabList  
+                      onChange={handleTabChange} 
+                      TabIndicatorProps={{ className: classes.selectedTab }} 
+                      sx={{ "& button.Mui-selected": {color:"#A53692"}}}
+                    >
+                        <Tab value="Overview" label="Overview" className={classes.tabContent}/>
+                        <Tab value="Tags" label="Tags" className={classes.tabContent}/>
+                        <Tab value="Dependencies" label={`${dependencies || 0} Dependencies`} className={classes.tabContent}/>
+                        <Tab value="Dependents" label={`${dependents || 0} Dependents`} className={classes.tabContent}/>
+                        <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent}/>
+                        <Tab value="6" label="Tab 6" className={classes.tabContent}/>
+                        <Tab value="7" label="Tab 7" className={classes.tabContent}/>
+                        <Tab value="8" label="Tab 8" className={classes.tabContent}/>
                     </TabList>
                     <Grid container>
                         <Grid item xs={8}>
-                            <TabPanel value="Readme" className={classes.tabPanel}>
-                              {renderReadme()}
+                            <TabPanel value="Overview" className={classes.tabPanel}>
+                              {renderOverview()}
                             </TabPanel>
                             <TabPanel value="Tags" className={classes.tabPanel}>
                               <Tags data={repoDetailData} />
@@ -288,7 +292,6 @@ function RepoDetails (props) {
                 </TabContext>
               </CardContent>
             </Card>
-         </div>
       </div>
   );
 }

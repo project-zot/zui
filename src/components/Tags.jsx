@@ -117,7 +117,7 @@ export default function CollapsibleTable(props) {
   return (
     <Card className={classes.card}>
       <CardContent className={classes.content}>
-        <Typography variant="h4" gutterBottom component="div" align="left" style={{color: "rgba(0, 0, 0, 0.87)"}}>Tags</Typography>
+        <Typography variant="h4" gutterBottom component="div" align="left" style={{color: "rgba(0, 0, 0, 0.87)"}}>Tags history</Typography>
         <Divider variant="fullWidth" sx={{margin:"5% 0% 5% 0%", background:"rgba(0, 0, 0, 0.38)", height:"1px", width:"100%"}}/>
         {renderTags(tags)}
       </CardContent>
