@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => ({
     order: 0,
     width: "100%",
     maxWidth:"270px",
-    maxHeight:"138PX"
+    maxHeight:"138px"
   },
   avatar: {
     height: "23px",
