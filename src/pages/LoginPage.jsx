@@ -1,5 +1,5 @@
 // react global
-import React, {  } from 'react';
+import React, { } from 'react';
 
 // components
 import SignIn from '../components/SignIn';
@@ -15,18 +15,18 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-function LoginPage({isAuthEnabled, setIsAuthEnabled, isLoggedIn,setIsLoggedIn }) {
+function LoginPage({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, setIsLoggedIn }) {
   const classes = useStyles();
 
   return (
-        <Grid container spacing={0} className={classes.container}>
-          <Grid item xs={6}>
-            <SignIn isAuthEnabled={isAuthEnabled} setIsAuthEnabled={setIsAuthEnabled} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
-          </Grid>
-          <Grid item xs={6}>
-            <SigninPresentation/>
-          </Grid>
-        </Grid>
+    <Grid container spacing={0} className={classes.container}>
+      <Grid item xs={6}>
+        <SigninPresentation />
+      </Grid>
+      <Grid item xs={6}>
+        <SignIn isAuthEnabled={isAuthEnabled} setIsAuthEnabled={setIsAuthEnabled} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+      </Grid>
+    </Grid>
   );
 }
 

@@ -6,8 +6,11 @@ import { Stack, Typography } from '@mui/material';
 
 const useStyles = makeStyles((theme) => ({
   subtext: {
-    color: "#00000099",
-    margin: 0
+    color: "rgba(0, 0, 0, 0.6)",
+    margin: 0,
+    fontSize:"12px",
+    lineHeight:"166%",
+    letterSpacing:"0.4px"
   }
 }));
 
@@ -15,7 +18,7 @@ export default function TermsOfService(props) {
   const classes = useStyles();
   return (
     <Stack spacing={0}>
-      <Typography variant="caption" className={classes.subtext} align="center" {...props} pb={6}>
+      <Typography variant="caption" className={classes.subtext} align="justify" {...props} pb={6}>
         By creating an account, you agree to the Terms of Service. For more information about our privacy practices, see the zot's Privacy Policy.
       </Typography>
       <Typography variant="caption" className={classes.subtext} align="center" {...props}>
