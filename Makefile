@@ -1,13 +1,13 @@
 .PHONY: all
-all: install build
+all: install audit build
 
 .PHONY: install
 install:
-	npm install
+	npm install --no-audit
 
 .PHONY: build
 build:
-	npm build
+	npm run build
 
 .PHONY: update
 update:
@@ -15,7 +15,7 @@ update:
 
 .PHONY: audit
 audit:
-	npm audit
+	npm audit --omit=dev
 
 .PHONY: run
 run:
