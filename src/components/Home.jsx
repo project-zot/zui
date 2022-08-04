@@ -1,7 +1,7 @@
 import { Grid, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { api, endpoints } from 'api';
-import { host } from '../constants';
+import { host } from '../host';
 import {isEmpty} from 'lodash';
 import React, { useEffect, useState } from 'react';
 import PreviewCard from './PreviewCard';
@@ -54,7 +54,7 @@ function Home ({ keywords, data, updateData }) {
   const classes = useStyles();
 
   useEffect(() => {
-    api.get(`${host}${endpoints.imageList}`)
+    api.get(`${host()}${endpoints.imageList}`)
       .then(response => {
         if (response.data && response.data.data) {
             let imageList = response.data.data.ImageListWithLatestTag;

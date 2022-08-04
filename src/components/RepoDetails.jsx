@@ -10,7 +10,7 @@ import mockData from '../utilities/mockData';
 import Tags from './Tags.jsx'
 import {Box, Card, CardContent, CardMedia, Chip, FormControl, Grid, IconButton, InputAdornment, OutlinedInput, Stack, Tab, Typography} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { host } from '../constants';
+import { host } from '../host';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
@@ -115,7 +115,7 @@ function RepoDetails (props) {
   const {description, overviewTitle, dependencies, dependents} = props;
 
   useEffect(() => {
-      api.get(`${host}${endpoints.detailedRepoInfo(name)}`)
+      api.get(`${host()}${endpoints.detailedRepoInfo(name)}`)
         .then(response => {
           if (response.data && response.data.data) {
               let imageList = response.data.data.ExpandedRepoInfo;

@@ -1,7 +1,7 @@
 // react global
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from "react-router-dom";
-import { host } from '../constants';
+import { host } from '../host';
 // utility
 import { api, endpoints } from '../api';
 
@@ -73,7 +73,7 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
     if (isAuthEnabled && isLoggedIn) {
       navigate("/home");
     } else {
-      api.get(`${host}/v2/`)
+      api.get(`${host()}/v2/`)
         .then(response => {
           if (response.status === 200) {
             setIsAuthEnabled(false);
@@ -99,7 +99,7 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
         }
       };
     }
-    api.get(`${host}${endpoints.imageList}`, cfg)
+    api.get(`${host()}${endpoints.imageList}`, cfg)
       .then(response => {
         if (response.data && response.data.data) {
           if (isAuthEnabled) {
