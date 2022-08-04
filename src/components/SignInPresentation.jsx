@@ -3,10 +3,12 @@ import {makeStyles} from '@mui/styles';
 import React from 'react';
 import logoWhite from '../assets/zot-white.png';
 import loginDrawing from '../assets/login-drawing.svg';
+import backgroundImage from '../assets/presentation-background.png';
 
 const useStyles = makeStyles(() => ({
   container: {
-    background:"linear-gradient(149.91deg, #7A4C75 14.36%, #9A6094 116.3%)",
+    backgroundImage:`url(${backgroundImage})`,
+    backgroundSize:"cover",
     minHeight: "100%",
     alignItems:"center",
   },
