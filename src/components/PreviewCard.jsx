@@ -28,26 +28,26 @@ const useStyles = makeStyles(() => ({
     flexDirection: "row",
     alignItems: "center",
     background: "#FFFFFF",
-    boxShadow: "0px 5px 10px rgba(131, 131, 131, 0.08)",
-    borderRadius: "24px",
+    boxShadow: "0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
+    borderRadius: "1.5rem",
     flex: "none",
     alignSelf: "stretch",
     flexGrow: 0,
     order: 0,
     width: "100%",
-    maxWidth:"270px",
-    maxHeight:"138px"
+    maxWidth:"16.875rem",
+    maxHeight:"8.625rem"
   },
   avatar: {
-    height: "23px",
-    width: "23px"
+    height: "1.4375rem",
+    width: "1.4375rem"
   },
   cardBtn: {
     height: "100%",
     width: "100%"
   },
   media: {
-    borderRadius: '50px',
+    borderRadius: '3.125rem',
   },
   content: {
     textAlign: "left",
@@ -55,8 +55,8 @@ const useStyles = makeStyles(() => ({
   },
   signedBadge: {
     color: '#9ccc65',
-    height: '22px',
-    width: '22px',
+    height: '1.375rem',
+    width: '1.375rem',
     marginLeft: 10,
   }
 }));
@@ -71,7 +71,7 @@ function RepoCard(props) {
   };
 
   const verifiedCheck = () => {
-    return (<CheckCircleOutlineOutlinedIcon sx={{ color: "#388E3C!important", height:"32px", width:"32px" }} />);
+    return (<CheckCircleOutlineOutlinedIcon sx={{ color: "#388E3C!important", height:"2rem", width:"2rem" }} />);
   }
 
   return (
@@ -89,14 +89,14 @@ function RepoCard(props) {
                   image={randomImage()}
                   alt="icon"
                 />
-                <Typography variant="h5" component="div" sx={{size:"24px", lineHeight:"32px", color:"#220052"}}>
+                <Typography variant="h5" component="div" sx={{size:"1.5rem", lineHeight:"2rem", color:"#220052"}}>
                   {name}
                 </Typography>
                 {verifiedCheck()}
               </Stack>
             </Grid>
             <Grid container item xs={12} mt={2}>
-              <Typography variant="body2" sx={{fontSize:"14px", lineHeight:"143%", letterSpacing:"0.17px"}}>Official*PH</Typography>
+              <Typography variant="body2" sx={{fontSize:"0.875rem", lineHeight:"143%", letterSpacing:"0.010625rem"}}>Official*PH</Typography>
             </Grid>
             <Grid container item xs={12}>
             </Grid>
