@@ -23,16 +23,16 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: "#fff",
     height: "100%",
     width:"100%",
-    borderBottom: "1px solid #BDBDBD",
-    boxShadow: "0px 1.5px 5px rgba(87, 87, 87, 0.16)"
+    borderBottom: "0.0625rem solid #BDBDBD",
+    boxShadow: "0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)"
   },
   search: {
     display: "flex",
     alignItems: "center",
     backgroundColor: "#FFFFFF",
-    boxShadow: "0px 5px 10px rgba(131, 131, 131, 0.08)",
-    borderRadius: "40px",
-    border: "2px solid #E7E7E7",
+    boxShadow: "0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
+    borderRadius: "2.5rem",
+    border: "0.125rem solid #E7E7E7",
     minWidth: "60%",
     marginLeft: 16,
     flexDirection: "row"

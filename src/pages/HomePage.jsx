@@ -17,7 +17,7 @@ const useStyles = makeStyles((theme) => ({
     },
     gridWrapper: {
         // backgroundColor: "#fff",
-        border: "1px #f2f2f2 dashed",
+        border: "0.0625em #f2f2f2 dashed",
     },
     pageWrapper: {
       height:"100%"

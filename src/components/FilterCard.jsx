@@ -8,8 +8,8 @@ const useStyles = makeStyles(() => ({
     minWidth:'15%',
     alignItems:'flex-start',
     background:"#FFFFFF",
-    boxShadow:"0px 5px 10px rgba(131, 131, 131, 0.08)",
-    borderRadius: "24px"
+    boxShadow:"0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
+    borderRadius: "1.5rem"
   }
 }));
 

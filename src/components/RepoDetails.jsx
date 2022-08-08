@@ -37,27 +37,27 @@ const useStyles = makeStyles((theme) => ({
     },
     repoName: {
       fontWeight:"400",
-      fontSize:"48px",
+      fontSize:"3rem",
       color:"#220052"
     },
     avatar: {
-      height:"48px",
-      width:"48px"
+      height:"3rem",
+      width:"3rem"
     },
     cardBtn: {
       height: "100%",
       width: "100%"
     },
     media: {
-      borderRadius: '50px',
+      borderRadius: '3.125em',
     },
     tabs: {
       marginTop: "5%",
       border: 1, 
       borderColor: 'divider',
-      padding:"8px",
-      boxShadow: "0px 5px 10px rgba(131, 131, 131, 0.08)",
-      borderRadius:"32px",
+      padding:"0.5rem",
+      boxShadow: "0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
+      borderRadius:"2rem",
       height: "100%"
     },
     tabContent:{
@@ -65,13 +65,13 @@ const useStyles = makeStyles((theme) => ({
     },
     selectedTab: {
       background:"#A53692",
-      borderRadius:"24px"
+      borderRadius:"1.5rem"
     },
     tabPanel: {
       height:"100%"
     },
     metadata: {
-      padding:"24px"
+      padding:"1.5rem"
     },
     card: {
       marginBottom: 2,
@@ -79,8 +79,8 @@ const useStyles = makeStyles((theme) => ({
       flexDirection:"row",
       alignItems:"start",
       background:"#FFFFFF",
-      boxShadow:"0px 5px 10px rgba(131, 131, 131, 0.08)",
-      borderRadius:"24px",
+      boxShadow:"0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
+      borderRadius:"1.5rem",
       flex:"none",
       alignSelf:"stretch",
       flexGrow:0,
@@ -166,7 +166,7 @@ function RepoDetails (props) {
       <Card className={classes.card}>
         <CardContent>
           <Typography variant="h4" align="left">{overviewTitle || 'Quickstart'}</Typography>
-          <Typography variant="body1" sx={{color:"rgba(0, 0, 0, 0.6)", fontSize:"16px",lineHeight:"150%", marginTop:"5%"}}>{description || mockData.loremIpsum}</Typography>
+          <Typography variant="body1" sx={{color:"rgba(0, 0, 0, 0.6)", fontSize:"1rem",lineHeight:"150%", marginTop:"5%"}}>{description || mockData.loremIpsum}</Typography>
         </CardContent>
       </Card>
     );
@@ -218,7 +218,7 @@ function RepoDetails (props) {
                       <Chip label="Verified license" sx={{backgroundColor:"#E8F5E9", color:"#388E3C"}} variant="filled" onDelete={() => {return}} deleteIcon={verifiedCheck()}/>
                       <BookmarkIcon/>
                     </Stack>
-                    <Typography pt={1} sx={{ fontSize: 16,lineHeight:"24px", color:"rgba(0, 0, 0, 0.6)" }} gutterBottom align="left">
+                    <Typography pt={1} sx={{ fontSize: 16,lineHeight:"1.5rem", color:"rgba(0, 0, 0, 0.6)" }} gutterBottom align="left">
                       {description || 'The complete solution for node.js command-line programs'}
                     </Typography>
                     <Stack alignItems="center" direction="row" spacing={2} pt={1}>

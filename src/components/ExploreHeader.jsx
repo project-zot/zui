@@ -23,7 +23,7 @@ const useStyles = makeStyles((theme) => {
         },
         explore: {
             color: '#00000099',
-            letterSpacing: "0.15px"
+            letterSpacing: "0.009375rem"
         }
     }
 });

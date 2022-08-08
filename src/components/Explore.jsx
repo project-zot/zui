@@ -138,7 +138,7 @@ function Explore ({ keywords, data, updateData }) {
                           <Grid item xs={9}>
                             <Stack direction="row" className={classes.resultsRow}>
                                 <Typography variant="body2" >Results {filteredData.length}</Typography>
-                                <FormControl  sx={{m:'1', minWidth:"75px"}} size="small">
+                                <FormControl  sx={{m:'1', minWidth:"4.6875rem"}} size="small">
                                   <InputLabel>Sort</InputLabel>
                                   <Select label="Sort">                                
                                   </Select>
