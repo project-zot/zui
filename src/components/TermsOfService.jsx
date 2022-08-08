@@ -8,9 +8,9 @@ const useStyles = makeStyles((theme) => ({
   subtext: {
     color: "rgba(0, 0, 0, 0.6)",
     margin: 0,
-    fontSize:"12px",
+    fontSize:"0.75rem",
     lineHeight:"166%",
-    letterSpacing:"0.4px"
+    letterSpacing:"0.025rem"
   }
 }));
 

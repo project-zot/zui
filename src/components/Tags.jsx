@@ -22,8 +22,8 @@ const useStyles = makeStyles(() => ({
     flexDirection:"row",
     alignItems:"center",
     background:"#FFFFFF",
-    boxShadow:"0px 5px 10px rgba(131, 131, 131, 0.08)",
-    borderRadius:"30px",
+    boxShadow:"0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
+    borderRadius:"1.875rem",
     flex:"none",
     alignSelf:"stretch",
     flexGrow:0,
@@ -118,7 +118,7 @@ export default function CollapsibleTable(props) {
     <Card className={classes.card}>
       <CardContent className={classes.content}>
         <Typography variant="h4" gutterBottom component="div" align="left" style={{color: "rgba(0, 0, 0, 0.87)"}}>Tags history</Typography>
-        <Divider variant="fullWidth" sx={{margin:"5% 0% 5% 0%", background:"rgba(0, 0, 0, 0.38)", height:"1px", width:"100%"}}/>
+        <Divider variant="fullWidth" sx={{margin:"5% 0% 5% 0%", background:"rgba(0, 0, 0, 0.38)", height:"0.0625rem", width:"100%"}}/>
         {renderTags(tags)}
       </CardContent>
     </Card>

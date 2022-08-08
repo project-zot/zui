@@ -6,7 +6,6 @@ import {isEmpty} from 'lodash';
 import React, { useEffect, useState } from 'react';
 import PreviewCard from './PreviewCard';
 import RepoCard from './RepoCard';
-import { Container } from '@mui/system';
 
 
 const useStyles = makeStyles(() => ({
@@ -40,10 +39,10 @@ const useStyles = makeStyles(() => ({
   subtitle: {
     color:"#00000099",
     fontWeight:400,
-    fontSize:"16px",
+    fontSize:"1rem",
     textAlign:"center",
     lineHeight:"150%",
-    letterSpacing:"0.15px",
+    letterSpacing:"0.009375rem",
     width:"65%",
   }
 }));

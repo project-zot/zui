@@ -34,16 +34,16 @@ const useStyles = makeStyles((theme) => ({
     width: "60%",
     height: "60%",
     background: '#FFFFFF',
-    gap: '10px',
-    boxShadow: '0px 5px 10px rgba(131, 131, 131, 0.08)',
-    borderRadius: '24px'
+    gap: '0.625em',
+    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
+    borderRadius: '1.5rem'
   },
   loginCardContent: {
     alignItems: 'center',
     justifyContent: 'center',
     display: 'flex',
     flexDirection: 'column',
-    border: '3px black',
+    border: '0.1875rem black',
     maxWidth: '73%',
     height: '90%'
   },

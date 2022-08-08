@@ -10,8 +10,8 @@ const useStyles = makeStyles(() => ({
     flexDirection:"row",
     alignItems:"start",
     background:"#FFFFFF",
-    boxShadow:"0px 5px 10px rgba(131, 131, 131, 0.08)",
-    borderRadius:"24px",
+    boxShadow:"0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
+    borderRadius:"1.5rem",
     flex:"none",
     alignSelf:"stretch",
     flexGrow:0,
@@ -26,7 +26,7 @@ const useStyles = makeStyles(() => ({
     fontFamily: 'Roboto',
     fontStyle: "normal",
     fontWeight: 400,
-    fontSize: "16px",
+    fontSize: "1rem",
     lineHeight: "150%",
     align:"left"
   }
