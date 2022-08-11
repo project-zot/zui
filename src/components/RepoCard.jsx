@@ -72,7 +72,7 @@ const useStyles = makeStyles(() => ({
 function RepoCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { name, vendor, description, lastUpdated, downloads, rating } = props;
+  const { name, vendor, description, lastUpdated, downloads, rating, version } = props;
 
   const goToDetails = (repo) => {
     navigate(`/image/${name}`, { state: { lastDate: (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({ unit: 'days' }) } });
@@ -92,7 +92,7 @@ function RepoCard(props) {
 
   const getVendorLastPublish = () => {
     const lastDate = lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 });
-    return `${vendor || 'andrewc'} • published ${lastDate.toFormat('MM.d.yy')} • ${lastDate.toRelative({ unit: 'days' })}`;
+    return `${vendor || 'andrewc'} • published ${version} • ${lastDate.toRelative({ unit: 'days' })}`;
   }
 
   return (
