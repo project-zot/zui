@@ -30,7 +30,7 @@ function App() {
 
 
   return (
-    <div className="App">
+    <div className="App" data-testid="app-container">
       <Router>
         <Routes>
           <Route element={<AuthWrapper isLoggedIn={isLoggedIn} redirect="/login" />}>

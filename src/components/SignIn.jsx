@@ -149,7 +149,7 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
 
 
   return (
-    <Box className={classes.cardContainer}>
+    <Box className={classes.cardContainer} data-testid="signin-container">
       <Card className={classes.loginCard} >
         <CardContent className={classes.loginCardContent}>
           <CssBaseline />

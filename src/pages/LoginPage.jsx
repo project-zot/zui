@@ -19,7 +19,7 @@ function LoginPage({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, setIsLoggedIn 
   const classes = useStyles();
 
   return (
-    <Grid container spacing={0} className={classes.container}>
+    <Grid container spacing={0} className={classes.container} data-testid="login-container">
       <Grid item xs={6}>
         <SigninPresentation />
       </Grid>
