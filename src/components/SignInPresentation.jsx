@@ -36,7 +36,7 @@ const useStyles = makeStyles(() => ({
 export default function SigninPresentation(props) {
   const classes = useStyles();
   return (
-    <Stack spacing={0} className={classes.container} >
+    <Stack spacing={0} className={classes.container} data-testid="presentation-container">
       <img src={logoWhite} alt="zot logo" className={classes.logo}></img>
       <Typography variant="h2" className={classes.mainText}>
         Welcome to our repository
