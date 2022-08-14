@@ -1,7 +1,6 @@
 // components
 import React from 'react';
 import Header from '../components/Header.jsx'
-import Rightbar from '../components/Rightbar.jsx'
 
 import makeStyles from '@mui/styles/makeStyles';
 import {Container, Grid, Stack} from '@mui/material';
@@ -31,7 +30,7 @@ function HomePage({ data, updateData, keywords, updateKeywords }) {
   const classes = useStyles();
 
   return (
-      <Stack className={classes.pageWrapper} direction="column">
+      <Stack className={classes.pageWrapper} direction="column" data-testid="homepage-container">
         <Header updateKeywords={updateKeywords}></Header>
         <Container className={classes.container} >
             <Grid container className={classes.gridWrapper}>

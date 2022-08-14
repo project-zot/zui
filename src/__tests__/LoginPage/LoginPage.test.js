@@ -15,4 +15,3 @@ it('renders the signin presentation component and signin components if auth enab
   expect(screen.getByTestId('presentation-container')).toBeInTheDocument();
   expect(screen.getByTestId('signin-container')).toBeInTheDocument();
 });
-
