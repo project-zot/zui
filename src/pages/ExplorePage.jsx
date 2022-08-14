@@ -30,7 +30,7 @@ function ExplorePage({ data, updateData, keywords, updateKeywords }) {
   const classes = useStyles();
 
   return (
-      <Stack className={classes.pageWrapper} direction="column">
+      <Stack className={classes.pageWrapper} direction="column" data-testid='explore-container'>
         <Header updateKeywords={updateKeywords}></Header>
         <Container className={classes.container} >
             <Grid container className={classes.gridWrapper}>

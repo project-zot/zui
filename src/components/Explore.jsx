@@ -6,7 +6,7 @@ import RepoCard from './RepoCard.jsx';
 import Loading from "./Loading";
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
-import { Container, FormControl, Grid, InputLabel, Select, Stack } from '@mui/material';
+import { Container, FormControl, Grid, InputLabel, MenuItem, Select, Stack } from '@mui/material';
 
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -40,6 +40,8 @@ const useStyles = makeStyles(() => ({
 function Explore ({ keywords, data, updateData }) {
     const [isLoading, setIsLoading] = useState(true);
     const [filteredData, setFilteredData] = useState([]);
+    const [sortFilter, setSortFilter] = useState('');
+    const filterStr = keywords && keywords.toLocaleLowerCase();
     const classes = useStyles();
 
     useEffect(() => {
@@ -83,9 +85,8 @@ function Explore ({ keywords, data, updateData }) {
         });
 
         setFilteredData(filtered);
-    }, [keywords, data]);
+    }, [keywords, filterStr, data]);
 
-    const filterStr = keywords && keywords.toLocaleLowerCase();
 
     const renderRepoCards = () => {
         return filteredData && filteredData.map((item, index) => {
@@ -118,10 +119,13 @@ function Explore ({ keywords, data, updateData }) {
       );
     };
 
+    const handleSortChange = (event) => {
+      setSortFilter(event.target.value);
+    }
+
     return (
         <Container maxWidth="lg">
             { isLoading && <Loading /> }
-            
                 { !(filteredData && filteredData.length) ? (
                       <Grid container className={classes.nodataWrapper}>
                           <div style={{marginTop: 20}}>
@@ -140,7 +144,8 @@ function Explore ({ keywords, data, updateData }) {
                                 <Typography variant="body2" >Results {filteredData.length}</Typography>
                                 <FormControl  sx={{m:'1', minWidth:"4.6875rem"}} size="small">
                                   <InputLabel>Sort</InputLabel>
-                                  <Select label="Sort">                                
+                                  <Select label="Sort" value={sortFilter} onChange={handleSortChange} MenuProps={{disableScrollLock: true}}>
+                                    <MenuItem value='relevance'>Relevance</MenuItem>                            
                                   </Select>
                                 </FormControl>
                             </Stack>
