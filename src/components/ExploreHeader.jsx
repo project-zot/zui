@@ -11,7 +11,6 @@ import makeStyles from '@mui/styles/makeStyles';
 import React from "react";
 
 const useStyles = makeStyles((theme) => {
-    console.log("theme", theme)
     return {
         exploreHeader: {
             backgroundColor: "#FFFFFF",

@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 // utility
 import { DateTime } from 'luxon';
 // components
-import { Card, CardActionArea, CardMedia, CardContent, Typography, Stack, Chip, Box, Grid } from '@mui/material';
+import { Card, CardActionArea, CardMedia, CardContent, Typography, Stack, Chip, Grid } from '@mui/material';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import makeStyles from '@mui/styles/makeStyles';

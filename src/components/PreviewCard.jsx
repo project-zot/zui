@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, CardMedia, Chip, Grid, Stack, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, CardMedia, Grid, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -61,7 +61,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function RepoCard(props) {
+function PreviewCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
   const { name, lastUpdated } = props;
@@ -110,4 +110,4 @@ function RepoCard(props) {
   );
 };
 
-export default RepoCard;
+export default PreviewCard;

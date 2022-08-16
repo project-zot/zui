@@ -89,7 +89,6 @@ TagCard.propTypes = {
   row: PropTypes.shape({
     Layers: PropTypes.arrayOf(
       PropTypes.shape({
-        amount: PropTypes.number.isRequired,
         Digest: PropTypes.string.isRequired,
         Size: PropTypes.string.isRequired,
       }),
@@ -109,13 +108,13 @@ const renderTags = (tags) => {
 }
 
 
-export default function CollapsibleTable(props) {
+export default function Tags(props) {
   const classes = useStyles();
   const {data} = props;
   const {tags} = data;
 
   return (
-    <Card className={classes.card}>
+    <Card className={classes.card} data-testid='tags-container'>
       <CardContent className={classes.content}>
         <Typography variant="h4" gutterBottom component="div" align="left" style={{color: "rgba(0, 0, 0, 0.87)"}}>Tags history</Typography>
         <Divider variant="fullWidth" sx={{margin:"5% 0% 5% 0%", background:"rgba(0, 0, 0, 0.38)", height:"0.0625rem", width:"100%"}}/>

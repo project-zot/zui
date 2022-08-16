@@ -108,9 +108,9 @@ function RepoDetails (props) {
 
   // get url param from <Route here (i.e. image name)
   const {name} = useParams();
-  const {state} = useLocation();
+  const {state} = useLocation() || {};
   // @ts-ignore
-  const {lastDate} = state;
+  const {lastDate} = state || {};
   const classes = useStyles();
   const {description, overviewTitle, dependencies, dependents} = props;
 
@@ -163,7 +163,7 @@ function RepoDetails (props) {
 
   const renderOverview = () => {
     return (
-      <Card className={classes.card}>
+      <Card className={classes.card} data-testid='overview-container'>
         <CardContent>
           <Typography variant="h4" align="left">{overviewTitle || 'Quickstart'}</Typography>
           <Typography variant="body1" sx={{color:"rgba(0, 0, 0, 0.6)", fontSize:"1rem",lineHeight:"150%", marginTop:"5%"}}>{description || mockData.loremIpsum}</Typography>
@@ -232,7 +232,7 @@ function RepoDetails (props) {
                           value={`Pull ${name}`}
                           endAdornment={
                             <InputAdornment position="end">
-                              <IconButton aria-label='copy' edge="end" onClick={() => navigator.clipboard.writeText(`Pull ${name}`)}>
+                              <IconButton aria-label='copy' edge="end" onClick={() => navigator.clipboard.writeText(`Pull ${name}`)} data-testid='pullcopy-btn'>
                                 <ContentCopyIcon/>
                               </IconButton>
                             </InputAdornment>
