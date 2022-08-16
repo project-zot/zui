@@ -33,7 +33,7 @@ function RepoPage(props) {
   const classes = useStyles();
 
   return (
-        <Stack direction="column" className={classes.pageWrapper}>
+        <Stack direction="column" className={classes.pageWrapper} data-testid='repo-container'>
           <Header updateKeywords={props.updateKeywords}></Header>
           <Container className={classes.container} >
             <ExploreHeader/>
