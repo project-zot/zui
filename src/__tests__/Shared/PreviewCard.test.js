@@ -35,7 +35,7 @@ describe('Preview card component', () => {
     const cardTitle = await screen.findByText('alpine');
     expect(cardTitle).toBeInTheDocument();
     userEvent.click(cardTitle);
-    expect(mockedUsedNavigate).toBeCalledWith(`/image/${mockImage.name}`, expect.anything());
+    expect(mockedUsedNavigate).toBeCalledWith(`/image/${mockImage.name}`);
   });
 });
 

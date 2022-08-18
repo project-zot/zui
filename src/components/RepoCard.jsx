@@ -75,7 +75,7 @@ function RepoCard(props) {
   const { name, vendor, description, lastUpdated, downloads, rating, version } = props;
 
   const goToDetails = (repo) => {
-    navigate(`/image/${name}`, { state: { lastDate: (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({ unit: 'days' }) } });
+    navigate(`/image/${name}`);
   }
 
   const verifiedCheck = () => {
