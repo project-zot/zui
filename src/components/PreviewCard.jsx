@@ -1,6 +1,5 @@
 import { Card, CardActionArea, CardContent, CardMedia, Grid, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import { DateTime } from 'luxon';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
@@ -64,10 +63,10 @@ const useStyles = makeStyles(() => ({
 function PreviewCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { name, lastUpdated } = props;
+  const { name } = props;
 
   const goToDetails = (repo) => {
-    navigate(`/image/${name}`, { state: { lastDate: (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({ unit: 'days' }) } });
+    navigate(`/image/${name}`);
   };
 
   const verifiedCheck = () => {

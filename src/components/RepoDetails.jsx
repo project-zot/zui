@@ -1,5 +1,5 @@
 // react global
-import { useLocation, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import React, { useEffect, useState } from 'react';
 
 // utility
@@ -87,6 +87,14 @@ const useStyles = makeStyles((theme) => ({
       order:0,
       width:"100%"
     },
+    platformText:{
+      backgroundColor:"#EDE7F6", 
+      color: "#220052", 
+      fontWeight:'400', 
+      fontSize:'0.8125rem',
+      lineHeight:'1.125rem',
+      letterSpacing:'0.01rem'
+    }
 }));
 
 
@@ -108,9 +116,6 @@ function RepoDetails (props) {
 
   // get url param from <Route here (i.e. image name)
   const {name} = useParams();
-  const {state} = useLocation() || {};
-  // @ts-ignore
-  const {lastDate} = state || {};
   const classes = useStyles();
   const {description, overviewTitle, dependencies, dependents} = props;
 
@@ -118,10 +123,15 @@ function RepoDetails (props) {
       api.get(`${host()}${endpoints.detailedRepoInfo(name)}`)
         .then(response => {
           if (response.data && response.data.data) {
-              let imageList = response.data.data.ExpandedRepoInfo;
+              let repoInfo = response.data.data.ExpandedRepoInfo;
               let imageData = {
                 name: name,
-                tags: imageList.Manifests
+                tags: repoInfo.Manifests,
+                lastUpdated: repoInfo.Summary?.LastUpdated,
+                size: repoInfo.Summary?.Size,
+                platforms: repoInfo.Summary?.Platforms,
+                vendors: repoInfo.Summary?.Vendors,
+                newestTag: repoInfo.Summary?.NewestTag
               }
               setRepoDetailData(imageData);
               setIsLoading(false);
@@ -131,18 +141,7 @@ function RepoDetails (props) {
             console.error(e);
             setRepoDetailData({});
         });
-  }, [])
-
-  const getLatestManifest = () => {
-    // @ts-ignore
-    const manifests = repoDetailData.tags || [{}];
-    return manifests[0];
-  }
-
-  const getLatestLayer = () => {
-    const layers = getLatestManifest().Layers || [{}];
-    return layers[0];
-  }
+  }, [name])
 
   const verifiedCheck = () => {
     return (<CheckCircleOutlineOutlinedIcon sx={{color:"#388E3C!important"}}/>);
@@ -150,9 +149,10 @@ function RepoDetails (props) {
 
   const platformChips = () => {
     // if platforms not received, mock data
-    const platforms = props.platforms || ["Windows","PowerPC64LE","IBM Z","Linux"];
+    // @ts-ignore
+    const platforms = repoDetailData.platforms || ["Windows","PowerPC64LE","IBM Z","Linux"];
     return platforms.map((platform, index) => (
-      <Chip key={index} label={platform} sx={{backgroundColor:"#EDE7F6", color: "#311B92"}}/>
+      <Chip key={index} label={platform.Os} className={classes.platformText}/>
     ));
   }
 
@@ -172,29 +172,29 @@ function RepoDetails (props) {
     );
   };
 
-  const renderDependencies = () => {
-    return (<Card className={classes.card}>
-        <CardContent>
-          <Typography variant="h4" align="left">Dependecies ({dependencies || '---'})</Typography>
-        </CardContent>
-      </Card>);
-  };
+  // const renderDependencies = () => {
+  //   return (<Card className={classes.card}>
+  //       <CardContent>
+  //         <Typography variant="h4" align="left">Dependecies ({dependencies || '---'})</Typography>
+  //       </CardContent>
+  //     </Card>);
+  // };
 
-  const renderDependents = () => {
-    return (<Card className={classes.card}>
-        <CardContent>
-          <Typography variant="h4" align="left">Dependents ({dependents || '---'})</Typography>
-        </CardContent>
-      </Card>);
-  };
+  // const renderDependents = () => {
+  //   return (<Card className={classes.card}>
+  //       <CardContent>
+  //         <Typography variant="h4" align="left">Dependents ({dependents || '---'})</Typography>
+  //       </CardContent>
+  //     </Card>);
+  // };
 
-  const renderVulnerabilities = () => {
-    return (<Card className={classes.card}>
-        <CardContent>
-          <Typography variant="h4" align="left">Vulnerabilities</Typography>
-        </CardContent>
-      </Card>);
-  };
+  // const renderVulnerabilities = () => {
+  //   return (<Card className={classes.card}>
+  //       <CardContent>
+  //         <Typography variant="h4" align="left">Vulnerabilities</Typography>
+  //       </CardContent>
+  //     </Card>);
+  // };
 
 
   return (
@@ -254,12 +254,12 @@ function RepoDetails (props) {
                     >
                         <Tab value="Overview" label="Overview" className={classes.tabContent}/>
                         <Tab value="Tags" label="Tags" className={classes.tabContent}/>
-                        <Tab value="Dependencies" label={`${dependencies || 0} Dependencies`} className={classes.tabContent}/>
+                        {/* <Tab value="Dependencies" label={`${dependencies || 0} Dependencies`} className={classes.tabContent}/>
                         <Tab value="Dependents" label={`${dependents || 0} Dependents`} className={classes.tabContent}/>
                         <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent}/>
                         <Tab value="6" label="Tab 6" className={classes.tabContent}/>
                         <Tab value="7" label="Tab 7" className={classes.tabContent}/>
-                        <Tab value="8" label="Tab 8" className={classes.tabContent}/>
+                        <Tab value="8" label="Tab 8" className={classes.tabContent}/> */}
                     </TabList>
                     <Grid container>
                         <Grid item xs={8}>
@@ -269,7 +269,7 @@ function RepoDetails (props) {
                             <TabPanel value="Tags" className={classes.tabPanel}>
                               <Tags data={repoDetailData} />
                             </TabPanel>
-                            <TabPanel value="Dependencies" className={classes.tabPanel}>
+                            {/* <TabPanel value="Dependencies" className={classes.tabPanel}>
                               {renderDependencies()}
                             </TabPanel>
                             <TabPanel value="Dependents" className={classes.tabPanel}>
@@ -277,14 +277,16 @@ function RepoDetails (props) {
                             </TabPanel>
                             <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
                               {renderVulnerabilities()}
-                            </TabPanel>
+                            </TabPanel> */}
                         </Grid>
                         <Grid item xs={4} className={classes.metadata}>
                             <RepoDetailsMetadata 
-                              name={name}
-                              lastUpdated={lastDate}
-                              size={getLatestLayer()?.size}
-                              latestTag={getLatestManifest()?.Tag}
+                              // @ts-ignore
+                              lastUpdated={repoDetailData.lastUpdated}
+                              // @ts-ignore
+                              size={repoDetailData.size}
+                              // @ts-ignore
+                              latestTag={repoDetailData.newestTag}
                             />
                         </Grid>
                     </Grid>
