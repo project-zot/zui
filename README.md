@@ -1,4 +1,4 @@
-# Zot UI
+# zot UI  [![build-test](https://github.com/project-zot/zui/actions/workflows/build-test.yml/badge.svg?branch=main)](https://github.com/project-zot/zui/actions/workflows/build-test.yml) [![codecov.io](http://codecov.io/github/project-zot/zui/coverage.svg?branch=main)](http://codecov.io/github/project-zot/zui?branch=main) [![CodeQL](https://github.com/project-zot/zui/workflows/CodeQL/badge.svg)](https://github.com/project-zot/zui/actions?query=workflow%3ACodeQL) 
 A graphical user interface to interact with a [zot](https://github.com/project-zot/zot) server instance.
 
 Built with [React JS](https://reactjs.org/) and [Material UI](https://mui.com/).
@@ -11,6 +11,13 @@ To start this app, run
 ### `npm install`
 ### `npm start`
 
+If `zui` is ran separately from the `zot` back-end, the manual host configuration must be changed in the `./src/host.js` file 
+```js
+const hostConfig = {
+  auto:false, 
+  default:'http://localhost:5000' // replace with zot host
+}
+```
 The  app will open in your default browser.
 If not, you can manually open [http://localhost:3000](http://localhost:3000).
 
