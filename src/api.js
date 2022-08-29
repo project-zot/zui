@@ -61,8 +61,8 @@ const api = {
 };
 
 const endpoints = {
-    imageList: '/v2/_zot/ext/search?query={ImageListWithLatestTag () { Name Latest LastUpdated Description Licenses Vendor Size Labels}}',
-    detailedRepoInfo: (name) => `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Manifests {Digest Tag Layers {Size Digest}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestTag {Tag}}}}`
+    imageList: '/v2/_zot/ext/search?query={RepoListWithNewestImage () { NewestImage {RepoName Tag LastUpdated Description Licenses Vendor Size Labels} }}',
+    detailedRepoInfo: (name) => `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Digest Tag Layers {Size Digest}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestTag {Tag}}}}`
 }
 
 export {api, endpoints};

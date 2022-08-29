@@ -48,11 +48,11 @@ function Explore ({ keywords, data, updateData }) {
         api.get(`${host()}${endpoints.imageList}`)
           .then(response => {
             if (response.data && response.data.data) {
-                let imageList = response.data.data.ImageListWithLatestTag;
+                let imageList = response.data.data.RepoListWithNewestImage.NewestImage;
                 let imagesData = imageList.map((image) => {
                     return {
-                        name: image.Name,
-                        latestVersion: image.Latest,
+                        name: image.RepoName,
+                        latestVersion: image.Tag,
                         tags: image.Labels,
                         description: image.Description,
                         licenses: image.Licenses,
