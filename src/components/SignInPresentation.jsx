@@ -1,7 +1,7 @@
 import {Stack, Typography } from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import React from 'react';
-import logoWhite from '../assets/zot-white.png';
+import logoWhite from '../assets/Zot1.png';
 import loginDrawing from '../assets/login-drawing.svg';
 import backgroundImage from '../assets/presentation-background.png';
 
@@ -13,8 +13,8 @@ const useStyles = makeStyles(() => ({
     alignItems:"center",
   },
   logo: {
-    maxHeight:128,
-    maxWidth: 138,
+    maxHeight:120,
+    maxWidth: 120,
     marginTop:"17%"
   },
   loginDrawing: {
