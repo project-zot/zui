@@ -9,7 +9,7 @@ import Avatar from '@mui/material/Avatar';
 
 // styling
 import makeStyles from '@mui/styles/makeStyles';
-import logo from '../assets/zot_1T.png';
+import logo from '../assets/Zot2.svg';
 import placeholderProfileButton from '../assets/Profile_button_placeholder.svg';
 
 
@@ -57,7 +57,7 @@ const useStyles = makeStyles((theme) => ({
   logoWrapper: {
   },
   logo: {
-    height: 60,
+    height: 64,
     width: 64,
   },
   userAvatar:{

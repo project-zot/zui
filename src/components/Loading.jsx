@@ -1,6 +1,6 @@
 import React from 'react';
 import makeStyles from '@mui/styles/makeStyles';
-import logo from "../assets/zot_1T.png";
+import logo from "../assets/Zot2.svg";
 
 const useStyles = makeStyles((theme) => ({
     wrapper: {
