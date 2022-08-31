@@ -48,17 +48,17 @@ function Explore ({ keywords, data, updateData }) {
         api.get(`${host()}${endpoints.imageList}`)
           .then(response => {
             if (response.data && response.data.data) {
-                let imageList = response.data.data.RepoListWithNewestImage.NewestImage;
+                let imageList = response.data.data.RepoListWithNewestImage;
                 let imagesData = imageList.map((image) => {
                     return {
-                        name: image.RepoName,
-                        latestVersion: image.Tag,
-                        tags: image.Labels,
-                        description: image.Description,
-                        licenses: image.Licenses,
-                        size: image.Size,
-                        vendor: image.Vendor,
-                        lastUpdated: image.LastUpdated
+                        name: image.NewestImage.RepoName,
+                        latestVersion: image.NewestImage.Tag,
+                        tags: image.NewestImage.Labels,
+                        description: image.NewestImage.Description,
+                        licenses: image.NewestImage.Licenses,
+                        size: image.NewestImage.Size,
+                        vendor: image.NewestImage.Vendor,
+                        lastUpdated: image.NewestImage.LastUpdated
                     };
                 });
                 updateData(imagesData);
