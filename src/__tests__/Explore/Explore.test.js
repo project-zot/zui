@@ -16,48 +16,44 @@ const StateExploreWrapper = (props) => {
   return (<Explore data={data} keywords={''} updateData={useData} />)
 }
 const mockImageList = {
-  ImageListWithLatestTag: [
+  RepoListWithNewestImage: [
     {
-      "Name": "alpine",
-      "Latest": "latest",
-      "LastUpdated": "2022-05-23T19:19:30.413290187Z",
-      "Description": "",
-      "Licenses": "",
-      "Vendor": "",
-      "Size": "585",
-      "Labels": ""
+        "NewestImage": {
+            "RepoName": "alpine",
+            "Tag": "latest",
+            "LastUpdated": "2022-08-09T17:19:53.274069586Z",
+            "Description": "w",
+            "Licenses": "",
+            "Vendor": "",
+            "Size": "2806985",
+            "Labels": ""
+        }
     },
     {
-      "Name": "buildah",
-      "Latest": "latest",
-      "LastUpdated": "2022-05-06T10:11:58Z",
-      "Description": "",
-      "Licenses": "",
-      "Vendor": "",
-      "Size": "4440",
-      "Labels": ""
+        "NewestImage": {
+            "RepoName": "mongo",
+            "Tag": "latest",
+            "LastUpdated": "2022-08-02T01:30:49.193203152Z",
+            "Description": "",
+            "Licenses": "",
+            "Vendor": "",
+            "Size": "231383863",
+            "Labels": ""
+        }
     },
     {
-      "Name": "redis",
-      "Latest": "latest",
-      "LastUpdated": "2022-06-23T00:20:27.020952309Z",
-      "Description": "",
-      "Licenses": "",
-      "Vendor": "",
-      "Size": "6591",
-      "Labels": ""
-    },
-    {
-      "Name": "ubuntu",
-      "Latest": "latest",
-      "LastUpdated": "2022-06-06T22:21:25.961828386Z",
-      "Description": "",
-      "Licenses": "",
-      "Vendor": "",
-      "Size": "579",
-      "Labels": ""
+        "NewestImage": {
+            "RepoName": "nodeUnique",
+            "Tag": "latest",
+            "LastUpdated": "2022-08-23T00:20:40.144281895Z",
+            "Description": "",
+            "Licenses": "",
+            "Vendor": "",
+            "Size": "369311301",
+            "Labels": ""
+        }
     }
-  ]
+]
 };
 afterEach(() => {
   // restore the spy created with spyOn
@@ -71,9 +67,8 @@ describe('Explore component', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } })
     render(<StateExploreWrapper/>);
     expect(await screen.findByText(/alpine/i)).toBeInTheDocument();
-    expect(await screen.findByText(/buildah/i)).toBeInTheDocument();
-    expect(await screen.findByText(/redis/i)).toBeInTheDocument();
-    expect(await screen.findByText(/ubuntu/i)).toBeInTheDocument();
+    expect(await screen.findByText(/mongo/i)).toBeInTheDocument();
+    expect(await screen.findByText(/nodeUnique/i)).toBeInTheDocument();
   });
 
   it('should log an error when data can\'t be fetched', async() => {
