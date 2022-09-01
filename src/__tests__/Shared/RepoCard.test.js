@@ -2,6 +2,7 @@ import { render, screen } from '@testing-library/react';
 import React from 'react';
 import PreviewCard from 'components/PreviewCard';
 import userEvent from '@testing-library/user-event';
+import RepoCard from 'components/RepoCard';
 
 
 // usenavigate mock
@@ -31,7 +32,7 @@ afterEach(() => {
 
 describe('Repo card component', () => {
   it('navigates to repo page when clicked',async () => {
-    render(<PreviewCard
+    render(<RepoCard
         name={mockImage.name}
         version={mockImage.latestVersion}
         description={mockImage.description}
