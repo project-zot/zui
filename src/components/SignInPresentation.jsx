@@ -1,9 +1,9 @@
 import {Stack, Typography } from '@mui/material';
 import {makeStyles} from '@mui/styles';
 import React from 'react';
-import logoWhite from '../assets/Zot1.png';
-import loginDrawing from '../assets/login-drawing.svg';
-import backgroundImage from '../assets/presentation-background.png';
+import logoWhite from '../assets/Zot-white.svg';
+import loginDrawing from '../assets/codeReviewSignIn.png';
+import backgroundImage from '../assets/backgroundSignIn.png';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -13,8 +13,8 @@ const useStyles = makeStyles(() => ({
     alignItems:"center",
   },
   logo: {
-    maxHeight:120,
-    maxWidth: 120,
+    maxHeight:96,
+    maxWidth: 320,
     marginTop:"17%"
   },
   loginDrawing: {
@@ -26,12 +26,14 @@ const useStyles = makeStyles(() => ({
     color: "#FFFFFF",
     fontWeight: 700,
     maxWidth:"45%",
-    marginTop:"4%"
+    marginTop:"4%",
+    fontSize: "2.5rem"
   },
   captionText: {
     color: "rgba(255, 255, 255, 0.7)",
     maxWidth:"48%",
-    marginTop:"2%"
+    marginTop:"2%",
+    fontSize: "1.1875rem"
   }
 }));
 
