@@ -1,6 +1,8 @@
 // react global
 import * as React from 'react';
+import { useNavigate } from "react-router-dom";
 import PropTypes from 'prop-types';
+import { DateTime } from 'luxon';
 
 // components
 import Box from '@mui/material/Box';
@@ -12,10 +14,24 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import transform from 'utilities/transform';
-import { Card, CardContent, Divider } from '@mui/material';
+import { Card, CardContent, Divider, Stack } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(() => ({
+  tagCard: {
+    marginBottom: 2,
+    display:"flex",
+    flexDirection:"row",
+    alignItems:"center",
+    background:"#FFFFFF",
+    boxShadow:"none!important",
+    borderRadius:"1.875rem",
+    flex:"none",
+    alignSelf:"stretch",
+    flexGrow:0,
+    order:0,
+    width:"100%"
+  },
   card: {
     marginBottom: 2,
     display:"flex",
@@ -39,25 +55,40 @@ const useStyles = makeStyles(() => ({
 }));
 
 
+
+
 function TagCard(props) {
-  const {data, row} = props;
-  const tags = data && data.tags;
+  const {row, lastUpdated, vendors} = props;
+
+  //const tags = data && data.tags;
   const [open, setOpen] = React.useState(false);
   const classes = useStyles();
+  const tagRow = row;
+  const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({ unit: 'days' })
+  const navigate = useNavigate();
+
+  const goToTags = (tag) => {
+    navigate(`tag/${tag}`);
+  };
 
   return (
     <Card className={classes.card} raised>
       <CardContent className={classes.content}>
-        <Typography variant="body1" align="left" sx={{color:"#828282"}}>{row.Tag}</Typography>
-        <Typography variant="caption">Last pushed {row.lastUpdated || '----'} by {row.vendor || '----'}</Typography>
-        <Typography sx={{color:"#7C4DFF", cursor:'pointer'}} onClick={() => setOpen(!open)}>{!open? 'See layers' : 'Hide layers'}</Typography>
+        <Typography variant="body1" align="left" sx={{color:"#828282", fontSize: "1rem", paddingBottom:"0.5rem"}}>Tag</Typography>
+        <Typography variant="body1" align="left" sx={{color:"#1479FF", fontSize: "1rem", textDecorationLine: "underline",  cursor:'pointer'}} onClick={() => goToTags(tagRow.Tag)}>{tagRow.Tag}</Typography>
+
+        <Stack sx={{display: "inline"}} direction="row" spacing={0.5}>
+          <Typography variant="caption" sx={{fontWeight:"400", fontSize: "0.8125rem"}} >
+             Last pushed
+          </Typography>
+          <Typography variant="caption" sx={{fontWeight:"600", fontSize: "0.8125rem"}} >
+            {lastDate || '----'} by {vendors[0] || '----'}
+          </Typography>
+        </Stack>
+
+        <Typography sx={{color:"#1479FF", paddingTop: "1rem", fontSize: "0.8125rem", fontWeight: "600", cursor:'pointer'}} onClick={() => setOpen(!open)}>{!open? 'See digests' : 'Hide digests'}</Typography>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <Box>
-            <Typography variant="h6" gutterBottom component="div">
-              {
-                // Layers
-              }
-            </Typography>
             <Table size="small" padding="none" sx={{[`& .${tableCellClasses.root}`]: {borderBottom: "none"}}}>
               <TableHead>
                 <TableRow>
@@ -85,23 +116,23 @@ function TagCard(props) {
   );
 }
 
-TagCard.propTypes = {
-  row: PropTypes.shape({
-    Layers: PropTypes.arrayOf(
-      PropTypes.shape({
-        Digest: PropTypes.string.isRequired,
-        Size: PropTypes.string.isRequired,
-      }),
-    ).isRequired,
-    Tag: PropTypes.string.isRequired,
-  }).isRequired,
-};
+// TagCard.propTypes = {
+//   row: PropTypes.shape({
+//     Layers: PropTypes.arrayOf(
+//       PropTypes.shape({
+//         Digest: PropTypes.string.isRequired,
+//         Size: PropTypes.string.isRequired,
+//       }),
+//     ).isRequired,
+//     Tag: PropTypes.string.isRequired,
+//   }).isRequired,
+// };
 
 
-const renderTags = (tags) => {
+const renderTags = (tags, lastUpdated, vendors) => {
   const cmp = tags && tags.map((tag, index) => {
       return (
-          <TagCard key={tag.Tag} row={tag} />
+          <TagCard key={tag.Tag} row={tag} lastUpdated={lastUpdated} vendors={vendors} />
       );
   });
   return cmp;
@@ -111,14 +142,15 @@ const renderTags = (tags) => {
 export default function Tags(props) {
   const classes = useStyles();
   const {data} = props;
-  const {tags} = data;
+  const {images, lastUpdated, vendors } = data;
+
 
   return (
-    <Card className={classes.card} data-testid='tags-container'>
+    <Card className={classes.tagCard} data-testid='tags-container'>
       <CardContent className={classes.content}>
-        <Typography variant="h4" gutterBottom component="div" align="left" style={{color: "rgba(0, 0, 0, 0.87)"}}>Tags history</Typography>
-        <Divider variant="fullWidth" sx={{margin:"5% 0% 5% 0%", background:"rgba(0, 0, 0, 0.38)", height:"0.0625rem", width:"100%"}}/>
-        {renderTags(tags)}
+        <Typography variant="h4" gutterBottom component="div" align="left" style={{color: "rgba(0, 0, 0, 0.87)", fontSize: "1.5rem", fontWeight: "600"}}>Tags History</Typography>
+        <Divider variant="fullWidth" sx={{margin:"5% 0% 5% 0%", background:"rgba(0, 0, 0, 0.38)", height:"0.00625rem", width:"100%"}}/>
+        {renderTags(images, lastUpdated, vendors)}
       </CardContent>
     </Card>
   );

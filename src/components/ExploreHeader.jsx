@@ -10,6 +10,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import makeStyles from '@mui/styles/makeStyles';
 import React from "react";
+import { Padding } from "@mui/icons-material";
 
 const useStyles = makeStyles((theme) => {
     return {
@@ -26,7 +27,7 @@ const useStyles = makeStyles((theme) => {
         explore: {
             color: '#52637A',
             fontSize: "1rem",
-            letterSpacing: "0.009375rem"
+            letterSpacing: "0.009375rem",
         }
     }
 });
@@ -36,13 +37,16 @@ function ExploreHeader() {
   const navigate = useNavigate();
   const location = useLocation();
   const path = location.pathname;
-
+  const pathWithoutImage = path.replace('tag/', '');
+  const pathToBeDisplayed = pathWithoutImage.replace('/image/', '');
+  const pathHeader = pathToBeDisplayed.replace("/", " / ");
   return (
       <div className={classes.exploreHeader}>
           <ArrowBackIcon sx={{color: "#14191F",fontSize: "2rem", cursor: "pointer"}} onClick={() => navigate(-1)}/>
           <Breadcrumbs separator="/" aria-label="breadcrumb">
               <Link to="/"><Typography variant="body1" className={classes.explore}>Home</Typography></Link>
-              { path.includes('/image/') && <Typography className={classes.explore} variant="body1">{path.replace('/image/', '')}</Typography> }
+              <Link to={path.substring(0, path.lastIndexOf('/'))}>{ path.includes('/image/') && <Typography className={classes.explore} variant="body1">{pathHeader}</Typography> }</Link>
+              
           </Breadcrumbs>
           <div></div>
       </div>

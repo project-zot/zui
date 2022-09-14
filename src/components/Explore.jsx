@@ -41,7 +41,7 @@ const useStyles = makeStyles(() => ({
     sortForm:{
       backgroundColor: '#ffffff',
       borderColor: "#E0E0E0",
-      borderRadius: "6px",
+      borderRadius: "0.375em",
     },
 }));
 
