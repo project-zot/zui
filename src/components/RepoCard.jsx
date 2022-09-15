@@ -194,8 +194,8 @@ function RepoCard(props) {
                 <Typography variant="h5" component="div">
                   {name}
                 </Typography>
-                {vulnerabilityCheck()}
-                {signatureCheck()}
+                {/* {vulnerabilityCheck()}
+                {signatureCheck()} */}
                 {/* <Chip label="Verified licensee" sx={{ backgroundColor: "#E8F5E9", color: "#388E3C" }} variant="filled" onDelete={() => { return }} deleteIcon={vulnerabilityCheck()} /> */}
               </Stack>
               <Typography

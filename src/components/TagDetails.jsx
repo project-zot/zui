@@ -25,6 +25,7 @@ import repocube3 from '../assets/repocube-3.png';
 import repocube4 from '../assets/repocube-4.png';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import TagDetailsMetadata from './TagDetailsMetadata';
+import VulnerabilitiesDetails from './VulnerabilitiesDetails';
 import { padding } from '@mui/system';
 
 // @ts-ignore
@@ -127,7 +128,7 @@ function TagDetails (props) {
   const [repoDetailData, setRepoDetailData] = useState({});
   // @ts-ignore
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("Layers");
+  const [selectedTab, setSelectedTab] = useState("Vulnerabilities");
 
   // get url param from <Route here (i.e. image name)
   const {name} = useParams();
@@ -272,14 +273,14 @@ function TagDetails (props) {
                           TabIndicatorProps={{ className: classes.selectedTab }} 
                           sx={{ "& button.Mui-selected": {color:"#14191F", fontWeight:"600"}}}
                         >
-                            <Tab value="Layers" label="Layers" className={classes.tabContent}/>
+                            {/* <Tab value="Layers" label="Layers" className={classes.tabContent}/>
                             <Tab value="DependsOn" label="Depends on" className={classes.tabContent}/>
-                            <Tab value="IsDependentOn" label="Is Dependent On" className={classes.tabContent}/>
+                            <Tab value="IsDependentOn" label="Is Dependent On" className={classes.tabContent}/> */}
                             <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent}/>
                         </TabList>
                         <Grid container>
                             <Grid item xs={12}>
-                                <TabPanel value="Layers" className={classes.tabPanel}>
+                                {/* <TabPanel value="Layers" className={classes.tabPanel}>
                                   <Typography> Layers </Typography>
                                 </TabPanel>
                                 <TabPanel value="DependsOn" className={classes.tabPanel}>
@@ -287,9 +288,10 @@ function TagDetails (props) {
                                 </TabPanel>
                                 <TabPanel value="IsDependentOn" className={classes.tabPanel}>
                                   <Typography> Is Dependent On </Typography>
-                                </TabPanel>
+                                </TabPanel> */}
                                 <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
                                   <Typography> Vulnerabilities </Typography>
+                                  <VulnerabilitiesDetails name={name}/>
                                 </TabPanel> 
                             </Grid>
                         </Grid>

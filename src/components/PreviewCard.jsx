@@ -119,8 +119,8 @@ function PreviewCard(props) {
                 <Typography variant="h5" component="div" sx={{size:"1.5rem", lineHeight:"2rem", color:"#220052"}}>
                   {name}
                 </Typography>
-                {vulnerabilityCheck()}
-                {signatureCheck()}
+                {/* {vulnerabilityCheck()}
+                {signatureCheck()} */}
               </Stack>
             </Grid>
             <Grid item xs={12} mt={2}>

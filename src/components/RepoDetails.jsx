@@ -132,6 +132,7 @@ function RepoDetails (props) {
 
   // get url param from <Route here (i.e. image name)
   const {name} = useParams();
+  console.log(name);
   const classes = useStyles();
   const {description, overviewTitle, dependencies, dependents} = props;
 
@@ -261,8 +262,8 @@ function RepoDetails (props) {
                       <Typography variant="h3" className={classes.repoName}>
                         {name}
                       </Typography>
-                      {vulnerabilityCheck()}
-                      {signatureCheck()}
+                      {/* {vulnerabilityCheck()}
+                      {signatureCheck()} */}
                       <BookmarkIcon sx={{color:"#52637A"}}/>
                     </Stack>
                     <Typography pt={1} sx={{ fontSize: 16,lineHeight:"1.5rem", color:"rgba(0, 0, 0, 0.6)", paddingLeft:"4rem"}} gutterBottom align="left">
