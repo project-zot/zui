@@ -11,7 +11,7 @@ import SigninPresentation from 'components/SignInPresentation';
 const useStyles = makeStyles((theme) => ({
   container: {
     minHeight: "100vh",
-    backgroundColor: "#F5F5F5",
+    backgroundColor: "#F6F7F9",
   },
 }));
 

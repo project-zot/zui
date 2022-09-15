@@ -9,7 +9,7 @@ import Avatar from '@mui/material/Avatar';
 
 // styling
 import makeStyles from '@mui/styles/makeStyles';
-import logo from '../assets/Zot2.svg';
+import logo from '../assets/Zot-white-text.svg';
 import placeholderProfileButton from '../assets/Profile_button_placeholder.svg';
 
 
@@ -38,7 +38,7 @@ const useStyles = makeStyles((theme) => ({
     flexDirection: "row"
   },
   searchIcon: {
-    color: "#A53692",
+    color: "#52637A",
     paddingRight: "3%"
   },
   input: {
@@ -57,12 +57,12 @@ const useStyles = makeStyles((theme) => ({
   logoWrapper: {
   },
   logo: {
-    height: 64,
-    width: 64,
+    width: "143px",
+    
   },
   userAvatar:{
     height:46,
-    width:46
+    width:46,
   },
   link: {
     color: "#000",

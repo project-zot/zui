@@ -19,7 +19,7 @@ import FilterCard from './FilterCard.jsx';
 
 const useStyles = makeStyles(() => ({
     gridWrapper: {
-        // backgroundColor: "#fff",
+      paddingTop:"2rem",
     },
     nodataWrapper: {
       backgroundColor: "#fff",
@@ -34,7 +34,15 @@ const useStyles = makeStyles(() => ({
       justifyContent:"space-between",
       alignItems:"center",
       color:"#00000099"
-    }
+    },
+    results:{
+      marginLeft: '1rem'
+    },
+    sortForm:{
+      backgroundColor: '#ffffff',
+      borderColor: "#E0E0E0",
+      borderRadius: "6px",
+    },
 }));
 
 function Explore ({ keywords, data, updateData }) {
@@ -141,10 +149,10 @@ function Explore ({ keywords, data, updateData }) {
                           </Grid>
                           <Grid item xs={9}>
                             <Stack direction="row" className={classes.resultsRow}>
-                                <Typography variant="body2" >Results {filteredData.length}</Typography>
-                                <FormControl  sx={{m:'1', minWidth:"4.6875rem"}} size="small">
+                                <Typography variant="body2"  className={classes.results}>Results {filteredData.length}</Typography>
+                                <FormControl  sx={{m:'1', minWidth:"4.6875rem"}} className={classes.sortForm} size="small">
                                   <InputLabel>Sort</InputLabel>
-                                  <Select label="Sort" value={sortFilter} onChange={handleSortChange} MenuProps={{disableScrollLock: true}}>
+                                  <Select label="Sort" value={sortFilter}  onChange={handleSortChange}  MenuProps={{disableScrollLock: true}}>
                                     <MenuItem value='relevance'>Relevance</MenuItem>                            
                                   </Select>
                                 </FormControl>

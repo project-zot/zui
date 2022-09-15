@@ -9,7 +9,9 @@ const useStyles = makeStyles(() => ({
     alignItems:'flex-start',
     background:"#FFFFFF",
     boxShadow:"0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
-    borderRadius: "1.5rem"
+    borderColor: "#FFFFFF",
+    borderRadius: "1.5rem",
+    color: "#14191F",
   }
 }));
 

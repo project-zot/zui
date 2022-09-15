@@ -1,8 +1,13 @@
-import { Card, CardActionArea, CardContent, CardMedia, Grid, Stack, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, CardMedia, Grid, Stack, Typography, Box } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import CheckCircleOutlineOutlinedIcon from '@mui/icons-material/CheckCircleOutlineOutlined';
+import BookmarkBorderOutlinedIcon from '@mui/icons-material/BookmarkBorderOutlined';
+import PestControlOutlinedIcon from '@mui/icons-material/PestControlOutlined';
+import PestControlIcon from '@mui/icons-material/PestControl';
+import GppBadOutlinedIcon from '@mui/icons-material/GppBadOutlined';
+import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
+import GppMaybeOutlinedIcon from '@mui/icons-material/GppMaybeOutlined';
 
 // placeholder images
 import repocube1 from '../assets/repocube-1.png';
@@ -29,6 +34,7 @@ const useStyles = makeStyles(() => ({
     background: "#FFFFFF",
     boxShadow: "0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
     borderRadius: "1.5rem",
+    borderColor: "#FFFFFF",
     flex: "none",
     alignSelf: "stretch",
     flexGrow: 0,
@@ -60,6 +66,11 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
+//function that returns a random element from an array
+function getRandom (list) {
+  return list[Math.floor((Math.random()*list.length))];
+}
+
 function PreviewCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
@@ -69,8 +80,25 @@ function PreviewCard(props) {
     navigate(`/image/${name}`);
   };
 
-  const verifiedCheck = () => {
-    return (<CheckCircleOutlineOutlinedIcon sx={{ color: "#388E3C!important", height:"2rem", width:"2rem" }} />);
+  const vulnerabilityCheck = () => {
+    const noneVulnerability = <PestControlOutlinedIcon sx={{ color: "#43A047!important", padding:"0.2rem", background: "#E8F5E9", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+    const unknownVulnerability = <PestControlOutlinedIcon sx={{ color: "#52637A!important", padding:"0.2rem", background: "#ECEFF1", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+    const lowVulnerability = <PestControlOutlinedIcon sx={{ color: "#FB8C00!important", padding:"0.2rem", background: "#FFF3E0", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+    const mediumVulnerability = <PestControlIcon sx={{ color: "#FB8C00!important", padding:"0.2rem", background: "#FFF3E0", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+    const highVulnerability = <PestControlOutlinedIcon sx={{ color: "#E53935!important", padding:"0.2rem", background: "#FEEBEE", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+    const criticalVulnerability = <PestControlIcon sx={{ color: "#E53935!important", padding:"0.2rem", background: "#FEEBEE", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+
+    const arrVulnerability = [noneVulnerability, unknownVulnerability, lowVulnerability, mediumVulnerability, highVulnerability, criticalVulnerability]
+    return(getRandom(arrVulnerability));
+  }
+
+  const signatureCheck = () => {
+    const unverifiedSignature = <GppBadOutlinedIcon sx={{ color: "#E53935!important", padding:"0.2rem", background: "#FEEBEE", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+    const untrustedSignature = <GppMaybeOutlinedIcon sx={{ color: "#52637A!important", padding:"0.2rem", background: "#ECEFF1", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+    const verifiedSignature = <GppGoodOutlinedIcon sx={{ color: "#43A047!important", padding:"0.2rem", background: "#E8F5E9", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+
+    const arrSignature = [unverifiedSignature, untrustedSignature, verifiedSignature]
+    return(getRandom(arrSignature));
   }
 
   return (
@@ -91,17 +119,17 @@ function PreviewCard(props) {
                 <Typography variant="h5" component="div" sx={{size:"1.5rem", lineHeight:"2rem", color:"#220052"}}>
                   {name}
                 </Typography>
-                {verifiedCheck()}
+                {vulnerabilityCheck()}
+                {signatureCheck()}
               </Stack>
             </Grid>
-            <Grid container item xs={12} mt={2}>
-              <Typography variant="body2" sx={{fontSize:"0.875rem", lineHeight:"143%", letterSpacing:"0.010625rem"}}>Official*PH</Typography>
+            <Grid item xs={12} mt={2}>
+              <Stack alignItems="flex-end" justifyContent="space-between" direction="row">
+                <Typography variant="body2" sx={{fontSize:"0.875rem", lineHeight:"143%", letterSpacing:"0.010625rem"}}>Official</Typography>
+                <BookmarkBorderOutlinedIcon/>
+              </Stack>
             </Grid>
-            <Grid container item xs={12}>
-            </Grid>
-            <Grid container item xs={12}>
-              <Typography variant="subtitle2" sx={{ color: "#7C4DFF" }}>Discover more</Typography>
-            </Grid>
+            
           </Grid>
         </CardContent>
       </CardActionArea>
