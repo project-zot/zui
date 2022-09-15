@@ -40,12 +40,14 @@ function ExploreHeader() {
   const pathWithoutImage = path.replace('tag/', '');
   const pathToBeDisplayed = pathWithoutImage.replace('/image/', '');
   const pathHeader = pathToBeDisplayed.replace("/", " / ");
+  const pathWithTag = path.substring(0, path.lastIndexOf('/'));
+  
   return (
       <div className={classes.exploreHeader}>
           <ArrowBackIcon sx={{color: "#14191F",fontSize: "2rem", cursor: "pointer"}} onClick={() => navigate(-1)}/>
           <Breadcrumbs separator="/" aria-label="breadcrumb">
               <Link to="/"><Typography variant="body1" className={classes.explore}>Home</Typography></Link>
-              <Link to={path.substring(0, path.lastIndexOf('/'))}>{ path.includes('/image/') && <Typography className={classes.explore} variant="body1">{pathHeader}</Typography> }</Link>
+              <Link to={pathWithTag.substring(0, pathWithTag.lastIndexOf('/'))}>{ path.includes('/image/') && <Typography className={classes.explore} variant="body1">{pathHeader}</Typography> }</Link>
               
           </Breadcrumbs>
           <div></div>

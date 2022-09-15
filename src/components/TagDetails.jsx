@@ -160,11 +160,11 @@ function TagDetails (props) {
         });
   }, [name])
   //function that returns a random element from an array
-  function get_random(list) {
+  function getRandom(list) {
     return list[Math.floor(Math.random() * list.length)];
   }
 
-  const verifiedCheck = () => {
+  const vulnerabilityCheck = () => {
     const noneVulnerability = <Chip label="No Vulnerability" sx={{backgroundColor: "#E8F5E9",color: "#388E3C",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#388E3C!important" }} />}/>;
     const unknownVulnerability = <Chip label="Unknown Vulnerability" sx={{backgroundColor: "#ECEFF1",color: "#52637A",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#52637A!important" }} />}/>;
     const lowVulnerability = <Chip label="Low Vulnerability" sx={{backgroundColor: "#FFF3E0",color: "#FB8C00",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#FB8C00!important" }} />}/>;
@@ -173,7 +173,7 @@ function TagDetails (props) {
     const criticalVulnerability = <Chip label="Critical Vulnerability" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlIcon sx={{ color: "#E53935!important" }} />}/>;
 
     const arrVulnerability = [noneVulnerability, unknownVulnerability, lowVulnerability, mediumVulnerability, highVulnerability, criticalVulnerability]
-    return(get_random(arrVulnerability));
+    return(getRandom(arrVulnerability));
   };
 
   const signatureCheck = () => {
@@ -182,9 +182,14 @@ function TagDetails (props) {
     const verifiedSignature = <Chip label="Verified Signature" sx={{backgroundColor: "#E8F5E9",color: "#388E3C",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppGoodOutlinedIcon sx={{ color: "#388E3C!important" }} />}/>;
 
     const arrSignature = [unverifiedSignature, untrustedSignature, verifiedSignature]
-    return(get_random(arrSignature));
+    return(getRandom(arrSignature));
   }
 
+  const getPlatform = () => {
+    // @ts-ignore
+    return repoDetailData?.platforms? repoDetailData.platforms[0] : '--/--';
+  }
+  
   // @ts-ignore
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
@@ -242,16 +247,16 @@ function TagDetails (props) {
                         alt="icon"
                       />
                       <Typography variant="h3" className={classes.repoName}>
-                        {name}:{repoDetailData.
+                        {name}:{repoDetailData?.
 // @ts-ignore
                         tags}
                       </Typography>
-                      {verifiedCheck()}
-                      {signatureCheck()}
-                      <BookmarkIcon sx={{color:"#52637A"}}/>
+                      {/* {vulnerabilityCheck()}
+                      {signatureCheck()} */}
+                      {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
                     </Stack>
                     <Typography pt={1} sx={{ fontSize: 16,lineHeight:"1.5rem", color:"rgba(0, 0, 0, 0.6)", paddingLeft:"4rem"}} gutterBottom align="left">
-                      Digest: {repoDetailData.
+                      Digest: {repoDetailData?.
 // @ts-ignore
                       latestDigest}
                     </Typography>
@@ -292,14 +297,13 @@ function TagDetails (props) {
                     </TabContext>
                   </Grid>
                     <Grid item xs={4} className={classes.metadata}>
-                      {console.log(JSON.stringify(repoDetailData))}
                       <TagDetailsMetadata 
                         // @ts-ignore
-                        platforms={repoDetailData.platforms[0]}
+                        platforms={getPlatform()}
                         // @ts-ignore
-                        size={repoDetailData.size}
+                        size={repoDetailData?.size}
                         // @ts-ignore
-                        lastUpdated={repoDetailData.lastUpdated}
+                        lastUpdated={repoDetailData?.lastUpdated}
                       />
                   </Grid>
                 </Grid>

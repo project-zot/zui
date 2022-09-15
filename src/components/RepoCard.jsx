@@ -93,15 +93,16 @@ const useStyles = makeStyles(() => ({
 function RepoCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { name, vendor, description, lastUpdated, downloads, rating, version } =
+  const { name, vendor, platforms, description, lastUpdated, downloads, rating, version } =
     props;
+
 
   //function that returns a random element from an array
   function getRandom(list) {
     return list[Math.floor(Math.random() * list.length)];
   }
 
-  const goToDetails = (repo) => {
+  const goToDetails = () => {
     navigate(`/image/${name}`);
   };
 
@@ -128,27 +129,38 @@ function RepoCard(props) {
 
   const platformChips = () => {
     // if platforms not received, mock data
-    const platforms = props.platforms || [
+    const platformsOsArch = platforms || [
       "Windows",
       "PowerPC64LE",
       "IBM Z",
       "Linux",
     ];
-    return platforms.map((platform, index) => (
+    return  (
+      <>
       <Chip
-        key={index}
-        label={platform}
+        key={platforms?.Os}
+        label={platforms?.Os}
         sx={{
           backgroundColor: "#E0E5EB",
           color: "#52637A",
           fontSize: "0.8125rem",
         }}
       />
-    ));
+      <Chip
+        key={platforms?.Arch}
+        label={platforms?.Arch}
+        sx={{
+          backgroundColor: "#E0E5EB",
+          color: "#52637A",
+          fontSize: "0.8125rem",
+        }}
+      />
+      </>
+    );
   };
 
   const getVendor = () => {
-    return `${vendor || "andrewc"} •`;
+    return `${vendor || "N/A"} •`;
   };
   const getVersion = () => {
     const lastDate = lastUpdated
@@ -218,14 +230,14 @@ function RepoCard(props) {
                 className={classes.contentRight}
               >
                 <Stack direction="column" alignItems="flex-end">
-                  <Typography variant="body2">
+                  {/* <Typography variant="body2">
                     Downloads • {downloads || "-"}
                   </Typography>
                   <Typography variant="body2">
                     Rating • {rating || "-"}
-                  </Typography>
+                  </Typography> */}
                 </Stack>
-                <BookmarkIcon sx={{color:"#52637A"}}/>
+                {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
               </Stack>
             </Grid>
           </Grid>

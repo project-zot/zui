@@ -82,7 +82,7 @@ function TagCard(props) {
              Last pushed
           </Typography>
           <Typography variant="caption" sx={{fontWeight:"600", fontSize: "0.8125rem"}} >
-            {lastDate || '----'} by {vendors[0] || '----'}
+            {lastDate || '----'} by {vendors[0] || 'N/A'}
           </Typography>
         </Stack>
 

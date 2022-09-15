@@ -35,7 +35,6 @@ const useStyles = makeStyles(() => ({
 
 function TagDetailsMetadata (props) {
   const classes = useStyles();
-  console.log(JSON.stringify(props));
   const {platforms, lastUpdated, size} = props;
   const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({ unit: 'days' })
   return (

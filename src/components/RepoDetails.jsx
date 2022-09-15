@@ -186,10 +186,12 @@ function RepoDetails (props) {
     return(getRandom(arrSignature));
   }
 
+  
   const platformChips = () => {
     // if platforms not received, mock data
     // @ts-ignore
-    const platforms = repoDetailData.platforms || ["Windows","PowerPC64LE","IBM Z","Linux"];
+    const platforms = repoDetailData?.platforms || ["Windows","PowerPC64LE","IBM Z","Linux"];
+
     return platforms.map((platform, index) => (
     
       <Chip key={index} label={platform.Os} sx={{
@@ -274,7 +276,8 @@ function RepoDetails (props) {
                       <Typography variant="body1" sx={{color:"#52637A", fontSize: "1rem"}}>Copy and pull to pull this image</Typography>
                       <FormControl  sx={{ m: 1, paddingLeft:"1.5rem"}} variant="outlined">
                         <OutlinedInput
-                          value={`Pull ${name}`}
+                          // value={`Pull ${name}`}
+                          value= 'N/A'
                           className={classes.inputForm}
                           sx={{ m: 1, width: '20.625rem',  borderRadius: "0.5rem", color: "#14191F"}}
                           endAdornment={
@@ -316,6 +319,7 @@ function RepoDetails (props) {
                                   {renderOverview()}
                                 </TabPanel>
                                 <TabPanel value="Tags" className={classes.tabPanel}>
+                                  {console.log(JSON.stringify(repoDetailData))}
                                   <Tags data={repoDetailData} />
                                 </TabPanel>
                                 {/* <TabPanel value="Dependencies" className={classes.tabPanel}>
@@ -335,11 +339,11 @@ function RepoDetails (props) {
                     <Grid item xs={4} className={classes.metadata}>
                       <RepoDetailsMetadata 
                         // @ts-ignore
-                        lastUpdated={repoDetailData.lastUpdated}
+                        lastUpdated={repoDetailData?.lastUpdated}
                         // @ts-ignore
-                        size={repoDetailData.size}
+                        size={repoDetailData?.size}
                         // @ts-ignore
-                        latestTag={repoDetailData.newestTag}
+                        latestTag={repoDetailData?.newestTag}
                       />
                   </Grid>
                 </Grid>

@@ -126,7 +126,7 @@ function PreviewCard(props) {
             <Grid item xs={12} mt={2}>
               <Stack alignItems="flex-end" justifyContent="space-between" direction="row">
                 <Typography variant="body2" sx={{fontSize:"0.875rem", lineHeight:"143%", letterSpacing:"0.010625rem"}}>Official</Typography>
-                <BookmarkBorderOutlinedIcon/>
+                {/* <BookmarkBorderOutlinedIcon/> */}
               </Stack>
             </Grid>
             
