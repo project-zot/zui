@@ -92,7 +92,7 @@ function PreviewCard(props) {
     return(getRandom(arrVulnerability));
   }
 
-  const SignatureCheck = () => {
+  const signatureCheck = () => {
     const unverifiedSignature = <GppBadOutlinedIcon sx={{ color: "#E53935!important", padding:"0.2rem", background: "#FEEBEE", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
     const untrustedSignature = <GppMaybeOutlinedIcon sx={{ color: "#52637A!important", padding:"0.2rem", background: "#ECEFF1", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
     const verifiedSignature = <GppGoodOutlinedIcon sx={{ color: "#43A047!important", padding:"0.2rem", background: "#E8F5E9", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
@@ -120,7 +120,7 @@ function PreviewCard(props) {
                   {name}
                 </Typography>
                 {vulnerabilityCheck()}
-                {SignatureCheck()}
+                {signatureCheck()}
               </Stack>
             </Grid>
             <Grid item xs={12} mt={2}>
