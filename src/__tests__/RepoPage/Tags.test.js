@@ -2,6 +2,13 @@ import { fireEvent, render, screen } from '@testing-library/react';
 import Tags from 'components/Tags';
 import React from 'react';
 
+const mockedUsedNavigate = jest.fn();
+jest.mock('react-router-dom', () => ({
+   // @ts-ignore
+   ...jest.requireActual('react-router-dom'),
+  useNavigate: () => mockedUsedNavigate,
+}));
+
 const mockedTagsData = {
   name: 'test',
   tags: [

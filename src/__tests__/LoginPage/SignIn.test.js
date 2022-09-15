@@ -71,7 +71,7 @@ describe('Sign in form', () => {
 
   it('should log in the user and navigate to homepage if login is successful',async () => {
     render(<SignIn isAuthEnabled={true} setIsAuthEnabled={() => { }} isLoggedIn={false} setIsLoggedIn={() => { }} />);
-    const submitButton = await screen.findByText(/^Continue/i);
+    const submitButton = await screen.findByText('Continue');
     // @ts-ignore
     jest.spyOn(api,"get").mockResolvedValue({status:200, data:{data:{}}});
     fireEvent.click(submitButton);
@@ -82,7 +82,7 @@ describe('Sign in form', () => {
 
   it('should should display login error if login not successful',async () => {
     render(<SignIn isAuthEnabled={true} setIsAuthEnabled={() => { }} isLoggedIn={false} setIsLoggedIn={() => { }} />);
-    const submitButton = await screen.findByText(/^Continue/i);
+    const submitButton = await screen.findByText('Continue');
     jest.spyOn(api,"get").mockRejectedValue();;
     fireEvent.click(submitButton);
     const errorDisplay = await screen.findByText(/Authentication Failed/i);

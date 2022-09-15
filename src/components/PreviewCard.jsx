@@ -67,7 +67,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 //function that returns a random element from an array
-function get_random (list) {
+function getRandom (list) {
   return list[Math.floor((Math.random()*list.length))];
 }
 
@@ -80,7 +80,7 @@ function PreviewCard(props) {
     navigate(`/image/${name}`);
   };
 
-  const verifiedCheck = () => {
+  const vulnerabilityCheck = () => {
     const noneVulnerability = <PestControlOutlinedIcon sx={{ color: "#43A047!important", padding:"0.2rem", background: "#E8F5E9", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
     const unknownVulnerability = <PestControlOutlinedIcon sx={{ color: "#52637A!important", padding:"0.2rem", background: "#ECEFF1", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
     const lowVulnerability = <PestControlOutlinedIcon sx={{ color: "#FB8C00!important", padding:"0.2rem", background: "#FFF3E0", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
@@ -89,7 +89,7 @@ function PreviewCard(props) {
     const criticalVulnerability = <PestControlIcon sx={{ color: "#E53935!important", padding:"0.2rem", background: "#FEEBEE", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
 
     const arrVulnerability = [noneVulnerability, unknownVulnerability, lowVulnerability, mediumVulnerability, highVulnerability, criticalVulnerability]
-    return(get_random(arrVulnerability));
+    return(getRandom(arrVulnerability));
   }
 
   const SignatureCheck = () => {
@@ -98,7 +98,7 @@ function PreviewCard(props) {
     const verifiedSignature = <GppGoodOutlinedIcon sx={{ color: "#43A047!important", padding:"0.2rem", background: "#E8F5E9", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
 
     const arrSignature = [unverifiedSignature, untrustedSignature, verifiedSignature]
-    return(get_random(arrSignature));
+    return(getRandom(arrSignature));
   }
 
   return (
@@ -119,7 +119,7 @@ function PreviewCard(props) {
                 <Typography variant="h5" component="div" sx={{size:"1.5rem", lineHeight:"2rem", color:"#220052"}}>
                   {name}
                 </Typography>
-                {verifiedCheck()}
+                {vulnerabilityCheck()}
                 {SignatureCheck()}
               </Stack>
             </Grid>
