@@ -107,7 +107,7 @@ function PreviewCard(props) {
         <CardContent className={classes.content}>
           <Grid container spacing={1}>
             <Grid container item xs={12}>
-              <Stack direction="row" spacing={3} sx={{display:"flex",alignItems:"center", flexWrap:"wrap"}}>
+              <Stack direction="row" spacing={3} sx={{display:"flex",alignItems:"center", flexWrap:"wrap", }}>
                 <CardMedia classes={{
                   root: classes.media,
                   img: classes.avatar,
@@ -116,7 +116,7 @@ function PreviewCard(props) {
                   image={randomImage()}
                   alt="icon"
                 />
-                <Typography variant="h5" component="div" sx={{size:"1.5rem", lineHeight:"2rem", color:"#220052"}}>
+                <Typography variant="h5" component="div" sx={{size:"1.5rem", lineHeight:"2rem", color:"#220052", width:"10rem",whiteSpace: "nowrap",  overflow: "hidden", textOverflow: "ellipsis"}}>
                   {name}
                 </Typography>
                 {/* {vulnerabilityCheck()}

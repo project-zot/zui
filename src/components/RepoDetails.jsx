@@ -132,7 +132,6 @@ function RepoDetails (props) {
 
   // get url param from <Route here (i.e. image name)
   const {name} = useParams();
-  console.log(name);
   const classes = useStyles();
   const {description, overviewTitle, dependencies, dependents} = props;
 
@@ -226,7 +225,7 @@ function RepoDetails (props) {
       <Card className={classes.card} data-testid='overview-container'>
         <CardContent>
           <Typography variant="h4" align="left">{overviewTitle || 'Quickstart'}</Typography>
-          <Typography variant="body1" sx={{color:"rgba(0, 0, 0, 0.6)", fontSize:"1rem",lineHeight:"150%", marginTop:"5%", alignSelf:"stretch"}}>{description || mockData.loremIpsum}</Typography>
+          <Typography variant="body1" sx={{color:"rgba(0, 0, 0, 0.6)", fontSize:"1rem",lineHeight:"150%", marginTop:"5%", alignSelf:"stretch"}}>{description || "N/A"}</Typography>
         </CardContent>
       </Card>
     );
@@ -280,7 +279,7 @@ function RepoDetails (props) {
                       {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
                     </Stack>
                     <Typography pt={1} sx={{ fontSize: 16,lineHeight:"1.5rem", color:"rgba(0, 0, 0, 0.6)", paddingLeft:"4rem"}} gutterBottom align="left">
-                      {description || 'The complete solution for node.js command-line programs'}
+                      {description || 'N/A'}
                     </Typography>
                     <Stack alignItems="center" sx={{ paddingLeft:"4rem"}} direction="row" spacing={2} pt={1}>
                       {platformChips()}
@@ -333,7 +332,6 @@ function RepoDetails (props) {
                                   {renderOverview()}
                                 </TabPanel>
                                 <TabPanel value="Tags" className={classes.tabPanel}>
-                                  {console.log(JSON.stringify(repoDetailData))}
                                   <Tags data={repoDetailData} />
                                 </TabPanel>
                                 {/* <TabPanel value="Dependencies" className={classes.tabPanel}>

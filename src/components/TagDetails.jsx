@@ -290,7 +290,6 @@ function TagDetails (props) {
                                   <Typography> Is Dependent On </Typography>
                                 </TabPanel> */}
                                 <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
-                                  <Typography> Vulnerabilities </Typography>
                                   <VulnerabilitiesDetails name={name}/>
                                 </TabPanel> 
                             </Grid>

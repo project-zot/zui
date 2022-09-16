@@ -7,7 +7,7 @@ import mockData from '../utilities/mockData';
 
 // components
 import Collapse from '@mui/material/Collapse';
-import { Box, Card, CardContent, CardMedia, Chip, FormControl, Grid, IconButton, InputAdornment, OutlinedInput, Stack, Tab, Typography } from '@mui/material';
+import { Box, Card, CardContent, Divider, Chip, FormControl, Grid, IconButton, InputAdornment, OutlinedInput, Stack, Tab, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
 import PestControlOutlinedIcon from "@mui/icons-material/PestControlOutlined";
@@ -40,10 +40,19 @@ const useStyles = makeStyles((theme) => ({
         width: "100%"
     },
     title: {
-        color: "#828282", fontSize: "1rem", paddingRight: "0.5rem", paddingBottom: "0.5rem"
+        color: "#828282", 
+        fontSize: "1rem", 
+        paddingRight: "0.5rem", 
+        paddingBottom: "0.5rem",
+        paddingTop: "0.5rem"
+
     },
     values: {
-        color: "#000000", fontSize: "1rem", fontWeight: "600"
+        color: "#000000", 
+        fontSize: "1rem", 
+        fontWeight: "600",
+        paddingBottom: "0.5rem",
+        paddingTop: "0.5rem"
     }
 }));
 
@@ -64,16 +73,16 @@ const vulnerabilityCheck = (status) => {
             result = lowVulnerability;
             break;
         case "MEDIUM":
-            result =  mediumVulnerability;
+            result = mediumVulnerability;
             break;
         case "HIGH":
-            result =  highVulnerability;
+            result = highVulnerability;
             break;
         case "CRITICAL":
-            result =  criticalVulnerability;
+            result = criticalVulnerability;
             break;
         default:
-            result =  unknownVulnerability;
+            result = unknownVulnerability;
     }
 
     return result;
@@ -141,7 +150,7 @@ function VulnerabilitiesDetails(props) {
 
 
     const renderCVEs = (cves) => {
-        if (cves) {
+        if (cves?.length !== 0) {
             return (cves && cves.map((cve, index) => {
                 return (
                     <VulnerabilitiyCard key={index} cve={cve} />
@@ -150,15 +159,17 @@ function VulnerabilitiesDetails(props) {
             );
         }
         else {
-            return (<Typography> NO Vulnerabilities </Typography>)
+            return (<Typography> No Vulnerabilities </Typography>);
         }
     }
 
     return (
         <div>
-            {renderCVEs(cveData?.
-                // @ts-ignore
-                cveList)}
+             <Typography variant="h4" gutterBottom component="div" align="left" style={{ color: "rgba(0, 0, 0, 0.87)", fontSize: "1.5rem", fontWeight: "600", paddingTop:"0.5rem" }}>Vulnerabilities</Typography>
+             <Divider variant="fullWidth" sx={{ margin: "5% 0% 5% 0%", background: "rgba(0, 0, 0, 0.38)", height: "0.00625rem", width: "100%" }} />
+                {renderCVEs(cveData?.
+                    // @ts-ignore
+                    cveList)}
         </div>
     )
 }

@@ -200,7 +200,7 @@ function RepoCard(props) {
                 gutterBottom
               >
                 {description ||
-                  "The complete solution for node.js command-line programs"}
+                  "N/A"}
               </Typography>
               <Stack alignItems="center" direction="row" spacing={2} pt={1}>
                 {platformChips()}

@@ -42,7 +42,8 @@ const useStyles = makeStyles((theme) => ({
     background: "#FFFFFF",
     gap: "0.625em",
     boxShadow: "0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
-    borderRadius: "1.5rem",    
+    borderRadius: "1.5rem",   
+    minWidth: "30rem"
   },
   loginCardContent: {
     alignItems: "center",
