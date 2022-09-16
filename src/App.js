@@ -38,8 +38,8 @@ function App() {
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<HomePage keywords={searchKeywords} updateKeywords={setSearchKeywords} data={data} updateData={setData} />} />
             <Route path="/explore" element={<ExplorePage keywords={searchKeywords} updateKeywords={setSearchKeywords} data={data} updateData={setData} />} />
-            <Route path="/image/:name*" element={<RepoPage />} />
-            <Route path="/image/:name/tag/:tag*" element={<TagPage />} />
+            <Route path="/image/:name" element={<RepoPage />} />
+            <Route path="/image/:name/tag/:tag" element={<TagPage />} />
           </Route>
           <Route element={<AuthWrapper isLoggedIn={!isLoggedIn} redirect="/"/>}>
             <Route path="/login" element={<LoginPage isAuthEnabled={isAuthEnabled} setIsAuthEnabled={setIsAuthEnabled} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />

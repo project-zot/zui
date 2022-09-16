@@ -103,7 +103,7 @@ function RepoCard(props) {
   }
 
   const goToDetails = () => {
-    navigate(`/image/${name}`);
+    navigate(`/image/${encodeURIComponent(name)}`);
   };
 
   const vulnerabilityCheck = () => {

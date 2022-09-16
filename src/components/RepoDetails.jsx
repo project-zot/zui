@@ -277,7 +277,7 @@ function RepoDetails (props) {
                       </Typography>
                       {/* {vulnerabilityCheck()}
                       {signatureCheck()} */}
-                      <BookmarkIcon sx={{color:"#52637A"}}/>
+                      {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
                     </Stack>
                     <Typography pt={1} sx={{ fontSize: 16,lineHeight:"1.5rem", color:"rgba(0, 0, 0, 0.6)", paddingLeft:"4rem"}} gutterBottom align="left">
                       {description || 'The complete solution for node.js command-line programs'}
