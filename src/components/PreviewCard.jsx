@@ -77,7 +77,7 @@ function PreviewCard(props) {
   const { name } = props;
 
   const goToDetails = (repo) => {
-    navigate(`/image/${name}`);
+    navigate(`/image/${encodeURIComponent(name)}`);
   };
 
   const vulnerabilityCheck = () => {

@@ -189,17 +189,30 @@ function RepoDetails (props) {
 
   
   const platformChips = () => {
-    // if platforms not received, mock data
     // @ts-ignore
-    const platforms = repoDetailData?.platforms || ["Windows","PowerPC64LE","IBM Z","Linux"];
+    const platforms = repoDetailData?.platforms || [];
 
     return platforms.map((platform, index) => (
-    
-      <Chip key={index} label={platform.Os} sx={{
-        backgroundColor: "#E0E5EB",
-        color: "#52637A",
-        fontSize: "0.8125rem",
-      }}/>
+      <Stack key={`stack${platform?.Os}${platform?.Arch}`} alignItems="center" direction="row" spacing={2}>
+        <Chip 
+          key={`${name}${platform?.Os}${index}`}
+          label={platform?.Os} 
+          sx={{
+            backgroundColor: "#E0E5EB",
+            color: "#52637A",
+            fontSize: "0.8125rem",
+          }}
+        />
+        <Chip
+          key={`${name}${platform?.Arch}${index}`}
+          label={platform?.Arch}
+          sx={{
+            backgroundColor: "#E0E5EB",
+            color: "#52637A",
+            fontSize: "0.8125rem",
+          }}
+        />
+      </Stack>
     ));
   }
 
@@ -264,7 +277,7 @@ function RepoDetails (props) {
                       </Typography>
                       {/* {vulnerabilityCheck()}
                       {signatureCheck()} */}
-                      <BookmarkIcon sx={{color:"#52637A"}}/>
+                      {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
                     </Stack>
                     <Typography pt={1} sx={{ fontSize: 16,lineHeight:"1.5rem", color:"rgba(0, 0, 0, 0.6)", paddingLeft:"4rem"}} gutterBottom align="left">
                       {description || 'The complete solution for node.js command-line programs'}

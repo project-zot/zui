@@ -103,7 +103,7 @@ function RepoCard(props) {
   }
 
   const goToDetails = () => {
-    navigate(`/image/${name}`);
+    navigate(`/image/${encodeURIComponent(name)}`);
   };
 
   const vulnerabilityCheck = () => {
@@ -129,34 +129,29 @@ function RepoCard(props) {
 
   const platformChips = () => {
     // if platforms not received, mock data
-    const platformsOsArch = platforms || [
-      "Windows",
-      "PowerPC64LE",
-      "IBM Z",
-      "Linux",
-    ];
-    return  (
-      <>
-      <Chip
-        key={platforms?.Os}
-        label={platforms?.Os}
-        sx={{
-          backgroundColor: "#E0E5EB",
-          color: "#52637A",
-          fontSize: "0.8125rem",
-        }}
-      />
-      <Chip
-        key={platforms?.Arch}
-        label={platforms?.Arch}
-        sx={{
-          backgroundColor: "#E0E5EB",
-          color: "#52637A",
-          fontSize: "0.8125rem",
-        }}
-      />
-      </>
-    );
+    const platformsOsArch = platforms || [];
+    return platformsOsArch.map((platform,index) => (
+      <Stack key={`stack${platform?.Os}${platform?.Arch}`} alignItems="center" direction="row" spacing={2}>
+        <Chip
+          key={`${name}${platform?.Os}${index}`}
+          label={platform?.Os}
+          sx={{
+            backgroundColor: "#E0E5EB",
+            color: "#52637A",
+            fontSize: "0.8125rem",
+          }}
+        />
+        <Chip
+          key={`${name}${platform?.Arch}${index}`}
+          label={platform?.Arch}
+          sx={{
+            backgroundColor: "#E0E5EB",
+            color: "#52637A",
+            fontSize: "0.8125rem",
+          }}
+        />
+      </Stack>
+    ));
   };
 
   const getVendor = () => {
