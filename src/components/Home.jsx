@@ -77,7 +77,7 @@ function Home({ keywords, data, updateData }) {
               latestVersion: image.NewestImage.Tag,
               tags: image.NewestImage.Labels,
               description: image.NewestImage.Description,
-              platforms: image.NewestImage.Platform,
+              platforms: image.Platforms,
               licenses: image.NewestImage.Licenses,
               size: image.NewestImage.Size,
               vendor: image.NewestImage.Vendor,
