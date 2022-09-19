@@ -68,7 +68,7 @@ describe('Home component', () => {
     render(<StateHomeWrapper/>);
     await waitFor(() => expect(screen.getAllByText(/alpine/i)).toHaveLength(2));
     await waitFor(() => expect(screen.getAllByText(/mongo/i)).toHaveLength(2));
-    await waitFor(() => expect(screen.getAllByText(/node/i)).toHaveLength(3));
+    await waitFor(() => expect(screen.getAllByText(/node/i)).toHaveLength(1));
   });
 
   it('should log an error when data can\'t be fetched', async() => {
