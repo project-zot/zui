@@ -3,14 +3,12 @@ import {Link, useLocation, useNavigate} from "react-router-dom";
 
 // components
 import {Typography, Breadcrumbs} from '@mui/material';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 // styling
 
 import makeStyles from '@mui/styles/makeStyles';
 import React from "react";
-import { Padding } from "@mui/icons-material";
 
 const useStyles = makeStyles((theme) => {
     return {
