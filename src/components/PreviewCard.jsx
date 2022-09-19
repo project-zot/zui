@@ -67,9 +67,9 @@ const useStyles = makeStyles(() => ({
 }));
 
 //function that returns a random element from an array
-function getRandom (list) {
-  return list[Math.floor((Math.random()*list.length))];
-}
+// function getRandom (list) {
+//   return list[Math.floor((Math.random()*list.length))];
+// }
 
 function PreviewCard(props) {
   const classes = useStyles();
@@ -80,26 +80,26 @@ function PreviewCard(props) {
     navigate(`/image/${encodeURIComponent(name)}`);
   };
 
-  const vulnerabilityCheck = () => {
-    const noneVulnerability = <PestControlOutlinedIcon sx={{ color: "#43A047!important", padding:"0.2rem", background: "#E8F5E9", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
-    const unknownVulnerability = <PestControlOutlinedIcon sx={{ color: "#52637A!important", padding:"0.2rem", background: "#ECEFF1", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
-    const lowVulnerability = <PestControlOutlinedIcon sx={{ color: "#FB8C00!important", padding:"0.2rem", background: "#FFF3E0", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
-    const mediumVulnerability = <PestControlIcon sx={{ color: "#FB8C00!important", padding:"0.2rem", background: "#FFF3E0", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
-    const highVulnerability = <PestControlOutlinedIcon sx={{ color: "#E53935!important", padding:"0.2rem", background: "#FEEBEE", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
-    const criticalVulnerability = <PestControlIcon sx={{ color: "#E53935!important", padding:"0.2rem", background: "#FEEBEE", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+  // const vulnerabilityCheck = () => {
+  //   const noneVulnerability = <PestControlOutlinedIcon sx={{ color: "#43A047!important", padding:"0.2rem", background: "#E8F5E9", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+  //   const unknownVulnerability = <PestControlOutlinedIcon sx={{ color: "#52637A!important", padding:"0.2rem", background: "#ECEFF1", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+  //   const lowVulnerability = <PestControlOutlinedIcon sx={{ color: "#FB8C00!important", padding:"0.2rem", background: "#FFF3E0", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+  //   const mediumVulnerability = <PestControlIcon sx={{ color: "#FB8C00!important", padding:"0.2rem", background: "#FFF3E0", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+  //   const highVulnerability = <PestControlOutlinedIcon sx={{ color: "#E53935!important", padding:"0.2rem", background: "#FEEBEE", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+  //   const criticalVulnerability = <PestControlIcon sx={{ color: "#E53935!important", padding:"0.2rem", background: "#FEEBEE", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
 
-    const arrVulnerability = [noneVulnerability, unknownVulnerability, lowVulnerability, mediumVulnerability, highVulnerability, criticalVulnerability]
-    return(getRandom(arrVulnerability));
-  }
+  //   const arrVulnerability = [noneVulnerability, unknownVulnerability, lowVulnerability, mediumVulnerability, highVulnerability, criticalVulnerability]
+  //   return(getRandom(arrVulnerability));
+  // }
 
-  const signatureCheck = () => {
-    const unverifiedSignature = <GppBadOutlinedIcon sx={{ color: "#E53935!important", padding:"0.2rem", background: "#FEEBEE", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
-    const untrustedSignature = <GppMaybeOutlinedIcon sx={{ color: "#52637A!important", padding:"0.2rem", background: "#ECEFF1", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
-    const verifiedSignature = <GppGoodOutlinedIcon sx={{ color: "#43A047!important", padding:"0.2rem", background: "#E8F5E9", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+  // const signatureCheck = () => {
+  //   const unverifiedSignature = <GppBadOutlinedIcon sx={{ color: "#E53935!important", padding:"0.2rem", background: "#FEEBEE", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+  //   const untrustedSignature = <GppMaybeOutlinedIcon sx={{ color: "#52637A!important", padding:"0.2rem", background: "#ECEFF1", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+  //   const verifiedSignature = <GppGoodOutlinedIcon sx={{ color: "#43A047!important", padding:"0.2rem", background: "#E8F5E9", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
 
-    const arrSignature = [unverifiedSignature, untrustedSignature, verifiedSignature]
-    return(getRandom(arrSignature));
-  }
+  //   const arrSignature = [unverifiedSignature, untrustedSignature, verifiedSignature]
+  //   return(getRandom(arrSignature));
+  // }
 
   return (
     <Card variant="outlined" className={classes.card}>

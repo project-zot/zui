@@ -86,8 +86,6 @@ const vulnerabilityCheck = (status) => {
     }
 
     return result;
-
-    const arrVulnerability = [noneVulnerability, unknownVulnerability, lowVulnerability, mediumVulnerability, highVulnerability, criticalVulnerability]
 };
 
 
