@@ -38,7 +38,7 @@ function TagDetailsMetadata (props) {
   const {platforms, lastUpdated, size} = props;
   const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({ unit: 'days' })
   return (
-    <Grid container spacing={1}>
+    <Grid container spacing={1} data-testid='tagDetailsMetadata-container'>
       <Grid container item xs={12}>
           <Card variant="outlined" className={classes.card}>
             <CardContent>

@@ -33,7 +33,7 @@ function TagPage(props) {
   const classes = useStyles();
 
   return (
-        <Stack direction="column" className={classes.pageWrapper} data-testid='repo-container'>
+        <Stack direction="column" className={classes.pageWrapper} data-testid='tag-container'>
           <Header updateKeywords={props.updateKeywords}></Header>
           <Container className={classes.container} >
             <ExploreHeader/>

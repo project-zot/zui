@@ -196,40 +196,30 @@ function TagDetails (props) {
     setSelectedTab(newValue);
   };
 
-  const renderOverview = () => {
-    return (
-      <Card className={classes.card} data-testid='overview-container'>
-        <CardContent>
-          <Typography variant="h4" align="left">{overviewTitle || 'Quickstart'}</Typography>
-          <Typography variant="body1" sx={{color:"rgba(0, 0, 0, 0.6)", fontSize:"1rem",lineHeight:"150%", marginTop:"5%", alignSelf:"stretch"}}>{description || mockData.loremIpsum}</Typography>
-        </CardContent>
-      </Card>
-    );
-  };
+  //will need this but not for now
+  // const renderDependencies = () => {
+  //   return (<Card className={classes.card}>
+  //       <CardContent>
+  //         <Typography variant="h4" align="left">Dependecies ({dependencies || '---'})</Typography>
+  //       </CardContent>
+  //     </Card>);
+  // };
 
-  const renderDependencies = () => {
-    return (<Card className={classes.card}>
-        <CardContent>
-          <Typography variant="h4" align="left">Dependecies ({dependencies || '---'})</Typography>
-        </CardContent>
-      </Card>);
-  };
+  // const renderDependents = () => {
+  //   return (<Card className={classes.card}>
+  //       <CardContent>
+  //         <Typography variant="h4" align="left">Dependents ({dependents || '---'})</Typography>
+  //       </CardContent>
+  //     </Card>);
+  // };
 
-  const renderDependents = () => {
-    return (<Card className={classes.card}>
-        <CardContent>
-          <Typography variant="h4" align="left">Dependents ({dependents || '---'})</Typography>
-        </CardContent>
-      </Card>);
-  };
-
-  const renderVulnerabilities = () => {
-    return (<Card className={classes.card}>
-        <CardContent>
-          <Typography variant="h4" align="left">Vulnerabilities</Typography>
-        </CardContent>
-      </Card>);
-  };
+  // const renderVulnerabilities = () => {
+  //   return (<Card className={classes.card}>
+  //       <CardContent>
+  //         <Typography variant="h4" align="left">Vulnerabilities</Typography>
+  //       </CardContent>
+  //     </Card>);
+  // };
 
 
   return (

@@ -1,4 +1,4 @@
-import { fireEvent, render, screen } from '@testing-library/react';
+import { fireEvent,waitFor, render, screen } from '@testing-library/react';
 import Tags from 'components/Tags';
 import React from 'react';
 
@@ -37,6 +37,7 @@ const mockedTagsData = {
   "newestTag": null
 }
 
+
 describe('Tags component', () => {
   it('should open and close details dropdown for tags', () => {
     render(<Tags data={mockedTagsData}/>);
@@ -45,4 +46,12 @@ describe('Tags component', () => {
     expect(screen.queryByText(/see digests/i)).not.toBeInTheDocument();
     expect(screen.getByText(/hide digests/i)).toBeInTheDocument();
   });
+  it('should navigate to tag page details when tag is clicked', async() => {
+    render(<Tags data={mockedTagsData}/>);
+    const tagLink = await screen.findByText('latest');
+    fireEvent.click(tagLink);
+    await waitFor(() => {
+      expect(mockedUsedNavigate).toHaveBeenCalledWith('tag/latest');
+    });
+  })
 })
