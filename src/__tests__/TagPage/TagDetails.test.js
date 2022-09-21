@@ -1,13 +1,9 @@
-import { render, screen , waitFor, fireEvent } from '@testing-library/react';
+import { render, screen , waitFor } from '@testing-library/react';
 import { api } from 'api';
 import TagDetails from 'components/TagDetails';
-import React, {useState} from 'react';
+import React from 'react';
 
-const StateTagsWrapper = () => {
-    return (<TagDetails name='mongo' />)
-  }
-
-  const mockImage = {"ExpandedRepoInfo": {
+const mockImage = {"ExpandedRepoInfo": {
     "Images": [
         {
             "Digest": "7374731e3dd3112d41ece21cf2db5a16f11a51b33bf065e98c767893f50d3dec",
@@ -69,25 +65,36 @@ const StateTagsWrapper = () => {
     }
 }};
 
+jest.mock("react-router-dom", () => ({
+    // @ts-ignore
+    ...jest.requireActual("react-router-dom"),
+    useParams: () =>{return {name:'test'} },
+}));
+  
+
+afterEach(() => {
+    // restore the spy created with spyOn
+    jest.restoreAllMocks();
+  });
+
 describe('Tags details', () => {
     it('should show vulnerability tab', async() => {
       // @ts-ignore
       jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } })
-      render(<StateTagsWrapper/>  );
+      render(<TagDetails />  );
       await waitFor(() => expect(screen.getAllByRole('tab')).toHaveLength(1));
     });
 
     it('should log an error when data can\'t be fetched', async() => {
-        // @ts-ignore
         jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: { } })
         const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-        render(<StateTagsWrapper/>  );
+        render(<TagDetails />  );
         await waitFor(() => expect(error).toBeCalledTimes(2));
       })
     it('should show tag details metadata', async() => {
     // @ts-ignore
         jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } })
-      render(<StateTagsWrapper/>  );
-      expect(screen.getByTestId('tagDetailsMetadata-container')).toBeInTheDocument();
+        render(<TagDetails />  );
+        expect(await screen.findByTestId('tagDetailsMetadata-container')).toBeInTheDocument();
     })
 });

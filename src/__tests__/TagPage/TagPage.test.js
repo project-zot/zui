@@ -1,10 +1,19 @@
 import { render, screen } from '@testing-library/react';
+import { api } from 'api';
 import TagPage from 'pages/TagPage';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
+afterEach(() => {
+  // restore the spy created with spyOn
+  jest.restoreAllMocks();
+});
 
-it('renders the tags page component', () => {
+jest.mock("components/TagDetails", () => () => {
+  return <div/>;
+});
+
+it('renders the tags page component', async () => {
   render(
     <BrowserRouter>
       <Routes>
