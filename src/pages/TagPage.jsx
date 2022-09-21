@@ -4,7 +4,7 @@ import React from 'react';
 // components
 
 import makeStyles from '@mui/styles/makeStyles';
-import { Container, Grid, Stack, Typography } from '@mui/material';
+import { Container, Grid, Stack } from '@mui/material';
 import Header from 'components/Header';
 import TagDetails from 'components/TagDetails';
 import ExploreHeader from 'components/ExploreHeader';
