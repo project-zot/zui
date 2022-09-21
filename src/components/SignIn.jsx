@@ -28,7 +28,7 @@ const useStyles = makeStyles((theme) => ({
     alignItems: "center",
     justifyContent: "center",
     margin: "0 auto",
-    padding: "10px",
+    padding: "0.625rem",
     position: "relative",
   },
   loginCard: {
@@ -42,7 +42,8 @@ const useStyles = makeStyles((theme) => ({
     background: "#FFFFFF",
     gap: "0.625em",
     boxShadow: "0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
-    borderRadius: "1.5rem",    
+    borderRadius: "1.5rem",   
+    minWidth: "30rem"
   },
   loginCardContent: {
     alignItems: "center",
@@ -65,33 +66,33 @@ const useStyles = makeStyles((theme) => ({
 
   },
   textField: {
-    borderRadius: "4px",
+    borderRadius: "0.25rem",
   },
   button: {
     textTransform: "none",
     color: "##FFFFFF",
     fontSize: "1.4375rem",
     fontWeight: "500",
-    height: "50px",
-    borderRadius: "4px",
+    height: "3.125rem",
+    borderRadius: "0.25rem",
     letterSpacing:"0.01rem",
   },
   gitLogo: {
     height: "24px",
-    borderRadius: "4px",
+    borderRadius: "0.25rem",
     paddingLeft: "1rem",
   },
   line: {
     width: "100%",
     textAlign: "center",
-    borderBottom: "1px solid #C2CBD6",
+    borderBottom: "0.0625rem solid #C2CBD6",
     lineHeight: "0.1rem",
-    margin: "10px 0 20px",
+    margin: "0.625rem 0 1.25rem",
  },
  lineSpan:{
     background: "#ffffff",
     color: "#C2CBD6",
-    padding: "0 10px",
+    padding: "0 0.625rem",
     fontSize: "1rem",
     fontWeight: "400",
     paddingLeft: "1rem",

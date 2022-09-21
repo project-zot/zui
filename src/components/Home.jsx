@@ -77,6 +77,7 @@ function Home({ keywords, data, updateData }) {
               latestVersion: image.NewestImage.Tag,
               tags: image.NewestImage.Labels,
               description: image.NewestImage.Description,
+              platforms: image.Platforms,
               licenses: image.NewestImage.Licenses,
               size: image.NewestImage.Size,
               vendor: image.NewestImage.Vendor,
@@ -137,6 +138,7 @@ function Home({ keywords, data, updateData }) {
             description={item.description}
             tags={item.tags}
             vendor={item.vendor}
+            platforms={item.platforms}
             size={item.size}
             licenses={item.licenses}
             key={index}
@@ -160,6 +162,7 @@ function Home({ keywords, data, updateData }) {
             description={item.description}
             tags={item.tags}
             vendor={item.vendor}
+            platforms={item.platforms}
             size={item.size}
             licenses={item.licenses}
             key={index}
@@ -188,10 +191,10 @@ function Home({ keywords, data, updateData }) {
         {renderPreviewCards()}
       </Grid> <Grid >
       </Grid>
-      <Typography variant="h4" align="left" className={classes.sectionTitle}>
+      {/* <Typography variant="h4" align="left" className={classes.sectionTitle}>
         Bookmarks
       </Typography>
-      {renderBookmarks()}
+      {renderBookmarks()} */}
       <Stack></Stack>
       <Typography variant="h4" align="left" className={classes.sectionTitle}>
         Recently updated repositories

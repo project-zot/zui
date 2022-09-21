@@ -41,7 +41,7 @@ const useStyles = makeStyles(() => ({
     sortForm:{
       backgroundColor: '#ffffff',
       borderColor: "#E0E0E0",
-      borderRadius: "6px",
+      borderRadius: "0.375em",
     },
 }));
 
@@ -63,6 +63,7 @@ function Explore ({ keywords, data, updateData }) {
                         latestVersion: image.NewestImage.Tag,
                         tags: image.NewestImage.Labels,
                         description: image.NewestImage.Description,
+                        platforms: image.Platforms,
                         licenses: image.NewestImage.Licenses,
                         size: image.NewestImage.Size,
                         vendor: image.NewestImage.Vendor,
@@ -105,6 +106,7 @@ function Explore ({ keywords, data, updateData }) {
                     description={item.description}
                     tags={item.tags}
                     vendor={item.vendor}
+                    platforms={item.platforms}
                     size={item.size}
                     licenses={item.licenses}
                     key={index}
@@ -145,25 +147,25 @@ function Explore ({ keywords, data, updateData }) {
                     ) : (
                       <Grid container className={classes.gridWrapper}>
                         <Grid container item xs={12}>
-                          <Grid item xs={3}>
+                          <Grid item xs={0}>
                           </Grid>
-                          <Grid item xs={9}>
+                          <Grid item xs={12}>
                             <Stack direction="row" className={classes.resultsRow}>
                                 <Typography variant="body2"  className={classes.results}>Results {filteredData.length}</Typography>
-                                <FormControl  sx={{m:'1', minWidth:"4.6875rem"}} className={classes.sortForm} size="small">
+                                {/* <FormControl  sx={{m:'1', minWidth:"4.6875rem"}} className={classes.sortForm} size="small">
                                   <InputLabel>Sort</InputLabel>
                                   <Select label="Sort" value={sortFilter}  onChange={handleSortChange}  MenuProps={{disableScrollLock: true}}>
                                     <MenuItem value='relevance'>Relevance</MenuItem>                            
                                   </Select>
-                                </FormControl>
+                                </FormControl> */}
                             </Stack>
                           </Grid>
                         </Grid>
                         <Grid container item xs={12} spacing={5} pt={1}>
-                          <Grid item xs={3}>
+                          {/* <Grid item xs={3}>
                             {renderFilterCards()}
-                          </Grid>
-                          <Grid item xs={9}>
+                          </Grid> */}
+                          <Grid item xs={12}>
                            <Stack  direction="column" spacing={2}>{renderRepoCards()}</Stack>
                           </Grid>
                         </Grid>

@@ -93,62 +93,69 @@ const useStyles = makeStyles(() => ({
 function RepoCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { name, vendor, description, lastUpdated, downloads, rating, version } =
+  const { name, vendor, platforms, description, lastUpdated, downloads, rating, version } =
     props;
 
+
   //function that returns a random element from an array
-  function getRandom(list) {
-    return list[Math.floor(Math.random() * list.length)];
-  }
+  // function getRandom(list) {
+  //   return list[Math.floor(Math.random() * list.length)];
+  // }
 
-  const goToDetails = (repo) => {
-    navigate(`/image/${name}`);
+  const goToDetails = () => {
+    navigate(`/image/${encodeURIComponent(name)}`);
   };
 
-  const vulnerabilityCheck = () => {
-    const noneVulnerability = <Chip label="None Vulnerability" sx={{backgroundColor: "#E8F5E9",color: "#388E3C",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#388E3C!important" }} />}/>;
-    const unknownVulnerability = <Chip label="Unknown Vulnerability" sx={{backgroundColor: "#ECEFF1",color: "#52637A",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#52637A!important" }} />}/>;
-    const lowVulnerability = <Chip label="Low Vulnerability" sx={{backgroundColor: "#FFF3E0",color: "#FB8C00",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#FB8C00!important" }} />}/>;
-    const mediumVulnerability = <Chip label="Medium Vulnerability" sx={{backgroundColor: "#FFF3E0",color: "#FB8C00",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlIcon sx={{ color: "#FB8C00!important" }} />}/>;
-    const highVulnerability = <Chip label="High Vulnerability" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#E53935!important" }} />}/>;
-    const criticalVulnerability = <Chip label="Critical Vulnerability" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlIcon sx={{ color: "#E53935!important" }} />}/>;
+  // const vulnerabilityCheck = () => {
+  //   const noneVulnerability = <Chip label="None Vulnerability" sx={{backgroundColor: "#E8F5E9",color: "#388E3C",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#388E3C!important" }} />}/>;
+  //   const unknownVulnerability = <Chip label="Unknown Vulnerability" sx={{backgroundColor: "#ECEFF1",color: "#52637A",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#52637A!important" }} />}/>;
+  //   const lowVulnerability = <Chip label="Low Vulnerability" sx={{backgroundColor: "#FFF3E0",color: "#FB8C00",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#FB8C00!important" }} />}/>;
+  //   const mediumVulnerability = <Chip label="Medium Vulnerability" sx={{backgroundColor: "#FFF3E0",color: "#FB8C00",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlIcon sx={{ color: "#FB8C00!important" }} />}/>;
+  //   const highVulnerability = <Chip label="High Vulnerability" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#E53935!important" }} />}/>;
+  //   const criticalVulnerability = <Chip label="Critical Vulnerability" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlIcon sx={{ color: "#E53935!important" }} />}/>;
 
-    const arrVulnerability = [noneVulnerability, unknownVulnerability, lowVulnerability, mediumVulnerability, highVulnerability, criticalVulnerability]
-    return(getRandom(arrVulnerability));
-  };
+  //   const arrVulnerability = [noneVulnerability, unknownVulnerability, lowVulnerability, mediumVulnerability, highVulnerability, criticalVulnerability]
+  //   return(getRandom(arrVulnerability));
+  // };
 
-  const signatureCheck = () => {
-    const unverifiedSignature = <Chip label="Unverified Signature" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppBadOutlinedIcon sx={{ color: "#E53935!important" }} />}/>; 
-    const untrustedSignature = <Chip label="Untrusted Signature" sx={{backgroundColor: "#ECEFF1",color: "#52637A",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppMaybeOutlinedIcon sx={{ color: "#52637A!important" }} />}/>;
-    const verifiedSignature = <Chip label="Verified Signature" sx={{backgroundColor: "#E8F5E9",color: "#388E3C",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppGoodOutlinedIcon sx={{ color: "#388E3C!important" }} />}/>;
+  // const signatureCheck = () => {
+  //   const unverifiedSignature = <Chip label="Unverified Signature" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppBadOutlinedIcon sx={{ color: "#E53935!important" }} />}/>; 
+  //   const untrustedSignature = <Chip label="Untrusted Signature" sx={{backgroundColor: "#ECEFF1",color: "#52637A",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppMaybeOutlinedIcon sx={{ color: "#52637A!important" }} />}/>;
+  //   const verifiedSignature = <Chip label="Verified Signature" sx={{backgroundColor: "#E8F5E9",color: "#388E3C",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppGoodOutlinedIcon sx={{ color: "#388E3C!important" }} />}/>;
 
-    const arrSignature = [unverifiedSignature, untrustedSignature, verifiedSignature]
-    return(getRandom(arrSignature));
-  }
+  //   const arrSignature = [unverifiedSignature, untrustedSignature, verifiedSignature]
+  //   return(getRandom(arrSignature));
+  // }
 
   const platformChips = () => {
     // if platforms not received, mock data
-    const platforms = props.platforms || [
-      "Windows",
-      "PowerPC64LE",
-      "IBM Z",
-      "Linux",
-    ];
-    return platforms.map((platform, index) => (
-      <Chip
-        key={index}
-        label={platform}
-        sx={{
-          backgroundColor: "#E0E5EB",
-          color: "#52637A",
-          fontSize: "0.8125rem",
-        }}
-      />
+    const platformsOsArch = platforms || [];
+    return platformsOsArch.map((platform,index) => (
+      <Stack key={`stack${platform?.Os}${platform?.Arch}`} alignItems="center" direction="row" spacing={2}>
+        <Chip
+          key={`${name}${platform?.Os}${index}`}
+          label={platform?.Os}
+          sx={{
+            backgroundColor: "#E0E5EB",
+            color: "#52637A",
+            fontSize: "0.8125rem",
+          }}
+        />
+        <Chip
+          key={`${name}${platform?.Arch}${index}`}
+          label={platform?.Arch}
+          sx={{
+            backgroundColor: "#E0E5EB",
+            color: "#52637A",
+            fontSize: "0.8125rem",
+          }}
+        />
+      </Stack>
     ));
   };
 
   const getVendor = () => {
-    return `${vendor || "andrewc"} •`;
+    return `${vendor || "N/A"} •`;
   };
   const getVersion = () => {
     const lastDate = lastUpdated
@@ -182,8 +189,8 @@ function RepoCard(props) {
                 <Typography variant="h5" component="div">
                   {name}
                 </Typography>
-                {vulnerabilityCheck()}
-                {signatureCheck()}
+                {/* {vulnerabilityCheck()}
+                {signatureCheck()} */}
                 {/* <Chip label="Verified licensee" sx={{ backgroundColor: "#E8F5E9", color: "#388E3C" }} variant="filled" onDelete={() => { return }} deleteIcon={vulnerabilityCheck()} /> */}
               </Stack>
               <Typography
@@ -193,7 +200,7 @@ function RepoCard(props) {
                 gutterBottom
               >
                 {description ||
-                  "The complete solution for node.js command-line programs"}
+                  "N/A"}
               </Typography>
               <Stack alignItems="center" direction="row" spacing={2} pt={1}>
                 {platformChips()}
@@ -218,14 +225,14 @@ function RepoCard(props) {
                 className={classes.contentRight}
               >
                 <Stack direction="column" alignItems="flex-end">
-                  <Typography variant="body2">
+                  {/* <Typography variant="body2">
                     Downloads • {downloads || "-"}
                   </Typography>
                   <Typography variant="body2">
                     Rating • {rating || "-"}
-                  </Typography>
+                  </Typography> */}
                 </Stack>
-                <BookmarkIcon sx={{color:"#52637A"}}/>
+                {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
               </Stack>
             </Grid>
           </Grid>

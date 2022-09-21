@@ -43,7 +43,7 @@ function RepoDetailsMetadata (props) {
           <Card variant="outlined" className={classes.card}>
             <CardContent>
               <Typography variant="body2" align="left" className={classes.metadataHeader}>Repository</Typography>
-              <Typography variant="body1" className={classes.metadataBody}>{repoURL || `----`}</Typography>
+              <Typography variant="body1" align="left" className={classes.metadataBody}>{repoURL || `N/A`}</Typography>
             </CardContent>
           </Card>
       </Grid>
@@ -51,7 +51,7 @@ function RepoDetailsMetadata (props) {
         <Card variant="outlined" className={classes.card}>
           <CardContent>
             <Typography variant="body2" align="left" className={classes.metadataHeader}>Weekly downloads</Typography>
-            <Typography variant="body1" align="left" className={classes.metadataBody}>{weeklyDownloads || `----`}</Typography>
+            <Typography variant="body1" align="left" className={classes.metadataBody}>{weeklyDownloads || `N/A`}</Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -60,7 +60,7 @@ function RepoDetailsMetadata (props) {
           <Card variant="outlined" className={classes.card}>
             <CardContent>
               <Typography variant="body2" align="left" className={classes.metadataHeader}>Last publish</Typography>
-              <Typography variant="body1" className={classes.metadataBody}>{lastDate || `35 days ago`}</Typography>
+              <Typography variant="body1" align="left" className={classes.metadataBody}>{lastDate || `35 days ago`}</Typography>
             </CardContent>
           </Card>
         </Grid>
@@ -68,12 +68,12 @@ function RepoDetailsMetadata (props) {
           <Card variant="outlined" className={classes.card}>
             <CardContent>
               <Typography variant="body2" align="left" className={classes.metadataHeader}>Total size</Typography>
-              <Typography variant="body1" className={classes.metadataBody}>{transform.formatBytes(size) || `----`}</Typography>
+              <Typography variant="body1" align="left"  className={classes.metadataBody}>{transform.formatBytes(size) || `----`}</Typography>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
-      <Grid container item xs={12} spacing={2}>
+      {/* <Grid container item xs={12} spacing={2}>
         <Grid item xs={12}>
           <Card variant="outlined" className={classes.card}>
             <CardContent>
@@ -82,7 +82,7 @@ function RepoDetailsMetadata (props) {
             </CardContent>
           </Card>
         </Grid>
-      </Grid>
+      </Grid> */}
     </Grid>
   )
 }
