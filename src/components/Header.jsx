@@ -1,9 +1,21 @@
 // react global
 import React from 'react';
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 // components
-import { AppBar, Toolbar, InputBase, Popper, MenuList, MenuItem, ClickAwayListener, Paper, Grow, Stack, IconButton } from '@mui/material';
+import {
+  AppBar,
+  Toolbar,
+  InputBase,
+  Popper,
+  MenuList,
+  MenuItem,
+  ClickAwayListener,
+  Paper,
+  Grow,
+  Stack,
+  IconButton
+} from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import Avatar from '@mui/material/Avatar';
 
@@ -12,65 +24,61 @@ import makeStyles from '@mui/styles/makeStyles';
 import logo from '../assets/Zot-white-text.svg';
 import placeholderProfileButton from '../assets/Profile_button_placeholder.svg';
 
-
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   header: {
-    display: "flex",
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent:"center",
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'center',
     paddingLeft: 0,
-    backgroundColor: "#fff",
-    height: "100%",
-    width:"100%",
-    borderBottom: "0.0625rem solid #BDBDBD",
-    boxShadow: "0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)"
+    backgroundColor: '#fff',
+    height: '100%',
+    width: '100%',
+    borderBottom: '0.0625rem solid #BDBDBD',
+    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)'
   },
   search: {
-    display: "flex",
-    alignItems: "center",
-    backgroundColor: "#FFFFFF",
-    boxShadow: "0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
-    borderRadius: "2.5rem",
-    border: "0.125rem solid #E7E7E7",
-    minWidth: "60%",
+    display: 'flex',
+    alignItems: 'center',
+    backgroundColor: '#FFFFFF',
+    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
+    borderRadius: '2.5rem',
+    border: '0.125rem solid #E7E7E7',
+    minWidth: '60%',
     marginLeft: 16,
-    flexDirection: "row"
+    flexDirection: 'row'
   },
   searchIcon: {
-    color: "#52637A",
-    paddingRight: "3%"
+    color: '#52637A',
+    paddingRight: '3%'
   },
   input: {
-    color: "#464141",
-    marginLeft: 1,
+    color: '#464141',
+    marginLeft: 1
   },
 
   icons: {
-    color: '#001e44',
+    color: '#001e44'
   },
   appName: {
     marginLeft: 10,
     marginTop: 8,
-    color: '#464141',
+    color: '#464141'
   },
-  logoWrapper: {
-  },
+  logoWrapper: {},
   logo: {
-    width: "143px",
-    
+    width: '143px'
   },
-  userAvatar:{
-    height:46,
-    width:46,
+  userAvatar: {
+    height: 46,
+    width: 46
   },
   link: {
-    color: "#000",
+    color: '#000'
   }
-
 }));
 
-function Header({ updateKeywords }) {
+function Header() {
   const classes = useStyles();
   const path = useLocation().pathname;
   const navigate = useNavigate();
@@ -94,29 +102,32 @@ function Header({ updateKeywords }) {
 
   const goToExplore = () => {
     navigate(`/explore`);
-  }
+  };
 
   return (
-    <AppBar sx={{ position: "sticky", minHeight: "10%" }}>
+    <AppBar sx={{ position: 'sticky', minHeight: '10%' }}>
       <Toolbar className={classes.header}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{minWidth:"60%"}}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ minWidth: '60%' }}>
           <Link to="/home" className={classes.logoWrapper}>
-            <Avatar
-              alt="zot"
-              src={logo}
-              className={classes.logo}
-              variant="square"
-            />
+            <Avatar alt="zot" src={logo} className={classes.logo} variant="square" />
           </Link>
-          {path !== '/' &&
-            <Stack className={classes.search} direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
-              <InputBase style={{ paddingLeft: 10, height: 46, color: "rgba(0, 0, 0, 0.6)" }}
+          {path !== '/' && (
+            <Stack
+              className={classes.search}
+              direction="row"
+              alignItems="center"
+              justifyContent="space-between"
+              spacing={2}
+            >
+              <InputBase
+                style={{ paddingLeft: 10, height: 46, color: 'rgba(0, 0, 0, 0.6)' }}
                 placeholder="Search for content..."
                 className={classes.input}
                 onKeyDown={() => goToExplore()}
               />
               <SearchIcon className={classes.searchIcon} />
-            </Stack>}
+            </Stack>
+          )}
           <IconButton
             ref={anchorRef}
             id="composition-button"
@@ -125,7 +136,7 @@ function Header({ updateKeywords }) {
             aria-haspopup="true"
             onClick={handleToggle}
           >
-            <Avatar alt="profile" src={placeholderProfileButton} className={classes.userAvatar} variant="rounded"/>
+            <Avatar alt="profile" src={placeholderProfileButton} className={classes.userAvatar} variant="rounded" />
           </IconButton>
           <Popper
             open={open}
@@ -139,17 +150,12 @@ function Header({ updateKeywords }) {
               <Grow
                 {...TransitionProps}
                 style={{
-                  transformOrigin:
-                    placement === 'bottom-start' ? 'left top' : 'left bottom',
+                  transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom'
                 }}
               >
                 <Paper>
                   <ClickAwayListener onClickAway={handleToggle}>
-                    <MenuList
-                      autoFocusItem={open}
-                      id="composition-menu"
-                      aria-labelledby="composition-button"
-                    >
+                    <MenuList autoFocusItem={open} id="composition-menu" aria-labelledby="composition-button">
                       <MenuItem onClick={handleClose}>Logout</MenuItem>
                     </MenuList>
                   </ClickAwayListener>

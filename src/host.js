@@ -1,7 +1,7 @@
 const hostConfig = {
-  auto:true, 
-  default:'http://localhost:5000'
-}
+  auto: true,
+  default: 'http://localhost:5000'
+};
 
 const host = (manualHost = null) => {
   if (hostConfig.auto) {
@@ -10,6 +10,6 @@ const host = (manualHost = null) => {
     return manualHost;
   }
   return hostConfig.default;
-}
+};
 
-export {host};
+export { host };

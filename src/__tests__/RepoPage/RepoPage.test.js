@@ -3,11 +3,11 @@ import RepoPage from 'pages/RepoPage';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
-jest.mock("react-router-dom", () => ({
+jest.mock('react-router-dom', () => ({
   // @ts-ignore
-  ...jest.requireActual("react-router-dom"),
+  ...jest.requireActual('react-router-dom'),
   useLocation: () => ({
-    pathname:'localhost:3000/image/test',
+    pathname: 'localhost:3000/image/test',
     state: { lastDate: '' }
   })
 }));
@@ -21,10 +21,9 @@ it('renders the repository page component', () => {
   render(
     <BrowserRouter>
       <Routes>
-        <Route path="*" element={<RepoPage updateKeywords={() => {}}/>} />
+        <Route path="*" element={<RepoPage updateKeywords={() => {}} />} />
       </Routes>
     </BrowserRouter>
   );
   expect(screen.getByTestId('repo-container')).toBeInTheDocument();
 });
-

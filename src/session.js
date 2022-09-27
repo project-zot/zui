@@ -1,6 +1,6 @@
 let SESSION = {
-    host: '',
-    username: '',
+  host: '',
+  username: ''
 };
 
-export {SESSION};
+export { SESSION };
