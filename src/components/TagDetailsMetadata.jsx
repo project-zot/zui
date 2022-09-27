@@ -7,51 +7,61 @@ import transform from '../utilities/transform';
 const useStyles = makeStyles(() => ({
   card: {
     marginBottom: 2,
-    display:"flex",
-    flexDirection:"row",
-    alignItems:"start",
-    background:"#FFFFFF",
-    boxShadow:"0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)",
-    borderRadius:"1.5rem",
-    flex:"none",
-    alignSelf:"stretch",
-    flexGrow:0,
-    order:0,
-    width:"100%"
+    display: 'flex',
+    flexDirection: 'row',
+    alignItems: 'start',
+    background: '#FFFFFF',
+    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
+    borderRadius: '1.5rem',
+    flex: 'none',
+    alignSelf: 'stretch',
+    flexGrow: 0,
+    order: 0,
+    width: '100%'
   },
   metadataHeader: {
-    color: "rgba(0, 0, 0, 0.6)"
+    color: 'rgba(0, 0, 0, 0.6)'
   },
   metadataBody: {
-    color: "rgba(0, 0, 0, 0.87)",
+    color: 'rgba(0, 0, 0, 0.87)',
     fontFamily: 'Roboto',
-    fontStyle: "normal",
+    fontStyle: 'normal',
     fontWeight: 400,
-    fontSize: "1rem",
-    lineHeight: "150%",
-    align:"left"
+    fontSize: '1rem',
+    lineHeight: '150%',
+    align: 'left'
   }
 }));
 
-function TagDetailsMetadata (props) {
+function TagDetailsMetadata(props) {
   const classes = useStyles();
-  const {platforms, lastUpdated, size} = props;
-  const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({ unit: 'days' })
+  const { platforms, lastUpdated, size } = props;
+  const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
+    unit: 'days'
+  });
   return (
-    <Grid container spacing={1} data-testid='tagDetailsMetadata-container'>
+    <Grid container spacing={1} data-testid="tagDetailsMetadata-container">
       <Grid container item xs={12}>
-          <Card variant="outlined" className={classes.card}>
-            <CardContent>
-              <Typography variant="body2" align="left" className={classes.metadataHeader}>OS/Arch</Typography>
-              <Typography variant="body1" className={classes.metadataBody}>{platforms.Os || `----`} / {platforms.Arch || `----`}</Typography>
-            </CardContent>
-          </Card>
+        <Card variant="outlined" className={classes.card}>
+          <CardContent>
+            <Typography variant="body2" align="left" className={classes.metadataHeader}>
+              OS/Arch
+            </Typography>
+            <Typography variant="body1" className={classes.metadataBody}>
+              {platforms.Os || `----`} / {platforms.Arch || `----`}
+            </Typography>
+          </CardContent>
+        </Card>
       </Grid>
       <Grid container item xs={12}>
         <Card variant="outlined" className={classes.card}>
           <CardContent>
-            <Typography variant="body2" align="left" className={classes.metadataHeader}>Total Size</Typography>
-            <Typography variant="body1" align="left" className={classes.metadataBody}>{transform.formatBytes(size) || `----`}</Typography>
+            <Typography variant="body2" align="left" className={classes.metadataHeader}>
+              Total Size
+            </Typography>
+            <Typography variant="body1" align="left" className={classes.metadataBody}>
+              {transform.formatBytes(size) || `----`}
+            </Typography>
           </CardContent>
         </Card>
       </Grid>
@@ -59,14 +69,18 @@ function TagDetailsMetadata (props) {
         <Grid item xs={12}>
           <Card variant="outlined" className={classes.card}>
             <CardContent>
-              <Typography variant="body2" align="left" className={classes.metadataHeader}>Last Published</Typography>
-              <Typography variant="body1" align="left" className={classes.metadataBody}>{lastDate || `----`}</Typography>
+              <Typography variant="body2" align="left" className={classes.metadataHeader}>
+                Last Published
+              </Typography>
+              <Typography variant="body1" align="left" className={classes.metadataBody}>
+                {lastDate || `----`}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>
       </Grid>
     </Grid>
-  )
+  );
 }
 
 export default TagDetailsMetadata;

@@ -1,5 +1,5 @@
 // react global
-import React, { } from 'react';
+import React from 'react';
 
 // components
 import SignIn from '../components/SignIn';
@@ -8,11 +8,11 @@ import makeStyles from '@mui/styles/makeStyles';
 import { Grid } from '@mui/material';
 import SigninPresentation from 'components/SignInPresentation';
 
-const useStyles = makeStyles((theme) => ({
+const useStyles = makeStyles(() => ({
   container: {
-    minHeight: "100vh",
-    backgroundColor: "#F6F7F9",
-  },
+    minHeight: '100vh',
+    backgroundColor: '#F6F7F9'
+  }
 }));
 
 function LoginPage({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, setIsLoggedIn }) {
@@ -24,7 +24,12 @@ function LoginPage({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, setIsLoggedIn 
         <SigninPresentation />
       </Grid>
       <Grid item xs={6}>
-        <SignIn isAuthEnabled={isAuthEnabled} setIsAuthEnabled={setIsAuthEnabled} isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />
+        <SignIn
+          isAuthEnabled={isAuthEnabled}
+          setIsAuthEnabled={setIsAuthEnabled}
+          isLoggedIn={isLoggedIn}
+          setIsLoggedIn={setIsLoggedIn}
+        />
       </Grid>
     </Grid>
   );

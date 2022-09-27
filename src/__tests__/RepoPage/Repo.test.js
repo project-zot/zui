@@ -3,19 +3,20 @@ import RepoDetails from 'components/RepoDetails';
 import React from 'react';
 import { api } from 'api';
 
-
 // uselocation mock
 const mockUseLocationValue = {
-    pathname: "'localhost:3000/image/test'",
-    search: '',
-    hash: '',
-    state:{ lastDate: '' }
-  }
+  pathname: "'localhost:3000/image/test'",
+  search: '',
+  hash: '',
+  state: { lastDate: '' }
+};
 
-jest.mock("react-router-dom", () => ({
+jest.mock('react-router-dom', () => ({
   // @ts-ignore
-  ...jest.requireActual("react-router-dom"),
-  useParams: () =>{return {name:'test'} },
+  ...jest.requireActual('react-router-dom'),
+  useParams: () => {
+    return { name: 'test' };
+  },
   useLocation: () => {
     return mockUseLocationValue;
   }
@@ -25,27 +26,26 @@ jest.mock("react-router-dom", () => ({
 const mockCopyToClipboard = jest.fn();
 Object.assign(navigator, {
   clipboard: {
-    writeText: mockCopyToClipboard,
-  },
+    writeText: mockCopyToClipboard
+  }
 });
 
-
 const mockRepoDetailsData = {
-  "ExpandedRepoInfo": {
-      "Manifests": [
+  ExpandedRepoInfo: {
+    Manifests: [
+      {
+        Digest: '2aa7ff5ca352d4d25fc6548f9930a436aacd64d56b1bd1f9ff4423711b9c8718',
+        Tag: 'latest',
+        Layers: [
           {
-              "Digest": "2aa7ff5ca352d4d25fc6548f9930a436aacd64d56b1bd1f9ff4423711b9c8718",
-              "Tag": "latest",
-              "Layers": [
-                  {
-                      "Size": "2798889",
-                      "Digest": "2408cc74d12b6cd092bb8b516ba7d5e290f485d3eb9672efc00f0583730179e8"
-                  }
-              ]
+            Size: '2798889',
+            Digest: '2408cc74d12b6cd092bb8b516ba7d5e290f485d3eb9672efc00f0583730179e8'
           }
-      ]
+        ]
+      }
+    ]
   }
-}
+};
 
 afterEach(() => {
   // restore the spy created with spyOn
@@ -53,36 +53,35 @@ afterEach(() => {
 });
 
 describe('Repo details component', () => {
-  it('fetches repo detailed data and renders',async () => {
+  it('fetches repo detailed data and renders', async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
-    render(<RepoDetails/>);
+    render(<RepoDetails />);
     expect(await screen.findByText('test')).toBeInTheDocument();
   });
 
-  it('should log error if data can\'t be fetched', async () => {
-    jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: { } })
+  it("should log error if data can't be fetched", async () => {
+    jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-    render(<RepoDetails/>);
+    render(<RepoDetails />);
     await waitFor(() => expect(error).toBeCalledTimes(1));
   });
-  
+
   it('should switch between tabs', async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
-    render(<RepoDetails/>);
+    render(<RepoDetails />);
     expect(screen.getByTestId('overview-container')).toBeInTheDocument();
     fireEvent.click(await screen.findByText(/tags/i));
     expect(screen.getByTestId('tags-container')).toBeInTheDocument();
     expect(screen.queryByTestId('overview-container')).not.toBeInTheDocument();
   });
 
-  it('should copy the pull string to clipboard',async () => {
+  it('should copy the pull string to clipboard', async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
-    render(<RepoDetails/>);
+    render(<RepoDetails />);
     fireEvent.click(screen.getByTestId('pullcopy-btn'));
     await waitFor(() => expect(mockCopyToClipboard).toHaveBeenCalledWith('Pull test'));
   });
 });
-

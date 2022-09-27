@@ -7,7 +7,12 @@ it('renders the signin presentation component and signin components if auth enab
   render(
     <BrowserRouter>
       <Routes>
-        <Route path="*" element={<LoginPage isAuthEnabled={true} setIsAuthEnabled={() => { }} isLoggedIn={false} setIsLoggedIn={() => { }} />} />
+        <Route
+          path="*"
+          element={
+            <LoginPage isAuthEnabled={true} setIsAuthEnabled={() => {}} isLoggedIn={false} setIsLoggedIn={() => {}} />
+          }
+        />
       </Routes>
     </BrowserRouter>
   );
