@@ -13,6 +13,7 @@ import makeStyles from '@mui/styles/makeStyles';
 // utility
 import { api, endpoints } from '../api';
 import { host } from '../host';
+import FilterCard from './FilterCard.jsx';
 import { mapToRepo } from 'utilities/objectModels.js';
 import { useSearchParams } from 'react-router-dom';
 
@@ -105,19 +106,19 @@ function Explore({ data, updateData }) {
     );
   };
 
-  // const renderFilterCards = () => {
-  //   return (
-  //     <Stack spacing={2}>
-  //       <FilterCard title="Products" filters={['Images', 'Plugins']} />
-  //       <FilterCard title="Images" filters={['Verified publisher', 'Official images']} />
-  //       <FilterCard title="Operating system" filters={['Windows', 'Linux']} />
-  //       <FilterCard
-  //         title="Architectures"
-  //         filters={['ARM', 'ARM 64', 'IBM POWER', 'IBM Z', 'PowerPC 64 LE', 'x86', 'x86-64']}
-  //       />
-  //     </Stack>
-  //   );
-  // };
+  const renderFilterCards = () => {
+    return (
+      <Stack spacing={2}>
+        <FilterCard title="Products" filters={['Images', 'Plugins']} />
+        <FilterCard title="Images" filters={['Verified publisher', 'Official images']} />
+        <FilterCard title="Operating system" filters={['Windows', 'Linux']} />
+        <FilterCard
+          title="Architectures"
+          filters={['ARM', 'ARM 64', 'IBM POWER', 'IBM Z', 'PowerPC 64 LE', 'x86', 'x86-64']}
+        />
+      </Stack>
+    );
+  };
 
   // const handleSortChange = (event) => {
   //   setSortFilter(event.target.value);
@@ -131,7 +132,7 @@ function Explore({ data, updateData }) {
           <div style={{ marginTop: 20 }}>
             <div style={{}}>
               <Alert style={{ marginTop: 10, width: '100%' }} variant="outlined" severity="warning">
-                Looks like we don&apos;t have anything matching that search. Try searching something else.
+                Looks like we don't have anything matching that search. Try searching something else.
               </Alert>
             </div>
           </div>
