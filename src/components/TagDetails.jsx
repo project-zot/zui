@@ -20,89 +20,90 @@ import TagDetailsMetadata from './TagDetailsMetadata';
 import VulnerabilitiesDetails from './VulnerabilitiesDetails';
 
 // @ts-ignore
-const useStyles = makeStyles(() => ({
-  pageWrapper: {
-    backgroundColor: '#FFFFFF',
-    height: '100vh'
-  },
-  container: {
-    paddingTop: 5,
-    paddingBottom: 5,
-    marginTop: 100,
-    backgroundColor: '#FFFFFF'
-  },
-  repoName: {
-    fontWeight: '700',
-    fontSize: '2.5rem',
-    color: '#0F2139',
-    textAlign: 'left'
-  },
-  avatar: {
-    height: '3rem',
-    width: '3rem'
-  },
-  cardBtn: {
-    height: '100%',
-    width: '100%'
-  },
-  media: {
-    borderRadius: '3.125em'
-  },
-  tabs: {
-    marginTop: '3rem',
-    padding: '0.5rem',
-    height: '100%'
-  },
-  tabContent: {
-    height: '100%'
-  },
-  selectedTab: {
-    background: '#D83C0E',
-    borderRadius: '1.5rem'
-  },
-  tabPanel: {
-    height: '100%',
-    paddingLeft: '0rem!important'
-  },
-  metadata: {
-    marginTop: '8rem',
-    paddingLeft: '1.5rem'
-  },
-  card: {
-    marginBottom: 2,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'start',
-    background: '#FFFFFF',
-    border: '0.0625rem solid #E0E5EB',
-    borderRadius: '2rem',
-    flex: 'none',
-    alignSelf: 'stretch',
-    flexGrow: 0,
-    order: 0,
-    width: '100%',
-    boxShadow: 'none!important'
-  },
-  platformText: {
-    backgroundColor: '#EDE7F6',
-    color: '#220052',
-    fontWeight: '400',
-    fontSize: '0.8125rem',
-    lineHeight: '1.125rem',
-    letterSpacing: '0.01rem'
-  },
-  inputForm: {
-    '& fieldset': {
-      border: '0.125rem solid #52637A'
+const useStyles = makeStyles((theme) => ({
+    pageWrapper: {
+        backgroundColor: "#FFFFFF",
+        height: '100vh',
+    },
+    container: {
+        paddingTop: 5,
+        paddingBottom: 5,
+        marginTop: 100,
+        backgroundColor: "#FFFFFF",
+    },
+    repoName: {
+      fontWeight:"700",
+      fontSize:"2.5rem",
+      color:"#0F2139",
+      textAlign: 'left'
+    },
+    avatar: {
+      height:"3rem",
+      width:"3rem"
+    },
+    cardBtn: {
+      height: "100%",
+      width: "100%"
+    },
+    media: {
+      borderRadius: '3.125em',
+    },
+    tabs: {
+      marginTop: "3rem",
+      padding:"0.5rem",
+      height: "100%"
+    },
+    tabContent:{
+      height:"100%"
+    },
+    selectedTab: {
+      background:"#D83C0E",
+      borderRadius:"1.5rem"
+    },
+    tabPanel: {
+      height:"100%",
+      paddingLeft: "0rem!important"
+    },
+    metadata: {
+      marginTop: "8rem",
+      paddingLeft:"1.5rem",
+    },
+    card: {
+      marginBottom: 2,
+      display:"flex",
+      flexDirection:"row",
+      alignItems:"start",
+      background:"#FFFFFF",
+      border: "0.0625rem solid #E0E5EB",
+      borderRadius:"2rem",
+      flex:"none",
+      alignSelf:"stretch",
+      flexGrow:0,
+      order:0,
+      width:"100%",
+      boxShadow: "none!important"
+    },
+    platformText:{
+      backgroundColor:"#EDE7F6", 
+      color: "#220052", 
+      fontWeight:'400', 
+      fontSize:'0.8125rem',
+      lineHeight:'1.125rem',
+      letterSpacing:'0.01rem'
+    },
+    inputForm:{
+      '& fieldset':{
+        border: "0.125rem solid #52637A",
+      },
+      
+    },
+    cardRoot:{
+      boxShadow: "none!important",
+    },
+    header:{
+      paddingLeft:"2rem"
     }
-  },
-  cardRoot: {
-    boxShadow: 'none!important'
-  },
-  header: {
-    paddingLeft: '2rem'
-  }
-}));
+  }));
 
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {

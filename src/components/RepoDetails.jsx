@@ -35,89 +35,90 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 import RepoDetailsMetadata from './RepoDetailsMetadata';
 
 // @ts-ignore
-const useStyles = makeStyles(() => ({
-  pageWrapper: {
-    backgroundColor: '#FFFFFF',
-    height: '100vh'
-  },
-  container: {
-    paddingTop: 5,
-    paddingBottom: 5,
-    marginTop: 100,
-    backgroundColor: '#FFFFFF'
-  },
-  repoName: {
-    fontWeight: '700',
-    fontSize: '2.5rem',
-    color: '#0F2139',
-    textAlign: 'left'
-  },
-  avatar: {
-    height: '3rem',
-    width: '3rem'
-  },
-  cardBtn: {
-    height: '100%',
-    width: '100%'
-  },
-  media: {
-    borderRadius: '3.125em'
-  },
-  tabs: {
-    marginTop: '3rem',
-    padding: '0.5rem',
-    height: '100%'
-  },
-  tabContent: {
-    height: '100%'
-  },
-  selectedTab: {
-    background: '#D83C0E',
-    borderRadius: '1.5rem'
-  },
-  tabPanel: {
-    height: '100%',
-    paddingLeft: '0rem!important'
-  },
-  metadata: {
-    marginTop: '8rem',
-    paddingLeft: '1.5rem'
-  },
-  card: {
-    marginBottom: 2,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'start',
-    background: '#FFFFFF',
-    border: '0.0625rem solid #E0E5EB',
-    borderRadius: '2rem',
-    flex: 'none',
-    alignSelf: 'stretch',
-    flexGrow: 0,
-    order: 0,
-    width: '100%',
-    boxShadow: 'none!important'
-  },
-  platformText: {
-    backgroundColor: '#EDE7F6',
-    color: '#220052',
-    fontWeight: '400',
-    fontSize: '0.8125rem',
-    lineHeight: '1.125rem',
-    letterSpacing: '0.01rem'
-  },
-  inputForm: {
-    '& fieldset': {
-      border: '0.125rem solid #52637A'
+const useStyles = makeStyles((theme) => ({
+    pageWrapper: {
+        backgroundColor: "#FFFFFF",
+        height: '100vh',
+    },
+    container: {
+        paddingTop: 5,
+        paddingBottom: 5,
+        marginTop: 100,
+        backgroundColor: "#FFFFFF",
+    },
+    repoName: {
+      fontWeight:"700",
+      fontSize:"2.5rem",
+      color:"#0F2139",
+      textAlign: 'left'
+    },
+    avatar: {
+      height:"3rem",
+      width:"3rem"
+    },
+    cardBtn: {
+      height: "100%",
+      width: "100%"
+    },
+    media: {
+      borderRadius: '3.125em',
+    },
+    tabs: {
+      marginTop: "3rem",
+      padding:"0.5rem",
+      height: "100%"
+    },
+    tabContent:{
+      height:"100%"
+    },
+    selectedTab: {
+      background:"#D83C0E",
+      borderRadius:"1.5rem"
+    },
+    tabPanel: {
+      height:"100%",
+      paddingLeft: "0rem!important"
+    },
+    metadata: {
+      marginTop: "8rem",
+      paddingLeft:"1.5rem",
+    },
+    card: {
+      marginBottom: 2,
+      display:"flex",
+      flexDirection:"row",
+      alignItems:"start",
+      background:"#FFFFFF",
+      border: "0.0625rem solid #E0E5EB",
+      borderRadius:"2rem",
+      flex:"none",
+      alignSelf:"stretch",
+      flexGrow:0,
+      order:0,
+      width:"100%",
+      boxShadow: "none!important"
+    },
+    platformText:{
+      backgroundColor:"#EDE7F6", 
+      color: "#220052", 
+      fontWeight:'400', 
+      fontSize:'0.8125rem',
+      lineHeight:'1.125rem',
+      letterSpacing:'0.01rem'
+    },
+    inputForm:{
+      '& fieldset':{
+        border: "0.125rem solid #52637A",
+      },
+      
+    },
+    cardRoot:{
+      boxShadow: "none!important",
+    },
+    header:{
+      paddingLeft:"2rem"
     }
-  },
-  cardRoot: {
-    boxShadow: 'none!important'
-  },
-  header: {
-    paddingLeft: '2rem'
-  }
-}));
+  }));
 
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
@@ -141,35 +142,34 @@ function RepoDetails(props) {
   const { overviewTitle } = props;
 
   useEffect(() => {
-    api
-      .get(`${host()}${endpoints.detailedRepoInfo(name)}`)
-      .then((response) => {
-        if (response.data && response.data.data) {
-          let repoInfo = response.data.data.ExpandedRepoInfo;
-          let imageData = {
-            name: name,
-            images: repoInfo.Images,
-            lastUpdated: repoInfo.Summary?.LastUpdated,
-            size: repoInfo.Summary?.Size,
-            //latestDigest: repoInfo.Summary?.NewestImage.Digest,
-            //layers: repoInfo.Summary?.NewestImage.Layers,
-            platforms: repoInfo.Summary?.Platforms,
-            vendors: repoInfo.Summary?.Vendors,
-            newestTag: repoInfo.Summary?.NewestImage,
-            description: repoInfo.Summary?.NewestImage.Description,
-            source: repoInfo.Summary?.NewestImage.Source,
-            downloads: repoInfo.Summary?.NewestImage.DownloadCount,
-            overview: repoInfo.Summary?.NewestImage.Documentation
-          };
-          setRepoDetailData(imageData);
-          //setIsLoading(false);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-        setRepoDetailData({});
-      });
-  }, [name]);
+      api.get(`${host()}${endpoints.detailedRepoInfo(name)}`)
+        .then(response => {
+          if (response.data && response.data.data) {
+              let repoInfo = response.data.data.ExpandedRepoInfo;
+              let imageData = {
+                name: name,
+                images: repoInfo.Images,
+                lastUpdated: repoInfo.Summary?.LastUpdated,
+                size: repoInfo.Summary?.Size,
+                //latestDigest: repoInfo.Summary?.NewestImage.Digest,
+                //layers: repoInfo.Summary?.NewestImage.Layers,
+                platforms: repoInfo.Summary?.Platforms,
+                vendors: repoInfo.Summary?.Vendors,
+                newestTag: repoInfo.Summary?.NewestImage,
+                description: repoInfo.Summary?.NewestImage.Description,
+                source: repoInfo.Summary?.NewestImage.Source,
+                downloads: repoInfo.Summary?.NewestImage.DownloadCount,
+                overview: repoInfo.Summary?.NewestImage.Documentation,
+              }
+              setRepoDetailData(imageData);
+              //setIsLoading(false);
+          }
+        })
+        .catch((e) => {
+            console.error(e);
+            setRepoDetailData({});
+        });
+  }, [name])
   //function that returns a random element from an array
   // function getRandom(list) {
   //   return list[Math.floor(Math.random() * list.length)];
@@ -233,24 +233,10 @@ function RepoDetails(props) {
     return (
       <Card className={classes.card} data-testid="overview-container">
         <CardContent>
-          <Typography variant="h4" align="left">
-            {overviewTitle || 'Quickstart'}
-          </Typography>
-          <Typography
-            variant="body1"
-            sx={{
-              color: 'rgba(0, 0, 0, 0.6)',
-              fontSize: '1rem',
-              lineHeight: '150%',
-              marginTop: '5%',
-              alignSelf: 'stretch'
-            }}
-          >
-            {
-              // @ts-ignore
-              repoDetailData.overview || 'N/A'
-            }
-          </Typography>
+          <Typography variant="h4" align="left">{overviewTitle || 'Quickstart'}</Typography>
+          <Typography variant="body1" sx={{color:"rgba(0, 0, 0, 0.6)", fontSize:"1rem",lineHeight:"150%", marginTop:"5%", alignSelf:"stretch"}}>{
+          // @ts-ignore 
+          repoDetailData.overview || "N/A"}</Typography>
         </CardContent>
       </Card>
     );
@@ -301,56 +287,42 @@ function RepoDetails(props) {
                 </Typography>
                 {/* {vulnerabilityCheck()}
                       {signatureCheck()} */}
-                {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
-              </Stack>
-              <Typography
-                pt={1}
-                sx={{ fontSize: 16, lineHeight: '1.5rem', color: 'rgba(0, 0, 0, 0.6)', paddingLeft: '4rem' }}
-                gutterBottom
-                align="left"
-              >
-                {
-                  // @ts-ignore
-                  repoDetailData?.description || 'N/A'
-                }
-              </Typography>
-              <Stack alignItems="center" sx={{ paddingLeft: '4rem' }} direction="row" spacing={2} pt={1}>
-                {platformChips()}
-              </Stack>
-            </Grid>
-            <Grid item xs={4}>
-              <Typography variant="body1" sx={{ color: '#52637A', fontSize: '1rem' }}>
-                Copy and pull to pull this image
-              </Typography>
-              <FormControl sx={{ m: 1, paddingLeft: '1.5rem' }} variant="outlined">
-                <OutlinedInput
-                  // value={`Pull ${name}`}
-                  value="N/A"
-                  className={classes.inputForm}
-                  sx={{ m: 1, width: '20.625rem', borderRadius: '0.5rem', color: '#14191F' }}
-                  endAdornment={
-                    <InputAdornment position="end">
-                      <IconButton
-                        aria-label="copy"
-                        edge="end"
-                        onClick={() => navigator.clipboard.writeText(`Pull ${name}`)}
-                        data-testid="pullcopy-btn"
-                      >
-                        <ContentCopyIcon />
-                      </IconButton>
-                    </InputAdornment>
-                  }
-                  aria-describedby="outlined-weight-helper-text"
-                  inputProps={{
-                    'aria-label': 'weight'
-                  }}
-                />
-              </FormControl>
-            </Grid>
-          </Grid>
-          <Grid container>
-            <Grid item xs={8} className={classes.tabs}>
-              <TabContext value={selectedTab}>
+                      {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
+                    </Stack>
+                    <Typography pt={1} sx={{ fontSize: 16,lineHeight:"1.5rem", color:"rgba(0, 0, 0, 0.6)", paddingLeft:"4rem"}} gutterBottom align="left">
+                   {// @ts-ignore
+                      repoDetailData?.description || 'N/A'}
+                    </Typography>
+                    <Stack alignItems="center" sx={{ paddingLeft:"4rem"}} direction="row" spacing={2} pt={1}>
+                      {platformChips()}
+                    </Stack>
+                  </Grid>
+                  <Grid item xs={4} >
+                      <Typography variant="body1" sx={{color:"#52637A", fontSize: "1rem"}}>Copy and pull to pull this image</Typography>
+                      <FormControl  sx={{ m: 1, paddingLeft:"1.5rem"}} variant="outlined">
+                        <OutlinedInput
+                          // value={`Pull ${name}`}
+                          value= 'N/A'
+                          className={classes.inputForm}
+                          sx={{ m: 1, width: '20.625rem',  borderRadius: "0.5rem", color: "#14191F"}}
+                          endAdornment={
+                            <InputAdornment position="end" >
+                              <IconButton aria-label='copy' edge="end" onClick={() => navigator.clipboard.writeText(`Pull ${name}`)} data-testid='pullcopy-btn'>
+                                <ContentCopyIcon/>
+                              </IconButton>
+                            </InputAdornment>
+                          }
+                          aria-describedby="outlined-weight-helper-text"
+                          inputProps={{
+                            'aria-label': 'weight',
+                          }}
+                        />
+                      </FormControl>
+                  </Grid>
+                </Grid>
+                <Grid container>
+                  <Grid item xs={8} className={classes.tabs}>
+                  <TabContext value={selectedTab}>
                 <Box>
                   <TabList
                     onChange={handleTabChange}

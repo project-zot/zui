@@ -59,12 +59,9 @@ const api = {
 };
 
 const endpoints = {
-  imageList:
-    '/v2/_zot/ext/search?query={RepoListWithNewestImage(){Platforms {Os Arch}  NewestImage {RepoName Tag LastUpdated Description  Licenses Vendor Size Labels} }}',
-  detailedRepoInfo: (name) =>
-    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Digest Tag Layers {Size Digest}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName Layers {Size Digest} Digest Tag Title Documentation DownloadCount Source Description History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}}}}}}`,
-  vulnerabilitiesForRepo: (name) =>
-    `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}"){Tag, CVEList {Id Title Description Severity PackageList {Name InstalledVersion FixedVersion}}}}`
-};
+    imageList: '/v2/_zot/ext/search?query={RepoListWithNewestImage(){Platforms {Os Arch}  NewestImage {RepoName Tag LastUpdated Description  Licenses Vendor Size Labels} }}',
+    detailedRepoInfo: (name) => `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Digest Tag Layers {Size Digest}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName Layers {Size Digest} Digest Tag Title Documentation DownloadCount Source Description History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}}}}}}`,
+    vulnerabilitiesForRepo: (name) => `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}"){Tag, CVEList {Id Title Description Severity PackageList {Name InstalledVersion FixedVersion}}}}`
+}
 
 export { api, endpoints };
