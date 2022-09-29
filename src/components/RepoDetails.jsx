@@ -43,7 +43,8 @@ const useStyles = makeStyles((theme) => ({
     repoName: {
       fontWeight:"700",
       fontSize:"2.5rem",
-      color:"#0F2139"
+      color:"#0F2139",
+      textAlign: 'left'
     },
     avatar: {
       height:"3rem",
@@ -145,11 +146,15 @@ function RepoDetails (props) {
                 images: repoInfo.Images,
                 lastUpdated: repoInfo.Summary?.LastUpdated,
                 size: repoInfo.Summary?.Size,
-                //latestDigest: repoInfo.Images[0].Digest,
-                //layers: repoInfo.Images[0].Layers,
+                //latestDigest: repoInfo.Summary?.NewestImage.Digest,
+                //layers: repoInfo.Summary?.NewestImage.Layers,
                 platforms: repoInfo.Summary?.Platforms,
                 vendors: repoInfo.Summary?.Vendors,
-                newestTag: repoInfo.Summary?.NewestImage
+                newestTag: repoInfo.Summary?.NewestImage,
+                description: repoInfo.Summary?.NewestImage.Description,
+                source: repoInfo.Summary?.NewestImage.Source,
+                downloads: repoInfo.Summary?.NewestImage.DownloadCount,
+                overview: repoInfo.Summary?.NewestImage.Documentation,
               }
               setRepoDetailData(imageData);
               setIsLoading(false);
@@ -225,7 +230,9 @@ function RepoDetails (props) {
       <Card className={classes.card} data-testid='overview-container'>
         <CardContent>
           <Typography variant="h4" align="left">{overviewTitle || 'Quickstart'}</Typography>
-          <Typography variant="body1" sx={{color:"rgba(0, 0, 0, 0.6)", fontSize:"1rem",lineHeight:"150%", marginTop:"5%", alignSelf:"stretch"}}>{description || "N/A"}</Typography>
+          <Typography variant="body1" sx={{color:"rgba(0, 0, 0, 0.6)", fontSize:"1rem",lineHeight:"150%", marginTop:"5%", alignSelf:"stretch"}}>{
+          // @ts-ignore 
+          repoDetailData.overview || "N/A"}</Typography>
         </CardContent>
       </Card>
     );
@@ -279,7 +286,8 @@ function RepoDetails (props) {
                       {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
                     </Stack>
                     <Typography pt={1} sx={{ fontSize: 16,lineHeight:"1.5rem", color:"rgba(0, 0, 0, 0.6)", paddingLeft:"4rem"}} gutterBottom align="left">
-                      {description || 'N/A'}
+                   {// @ts-ignore
+                      repoDetailData?.description || 'N/A'}
                     </Typography>
                     <Stack alignItems="center" sx={{ paddingLeft:"4rem"}} direction="row" spacing={2} pt={1}>
                       {platformChips()}
@@ -350,6 +358,10 @@ function RepoDetails (props) {
                   </Grid>
                     <Grid item xs={4} className={classes.metadata}>
                       <RepoDetailsMetadata 
+                      // @ts-ignore
+                      weeklyDownloads={repoDetailData?.downloads}
+                      // @ts-ignore
+                       repoURL={repoDetailData?.source}
                         // @ts-ignore
                         lastUpdated={repoDetailData?.lastUpdated}
                         // @ts-ignore

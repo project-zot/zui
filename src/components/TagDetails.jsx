@@ -43,7 +43,8 @@ const useStyles = makeStyles((theme) => ({
     repoName: {
       fontWeight:"700",
       fontSize:"2.5rem",
-      color:"#0F2139"
+      color:"#0F2139",
+      textAlign: 'left'
     },
     avatar: {
       height:"3rem",
