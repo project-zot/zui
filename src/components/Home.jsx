@@ -2,10 +2,10 @@ import { Grid, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { api, endpoints } from 'api';
 import { host } from '../host';
-import { isEmpty } from 'lodash';
 import React, { useEffect, useState } from 'react';
 import PreviewCard from './PreviewCard';
 import RepoCard from './RepoCard';
+import { mapToRepo } from 'utilities/objectModels';
 
 const useStyles = makeStyles(() => ({
   gridWrapper: {
@@ -59,58 +59,32 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function Home({ keywords, data, updateData }) {
+function Home({ data, updateData }) {
   // const [isLoading, setIsLoading] = useState(true);
   const [homeData, setHomeData] = useState([]);
-  const filterStr = keywords && keywords.toLocaleLowerCase();
   const classes = useStyles();
 
   useEffect(() => {
     api
-      .get(`${host()}${endpoints.imageList}`)
+      .get(`${host()}${endpoints.repoList}`)
       .then((response) => {
         if (response.data && response.data.data) {
-          let imageList = response.data.data.RepoListWithNewestImage;
-          let imagesData = imageList.map((image) => {
-            return {
-              name: image.NewestImage.RepoName,
-              latestVersion: image.NewestImage.Tag,
-              tags: image.NewestImage.Labels,
-              description: image.NewestImage.Description,
-              platforms: image.Platforms,
-              licenses: image.NewestImage.Licenses,
-              size: image.NewestImage.Size,
-              vendor: image.NewestImage.Vendor,
-              lastUpdated: image.NewestImage.LastUpdated
-            };
+          let repoList = response.data.data.RepoListWithNewestImage;
+          let repoData = repoList.map((responseRepo) => {
+            return mapToRepo(responseRepo);
           });
-          updateData(imagesData);
+          updateData(repoData);
           // setIsLoading(false);
         }
       })
       .catch((e) => {
         console.error(e);
       });
-  }, []);
+  }, [updateData]);
 
   useEffect(() => {
-    // setIsLoading(false);
-  }, []);
-
-  useEffect(() => {
-    const filtered =
-      data &&
-      data.filter((item) => {
-        return (
-          isEmpty(keywords) ||
-          (item.name && item.name.toLocaleLowerCase().indexOf(filterStr) >= 0) ||
-          (item.appID && item.appID.toLocaleLowerCase().indexOf(filterStr) >= 0) ||
-          (item.appId && item.appId.toLocaleLowerCase().indexOf(filterStr) >= 0)
-        );
-      });
-
-    setHomeData(filtered);
-  }, [keywords, data]);
+    setHomeData(data);
+  }, [data]);
 
   const renderPreviewCards = () => {
     return (

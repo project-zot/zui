@@ -1,12 +1,11 @@
 // react global
 import React from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation } from 'react-router-dom';
 
 // components
 import {
   AppBar,
   Toolbar,
-  InputBase,
   Popper,
   MenuList,
   MenuItem,
@@ -16,13 +15,14 @@ import {
   Stack,
   IconButton
 } from '@mui/material';
-import SearchIcon from '@mui/icons-material/Search';
 import Avatar from '@mui/material/Avatar';
 
 // styling
 import makeStyles from '@mui/styles/makeStyles';
 import logo from '../assets/Zot-white-text.svg';
 import placeholderProfileButton from '../assets/Profile_button_placeholder.svg';
+import { useState, useRef } from 'react';
+import SearchSuggestion from './SearchSuggestion';
 
 const useStyles = makeStyles(() => ({
   header: {
@@ -37,24 +37,14 @@ const useStyles = makeStyles(() => ({
     borderBottom: '0.0625rem solid #BDBDBD',
     boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)'
   },
-  search: {
-    display: 'flex',
-    alignItems: 'center',
-    backgroundColor: '#FFFFFF',
-    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
-    borderRadius: '2.5rem',
-    border: '0.125rem solid #E7E7E7',
-    minWidth: '60%',
-    marginLeft: 16,
-    flexDirection: 'row'
-  },
   searchIcon: {
     color: '#52637A',
     paddingRight: '3%'
   },
   input: {
     color: '#464141',
-    marginLeft: 1
+    marginLeft: 1,
+    width: '90%'
   },
 
   icons: {
@@ -78,13 +68,13 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function Header() {
+function Header({ updateData }) {
   const classes = useStyles();
   const path = useLocation().pathname;
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
 
-  const [open, setOpen] = React.useState(false);
-  const anchorRef = React.useRef(null);
+  const [open, setOpen] = useState(false);
+  const anchorRef = useRef(null);
 
   const handleToggle = () => {
     setOpen((prevOpen) => !prevOpen);
@@ -100,10 +90,6 @@ function Header() {
     setOpen(false);
   };
 
-  const goToExplore = () => {
-    navigate(`/explore`);
-  };
-
   return (
     <AppBar sx={{ position: 'sticky', minHeight: '10%' }}>
       <Toolbar className={classes.header}>
@@ -111,23 +97,7 @@ function Header() {
           <Link to="/home" className={classes.logoWrapper}>
             <Avatar alt="zot" src={logo} className={classes.logo} variant="square" />
           </Link>
-          {path !== '/' && (
-            <Stack
-              className={classes.search}
-              direction="row"
-              alignItems="center"
-              justifyContent="space-between"
-              spacing={2}
-            >
-              <InputBase
-                style={{ paddingLeft: 10, height: 46, color: 'rgba(0, 0, 0, 0.6)' }}
-                placeholder="Search for content..."
-                className={classes.input}
-                onKeyDown={() => goToExplore()}
-              />
-              <SearchIcon className={classes.searchIcon} />
-            </Stack>
-          )}
+          {path !== '/' && <SearchSuggestion updateData={updateData} />}
           <IconButton
             ref={anchorRef}
             id="composition-button"

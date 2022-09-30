@@ -59,15 +59,21 @@ const api = {
 };
 
 const endpoints = {
-  imageList:
-    '/v2/_zot/ext/search?query={RepoListWithNewestImage(){Platforms {Os Arch}  NewestImage {RepoName Tag LastUpdated Description  Licenses Vendor Size Labels} }}',
+  repoList:
+    '/v2/_zot/ext/search?query={RepoListWithNewestImage(){Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag  Description  Licenses Title Source Documentation History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}} Vendor Labels} DownloadCount}}',
   detailedRepoInfo: (name) =>
     `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Digest Tag Layers {Size Digest}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName Layers {Size Digest} Digest Tag Title Documentation DownloadCount Source Description History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}}}}}}`,
   vulnerabilitiesForRepo: (name) =>
     `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}"){Tag, CVEList {Id Title Description Severity PackageList {Name InstalledVersion FixedVersion}}}}`,
+  globalSearch: (searchQuery) =>
+    `/v2/_zot/ext/search?query={GlobalSearch(query:"${searchQuery}") {Repos {Name LastUpdated Size Platforms { Os Arch } NewestImage { Tag Description Licenses Vendor Labels } DownloadCount}}}`,
   layersDetailsForImage: (name) =>
     `/v2/_zot/ext/search?query={Image(image: "${name}"){History {Layer {Size Digest Score} HistoryDescription {Created CreatedBy Author Comment EmptyLayer} }}}`,
-  dependsOnForImage: (name) => `/v2/_zot/ext/search?query={BaseImageList(image: "${name}"){RepoName}}`
+  dependsOnForImage: (name) => `/v2/_zot/ext/search?query={BaseImageList(image: "${name}"){RepoName}}`,
+  globalSearchPaginated: (searchQuery, pageNumber, pageSize) =>
+    `/v2/_zot/ext/search?query={GlobalSearch(query:"${searchQuery}", requestedPage: {limit:${pageSize} offset:${
+      (pageNumber - 1) * pageSize
+    }}) {Repos {Name LastUpdated Size Platforms { Os Arch } NewestImage { Tag Description Licenses Vendor Labels } DownloadCount}}}`
 };
 
 export { api, endpoints };

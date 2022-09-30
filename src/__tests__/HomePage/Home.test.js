@@ -13,43 +13,43 @@ jest.mock('react-router-dom', () => ({
 
 const StateHomeWrapper = () => {
   const [data, useData] = useState([]);
-  return <Home data={data} keywords={''} updateData={useData} />;
+  return <Home data={data} updateData={useData} />;
 };
 const mockImageList = {
   RepoListWithNewestImage: [
     {
+      Name: 'alpine',
+      Size: '2806985',
+      LastUpdated: '2022-08-09T17:19:53.274069586Z',
       NewestImage: {
-        RepoName: 'alpine',
         Tag: 'latest',
-        LastUpdated: '2022-08-09T17:19:53.274069586Z',
-        Description: '',
+        Description: 'w',
         Licenses: '',
         Vendor: '',
-        Size: '2806985',
         Labels: ''
       }
     },
     {
+      Name: 'mongo',
+      Size: '231383863',
+      LastUpdated: '2022-08-02T01:30:49.193203152Z',
       NewestImage: {
-        RepoName: 'mongo',
         Tag: 'latest',
-        LastUpdated: '2022-08-02T01:30:49.193203152Z',
         Description: '',
         Licenses: '',
         Vendor: '',
-        Size: '231383863',
         Labels: ''
       }
     },
     {
+      Name: 'node',
+      Size: '369311301',
+      LastUpdated: '2022-08-23T00:20:40.144281895Z',
       NewestImage: {
-        RepoName: 'node',
         Tag: 'latest',
-        LastUpdated: '2022-08-23T00:20:40.144281895Z',
         Description: '',
         Licenses: '',
         Vendor: '',
-        Size: '369311301',
         Labels: ''
       }
     }

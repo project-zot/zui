@@ -13,8 +13,8 @@ import makeStyles from '@mui/styles/makeStyles';
 // utility
 import { api, endpoints } from '../api';
 import { host } from '../host';
-import { isEmpty } from 'lodash';
-//
+import { mapToRepo } from 'utilities/objectModels.js';
+import { useSearchParams } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
   gridWrapper: {
@@ -44,64 +44,46 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function Explore({ keywords, data, updateData }) {
+function Explore({ data, updateData }) {
   const [isLoading, setIsLoading] = useState(true);
-  const [filteredData, setFilteredData] = useState([]);
+  const [exploreData, setExploreData] = useState([]);
   // const [sortFilter, setSortFilter] = useState('');
-  const filterStr = keywords && keywords.toLocaleLowerCase();
+  const [queryParams] = useSearchParams();
   const classes = useStyles();
 
   useEffect(() => {
-    api
-      .get(`${host()}${endpoints.imageList}`)
-      .then((response) => {
-        if (response.data && response.data.data) {
-          let imageList = response.data.data.RepoListWithNewestImage;
-          let imagesData = imageList.map((image) => {
-            return {
-              name: image.NewestImage.RepoName,
-              latestVersion: image.NewestImage.Tag,
-              tags: image.NewestImage.Labels,
-              description: image.NewestImage.Description,
-              platforms: image.Platforms,
-              licenses: image.NewestImage.Licenses,
-              size: image.NewestImage.Size,
-              vendor: image.NewestImage.Vendor,
-              lastUpdated: image.NewestImage.LastUpdated
-            };
-          });
-          updateData(imagesData);
-          setIsLoading(false);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-      });
-  }, []);
+    if (!queryParams.get('search')) {
+      api
+        .get(`${host()}${endpoints.repoList}`)
+        .then((response) => {
+          if (response.data && response.data.data) {
+            let repoList = response.data.data.RepoListWithNewestImage;
+            let repoData = repoList.map((responseRepo) => {
+              return mapToRepo(responseRepo);
+            });
+            updateData(repoData);
+            setIsLoading(false);
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+        });
+    }
+  }, [updateData, queryParams]);
 
   useEffect(() => {
     setIsLoading(false);
   }, []);
 
+  // Update component data based on response data, here filtering logic will be added
   useEffect(() => {
-    const filtered =
-      data &&
-      data.filter((item) => {
-        return (
-          isEmpty(keywords) ||
-          (item.name && item.name.toLocaleLowerCase().indexOf(filterStr) >= 0) ||
-          (item.appID && item.appID.toLocaleLowerCase().indexOf(filterStr) >= 0) ||
-          (item.appId && item.appId.toLocaleLowerCase().indexOf(filterStr) >= 0)
-        );
-      });
-
-    setFilteredData(filtered);
-  }, [keywords, filterStr, data]);
+    setExploreData(data);
+  }, [data]);
 
   const renderRepoCards = () => {
     return (
-      filteredData &&
-      filteredData.map((item, index) => {
+      exploreData &&
+      exploreData.map((item, index) => {
         return (
           <RepoCard
             name={item.name}
@@ -143,7 +125,7 @@ function Explore({ keywords, data, updateData }) {
   return (
     <Container maxWidth="lg">
       {isLoading && <Loading />}
-      {!(filteredData && filteredData.length) ? (
+      {!(exploreData && exploreData.length) ? (
         <Grid container className={classes.nodataWrapper}>
           <div style={{ marginTop: 20 }}>
             <div style={{}}>
@@ -160,7 +142,7 @@ function Explore({ keywords, data, updateData }) {
             <Grid item xs={12}>
               <Stack direction="row" className={classes.resultsRow}>
                 <Typography variant="body2" className={classes.results}>
-                  Results {filteredData.length}
+                  Results {exploreData.length}
                 </Typography>
                 {/* <FormControl  sx={{m:'1', minWidth:"4.6875rem"}} className={classes.sortForm} size="small">
                                   <InputLabel>Sort</InputLabel>

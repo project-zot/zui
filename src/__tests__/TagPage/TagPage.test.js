@@ -20,7 +20,7 @@ it('renders the tags page component', async () => {
   render(
     <BrowserRouter>
       <Routes>
-        <Route path="*" element={<TagPage updateKeywords={() => {}} />} />
+        <Route path="*" element={<TagPage updateData={() => {}} />} />
       </Routes>
     </BrowserRouter>
   );

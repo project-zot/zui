@@ -140,7 +140,7 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
       };
     }
     api
-      .get(`${host()}${endpoints.imageList}`, cfg)
+      .get(`${host()}${endpoints.repoList}`, cfg)
       .then((response) => {
         if (response.data && response.data.data) {
           if (isAuthEnabled) {
