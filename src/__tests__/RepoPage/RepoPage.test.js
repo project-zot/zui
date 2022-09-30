@@ -21,7 +21,7 @@ it('renders the repository page component', () => {
   render(
     <BrowserRouter>
       <Routes>
-        <Route path="*" element={<RepoPage updateKeywords={() => {}} />} />
+        <Route path="*" element={<RepoPage />} />
       </Routes>
     </BrowserRouter>
   );

@@ -25,16 +25,16 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function HomePage({ data, updateData, keywords, updateKeywords }) {
+function HomePage({ data, updateData }) {
   const classes = useStyles();
 
   return (
     <Stack className={classes.pageWrapper} direction="column" data-testid="homepage-container">
-      <Header updateKeywords={updateKeywords}></Header>
+      <Header updateData={updateData} />
       <Container className={classes.container}>
         <Grid container className={classes.gridWrapper}>
           <Grid item className={classes.tile}>
-            <Home keywords={keywords} data={data} updateData={updateData} />
+            <Home data={data} updateData={updateData} />
           </Grid>
         </Grid>
       </Container>

@@ -7,10 +7,7 @@ it('renders the explore page component', () => {
   render(
     <BrowserRouter>
       <Routes>
-        <Route
-          path="*"
-          element={<ExplorePage data={[]} keywords={''} updateData={() => {}} updateKeywords={() => {}} />}
-        />
+        <Route path="*" element={<ExplorePage data={[]} updateData={() => {}} />} />
       </Routes>
     </BrowserRouter>
   );

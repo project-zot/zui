@@ -29,12 +29,12 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function TagPage(props) {
+function TagPage({ updateData }) {
   const classes = useStyles();
 
   return (
     <Stack direction="column" className={classes.pageWrapper} data-testid="tag-container">
-      <Header updateKeywords={props.updateKeywords}></Header>
+      <Header updateData={updateData} />
       <Container className={classes.container}>
         <ExploreHeader />
         <Grid container className={classes.gridWrapper}>

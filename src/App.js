@@ -16,7 +16,6 @@ function App() {
     return localStorageToken ? true : false;
   };
 
-  const [searchKeywords, setSearchKeywords] = useState(null);
   const [data, setData] = useState(null);
   const [isAuthEnabled, setIsAuthEnabled] = useState(true);
   const [isLoggedIn, setIsLoggedIn] = useState(isToken());
@@ -27,30 +26,10 @@ function App() {
         <Routes>
           <Route element={<AuthWrapper isLoggedIn={isLoggedIn} redirect="/login" />}>
             <Route path="/" element={<Navigate to="/home" />} />
-            <Route
-              path="/home"
-              element={
-                <HomePage
-                  keywords={searchKeywords}
-                  updateKeywords={setSearchKeywords}
-                  data={data}
-                  updateData={setData}
-                />
-              }
-            />
-            <Route
-              path="/explore"
-              element={
-                <ExplorePage
-                  keywords={searchKeywords}
-                  updateKeywords={setSearchKeywords}
-                  data={data}
-                  updateData={setData}
-                />
-              }
-            />
-            <Route path="/image/:name" element={<RepoPage />} />
-            <Route path="/image/:name/tag/:tag" element={<TagPage />} />
+            <Route path="/home" element={<HomePage data={data} updateData={setData} />} />
+            <Route path="/explore" element={<ExplorePage data={data} updateData={setData} />} />
+            <Route path="/image/:name" element={<RepoPage updateData={setData} />} />
+            <Route path="/image/:name/tag/:tag" element={<TagPage updateData={setData} />} />
           </Route>
           <Route element={<AuthWrapper isLoggedIn={!isLoggedIn} redirect="/" />}>
             <Route

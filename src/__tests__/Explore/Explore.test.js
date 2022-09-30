@@ -2,8 +2,9 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { api } from 'api';
 import Explore from 'components/Explore';
 import React, { useState } from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
-// useNavigate mock
+// router mock
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
   // @ts-ignore
@@ -11,45 +12,50 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedUsedNavigate
 }));
 
-const StateExploreWrapper = () => {
+const StateExploreWrapper = (props) => {
   const [data, useData] = useState([]);
-  return <Explore data={data} keywords={''} updateData={useData} />;
+  const queryString = props.search || '';
+  return (
+    <MemoryRouter initialEntries={[queryString]}>
+      <Explore data={data} updateData={useData} />
+    </MemoryRouter>
+  );
 };
 const mockImageList = {
   RepoListWithNewestImage: [
     {
+      Name: 'alpine',
+      Size: '2806985',
+      LastUpdated: '2022-08-09T17:19:53.274069586Z',
       NewestImage: {
-        RepoName: 'alpine',
         Tag: 'latest',
-        LastUpdated: '2022-08-09T17:19:53.274069586Z',
         Description: 'w',
         Licenses: '',
         Vendor: '',
-        Size: '2806985',
         Labels: ''
       }
     },
     {
+      Name: 'mongo',
+      Size: '231383863',
+      LastUpdated: '2022-08-02T01:30:49.193203152Z',
       NewestImage: {
-        RepoName: 'mongo',
         Tag: 'latest',
-        LastUpdated: '2022-08-02T01:30:49.193203152Z',
         Description: '',
         Licenses: '',
         Vendor: '',
-        Size: '231383863',
         Labels: ''
       }
     },
     {
+      Name: 'nodeUnique',
+      Size: '369311301',
+      LastUpdated: '2022-08-23T00:20:40.144281895Z',
       NewestImage: {
-        RepoName: 'nodeUnique',
         Tag: 'latest',
-        LastUpdated: '2022-08-23T00:20:40.144281895Z',
         Description: '',
         Licenses: '',
         Vendor: '',
-        Size: '369311301',
         Labels: ''
       }
     }

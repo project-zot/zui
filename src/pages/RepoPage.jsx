@@ -29,12 +29,12 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function RepoPage(props) {
+function RepoPage({ updateData }) {
   const classes = useStyles();
 
   return (
     <Stack direction="column" className={classes.pageWrapper} data-testid="repo-container">
-      <Header updateKeywords={props.updateKeywords}></Header>
+      <Header updateData={updateData} />
       <Container className={classes.container}>
         <ExploreHeader />
         <Grid container className={classes.gridWrapper}>
