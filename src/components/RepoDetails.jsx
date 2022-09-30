@@ -258,13 +258,6 @@ function RepoDetails(props) {
   //     </Card>);
   // };
 
-  // const renderVulnerabilities = () => {
-  //   return (<Card className={classes.card}>
-  //       <CardContent>
-  //         <Typography variant="h4" align="left">Vulnerabilities</Typography>
-  //       </CardContent>
-  //     </Card>);
-  // };
 
   return (
     <div className={classes.pageWrapper}>

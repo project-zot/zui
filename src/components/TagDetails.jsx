@@ -18,6 +18,9 @@ import repocube4 from '../assets/repocube-4.png';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import TagDetailsMetadata from './TagDetailsMetadata';
 import VulnerabilitiesDetails from './VulnerabilitiesDetails';
+import HistoryLayers from './HistoryLayers';
+import DependsOn from './DependsOn';
+import { padding } from '@mui/system';
 
 // @ts-ignore
 const useStyles = makeStyles((theme) => ({
@@ -118,8 +121,10 @@ const randomImage = () => {
 function TagDetails() {
   const [repoDetailData, setRepoDetailData] = useState({});
   // @ts-ignore
-  // const [isLoading, setIsLoading] = useState(false);
-  const [selectedTab, setSelectedTab] = useState('Vulnerabilities');
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedTab, setSelectedTab] = useState("Layers");
+  const [tagName, setTagName] = useState("");
+
 
   // get url param from <Route here (i.e. image name)
   const { name } = useParams();
@@ -127,31 +132,31 @@ function TagDetails() {
   // const { description, overviewTitle, dependencies, dependents } = props;
 
   useEffect(() => {
-    api
-      .get(`${host()}${endpoints.detailedRepoInfo(name)}`)
-      .then((response) => {
-        if (response.data && response.data.data) {
-          let repoInfo = response.data.data.ExpandedRepoInfo;
-          let imageData = {
-            name: name,
-            tags: repoInfo.Images[0].Tag,
-            lastUpdated: repoInfo.Summary?.LastUpdated,
-            size: repoInfo.Summary?.Size,
-            latestDigest: repoInfo.Images[0].Digest,
-            layers: repoInfo.Images[0].Layers,
-            platforms: repoInfo.Summary?.Platforms,
-            vendors: repoInfo.Summary?.Vendors,
-            newestTag: repoInfo.Summary?.NewestImage
-          };
-          setRepoDetailData(imageData);
-          // setIsLoading(false);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-        setRepoDetailData({});
-      });
-  }, [name]);
+      api.get(`${host()}${endpoints.detailedRepoInfo(name)}`)
+        .then(response => {
+          if (response.data && response.data.data) {
+              let repoInfo = response.data.data.ExpandedRepoInfo;
+              let imageData = {
+                name: name,
+                tags: repoInfo.Images[0].Tag,
+                lastUpdated: repoInfo.Summary?.LastUpdated,
+                size: repoInfo.Summary?.Size,
+                latestDigest: repoInfo.Images[0].Digest,
+                layers: repoInfo.Images[0].Layers,
+                platforms: repoInfo.Summary?.Platforms,
+                vendors: repoInfo.Summary?.Vendors,
+                newestTag: repoInfo.Summary?.NewestImage.Tag
+              }
+              setRepoDetailData(imageData);
+              setTagName(imageData.name + ":" + imageData.newestTag);
+              setIsLoading(false);
+          }
+        })
+        .catch((e) => {
+            console.error(e);
+            setRepoDetailData({});
+        });
+  }, [name])
   //function that returns a random element from an array
   // function getRandom(list) {
   //   return list[Math.floor(Math.random() * list.length)];
@@ -214,84 +219,70 @@ function TagDetails() {
   // };
 
   return (
-    <div className={classes.pageWrapper}>
-      <Card className={classes.cardRoot}>
-        <CardContent>
-          <Grid container className={classes.header}>
-            <Grid item xs={8}>
-              <Stack alignItems="center" direction="row" spacing={2}>
-                <CardMedia
-                  classes={{
-                    root: classes.media,
-                    img: classes.avatar
-                  }}
-                  component="img"
-                  image={randomImage()}
-                  alt="icon"
-                />
-                <Typography variant="h3" className={classes.repoName}>
-                  {name}:
-                  {
-                    // @ts-ignore
-                    repoDetailData?.tags
-                  }
-                </Typography>
-                {/* {vulnerabilityCheck()}
+      <div className={classes.pageWrapper}>
+            <Card className={classes.cardRoot}>
+              <CardContent>
+                <Grid container className={classes.header}>
+                  <Grid item xs={8}>
+                    <Stack alignItems="center" direction="row" spacing={2}>
+                      <CardMedia classes={{
+                          root: classes.media,
+                          img: classes.avatar,
+                      }}
+                        component="img"
+                        image={randomImage()}
+                        alt="icon"
+                      />
+                      <Typography variant="h3" className={classes.repoName}>
+                        {name}:{repoDetailData?.
+                          // @ts-ignore
+                          newestTag}
+                      </Typography>
+                      {/* {vulnerabilityCheck()}
                       {signatureCheck()} */}
-                {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
-              </Stack>
-              <Typography
-                pt={1}
-                sx={{
-                  fontSize: 16,
-                  lineHeight: '1.5rem',
-                  color: 'rgba(0, 0, 0, 0.6)',
-                  paddingLeft: '4rem'
-                }}
-                gutterBottom
-                align="left"
-              >
-                Digest:{' '}
-                {
-                  // @ts-ignore
-                  repoDetailData?.latestDigest
-                }
-              </Typography>
-            </Grid>
-          </Grid>
-          <Grid container>
-            <Grid item xs={8} className={classes.tabs}>
-              <TabContext value={selectedTab}>
-                <Box>
-                  <TabList
-                    onChange={handleTabChange}
-                    TabIndicatorProps={{ className: classes.selectedTab }}
-                    sx={{ '& button.Mui-selected': { color: '#14191F', fontWeight: '600' } }}
-                  >
-                    {/* <Tab value="Layers" label="Layers" className={classes.tabContent}/>
+                      {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
+                    </Stack>
+                    <Typography pt={1} sx={{ fontSize: 16,lineHeight:"1.5rem", color:"rgba(0, 0, 0, 0.6)", paddingLeft:"4rem"}} gutterBottom align="left">
+                      Digest: {repoDetailData?.
+// @ts-ignore
+                      latestDigest}
+                    </Typography>
+                  </Grid>
+                  
+                </Grid>
+                <Grid container>
+                  <Grid item xs={8} className={classes.tabs}>
+                    <TabContext value={selectedTab}>
+                      <Box >
+                        <TabList  
+                          onChange={handleTabChange} 
+                          TabIndicatorProps={{ className: classes.selectedTab }} 
+                          sx={{ "& button.Mui-selected": {color:"#14191F", fontWeight:"600"}}}
+                        >
+                            <Tab value="Layers" label="Layers" className={classes.tabContent}/>
                             <Tab value="DependsOn" label="Depends on" className={classes.tabContent}/>
-                            <Tab value="IsDependentOn" label="Is Dependent On" className={classes.tabContent}/> */}
-                    <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent} />
-                  </TabList>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      {/* <TabPanel value="Layers" className={classes.tabPanel}>
-                                  <Typography> Layers </Typography>
-                                </TabPanel>
+                            <Tab value="IsDependentOn" label="Is dependent on" className={classes.tabContent}/>
+                            <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent}/>
+                        </TabList>
+                        <Grid container>
+                            <Grid item xs={12}>
+                                <TabPanel value="Layers" className={classes.tabPanel}>
+                                  <HistoryLayers name={tagName}/>
+                                </TabPanel> 
                                 <TabPanel value="DependsOn" className={classes.tabPanel}>
-                                  <Typography> Depends On </Typography>
+                                  <DependsOn name={tagName}/>
                                 </TabPanel>
                                 <TabPanel value="IsDependentOn" className={classes.tabPanel}>
                                   <Typography> Is Dependent On </Typography>
-                                </TabPanel> */}
-                      <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
-                        <VulnerabilitiesDetails name={name} />
-                      </TabPanel>
-                    </Grid>
+                                </TabPanel>
+                                <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
+                                  <VulnerabilitiesDetails name={name}/>
+                                </TabPanel> 
+                            </Grid>
+                        </Grid>
+                      </Box>
+                    </TabContext>
                   </Grid>
-                </Box>
-              </TabContext>
-            </Grid>
             <Grid item xs={4} className={classes.metadata}>
               <TagDetailsMetadata
                 // @ts-ignore
