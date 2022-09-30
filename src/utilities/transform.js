@@ -1,12 +1,11 @@
 const transform = {
   // takes raw # of bytes and decimal value to be returned;
   // returns bytes with nearest human-readable unit
-  formatBytes : (bytes) => {
+  formatBytes: (bytes) => {
     if (isNaN(bytes)) {
-        return '0 Bytes';
-    }
-    else if(bytes===0){
-      return "0 Bytes"
+      return '0 Bytes';
+    } else if (bytes === 0) {
+      return '0 Bytes';
     }
 
     const DATA_UNITS = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
