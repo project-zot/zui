@@ -85,15 +85,10 @@ function TagCard(props) {
         <Typography
           variant="body1"
           align="left"
-          sx={{
-            color: '#1479FF',
-            fontSize: '1rem',
-            textDecorationLine: 'underline',
-            cursor: 'pointer'
-          }}
-          onClick={() => goToTags(tagRow?.Tag)}
+          sx={{ color: '#1479FF', fontSize: '1rem', textDecorationLine: 'underline', cursor: 'pointer' }}
+          onClick={() => goToTags(tagRow.Tag)}
         >
-          {tagRow.Tag}
+          {tagRow?.Tag}
         </Typography>
 
         <Stack sx={{ display: 'inline' }} direction="row" spacing={0.5}>
