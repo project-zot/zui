@@ -49,7 +49,8 @@ const useStyles = makeStyles(() => ({
   repoName: {
     fontWeight: '700',
     fontSize: '2.5rem',
-    color: '#0F2139'
+    color: '#0F2139',
+    textAlign: 'left'
   },
   avatar: {
     height: '3rem',
@@ -131,13 +132,13 @@ const randomImage = () => {
 function RepoDetails(props) {
   const [repoDetailData, setRepoDetailData] = useState({});
   // @ts-ignore
-  // const [isLoading, setIsLoading] = useState(false);
+  //const [isLoading, setIsLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState('Overview');
 
   // get url param from <Route here (i.e. image name)
   const { name } = useParams();
   const classes = useStyles();
-  const { description, overviewTitle } = props;
+  const { overviewTitle } = props;
 
   useEffect(() => {
     api
@@ -150,14 +151,18 @@ function RepoDetails(props) {
             images: repoInfo.Images,
             lastUpdated: repoInfo.Summary?.LastUpdated,
             size: repoInfo.Summary?.Size,
-            //latestDigest: repoInfo.Images[0].Digest,
-            //layers: repoInfo.Images[0].Layers,
+            //latestDigest: repoInfo.Summary?.NewestImage.Digest,
+            //layers: repoInfo.Summary?.NewestImage.Layers,
             platforms: repoInfo.Summary?.Platforms,
             vendors: repoInfo.Summary?.Vendors,
-            newestTag: repoInfo.Summary?.NewestImage
+            newestTag: repoInfo.Summary?.NewestImage,
+            description: repoInfo.Summary?.NewestImage.Description,
+            source: repoInfo.Summary?.NewestImage.Source,
+            downloads: repoInfo.Summary?.NewestImage.DownloadCount,
+            overview: repoInfo.Summary?.NewestImage.Documentation
           };
           setRepoDetailData(imageData);
-          // setIsLoading(false);
+          //setIsLoading(false);
         }
       })
       .catch((e) => {
@@ -241,7 +246,10 @@ function RepoDetails(props) {
               alignSelf: 'stretch'
             }}
           >
-            {description || 'N/A'}
+            {
+              // @ts-ignore
+              repoDetailData.overview || 'N/A'
+            }
           </Typography>
         </CardContent>
       </Card>
@@ -297,16 +305,14 @@ function RepoDetails(props) {
               </Stack>
               <Typography
                 pt={1}
-                sx={{
-                  fontSize: 16,
-                  lineHeight: '1.5rem',
-                  color: 'rgba(0, 0, 0, 0.6)',
-                  paddingLeft: '4rem'
-                }}
+                sx={{ fontSize: 16, lineHeight: '1.5rem', color: 'rgba(0, 0, 0, 0.6)', paddingLeft: '4rem' }}
                 gutterBottom
                 align="left"
               >
-                {description || 'N/A'}
+                {
+                  // @ts-ignore
+                  repoDetailData?.description || 'N/A'
+                }
               </Typography>
               <Stack alignItems="center" sx={{ paddingLeft: '4rem' }} direction="row" spacing={2} pt={1}>
                 {platformChips()}
@@ -384,6 +390,10 @@ function RepoDetails(props) {
             </Grid>
             <Grid item xs={4} className={classes.metadata}>
               <RepoDetailsMetadata
+                // @ts-ignore
+                weeklyDownloads={repoDetailData?.downloads}
+                // @ts-ignore
+                repoURL={repoDetailData?.source}
                 // @ts-ignore
                 lastUpdated={repoDetailData?.lastUpdated}
                 // @ts-ignore

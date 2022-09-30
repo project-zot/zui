@@ -91,7 +91,7 @@ function TagCard(props) {
             textDecorationLine: 'underline',
             cursor: 'pointer'
           }}
-          onClick={() => goToTags(tagRow.Tag)}
+          onClick={() => goToTags(tagRow?.Tag)}
         >
           {tagRow.Tag}
         </Typography>
@@ -101,7 +101,7 @@ function TagCard(props) {
             Last pushed
           </Typography>
           <Typography variant="caption" sx={{ fontWeight: '600', fontSize: '0.8125rem' }}>
-            {lastDate || '----'} by {vendors[0] || 'N/A'}
+            {lastDate || '----'} by {vendors || 'N/A'}
           </Typography>
         </Stack>
 
