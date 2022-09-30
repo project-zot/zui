@@ -83,14 +83,14 @@ function TagCard(props) {
     <Card className={classes.card} raised>
       <CardContent className={classes.content}>
         <Typography variant="body1" align="left" sx={{ color: "#828282", fontSize: "1rem", paddingBottom: "0.5rem" }}>Tag</Typography>
-        <Typography variant="body1" align="left" sx={{ color: "#1479FF", fontSize: "1rem", textDecorationLine: "underline", cursor: 'pointer' }} onClick={() => goToTags(tagRow.Tag)}>{tagRow.Tag}</Typography>
+        <Typography variant="body1" align="left" sx={{ color: "#1479FF", fontSize: "1rem", textDecorationLine: "underline", cursor: 'pointer' }} onClick={() => goToTags(tagRow.Tag)}>{tagRow?.Tag}</Typography>
 
         <Stack sx={{ display: "inline" }} direction="row" spacing={0.5}>
           <Typography variant="caption" sx={{ fontWeight: "400", fontSize: "0.8125rem" }} >
             Last pushed
           </Typography>
           <Typography variant="caption" sx={{ fontWeight: "600", fontSize: "0.8125rem" }} >
-            {lastDate || '----'} by {vendors[0] || 'N/A'}
+            {lastDate || '----'} by {vendors || 'N/A'}
           </Typography>
         </Stack>
 

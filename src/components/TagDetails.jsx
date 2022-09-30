@@ -26,6 +26,8 @@ import repocube4 from '../assets/repocube-4.png';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import TagDetailsMetadata from './TagDetailsMetadata';
 import VulnerabilitiesDetails from './VulnerabilitiesDetails';
+import HistoryLayers from './HistoryLayers';
+import DependsOn from './DependsOn';
 import { padding } from '@mui/system';
 
 // @ts-ignore
@@ -129,7 +131,9 @@ function TagDetails (props) {
   const [repoDetailData, setRepoDetailData] = useState({});
   // @ts-ignore
   const [isLoading, setIsLoading] = useState(false);
-  const [selectedTab, setSelectedTab] = useState("Vulnerabilities");
+  const [selectedTab, setSelectedTab] = useState("Layers");
+  const [tagName, setTagName] = useState("");
+
 
   // get url param from <Route here (i.e. image name)
   const {name} = useParams();
@@ -150,9 +154,10 @@ function TagDetails (props) {
                 layers: repoInfo.Images[0].Layers,
                 platforms: repoInfo.Summary?.Platforms,
                 vendors: repoInfo.Summary?.Vendors,
-                newestTag: repoInfo.Summary?.NewestImage
+                newestTag: repoInfo.Summary?.NewestImage.Tag
               }
               setRepoDetailData(imageData);
+              setTagName(imageData.name + ":" + imageData.newestTag);
               setIsLoading(false);
           }
         })
@@ -240,8 +245,8 @@ function TagDetails (props) {
                       />
                       <Typography variant="h3" className={classes.repoName}>
                         {name}:{repoDetailData?.
-// @ts-ignore
-                        tags}
+                          // @ts-ignore
+                          newestTag}
                       </Typography>
                       {/* {vulnerabilityCheck()}
                       {signatureCheck()} */}
@@ -264,22 +269,22 @@ function TagDetails (props) {
                           TabIndicatorProps={{ className: classes.selectedTab }} 
                           sx={{ "& button.Mui-selected": {color:"#14191F", fontWeight:"600"}}}
                         >
-                            {/* <Tab value="Layers" label="Layers" className={classes.tabContent}/>
+                            <Tab value="Layers" label="Layers" className={classes.tabContent}/>
                             <Tab value="DependsOn" label="Depends on" className={classes.tabContent}/>
-                            <Tab value="IsDependentOn" label="Is Dependent On" className={classes.tabContent}/> */}
+                            <Tab value="IsDependentOn" label="Is dependent on" className={classes.tabContent}/>
                             <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent}/>
                         </TabList>
                         <Grid container>
                             <Grid item xs={12}>
-                                {/* <TabPanel value="Layers" className={classes.tabPanel}>
-                                  <Typography> Layers </Typography>
-                                </TabPanel>
+                                <TabPanel value="Layers" className={classes.tabPanel}>
+                                  <HistoryLayers name={tagName}/>
+                                </TabPanel> 
                                 <TabPanel value="DependsOn" className={classes.tabPanel}>
-                                  <Typography> Depends On </Typography>
+                                  <DependsOn name={tagName}/>
                                 </TabPanel>
                                 <TabPanel value="IsDependentOn" className={classes.tabPanel}>
                                   <Typography> Is Dependent On </Typography>
-                                </TabPanel> */}
+                                </TabPanel>
                                 <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
                                   <VulnerabilitiesDetails name={name}/>
                                 </TabPanel> 
