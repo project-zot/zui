@@ -83,7 +83,7 @@ describe('Tags details', () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetails />);
-    await waitFor(() => expect(screen.getAllByRole('tab')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByRole('tab')).toHaveLength(4));
   });
 
   it("should log an error when data can't be fetched", async () => {
