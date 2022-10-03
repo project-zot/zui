@@ -18,7 +18,8 @@ import { useSearchParams } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
   gridWrapper: {
-    paddingTop: '2rem'
+    paddingTop: '2rem',
+    paddingBottom: '2rem'
   },
   nodataWrapper: {
     backgroundColor: '#fff',

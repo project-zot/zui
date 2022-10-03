@@ -12,15 +12,15 @@ import {
   ClickAwayListener,
   Paper,
   Grow,
-  Stack,
-  IconButton
+  Stack
+  //IconButton
 } from '@mui/material';
 import Avatar from '@mui/material/Avatar';
 
 // styling
 import makeStyles from '@mui/styles/makeStyles';
 import logo from '../assets/Zot-white-text.svg';
-import placeholderProfileButton from '../assets/Profile_button_placeholder.svg';
+//import placeholderProfileButton from '../assets/Profile_button_placeholder.svg';
 import { useState, useRef } from 'react';
 import SearchSuggestion from './SearchSuggestion';
 
@@ -98,7 +98,8 @@ function Header({ updateData }) {
             <Avatar alt="zot" src={logo} className={classes.logo} variant="square" />
           </Link>
           {path !== '/' && <SearchSuggestion updateData={updateData} />}
-          <IconButton
+          <div></div>
+          {/* <IconButton
             ref={anchorRef}
             id="composition-button"
             aria-controls={open ? 'composition-menu' : undefined}
@@ -107,7 +108,7 @@ function Header({ updateData }) {
             onClick={handleToggle}
           >
             <Avatar alt="profile" src={placeholderProfileButton} className={classes.userAvatar} variant="rounded" />
-          </IconButton>
+          </IconButton> */}
           <Popper
             open={open}
             anchorEl={anchorRef.current}

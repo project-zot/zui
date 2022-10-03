@@ -20,6 +20,7 @@ import TagDetailsMetadata from './TagDetailsMetadata';
 import VulnerabilitiesDetails from './VulnerabilitiesDetails';
 import HistoryLayers from './HistoryLayers';
 import DependsOn from './DependsOn';
+import IsDependentOn from './IsDependentOn';
 
 // @ts-ignore
 const useStyles = makeStyles(() => ({
@@ -277,10 +278,10 @@ function TagDetails() {
                         <HistoryLayers name={tagName} />
                       </TabPanel>
                       <TabPanel value="DependsOn" className={classes.tabPanel}>
-                        <DependsOn name={tagName} />
+                        <DependsOn />
                       </TabPanel>
                       <TabPanel value="IsDependentOn" className={classes.tabPanel}>
-                        <Typography> Is Dependent On </Typography>
+                        <IsDependentOn />
                       </TabPanel>
                       <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
                         <VulnerabilitiesDetails name={name} />
