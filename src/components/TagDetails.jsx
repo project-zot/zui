@@ -278,10 +278,10 @@ function TagDetails() {
                         <HistoryLayers name={tagName} />
                       </TabPanel>
                       <TabPanel value="DependsOn" className={classes.tabPanel}>
-                        <DependsOn />
+                        <DependsOn name={tagName} />
                       </TabPanel>
                       <TabPanel value="IsDependentOn" className={classes.tabPanel}>
-                        <IsDependentOn />
+                        <IsDependentOn name={tagName} />
                       </TabPanel>
                       <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
                         <VulnerabilitiesDetails name={name} />
