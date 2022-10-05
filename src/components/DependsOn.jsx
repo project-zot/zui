@@ -1,13 +1,13 @@
 import React, { useEffect, useState } from 'react';
 
 // utility
-//import { api, endpoints } from '../api';
+import { api, endpoints } from '../api';
 
 // components
-import { Divider, Typography, Card } from '@mui/material';
+import { Divider, Typography, Card, CardContent } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { Link } from 'react-router-dom';
-//import { host } from '../host';
+import { host } from '../host';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -54,34 +54,24 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function DependsOn(/*props*/) {
+function DependsOn(props) {
   const [images, setImages] = useState([]);
-  //const { name } = props;
+  const { name } = props;
   const classes = useStyles();
-  //const [isLoaded, setIsLoaded] = useState(false);
-  const mockData = [
-    { RepoName: 'alpine' },
-    { RepoName: 'mysql' },
-    { RepoName: 'datadog/watermarkpodautoscaler' },
-    { RepoName: 'project-stacker/c3/static-debian-amd64' },
-    { RepoName: 'project-stacker/c3/static-ubuntu-amd64' }
-  ];
+  // const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
-    // api
-    //   .get(`${host()}${endpoints.dependsOnForImage(name)}`)
-    //   .then((response) => {
-    //     if (response.data && response.data.data) {
-    //       //let images = response.data.data.BaseImageList;
-    //       //setImages(images);
-    //     }
-    //   })
-    //   .catch((e) => {
-    //     console.error(e);
-    //     //setImages([]);
-    //   });
-    setImages(mockData);
-    //setIsLoaded(true);
+    api
+      .get(`${host()}${endpoints.dependsOnForImage(name)}`)
+      .then((response) => {
+        if (response.data && response.data.data) {
+          let images = response.data.data.BaseImageList;
+          setImages(images);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
   }, []);
 
   return (
@@ -101,21 +91,18 @@ function DependsOn(/*props*/) {
         sx={{ margin: '5% 0% 5% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}
       />
       <Card className={classes.card} raised>
-        <Typography className={classes.content}>
-          {images &&
-            images.map((dependence, index) => {
-              return (
-                <Typography
-                  // @ts-ignore
-                  key={{ index }}
-                  variant="body1"
-                  className={classes.link}
-                >
-                  <Link to={`/image/${encodeURIComponent(dependence.RepoName)}`}>{dependence.RepoName}</Link>
-                </Typography>
-              );
-            })}
-        </Typography>
+        <CardContent>
+          <Typography className={classes.content}>
+            {images &&
+              images.map((dependence, index) => {
+                return (
+                  <Link key={index} className={classes.link} to={`/image/${encodeURIComponent(dependence.RepoName)}`}>
+                    {dependence.RepoName}
+                  </Link>
+                );
+              })}
+          </Typography>
+        </CardContent>
       </Card>
     </div>
   );
