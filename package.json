@@ -36,7 +36,7 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test --detectOpenHandles",
-    "test:coverage": "react-scripts test --coverage",
+    "test:coverage": "react-scripts test --detectOpenHandles --coverage",
     "lint": "eslint -c .eslintrc.json --ext .js,.jsx .",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write ./**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc",

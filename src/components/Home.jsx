@@ -9,7 +9,8 @@ import { mapToRepo } from 'utilities/objectModels';
 
 const useStyles = makeStyles(() => ({
   gridWrapper: {
-    marginTop: 10
+    marginTop: 10,
+    marginBottom: '5rem'
   },
   nodataWrapper: {
     backgroundColor: '#fff',

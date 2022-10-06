@@ -65,28 +65,30 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function DependsOn(props) {
+function IsDependentOn(props) {
   const [images, setImages] = useState([]);
   const { name } = props;
   const classes = useStyles();
-  // const [isLoaded, setIsLoaded] = useState(false);
+  //const [isLoaded, setIsLoaded] = useState(false);
 
   useEffect(() => {
     api
-      .get(`${host()}${endpoints.dependsOnForImage(name)}`)
+      .get(`${host()}${endpoints.isDependentOnForImage(name)}`)
       .then((response) => {
         if (response.data && response.data.data) {
-          let images = response.data.data.BaseImageList;
+          let images = response.data.data.DerivedImageList;
           setImages(images);
         }
       })
       .catch((e) => {
         console.error(e);
+        //setImages([]);
       });
+    //setIsLoaded(true);
   }, []);
 
   return (
-    <div data-testid="depends-on-container">
+    <div>
       <Typography
         variant="h4"
         gutterBottom
@@ -95,19 +97,20 @@ function DependsOn(props) {
         className={classes.title}
         style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.5rem', fontWeight: '600', paddingTop: '0.5rem' }}
       >
-        Depends On
+        Is Dependent On
       </Typography>
       <Divider
         variant="fullWidth"
         sx={{ margin: '5% 0% 5% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}
       />
+
       {images?.length ? (
         <Card className={classes.card} raised>
           <CardContent>
             <Typography className={classes.content}>
               {images.map((dependence, index) => {
                 return (
-                  <Link key={index} className={classes.link} to={`/image/${encodeURIComponent(dependence.RepoName)}`}>
+                  <Link key={index} to={`/image/${encodeURIComponent(dependence.RepoName)}`} className={classes.link}>
                     {dependence.RepoName}
                   </Link>
                 );
@@ -125,4 +128,4 @@ function DependsOn(props) {
   );
 }
 
-export default DependsOn;
+export default IsDependentOn;

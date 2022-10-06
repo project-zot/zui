@@ -8,6 +8,7 @@ import { api, endpoints } from '../api';
 import { Card, CardContent, Divider, Grid, Stack, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
+import Monitor from '../assets/Monitor.png';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -59,6 +60,16 @@ const useStyles = makeStyles(() => ({
     fontWeight: '400',
     paddingBottom: '0.5rem',
     paddingTop: '0.5rem'
+  },
+  monitor: {
+    width: '27.25rem',
+    height: '24.625rem',
+    paddingTop: '2rem'
+  },
+  none: {
+    color: '#52637A',
+    fontSize: '1.4rem',
+    fontWeight: '600'
   }
 }));
 
@@ -77,7 +88,7 @@ function LayerCard(props) {
   }, []);
 
   return (
-    <Grid sx={isSelected ? { backgroundColor: '#F7F7F7' } : null} container>
+    <Grid sx={isSelected ? { backgroundColor: '#F7F7F7' } : null} container data-testid="layer-card-container">
       <Grid item xs={10} container>
         <Grid item xs={1}>
           <Typography variant="body1" align="left" className={classes.title}>
@@ -139,10 +150,10 @@ function HistoryLayers(props) {
         variant="fullWidth"
         sx={{ margin: '5% 0% 0% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}
       />
-      <Card className={classes.card} raised>
-        <CardContent className={classes.content}>
-          {historyData &&
-            historyData.map((layer, index) => {
+      {historyData ? (
+        <Card className={classes.card} raised>
+          <CardContent className={classes.content}>
+            {historyData.map((layer, index) => {
               return (
                 <div key={`${layer?.Layer?.Size}${index}`} onClick={() => setSelectedIndex(index)}>
                   <LayerCard
@@ -155,26 +166,30 @@ function HistoryLayers(props) {
                 </div>
               );
             })}
-        </CardContent>
-      </Card>
+          </CardContent>
+        </Card>
+      ) : (
+        <div>
+          <img src={Monitor} alt="Monitor" className={classes.monitor}></img>
+          <Typography className={classes.none}> No Layers </Typography>
+        </div>
+      )}
+
       {isLoaded && historyData && (
         <Card className={classes.card} raised>
           <CardContent className={classes.content}>
             <Grid item xs={11}>
               <Stack sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Typography variant="body1" align="left" className={classes.title}>
-                  {' '}
-                  Command{' '}
+                  Command
                 </Typography>
                 <Typography variant="body1" align="left" className={classes.values}>
-                  {' '}
-                  {transform.formatBytes(historyData[selectedIndex].Layer?.Size)}{' '}
+                  {transform.formatBytes(historyData[selectedIndex].Layer?.Size)}
                 </Typography>
               </Stack>
             </Grid>
             <Typography variant="body1" align="left" className={classes.title} sx={{ backgroundColor: '#F7F7F7' }}>
-              {' '}
-              {historyData[selectedIndex].HistoryDescription?.CreatedBy}{' '}
+              {historyData[selectedIndex].HistoryDescription?.CreatedBy}
             </Typography>
           </CardContent>
         </Card>

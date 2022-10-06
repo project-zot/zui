@@ -20,6 +20,7 @@ import TagDetailsMetadata from './TagDetailsMetadata';
 import VulnerabilitiesDetails from './VulnerabilitiesDetails';
 import HistoryLayers from './HistoryLayers';
 import DependsOn from './DependsOn';
+import IsDependentOn from './IsDependentOn';
 
 // @ts-ignore
 const useStyles = makeStyles(() => ({
@@ -136,14 +137,14 @@ function TagDetails() {
           let repoInfo = response.data.data.ExpandedRepoInfo;
           let imageData = {
             name: name,
-            tags: repoInfo.Images[0].Tag,
+            tags: repoInfo.Images[0]?.Tag,
             lastUpdated: repoInfo.Summary?.LastUpdated,
             size: repoInfo.Summary?.Size,
             latestDigest: repoInfo.Images[0].Digest,
             layers: repoInfo.Images[0].Layers,
             platforms: repoInfo.Summary?.Platforms,
             vendors: repoInfo.Summary?.Vendors,
-            newestTag: repoInfo.Summary?.NewestImage.Tag
+            newestTag: repoInfo.Summary?.NewestImage?.Tag
           };
           setRepoDetailData(imageData);
           setTagName(imageData.name + ':' + imageData.newestTag);
@@ -267,7 +268,12 @@ function TagDetails() {
                     sx={{ '& button.Mui-selected': { color: '#14191F', fontWeight: '600' } }}
                   >
                     <Tab value="Layers" label="Layers" className={classes.tabContent} />
-                    <Tab value="DependsOn" label="Depends on" className={classes.tabContent} />
+                    <Tab
+                      value="DependsOn"
+                      label="Depends on"
+                      className={classes.tabContent}
+                      data-testid="dependencies-tab"
+                    />
                     <Tab value="IsDependentOn" label="Is dependent on" className={classes.tabContent} />
                     <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent} />
                   </TabList>
@@ -280,7 +286,7 @@ function TagDetails() {
                         <DependsOn name={tagName} />
                       </TabPanel>
                       <TabPanel value="IsDependentOn" className={classes.tabPanel}>
-                        <Typography> Is Dependent On </Typography>
+                        <IsDependentOn name={tagName} />
                       </TabPanel>
                       <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
                         <VulnerabilitiesDetails name={name} />

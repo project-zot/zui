@@ -12,6 +12,14 @@ jest.mock('react-router-dom', () => ({
   })
 }));
 
+jest.mock(
+  'components/RepoDetails',
+  () =>
+    function RepoDetails() {
+      return <div />;
+    }
+);
+
 afterEach(() => {
   // restore the spy created with spyOn
   jest.restoreAllMocks();
@@ -21,7 +29,7 @@ it('renders the repository page component', () => {
   render(
     <BrowserRouter>
       <Routes>
-        <Route path="*" element={<RepoPage />} />
+        <Route path="*" element={<RepoPage updateData={() => {}} />} />
       </Routes>
     </BrowserRouter>
   );

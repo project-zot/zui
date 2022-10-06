@@ -70,6 +70,7 @@ const endpoints = {
   layersDetailsForImage: (name) =>
     `/v2/_zot/ext/search?query={Image(image: "${name}"){History {Layer {Size Digest Score} HistoryDescription {Created CreatedBy Author Comment EmptyLayer} }}}`,
   dependsOnForImage: (name) => `/v2/_zot/ext/search?query={BaseImageList(image: "${name}"){RepoName}}`,
+  isDependentOnForImage: (name) => `/v2/_zot/ext/search?query={DerivedImageList(image: "${name}"){RepoName}}`,
   globalSearchPaginated: (searchQuery, pageNumber, pageSize) =>
     `/v2/_zot/ext/search?query={GlobalSearch(query:"${searchQuery}", requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize

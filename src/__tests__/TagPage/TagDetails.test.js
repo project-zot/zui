@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { api } from 'api';
 import TagDetails from 'components/TagDetails';
 import React from 'react';
@@ -79,10 +79,13 @@ afterEach(() => {
 });
 
 describe('Tags details', () => {
-  it('should show vulnerability tab', async () => {
+  it('should show tabs and allow nagivation between them', async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetails />);
+    const dependenciesTab = await screen.findByTestId('dependencies-tab');
+    fireEvent.click(dependenciesTab);
+    expect(await screen.findByTestId('depends-on-container')).toBeInTheDocument();
     await waitFor(() => expect(screen.getAllByRole('tab')).toHaveLength(4));
   });
 
