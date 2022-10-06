@@ -10,6 +10,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
 import PestControlOutlinedIcon from '@mui/icons-material/PestControlOutlined';
 import PestControlIcon from '@mui/icons-material/PestControl';
+import Monitor from '../assets/Monitor.png';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -46,6 +47,16 @@ const useStyles = makeStyles(() => ({
     fontWeight: '600',
     paddingBottom: '0.5rem',
     paddingTop: '0.5rem'
+  },
+  monitor: {
+    width: '27.25rem',
+    height: '24.625rem',
+    paddingTop: '2rem'
+  },
+  none: {
+    color: '#52637A',
+    fontSize: '1.4rem',
+    fontWeight: '600'
   }
 }));
 
@@ -194,6 +205,7 @@ function VulnerabilitiyCard(props) {
 }
 
 function VulnerabilitiesDetails(props) {
+  const classes = useStyles();
   const [cveData, setCveData] = useState({});
   // const [isLoading, setIsLoading] = useState(true);
   const { name } = props;
@@ -226,7 +238,12 @@ function VulnerabilitiesDetails(props) {
         })
       );
     } else {
-      return <Typography> No Vulnerabilities </Typography>;
+      return (
+        <div>
+          <img src={Monitor} alt="Monitor" className={classes.monitor}></img>
+          <Typography className={classes.none}> No Vulnerabilities </Typography>{' '}
+        </div>
+      );
     }
   };
 

@@ -8,6 +8,7 @@ import { Divider, Typography, Card, CardContent } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { Link } from 'react-router-dom';
 import { host } from '../host';
+import Monitor from '../assets/Monitor.png';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -51,6 +52,16 @@ const useStyles = makeStyles(() => ({
     letterSpacing: '0.009375rem',
     paddingRight: '1rem',
     textDecorationLine: 'underline'
+  },
+  monitor: {
+    width: '27.25rem',
+    height: '24.625rem',
+    paddingTop: '2rem'
+  },
+  none: {
+    color: '#52637A',
+    fontSize: '1.4rem',
+    fontWeight: '600'
   }
 }));
 
@@ -90,20 +101,26 @@ function DependsOn(props) {
         variant="fullWidth"
         sx={{ margin: '5% 0% 5% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}
       />
-      <Card className={classes.card} raised>
-        <CardContent>
-          <Typography className={classes.content}>
-            {images &&
-              images.map((dependence, index) => {
+      {images.length ? (
+        <Card className={classes.card} raised>
+          <CardContent>
+            <Typography className={classes.content}>
+              {images.map((dependence, index) => {
                 return (
                   <Link key={index} className={classes.link} to={`/image/${encodeURIComponent(dependence.RepoName)}`}>
                     {dependence.RepoName}
                   </Link>
                 );
               })}
-          </Typography>
-        </CardContent>
-      </Card>
+            </Typography>
+          </CardContent>
+        </Card>
+      ) : (
+        <div>
+          <img src={Monitor} alt="Monitor" className={classes.monitor}></img>
+          <Typography className={classes.none}> Nothing found </Typography>
+        </div>
+      )}
     </div>
   );
 }
