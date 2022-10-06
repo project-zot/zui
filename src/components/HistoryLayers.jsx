@@ -88,7 +88,7 @@ function LayerCard(props) {
   }, []);
 
   return (
-    <Grid sx={isSelected ? { backgroundColor: '#F7F7F7' } : null} container>
+    <Grid sx={isSelected ? { backgroundColor: '#F7F7F7' } : null} container data-testid="layer-card-container">
       <Grid item xs={10} container>
         <Grid item xs={1}>
           <Typography variant="body1" align="left" className={classes.title}>

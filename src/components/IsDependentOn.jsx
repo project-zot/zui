@@ -104,7 +104,7 @@ function IsDependentOn(props) {
         sx={{ margin: '5% 0% 5% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}
       />
 
-      {images.length ? (
+      {images?.length ? (
         <Card className={classes.card} raised>
           <CardContent>
             <Typography className={classes.content}>

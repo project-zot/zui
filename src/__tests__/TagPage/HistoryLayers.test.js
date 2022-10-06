@@ -3,10 +3,6 @@ import { api } from 'api';
 import HistoryLayers from 'components/HistoryLayers';
 import React from 'react';
 
-const StateLayersWrapper = () => {
-  return <HistoryLayers name="alpine:latest" />;
-};
-
 const mockLayersList = [
   {
     Layer: { Size: '2806054', Digest: '213ec9aee27d8be045c6a92b7eac22c9a64b44558193775a1a7f626352392b49', Score: null },
@@ -38,9 +34,9 @@ afterEach(() => {
 describe('Layers page', () => {
   it('renders the layers if there are any', async () => {
     // @ts-ignore
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockLayersList } });
-    render(<StateLayersWrapper />);
-    await waitFor(() => expect(screen.getAllByText('Layers')).toHaveLength(1));
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: { Image: { History: mockLayersList } } } });
+    render(<HistoryLayers name="alpine:latest" />);
+    expect(await screen.findAllByTestId('layer-card-container')).toHaveLength(2);
   });
 
   it('renders no layers if there are not any', async () => {
@@ -49,7 +45,7 @@ describe('Layers page', () => {
       status: 200,
       data: { data: { History: { Tag: '', mockLayersList: [] } } }
     });
-    render(<StateLayersWrapper />);
+    render(<HistoryLayers name="alpine:latest" />);
     await waitFor(() => expect(screen.getAllByText('No Layers')).toHaveLength(1));
   });
 
@@ -57,7 +53,7 @@ describe('Layers page', () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-    render(<StateLayersWrapper />);
+    render(<HistoryLayers name="alpine:latest" />);
     await waitFor(() => expect(error).toBeCalledTimes(1));
   });
 });
