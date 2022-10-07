@@ -1,6 +1,6 @@
 // react global
 import React from 'react';
-import { createSearchParams, Link, useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation } from 'react-router-dom';
 
 // components
 import {
@@ -68,7 +68,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function Header({ updateData }) {
+function Header() {
   const classes = useStyles();
   const path = useLocation().pathname;
   // const navigate = useNavigate();
@@ -97,7 +97,7 @@ function Header({ updateData }) {
           <Link to="/home" className={classes.logoWrapper}>
             <Avatar alt="zot" src={logo} className={classes.logo} variant="square" />
           </Link>
-          {path !== '/' && <SearchSuggestion updateData={updateData} />}
+          {path !== '/' && <SearchSuggestion />}
           <div></div>
           {/* <IconButton
             ref={anchorRef}

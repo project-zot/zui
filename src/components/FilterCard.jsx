@@ -1,6 +1,6 @@
 import { Card, CardContent, Checkbox, FormControlLabel, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
-import React from 'react';
+import React, { useState } from 'react';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -17,17 +17,43 @@ const useStyles = makeStyles(() => ({
 
 function FilterCard(props) {
   const classes = useStyles();
-  const { title, filters } = props;
+  const { title, filters, updateFilters } = props;
+  const [selectedFilter, setSelectedFilter] = useState(null);
+
+  const handleFilterClicked = (event, changedFilterLabel, changedFilterValue) => {
+    const { checked } = event.target;
+
+    if (checked) {
+      // updateFilters([...filterValue, changedFilterValue]);
+      if (filters[0]?.type === 'boolean') {
+        updateFilters(checked);
+      } else {
+        updateFilters(changedFilterValue);
+      }
+      setSelectedFilter(changedFilterLabel);
+    } else {
+      // updateFilters(filterValue.filter((e) => e !== changedFilterValue));
+      if (filters[0]?.type === 'boolean') {
+        updateFilters(checked);
+      } else {
+        updateFilters('');
+      }
+      setSelectedFilter(null);
+    }
+  };
 
   const getFilterRows = () => {
-    const filterRows = filters || ['ARM', 'ARM 64', 'IBM POWER', 'IBM Z', 'PowerPC 64 LE', 'x86', 'x86-64'];
+    const filterRows = filters;
     return filterRows.map((filter, index) => {
       return (
         <FormControlLabel
           key={index}
           componentsProps={{ typography: { variant: 'body2' } }}
           control={<Checkbox />}
-          label={filter}
+          label={filter.label}
+          id={title}
+          checked={filter.label === selectedFilter}
+          onChange={() => handleFilterClicked(event, filter.label, filter.value)}
         />
       );
     });

@@ -13,9 +13,11 @@ import makeStyles from '@mui/styles/makeStyles';
 // utility
 import { api, endpoints } from '../api';
 import { host } from '../host';
-import FilterCard from './FilterCard.jsx';
 import { mapToRepo } from 'utilities/objectModels.js';
 import { useSearchParams } from 'react-router-dom';
+import FilterCard from './FilterCard.jsx';
+import { isEmpty } from 'lodash';
+import filterConstants from 'utilities/filterConstants.js';
 
 const useStyles = makeStyles(() => ({
   gridWrapper: {
@@ -46,41 +48,50 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function Explore({ data, updateData }) {
+function Explore() {
   const [isLoading, setIsLoading] = useState(true);
   const [exploreData, setExploreData] = useState([]);
   // const [sortFilter, setSortFilter] = useState('');
   const [queryParams] = useSearchParams();
+  const search = queryParams.get('search');
+  // filtercard filters
+  const [imageFilters, setImageFilters] = useState(false);
+  const [osFilters, setOSFilters] = useState('');
+  const [archFilters, setArchFilters] = useState('');
   const classes = useStyles();
 
-  useEffect(() => {
-    if (!queryParams.get('search')) {
-      api
-        .get(`${host()}${endpoints.repoList}`)
-        .then((response) => {
-          if (response.data && response.data.data) {
-            let repoList = response.data.data.RepoListWithNewestImage;
-            let repoData = repoList.map((responseRepo) => {
-              return mapToRepo(responseRepo);
-            });
-            updateData(repoData);
-            setIsLoading(false);
-          }
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+  const buildFilterQuery = () => {
+    let filter = {};
+    // workaround until backend bugfix
+    filter = !isEmpty(osFilters) ? { ...filter, Os: osFilters.toLocaleLowerCase() } : filter;
+    filter = !isEmpty(archFilters) ? { ...filter, Arch: archFilters.toLocaleLowerCase() } : filter;
+    if (imageFilters) {
+      filter = { ...filter, HasToBeSigned: imageFilters };
     }
-  }, [updateData, queryParams]);
+    return filter;
+  };
+
+  useEffect(() => {
+    api
+      .get(`${host()}${endpoints.globalSearch({ searchQuery: search, filter: buildFilterQuery() })}`)
+      .then((response) => {
+        if (response.data && response.data.data) {
+          let repoList = response.data.data.GlobalSearch.Repos;
+          let repoData = repoList.map((responseRepo) => {
+            return mapToRepo(responseRepo);
+          });
+          setExploreData(repoData);
+          setIsLoading(false);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }, [search, queryParams, imageFilters, osFilters, archFilters]);
 
   useEffect(() => {
     setIsLoading(false);
   }, []);
-
-  // Update component data based on response data, here filtering logic will be added
-  useEffect(() => {
-    setExploreData(data);
-  }, [data]);
 
   const renderRepoCards = () => {
     return (
@@ -109,12 +120,23 @@ function Explore({ data, updateData }) {
   const renderFilterCards = () => {
     return (
       <Stack spacing={2}>
-        <FilterCard title="Products" filters={['Images', 'Plugins']} />
-        <FilterCard title="Images" filters={['Verified publisher', 'Official images']} />
-        <FilterCard title="Operating system" filters={['Windows', 'Linux']} />
+        <FilterCard
+          title="Images"
+          filters={filterConstants.imageFilters}
+          filterValue={imageFilters}
+          updateFilters={setImageFilters}
+        />
+        <FilterCard
+          title="Operating system"
+          filters={filterConstants.osFilters}
+          filterValue={osFilters}
+          updateFilters={setOSFilters}
+        />
         <FilterCard
           title="Architectures"
-          filters={['ARM', 'ARM 64', 'IBM POWER', 'IBM Z', 'PowerPC 64 LE', 'x86', 'x86-64']}
+          filters={filterConstants.archFilters}
+          filterValue={archFilters}
+          updateFilters={setArchFilters}
         />
       </Stack>
     );
@@ -127,46 +149,46 @@ function Explore({ data, updateData }) {
   return (
     <Container maxWidth="lg">
       {isLoading && <Loading />}
-      {!(exploreData && exploreData.length) ? (
-        <Grid container className={classes.nodataWrapper}>
-          <div style={{ marginTop: 20 }}>
-            <div style={{}}>
-              <Alert style={{ marginTop: 10, width: '100%' }} variant="outlined" severity="warning">
-                Looks like we don't have anything matching that search. Try searching something else.
-              </Alert>
-            </div>
-          </div>
-        </Grid>
-      ) : (
-        <Grid container className={classes.gridWrapper}>
-          <Grid container item xs={12}>
-            <Grid item xs={0}></Grid>
-            <Grid item xs={12}>
-              <Stack direction="row" className={classes.resultsRow}>
-                <Typography variant="body2" className={classes.results}>
-                  Results {exploreData.length}
-                </Typography>
-                {/* <FormControl  sx={{m:'1', minWidth:"4.6875rem"}} className={classes.sortForm} size="small">
+      <Grid container className={classes.gridWrapper}>
+        <Grid container item xs={12}>
+          <Grid item xs={0}></Grid>
+          <Grid item xs={12}>
+            <Stack direction="row" className={classes.resultsRow}>
+              <Typography variant="body2" className={classes.results}>
+                Results {exploreData.length}
+              </Typography>
+              {/* <FormControl  sx={{m:'1', minWidth:"4.6875rem"}} className={classes.sortForm} size="small">
                                   <InputLabel>Sort</InputLabel>
                                   <Select label="Sort" value={sortFilter}  onChange={handleSortChange}  MenuProps={{disableScrollLock: true}}>
                                     <MenuItem value='relevance'>Relevance</MenuItem>                            
                                   </Select>
                                 </FormControl> */}
-              </Stack>
-            </Grid>
+            </Stack>
           </Grid>
-          <Grid container item xs={12} spacing={5} pt={1}>
-            {/* <Grid item xs={3}>
-                            {renderFilterCards()}
-                          </Grid> */}
-            <Grid item xs={12}>
+        </Grid>
+        <Grid container item xs={12} spacing={5} pt={1}>
+          <Grid item xs={3}>
+            {renderFilterCards()}
+          </Grid>
+          <Grid item xs={9}>
+            {!(exploreData && exploreData.length) ? (
+              <Grid container className={classes.nodataWrapper}>
+                <div style={{ marginTop: 20 }}>
+                  <div style={{}}>
+                    <Alert style={{ marginTop: 10, width: '100%' }} variant="outlined" severity="warning">
+                      Looks like we don&apos;t have anything matching that search. Try searching something else.
+                    </Alert>
+                  </div>
+                </div>
+              </Grid>
+            ) : (
               <Stack direction="column" spacing={2}>
                 {renderRepoCards()}
               </Stack>
-            </Grid>
+            )}
           </Grid>
         </Grid>
-      )}
+      </Grid>
     </Container>
   );
 }

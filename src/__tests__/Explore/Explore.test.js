@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { api } from 'api';
 import Explore from 'components/Explore';
-import React, { useState } from 'react';
+import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
 // router mock
@@ -13,53 +13,54 @@ jest.mock('react-router-dom', () => ({
 }));
 
 const StateExploreWrapper = (props) => {
-  const [data, useData] = useState([]);
   const queryString = props.search || '';
   return (
     <MemoryRouter initialEntries={[queryString]}>
-      <Explore data={data} updateData={useData} />
+      <Explore />
     </MemoryRouter>
   );
 };
 const mockImageList = {
-  RepoListWithNewestImage: [
-    {
-      Name: 'alpine',
-      Size: '2806985',
-      LastUpdated: '2022-08-09T17:19:53.274069586Z',
-      NewestImage: {
-        Tag: 'latest',
-        Description: 'w',
-        Licenses: '',
-        Vendor: '',
-        Labels: ''
+  GlobalSearch: {
+    Repos: [
+      {
+        Name: 'alpine',
+        Size: '2806985',
+        LastUpdated: '2022-08-09T17:19:53.274069586Z',
+        NewestImage: {
+          Tag: 'latest',
+          Description: 'w',
+          Licenses: '',
+          Vendor: '',
+          Labels: ''
+        }
+      },
+      {
+        Name: 'mongo',
+        Size: '231383863',
+        LastUpdated: '2022-08-02T01:30:49.193203152Z',
+        NewestImage: {
+          Tag: 'latest',
+          Description: '',
+          Licenses: '',
+          Vendor: '',
+          Labels: ''
+        }
+      },
+      {
+        Name: 'nodeUnique',
+        Size: '369311301',
+        LastUpdated: '2022-08-23T00:20:40.144281895Z',
+        NewestImage: {
+          Tag: 'latest',
+          Description: '',
+          Licenses: '',
+          Vendor: '',
+          Labels: ''
+        }
       }
-    },
-    {
-      Name: 'mongo',
-      Size: '231383863',
-      LastUpdated: '2022-08-02T01:30:49.193203152Z',
-      NewestImage: {
-        Tag: 'latest',
-        Description: '',
-        Licenses: '',
-        Vendor: '',
-        Labels: ''
-      }
-    },
-    {
-      Name: 'nodeUnique',
-      Size: '369311301',
-      LastUpdated: '2022-08-23T00:20:40.144281895Z',
-      NewestImage: {
-        Tag: 'latest',
-        Description: '',
-        Licenses: '',
-        Vendor: '',
-        Labels: ''
-      }
-    }
-  ]
+    ]
+  }
 };
 afterEach(() => {
   // restore the spy created with spyOn

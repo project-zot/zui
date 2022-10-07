@@ -71,7 +71,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function SearchSuggestion({ updateData }) {
+function SearchSuggestion() {
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestionData, setSuggestionData] = useState([]);
   const navigate = useNavigate();
@@ -85,21 +85,7 @@ function SearchSuggestion({ updateData }) {
   const handleSearch = (event) => {
     const { key, type } = event;
     if (key === 'Enter' || type === 'click') {
-      api
-        .get(`${host()}${endpoints.globalSearch(searchQuery)}`)
-        .then((response) => {
-          if (response.data && response.data.data) {
-            let repoList = response.data.data.GlobalSearch.Repos;
-            let repoData = repoList.map((responseRepo) => {
-              return mapToRepo(responseRepo);
-            });
-            updateData(repoData);
-            navigate({ pathname: `/explore`, search: createSearchParams({ search: searchQuery }).toString() });
-          }
-        })
-        .catch((e) => {
-          console.error(e);
-        });
+      navigate({ pathname: `/explore`, search: createSearchParams({ search: searchQuery }).toString() });
     }
   };
 
@@ -108,7 +94,7 @@ function SearchSuggestion({ updateData }) {
     setSearchQuery(value);
     if (value !== '' && value.length > 1) {
       api
-        .get(`${host()}${endpoints.globalSearchPaginated(value, 1, 9)}`)
+        .get(`${host()}${endpoints.globalSearch({ searchQuery: value, pageNumber: 1, pageSize: 9 })}`)
         .then((suggestionResponse) => {
           if (suggestionResponse.data.data.GlobalSearch.Repos) {
             const suggestionParsedData = suggestionResponse.data.data.GlobalSearch.Repos.map((el) => mapToRepo(el));

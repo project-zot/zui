@@ -27,9 +27,9 @@ function App() {
           <Route element={<AuthWrapper isLoggedIn={isLoggedIn} redirect="/login" />}>
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<HomePage data={data} updateData={setData} />} />
-            <Route path="/explore" element={<ExplorePage data={data} updateData={setData} />} />
-            <Route path="/image/:name" element={<RepoPage updateData={setData} />} />
-            <Route path="/image/:name/tag/:tag" element={<TagPage updateData={setData} />} />
+            <Route path="/explore" element={<ExplorePage />} />
+            <Route path="/image/:name" element={<RepoPage />} />
+            <Route path="/image/:name/tag/:tag" element={<TagPage />} />
           </Route>
           <Route element={<AuthWrapper isLoggedIn={!isLoggedIn} redirect="/" />}>
             <Route

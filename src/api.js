@@ -1,3 +1,4 @@
+// @ts-nocheck
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 
@@ -65,16 +66,21 @@ const endpoints = {
     `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Digest Tag Layers {Size Digest}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName Layers {Size Digest} Digest Tag Title Documentation DownloadCount Source Description History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}}}}}}`,
   vulnerabilitiesForRepo: (name) =>
     `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}"){Tag, CVEList {Id Title Description Severity PackageList {Name InstalledVersion FixedVersion}}}}`,
-  globalSearch: (searchQuery) =>
-    `/v2/_zot/ext/search?query={GlobalSearch(query:"${searchQuery}") {Repos {Name LastUpdated Size Platforms { Os Arch } NewestImage { Tag Description Licenses Vendor Labels } DownloadCount}}}`,
   layersDetailsForImage: (name) =>
     `/v2/_zot/ext/search?query={Image(image: "${name}"){History {Layer {Size Digest Score} HistoryDescription {Created CreatedBy Author Comment EmptyLayer} }}}`,
   dependsOnForImage: (name) => `/v2/_zot/ext/search?query={BaseImageList(image: "${name}"){RepoName}}`,
   isDependentOnForImage: (name) => `/v2/_zot/ext/search?query={DerivedImageList(image: "${name}"){RepoName}}`,
-  globalSearchPaginated: (searchQuery, pageNumber, pageSize) =>
-    `/v2/_zot/ext/search?query={GlobalSearch(query:"${searchQuery}", requestedPage: {limit:${pageSize} offset:${
-      (pageNumber - 1) * pageSize
-    }}) {Repos {Name LastUpdated Size Platforms { Os Arch } NewestImage { Tag Description Licenses Vendor Labels } DownloadCount}}}`
+  globalSearch: ({ searchQuery = '""', pageNumber = 1, pageSize = 15, filter = {} }) => {
+    const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
+    const paginationParam = `requestedPage: {limit:${pageSize} offset:${(pageNumber - 1) * pageSize}}`;
+    let filterParam = `,filter: {`;
+    if (filter.Os) filterParam += ` Os:${!isEmpty(filter.Os) ? `"${filter.Os}"` : '""'}`;
+    if (filter.Arch) filterParam += ` Arch:${!isEmpty(filter.Arch) ? `"${filter.Arch}"` : '""'}`;
+    if (filter.HasToBeSigned) filterParam += ` HasToBeSigned: ${filter.HasToBeSigned}`;
+    filterParam += '}';
+    if (Object.keys(filter).length === 0) filterParam = '';
+    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam} ${filterParam}) {Repos {Name LastUpdated Size Platforms { Os Arch } NewestImage { Tag Description Licenses Vendor Labels } DownloadCount}}}`;
+  }
 };
 
 export { api, endpoints };
