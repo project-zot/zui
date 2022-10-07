@@ -36,6 +36,7 @@ const useStyles = makeStyles(() => ({
 function RepoDetailsMetadata(props) {
   const classes = useStyles();
   const { repoURL, weeklyDownloads, lastUpdated, size } = props;
+  // @ts-ignore
   const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
     unit: 'days'
   });

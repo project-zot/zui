@@ -33,7 +33,7 @@ const useStyles = makeStyles(() => ({
     width: '100%'
   },
   card: {
-    marginBottom: 2,
+    marginBottom: '2rem',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
@@ -62,6 +62,7 @@ function TagCard(props) {
   const [digests, setDigests] = React.useState([]);
   const classes = useStyles();
   const tagRow = row;
+  // @ts-ignore
   const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
     unit: 'days'
   });
@@ -110,7 +111,7 @@ function TagCard(props) {
           }}
           onClick={() => setOpen(!open)}
         >
-          {!open ? 'See digests' : 'Hide digests'}
+          {!open ? 'See digest' : 'Hide digest'}
         </Typography>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <Box>
