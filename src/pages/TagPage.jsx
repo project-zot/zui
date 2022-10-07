@@ -15,8 +15,7 @@ const useStyles = makeStyles(() => ({
   },
   container: {
     paddingTop: 5,
-    paddingBottom: 5,
-    backgroundColor: '#FFFFFF'
+    paddingBottom: 5
   },
   parentWrapper: {
     height: '100vh'

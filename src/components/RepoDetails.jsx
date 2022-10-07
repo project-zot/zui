@@ -129,7 +129,7 @@ const randomImage = () => {
   return imageArray[randomIntFromInterval(0, 3)];
 };
 
-function RepoDetails(props) {
+function RepoDetails() {
   const [repoDetailData, setRepoDetailData] = useState({});
   // @ts-ignore
   //const [isLoading, setIsLoading] = useState(false);
@@ -138,7 +138,6 @@ function RepoDetails(props) {
   // get url param from <Route here (i.e. image name)
   const { name } = useParams();
   const classes = useStyles();
-  const { overviewTitle } = props;
 
   useEffect(() => {
     api
@@ -157,6 +156,7 @@ function RepoDetails(props) {
             vendors: repoInfo.Summary?.Vendors,
             newestTag: repoInfo.Summary?.NewestImage,
             description: repoInfo.Summary?.NewestImage.Description,
+            title: repoInfo.Summary?.NewestImage.Title,
             source: repoInfo.Summary?.NewestImage.Source,
             downloads: repoInfo.Summary?.NewestImage.DownloadCount,
             overview: repoInfo.Summary?.NewestImage.Documentation
@@ -234,7 +234,7 @@ function RepoDetails(props) {
       <Card className={classes.card} data-testid="overview-container">
         <CardContent>
           <Typography variant="h4" align="left">
-            {overviewTitle || 'Quickstart'}
+            Quickstart
           </Typography>
           <Typography
             variant="body1"
@@ -248,7 +248,7 @@ function RepoDetails(props) {
           >
             {
               // @ts-ignore
-              repoDetailData.overview || 'N/A'
+              repoDetailData.description || 'N/A'
             }
           </Typography>
         </CardContent>
@@ -303,7 +303,7 @@ function RepoDetails(props) {
               >
                 {
                   // @ts-ignore
-                  repoDetailData?.description || 'N/A'
+                  repoDetailData?.title || 'N/A'
                 }
               </Typography>
               <Stack alignItems="center" sx={{ paddingLeft: '4rem' }} direction="row" spacing={2} pt={1}>

@@ -38,10 +38,10 @@ const mockedTagsData = {
 describe('Tags component', () => {
   it('should open and close details dropdown for tags', () => {
     render(<Tags data={mockedTagsData} />);
-    const openBtn = screen.getByText(/see digests/i);
+    const openBtn = screen.getByText(/see digest/i);
     fireEvent.click(openBtn);
-    expect(screen.queryByText(/see digests/i)).not.toBeInTheDocument();
-    expect(screen.getByText(/hide digests/i)).toBeInTheDocument();
+    expect(screen.queryByText(/see digest/i)).not.toBeInTheDocument();
+    expect(screen.getByText(/hide digest/i)).toBeInTheDocument();
   });
   it('should navigate to tag page details when tag is clicked', async () => {
     render(<Tags data={mockedTagsData} />);
