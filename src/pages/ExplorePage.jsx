@@ -25,16 +25,16 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function ExplorePage({ data, updateData }) {
+function ExplorePage() {
   const classes = useStyles();
 
   return (
     <Stack className={classes.pageWrapper} direction="column" data-testid="explore-container">
-      <Header updateData={updateData} />
+      <Header />
       <Container className={classes.container}>
         <Grid container className={classes.gridWrapper}>
           <Grid item className={classes.tile}>
-            <Explore data={data} updateData={updateData} />
+            <Explore />
           </Grid>
         </Grid>
       </Container>

@@ -30,7 +30,7 @@ function HomePage({ data, updateData }) {
 
   return (
     <Stack className={classes.pageWrapper} direction="column" data-testid="homepage-container">
-      <Header updateData={updateData} />
+      <Header />
       <Container className={classes.container}>
         <Grid container className={classes.gridWrapper}>
           <Grid item className={classes.tile}>

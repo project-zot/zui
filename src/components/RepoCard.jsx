@@ -171,7 +171,7 @@ function RepoCard(props) {
                 {signatureCheck()} */}
                 {/* <Chip label="Verified licensee" sx={{ backgroundColor: "#E8F5E9", color: "#388E3C" }} variant="filled" onDelete={() => { return }} deleteIcon={vulnerabilityCheck()} /> */}
               </Stack>
-              <Typography className={classes.versionLast} pt={1} sx={{ fontSize: 12 }} gutterBottom>
+              <Typography className={classes.versionLast} pt={1} sx={{ fontSize: 12 }} gutterBottom noWrap>
                 {description || 'N/A'}
               </Typography>
               <Stack alignItems="center" direction="row" spacing={2} pt={1}>

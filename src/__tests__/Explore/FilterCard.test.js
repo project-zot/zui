@@ -1,9 +1,10 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import FilterCard from 'components/FilterCard';
 import React from 'react';
+import filterConstants from 'utilities/filterConstants';
 
 const StateFilterCardWrapper = () => {
-  return <FilterCard title="Products" filters={['Images', 'Plugins']} />;
+  return <FilterCard title="Products" filters={filterConstants.osFilters} updateFilters={() => {}} />;
 };
 
 describe('Filters components', () => {
