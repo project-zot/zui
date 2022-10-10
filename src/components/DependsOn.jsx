@@ -9,6 +9,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { Link } from 'react-router-dom';
 import { host } from '../host';
 import Monitor from '../assets/Monitor.png';
+import Loading from './Loading';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -69,9 +70,10 @@ function DependsOn(props) {
   const [images, setImages] = useState([]);
   const { name } = props;
   const classes = useStyles();
-  // const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
+    setIsLoading(true);
     api
       .get(`${host()}${endpoints.dependsOnForImage(name)}`)
       .then((response) => {
@@ -79,11 +81,36 @@ function DependsOn(props) {
           let images = response.data.data.BaseImageList;
           setImages(images);
         }
+        setIsLoading(false);
       })
       .catch((e) => {
         console.error(e);
+        setIsLoading(false);
       });
   }, []);
+
+  const renderDependencies = () => {
+    return images?.length ? (
+      <Card className={classes.card} raised>
+        <CardContent>
+          <Typography className={classes.content}>
+            {images.map((dependence, index) => {
+              return (
+                <Link key={index} className={classes.link} to={`/image/${encodeURIComponent(dependence.RepoName)}`}>
+                  {dependence.RepoName}
+                </Link>
+              );
+            })}
+          </Typography>
+        </CardContent>
+      </Card>
+    ) : (
+      <div>
+        <img src={Monitor} alt="Monitor" className={classes.monitor}></img>
+        <Typography className={classes.none}> Nothing found </Typography>
+      </div>
+    );
+  };
 
   return (
     <div data-testid="depends-on-container">
@@ -101,26 +128,7 @@ function DependsOn(props) {
         variant="fullWidth"
         sx={{ margin: '5% 0% 5% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}
       />
-      {images?.length ? (
-        <Card className={classes.card} raised>
-          <CardContent>
-            <Typography className={classes.content}>
-              {images.map((dependence, index) => {
-                return (
-                  <Link key={index} className={classes.link} to={`/image/${encodeURIComponent(dependence.RepoName)}`}>
-                    {dependence.RepoName}
-                  </Link>
-                );
-              })}
-            </Typography>
-          </CardContent>
-        </Card>
-      ) : (
-        <div>
-          <img src={Monitor} alt="Monitor" className={classes.monitor}></img>
-          <Typography className={classes.none}> Nothing found </Typography>
-        </div>
-      )}
+      {isLoading ? <Loading /> : renderDependencies()}
     </div>
   );
 }

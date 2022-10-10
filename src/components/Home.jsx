@@ -6,6 +6,7 @@ import React, { useEffect, useState } from 'react';
 import PreviewCard from './PreviewCard';
 import RepoCard from './RepoCard';
 import { mapToRepo } from 'utilities/objectModels';
+import Loading from './Loading';
 
 const useStyles = makeStyles(() => ({
   gridWrapper: {
@@ -61,11 +62,13 @@ const useStyles = makeStyles(() => ({
 }));
 
 function Home({ data, updateData }) {
-  // const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const [homeData, setHomeData] = useState([]);
   const classes = useStyles();
 
   useEffect(() => {
+    window.scrollTo(0, 0);
+    setIsLoading(true);
     api
       .get(`${host()}${endpoints.repoList}`)
       .then((response) => {
@@ -75,7 +78,7 @@ function Home({ data, updateData }) {
             return mapToRepo(responseRepo);
           });
           updateData(repoData);
-          // setIsLoading(false);
+          setIsLoading(false);
         }
       })
       .catch((e) => {
@@ -149,31 +152,37 @@ function Home({ data, updateData }) {
   };
 
   return (
-    <Stack spacing={4} alignItems="center" className={classes.gridWrapper}>
-      <Grid container item xs={12} sx={{ mt: 2, mb: 1 }} justifyContent="center">
-        <Stack sx={{ display: 'inline' }} direction="row" justifyContent="center" spacing={1}>
-          <Typography variant="h3" className={classes.title}>
-            Most popular
-          </Typography>
-          <Typography variant="h3" className={classes.titleRed}>
-            images
-          </Typography>
-        </Stack>
-      </Grid>
-      <Grid container spacing={1}>
-        {renderPreviewCards()}
-      </Grid>{' '}
-      <Grid></Grid>
-      {/* <Typography variant="h4" align="left" className={classes.sectionTitle}>
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Stack spacing={4} alignItems="center" className={classes.gridWrapper}>
+          <Grid container item xs={12} sx={{ mt: 2, mb: 1 }} justifyContent="center">
+            <Stack sx={{ display: 'inline' }} direction="row" justifyContent="center" spacing={1}>
+              <Typography variant="h3" className={classes.title}>
+                Most popular
+              </Typography>
+              <Typography variant="h3" className={classes.titleRed}>
+                images
+              </Typography>
+            </Stack>
+          </Grid>
+          <Grid container spacing={1}>
+            {renderPreviewCards()}
+          </Grid>{' '}
+          <Grid></Grid>
+          {/* <Typography variant="h4" align="left" className={classes.sectionTitle}>
         Bookmarks
       </Typography>
       {renderBookmarks()} */}
-      <Stack></Stack>
-      <Typography variant="h4" align="left" className={classes.sectionTitle}>
-        Recently updated repositories
-      </Typography>
-      {renderRecentlyUpdated()}
-    </Stack>
+          <Stack></Stack>
+          <Typography variant="h4" align="left" className={classes.sectionTitle}>
+            Recently updated repositories
+          </Typography>
+          {renderRecentlyUpdated()}
+        </Stack>
+      )}
+    </>
   );
 }
 

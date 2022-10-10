@@ -20,6 +20,7 @@ import git from '../assets/Git.png';
 // styling
 import { makeStyles } from '@mui/styles';
 import { Card, CardContent } from '@mui/material';
+import Loading from './Loading';
 
 const useStyles = makeStyles(() => ({
   cardContainer: {
@@ -105,11 +106,14 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
   const [password, setPassword] = useState(null);
   const [requestProcessing, setRequestProcessing] = useState(false);
   const [requestError, setRequestError] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const navigate = useNavigate();
   const classes = useStyles();
 
   useEffect(() => {
+    setIsLoading(true);
     if (isAuthEnabled && isLoggedIn) {
+      setIsLoading(false);
       navigate('/home');
     } else {
       api
@@ -118,11 +122,13 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
           if (response.status === 200) {
             setIsAuthEnabled(false);
             setIsLoggedIn(true);
+            setIsLoading(false);
             navigate('/home');
           }
         })
         .catch(() => {
           setIsAuthEnabled(true);
+          setIsLoading(false);
         });
     }
   }, []);
@@ -190,132 +196,136 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
 
   return (
     <Box className={classes.cardContainer} data-testid="signin-container">
-      <Card className={classes.loginCard}>
-        <CardContent className={classes.loginCardContent}>
-          <CssBaseline />
-          <Typography align="left" className={classes.text} component="h1" variant="h4">
-            Sign in
-          </Typography>
-          <Typography align="left" className={classes.subtext} variant="body1" gutterBottom>
-            Welcome back! Please enter your details.
-          </Typography>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Card className={classes.loginCard}>
+          <CardContent className={classes.loginCardContent}>
+            <CssBaseline />
+            <Typography align="left" className={classes.text} component="h1" variant="h4">
+              Sign in
+            </Typography>
+            <Typography align="left" className={classes.subtext} variant="body1" gutterBottom>
+              Welcome back! Please enter your details.
+            </Typography>
 
-          <Box component="form" onSubmit={null} noValidate autoComplete="off" sx={{ mt: 1 }}>
-            <div>
-              <Button
+            <Box component="form" onSubmit={null} noValidate autoComplete="off" sx={{ mt: 1 }}>
+              <div>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  className={classes.button}
+                  sx={{
+                    mt: 3,
+                    mb: 1,
+                    background: '#161614',
+                    '&:hover': {
+                      backgroundColor: '#1565C0',
+                      color: '#FFFFFF'
+                    }
+                  }}
+                >
+                  {' '}
+                  Continue with GitHub
+                  <img src={git} alt="git logo" className={classes.gitLogo}></img>
+                </Button>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  className={classes.button}
+                  sx={{
+                    mt: 1,
+                    mb: 1,
+                    background: 'transparent',
+                    color: '#52637A',
+                    '&:hover': {
+                      backgroundColor: '#1565C0',
+                      color: '#FFFFFF'
+                    }
+                  }}
+                >
+                  {' '}
+                  Continue with Google
+                  <img src={google} alt="google logo" className={classes.gitLogo}></img>
+                </Button>
+              </div>
+              <br></br>
+              <h2 className={classes.line}>
+                <span className={classes.lineSpan}>or</span>
+              </h2>
+              <TextField
+                margin="normal"
+                required
                 fullWidth
-                variant="contained"
-                className={classes.button}
-                sx={{
-                  mt: 3,
-                  mb: 1,
-                  background: '#161614',
-                  '&:hover': {
-                    backgroundColor: '#1565C0',
-                    color: '#FFFFFF'
-                  }
-                }}
-              >
-                {' '}
-                Continue with GitHub
-                <img src={git} alt="git logo" className={classes.gitLogo}></img>
-              </Button>
-              <Button
+                id="username"
+                label="Username"
+                name="username"
+                className={classes.textField}
+                onInput={(e) => handleChange(e, 'username')}
+                error={usernameError != null}
+                helperText={usernameError}
+              />
+              <TextField
+                margin="normal"
+                required
                 fullWidth
-                variant="contained"
-                className={classes.button}
-                sx={{
-                  mt: 1,
-                  mb: 1,
-                  background: 'transparent',
-                  color: '#52637A',
-                  '&:hover': {
-                    backgroundColor: '#1565C0',
-                    color: '#FFFFFF'
-                  }
-                }}
-              >
-                {' '}
-                Continue with Google
-                <img src={google} alt="google logo" className={classes.gitLogo}></img>
-              </Button>
-            </div>
-            <br></br>
-            <h2 className={classes.line}>
-              <span className={classes.lineSpan}>or</span>
-            </h2>
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              id="username"
-              label="Username"
-              name="username"
-              className={classes.textField}
-              onInput={(e) => handleChange(e, 'username')}
-              error={usernameError != null}
-              helperText={usernameError}
-            />
-            <TextField
-              margin="normal"
-              required
-              fullWidth
-              name="password"
-              label="Enter password"
-              type="password"
-              id="password"
-              className={classes.textField}
-              onInput={(e) => handleChange(e, 'password')}
-              error={passwordError != null}
-              helperText={passwordError}
-            />
-            {requestProcessing && <CircularProgress style={{ marginTop: 20 }} color="secondary" />}
-            {requestError && (
-              <Alert style={{ marginTop: 20 }} severity="error">
-                Authentication Failed. Please try again.
-              </Alert>
-            )}
-            <div>
-              <Button
-                fullWidth
-                variant="contained"
-                className={classes.button}
-                sx={{
-                  mt: 3,
-                  mb: 1,
-                  background: '#1479FF',
-                  '&:hover': {
-                    backgroundColor: '#1565C0'
-                  }
-                }}
-                onClick={handleClick}
-              >
-                {' '}
-                Continue
-              </Button>
-              <Button
-                fullWidth
-                variant="contained"
-                className={classes.button}
-                sx={{
-                  mt: 1,
-                  mb: 1,
-                  background: 'transparent',
-                  color: '#52637A',
-                  '&:hover': {
-                    backgroundColor: '#EFEFEF',
-                    color: '#52637A'
-                  }
-                }}
-              >
-                {' '}
-                Continue as guest
-              </Button>
-            </div>
-          </Box>
-          <TermsOfService sx={{ mt: 2, mb: 4 }} />
-        </CardContent>
-      </Card>
+                name="password"
+                label="Enter password"
+                type="password"
+                id="password"
+                className={classes.textField}
+                onInput={(e) => handleChange(e, 'password')}
+                error={passwordError != null}
+                helperText={passwordError}
+              />
+              {requestProcessing && <CircularProgress style={{ marginTop: 20 }} color="secondary" />}
+              {requestError && (
+                <Alert style={{ marginTop: 20 }} severity="error">
+                  Authentication Failed. Please try again.
+                </Alert>
+              )}
+              <div>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  className={classes.button}
+                  sx={{
+                    mt: 3,
+                    mb: 1,
+                    background: '#1479FF',
+                    '&:hover': {
+                      backgroundColor: '#1565C0'
+                    }
+                  }}
+                  onClick={handleClick}
+                >
+                  {' '}
+                  Continue
+                </Button>
+                <Button
+                  fullWidth
+                  variant="contained"
+                  className={classes.button}
+                  sx={{
+                    mt: 1,
+                    mb: 1,
+                    background: 'transparent',
+                    color: '#52637A',
+                    '&:hover': {
+                      backgroundColor: '#EFEFEF',
+                      color: '#52637A'
+                    }
+                  }}
+                >
+                  {' '}
+                  Continue as guest
+                </Button>
+              </div>
+            </Box>
+            <TermsOfService sx={{ mt: 2, mb: 4 }} />
+          </CardContent>
+        </Card>
+      )}
     </Box>
   );
 }

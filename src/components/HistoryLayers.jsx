@@ -10,6 +10,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
 import Monitor from '../assets/Monitor.png';
 import { isEmpty } from 'lodash';
+import Loading from './Loading';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -141,6 +142,35 @@ function HistoryLayers(props) {
     }
   }, [name]);
 
+  const renderHistoryData = () => {
+    return (
+      historyData && (
+        <Card className={classes.card} raised>
+          <CardContent className={classes.content}>
+            <Grid item xs={11}>
+              <Stack sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Typography variant="body1" align="left" className={classes.title}>
+                  Command
+                </Typography>
+                <Typography variant="body1" align="left" className={classes.values}>
+                  {transform.formatBytes(historyData[selectedIndex].Layer?.Size)}
+                </Typography>
+              </Stack>
+            </Grid>
+            <Typography variant="body1" align="left" className={classes.title} sx={{ backgroundColor: '#F7F7F7' }}>
+              {historyData[selectedIndex].HistoryDescription?.CreatedBy}
+            </Typography>
+            {!historyData[selectedIndex].HistoryDescription?.EmptyLayer ? (
+              <Typography data-testid="hash-typography">#: {historyData[selectedIndex].Layer?.Digest}</Typography>
+            ) : (
+              <Typography data-testid="no-hash-typography"></Typography>
+            )}
+          </CardContent>
+        </Card>
+      )
+    );
+  };
+
   return (
     <div>
       <Typography
@@ -181,30 +211,7 @@ function HistoryLayers(props) {
         </div>
       )}
 
-      {isLoaded && historyData && (
-        <Card className={classes.card} raised>
-          <CardContent className={classes.content}>
-            <Grid item xs={11}>
-              <Stack sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Typography variant="body1" align="left" className={classes.title}>
-                  Command
-                </Typography>
-                <Typography variant="body1" align="left" className={classes.values}>
-                  {transform.formatBytes(historyData[selectedIndex].Layer?.Size)}
-                </Typography>
-              </Stack>
-            </Grid>
-            <Typography variant="body1" align="left" className={classes.title} sx={{ backgroundColor: '#F7F7F7' }}>
-              {historyData[selectedIndex].HistoryDescription?.CreatedBy}
-            </Typography>
-            {!historyData[selectedIndex].HistoryDescription?.EmptyLayer ? (
-              <Typography data-testid="hash-typography">#: {historyData[selectedIndex].Layer?.Digest}</Typography>
-            ) : (
-              <Typography data-testid="no-hash-typography"></Typography>
-            )}
-          </CardContent>
-        </Card>
-      )}
+      {!isLoaded ? <Loading /> : renderHistoryData()}
     </div>
   );
 }
