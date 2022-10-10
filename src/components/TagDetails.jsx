@@ -236,11 +236,11 @@ function TagDetails() {
                     <Tab value="Layers" label="Layers" className={classes.tabContent} />
                     <Tab
                       value="DependsOn"
-                      label="Depends on"
+                      label="Dependencies"
                       className={classes.tabContent}
                       data-testid="dependencies-tab"
                     />
-                    <Tab value="IsDependentOn" label="Is dependent on" className={classes.tabContent} />
+                    <Tab value="IsDependentOn" label="Dependants" className={classes.tabContent} />
                     <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent} />
                   </TabList>
                   <Grid container>

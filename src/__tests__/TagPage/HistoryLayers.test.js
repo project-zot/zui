@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { api } from 'api';
 import HistoryLayers from 'components/HistoryLayers';
 import React from 'react';
@@ -47,6 +47,16 @@ describe('Layers page', () => {
     });
     render(<HistoryLayers name="alpine:latest" />);
     await waitFor(() => expect(screen.getAllByText('No Layers')).toHaveLength(1));
+  });
+
+  it('renders hash layers', async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: { Image: { History: mockLayersList } } } });
+    render(<HistoryLayers name="alpine:latest" />);
+    expect(await screen.findAllByTestId('hash-typography')).toHaveLength(1);
+    const openText = screen.getByText(/2:/i);
+    fireEvent.click(openText);
+    expect(await screen.findAllByTestId('no-hash-typography')).toHaveLength(1);
   });
 
   it("should log an error when data can't be fetched", async () => {
