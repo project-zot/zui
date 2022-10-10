@@ -215,7 +215,30 @@ function HistoryLayers(props) {
         </div>
       )}
 
-      {!isLoaded ? <Loading /> : renderHistoryData()}
+      {isLoaded && historyData && (
+        <Card className={classes.card} raised>
+          <CardContent className={classes.content}>
+            <Grid item xs={11}>
+              <Stack sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                <Typography variant="body1" align="left" className={classes.title}>
+                  Command
+                </Typography>
+                <Typography variant="body1" align="left" className={classes.values}>
+                  {transform.formatBytes(historyData[selectedIndex].Layer?.Size)}
+                </Typography>
+              </Stack>
+            </Grid>
+            <Typography variant="body1" align="left" className={classes.title} sx={{ backgroundColor: '#F7F7F7' }}>
+              {historyData[selectedIndex].HistoryDescription?.CreatedBy}
+            </Typography>
+            {!historyData[selectedIndex].HistoryDescription?.EmptyLayer ? (
+              <Typography>#: {historyData[selectedIndex].Layer?.Digest}</Typography>
+            ) : (
+              <Typography></Typography>
+            )}
+          </CardContent>
+        </Card>
+      )}
     </div>
   );
 }
