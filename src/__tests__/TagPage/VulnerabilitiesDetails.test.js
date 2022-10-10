@@ -2,9 +2,14 @@ import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { api } from 'api';
 import VulnerabilitiesDetails from 'components/VulnerabilitiesDetails';
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 
 const StateVulnerabilitiesWrapper = () => {
-  return <VulnerabilitiesDetails name="mongo" />;
+  return (
+    <MemoryRouter>
+      <VulnerabilitiesDetails name="mongo" />
+    </MemoryRouter>
+  );
 };
 
 const mockCVEList = {
@@ -426,6 +431,20 @@ const mockCVEList = {
   }
 };
 
+const mockCVEFixed = {
+  ImageListWithCVEFixed: [
+    {
+      Tag: '1.0.16'
+    },
+    {
+      Tag: '0.4.33'
+    },
+    {
+      Tag: '1.0.17'
+    }
+  ]
+};
+
 afterEach(() => {
   // restore the spy created with spyOn
   jest.restoreAllMocks();
@@ -467,5 +486,17 @@ describe('Vulnerabilties page', () => {
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(error).toBeCalledTimes(1));
+  });
+
+  it('should find out which version fixes the CVEs', async () => {
+    jest
+      .spyOn(api, 'get')
+      // @ts-ignore
+      .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
+      // @ts-ignore
+      .mockResolvedValue({ status: 200, data: { data: mockCVEFixed } });
+    render(<StateVulnerabilitiesWrapper />);
+    await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('1.0.16')).toHaveLength(20));
   });
 });

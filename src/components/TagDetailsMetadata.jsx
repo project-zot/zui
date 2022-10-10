@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
 
 function TagDetailsMetadata(props) {
   const classes = useStyles();
-  const { platforms, lastUpdated, size } = props;
+  const { platform, lastUpdated, size } = props;
   const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
     unit: 'days'
   });
@@ -48,7 +48,7 @@ function TagDetailsMetadata(props) {
               OS/Arch
             </Typography>
             <Typography variant="body1" className={classes.metadataBody}>
-              {platforms.Os || `----`} / {platforms.Arch || `----`}
+              {platform?.Os || `----`} / {platform?.Arch || `----`}
             </Typography>
           </CardContent>
         </Card>

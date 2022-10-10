@@ -11,6 +11,8 @@ import { host } from '../host';
 import PestControlOutlinedIcon from '@mui/icons-material/PestControlOutlined';
 import PestControlIcon from '@mui/icons-material/PestControl';
 import Monitor from '../assets/Monitor.png';
+import { isEmpty } from 'lodash';
+import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -46,7 +48,15 @@ const useStyles = makeStyles(() => ({
     fontSize: '1rem',
     fontWeight: '600',
     paddingBottom: '0.5rem',
-    paddingTop: '0.5rem'
+    paddingTop: '0.5rem',
+    textOverflow: 'ellipsis'
+  },
+  link: {
+    color: '#52637A',
+    fontSize: '1rem',
+    letterSpacing: '0.009375rem',
+    paddingRight: '1rem',
+    textDecorationLine: 'underline'
   },
   monitor: {
     width: '27.25rem',
@@ -154,8 +164,40 @@ const vulnerabilityCheck = (status) => {
 
 function VulnerabilitiyCard(props) {
   const classes = useStyles();
-  const { cve } = props;
-  const [open, setOpen] = React.useState(false);
+  const { cve, name } = props;
+  const [open, setOpen] = useState(false);
+  const [loadingFixed, setLoadingFixed] = useState(true);
+  const [fixedInfo, setFixedInfo] = useState([]);
+
+  useEffect(() => {
+    setLoadingFixed(true);
+    api
+      .get(`${host()}${endpoints.imageListWithCVEFixed(cve.Id, name)}`)
+      .then((response) => {
+        if (response.data && response.data.data) {
+          const fixedTagsList = response.data.data.ImageListWithCVEFixed?.map((e) => e.Tag);
+          setFixedInfo(fixedTagsList);
+        }
+        setLoadingFixed(false);
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  }, []);
+
+  const renderFixedVer = () => {
+    if (!isEmpty(fixedInfo)) {
+      return fixedInfo.map((tag, index) => {
+        return (
+          <Link key={index} to={`/image/${encodeURIComponent(name)}/tag/${tag}`} className={classes.link}>
+            {tag}
+          </Link>
+        );
+      });
+    } else {
+      return 'Not fixed';
+    }
+  };
 
   return (
     <Card className={classes.card} raised>
@@ -177,6 +219,15 @@ function VulnerabilitiyCard(props) {
           <Typography variant="body1" align="left" className={classes.values}>
             {' '}
             {cve.Title}
+          </Typography>
+        </Stack>
+        <Stack sx={{ flexDirection: 'row' }}>
+          <Typography variant="body1" align="left" className={classes.title}>
+            Fixed In:{' '}
+          </Typography>
+          <Typography variant="body1" align="left" className={classes.values} noWrap>
+            {' '}
+            {loadingFixed ? 'Loading...' : renderFixedVer()}
           </Typography>
         </Stack>
         <Typography
@@ -234,7 +285,7 @@ function VulnerabilitiesDetails(props) {
       return (
         cves &&
         cves.map((cve, index) => {
-          return <VulnerabilitiyCard key={index} cve={cve} />;
+          return <VulnerabilitiyCard key={index} cve={cve} name={name} />;
         })
       );
     } else {
