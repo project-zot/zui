@@ -232,9 +232,9 @@ function HistoryLayers(props) {
               {historyData[selectedIndex].HistoryDescription?.CreatedBy}
             </Typography>
             {!historyData[selectedIndex].HistoryDescription?.EmptyLayer ? (
-              <Typography>#: {historyData[selectedIndex].Layer?.Digest}</Typography>
+              <Typography data-testid="hash-typography">#: {historyData[selectedIndex].Layer?.Digest}</Typography>
             ) : (
-              <Typography></Typography>
+              <Typography data-testid="no-hash-typography"></Typography>
             )}
           </CardContent>
         </Card>
