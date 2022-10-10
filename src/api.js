@@ -64,10 +64,14 @@ const endpoints = {
     '/v2/_zot/ext/search?query={RepoListWithNewestImage(){Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag  Description  Licenses Title Source Documentation History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}} Vendor Labels} DownloadCount}}',
   detailedRepoInfo: (name) =>
     `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Digest Tag Layers {Size Digest}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName Layers {Size Digest} Digest Tag Title Documentation DownloadCount Source Description History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}}}}}}`,
+  detailedImageInfo: (name, tag) =>
+    `/v2/_zot/ext/search?query={Image(image: "${name}:${tag}"){RepoName Tag Digest LastUpdated Size ConfigDigest Platform {Os Arch} Vendor History {Layer {Size Digest Score} HistoryDescription {Created CreatedBy Author Comment EmptyLayer} }}}`,
   vulnerabilitiesForRepo: (name) =>
     `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}"){Tag, CVEList {Id Title Description Severity PackageList {Name InstalledVersion FixedVersion}}}}`,
   layersDetailsForImage: (name) =>
     `/v2/_zot/ext/search?query={Image(image: "${name}"){History {Layer {Size Digest Score} HistoryDescription {Created CreatedBy Author Comment EmptyLayer} }}}`,
+  imageListWithCVEFixed: (cveId, repoName) =>
+    `/v2/_zot/ext/search?query={ImageListWithCVEFixed(id:"${cveId}", image:"${repoName}") {Tag}}`,
   dependsOnForImage: (name) => `/v2/_zot/ext/search?query={BaseImageList(image: "${name}"){RepoName}}`,
   isDependentOnForImage: (name) => `/v2/_zot/ext/search?query={DerivedImageList(image: "${name}"){RepoName}}`,
   globalSearch: ({ searchQuery = '""', pageNumber = 1, pageSize = 15, filter = {} }) => {

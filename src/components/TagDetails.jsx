@@ -118,60 +118,51 @@ const randomImage = () => {
 };
 
 function TagDetails() {
-  const [repoDetailData, setRepoDetailData] = useState({});
+  const [imageDetailData, setImageDetailData] = useState({});
   // @ts-ignore
   //const [isLoading, setIsLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState('Layers');
-  const [tagName, setTagName] = useState('');
+  const [fullName, setFullName] = useState('');
 
   // get url param from <Route here (i.e. image name)
-  const { name } = useParams();
+  const { name, tag } = useParams();
   const classes = useStyles();
   // const { description, overviewTitle, dependencies, dependents } = props;
 
   useEffect(() => {
+    // if same-page navigation because of tag update, following 2 lines help ux
+    setSelectedTab('Layers');
+    window?.scrollTo(0, 0);
     api
-      .get(`${host()}${endpoints.detailedRepoInfo(name)}`)
+      .get(`${host()}${endpoints.detailedImageInfo(name, tag)}`)
       .then((response) => {
         if (response.data && response.data.data) {
-          let repoInfo = response.data.data.ExpandedRepoInfo;
+          let imageInfo = response.data.data.Image;
           let imageData = {
-            name: name,
-            tags: repoInfo.Images[0]?.Tag,
-            lastUpdated: repoInfo.Summary?.LastUpdated,
-            size: repoInfo.Summary?.Size,
-            latestDigest: repoInfo.Images[0].Digest,
-            layers: repoInfo.Images[0].Layers,
-            platforms: repoInfo.Summary?.Platforms,
-            vendors: repoInfo.Summary?.Vendors,
-            newestTag: repoInfo.Summary?.NewestImage?.Tag
+            name: imageInfo.RepoName,
+            tag: imageInfo.Tag,
+            lastUpdated: imageInfo.LastUpdated,
+            size: imageInfo.Size,
+            digest: imageInfo.ConfigDigest,
+            platform: imageInfo.Platform,
+            vendor: imageInfo.Vendor,
+            history: imageInfo.History
           };
-          setRepoDetailData(imageData);
-          setTagName(imageData.name + ':' + imageData.newestTag);
+          setImageDetailData(imageData);
+          setFullName(imageData.name + ':' + imageData.tag);
+
           //setIsLoading(false);
         }
       })
       .catch((e) => {
         console.error(e);
-        setRepoDetailData({});
+        setImageDetailData({});
       });
-  }, [name]);
+  }, [name, tag]);
   //function that returns a random element from an array
   // function getRandom(list) {
   //   return list[Math.floor(Math.random() * list.length)];
   // }
-
-  // const vulnerabilityCheck = () => {
-  //   const noneVulnerability = <Chip label="No Vulnerability" sx={{backgroundColor: "#E8F5E9",color: "#388E3C",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#388E3C!important" }} />}/>;
-  //   const unknownVulnerability = <Chip label="Unknown Vulnerability" sx={{backgroundColor: "#ECEFF1",color: "#52637A",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#52637A!important" }} />}/>;
-  //   const lowVulnerability = <Chip label="Low Vulnerability" sx={{backgroundColor: "#FFF3E0",color: "#FB8C00",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#FB8C00!important" }} />}/>;
-  //   const mediumVulnerability = <Chip label="Medium Vulnerability" sx={{backgroundColor: "#FFF3E0",color: "#FB8C00",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlIcon sx={{ color: "#FB8C00!important" }} />}/>;
-  //   const highVulnerability = <Chip label="High Vulnerability" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlOutlinedIcon sx={{ color: "#E53935!important" }} />}/>;
-  //   const criticalVulnerability = <Chip label="Critical Vulnerability" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <PestControlIcon sx={{ color: "#E53935!important" }} />}/>;
-
-  //   const arrVulnerability = [noneVulnerability, unknownVulnerability, lowVulnerability, mediumVulnerability, highVulnerability, criticalVulnerability]
-  //   return(getRandom(arrVulnerability));
-  // };
 
   // const signatureCheck = () => {
   //   const unverifiedSignature = <Chip label="Unverified Signature" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppBadOutlinedIcon sx={{ color: "#E53935!important" }} />}/>;
@@ -184,38 +175,13 @@ function TagDetails() {
 
   const getPlatform = () => {
     // @ts-ignore
-    return repoDetailData?.platforms ? repoDetailData.platforms[0] : '--/--';
+    return imageDetailData?.platform ? imageDetailData.platform : '--/--';
   };
 
   // @ts-ignore
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
-
-  //will need this but not for now
-  // const renderDependencies = () => {
-  //   return (<Card className={classes.card}>
-  //       <CardContent>
-  //         <Typography variant="h4" align="left">Dependecies ({dependencies || '---'})</Typography>
-  //       </CardContent>
-  //     </Card>);
-  // };
-
-  // const renderDependents = () => {
-  //   return (<Card className={classes.card}>
-  //       <CardContent>
-  //         <Typography variant="h4" align="left">Dependents ({dependents || '---'})</Typography>
-  //       </CardContent>
-  //     </Card>);
-  // };
-
-  // const renderVulnerabilities = () => {
-  //   return (<Card className={classes.card}>
-  //       <CardContent>
-  //         <Typography variant="h4" align="left">Vulnerabilities</Typography>
-  //       </CardContent>
-  //     </Card>);
-  // };
 
   return (
     <div className={classes.pageWrapper}>
@@ -237,7 +203,7 @@ function TagDetails() {
                   {name}:
                   {
                     // @ts-ignore
-                    repoDetailData?.newestTag
+                    tag
                   }
                 </Typography>
                 {/* {vulnerabilityCheck()}
@@ -253,7 +219,7 @@ function TagDetails() {
                 Digest:{' '}
                 {
                   // @ts-ignore
-                  repoDetailData?.latestDigest
+                  imageDetailData?.digest
                 }
               </Typography>
             </Grid>
@@ -280,13 +246,19 @@ function TagDetails() {
                   <Grid container>
                     <Grid item xs={12}>
                       <TabPanel value="Layers" className={classes.tabPanel}>
-                        <HistoryLayers name={tagName} />
+                        <HistoryLayers
+                          name={fullName}
+                          history={
+                            // @ts-ignore
+                            imageDetailData.history
+                          }
+                        />
                       </TabPanel>
                       <TabPanel value="DependsOn" className={classes.tabPanel}>
-                        <DependsOn name={tagName} />
+                        <DependsOn name={fullName} />
                       </TabPanel>
                       <TabPanel value="IsDependentOn" className={classes.tabPanel}>
-                        <IsDependentOn name={tagName} />
+                        <IsDependentOn name={fullName} />
                       </TabPanel>
                       <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
                         <VulnerabilitiesDetails name={name} />
@@ -299,11 +271,11 @@ function TagDetails() {
             <Grid item xs={4} className={classes.metadata}>
               <TagDetailsMetadata
                 // @ts-ignore
-                platforms={getPlatform()}
+                platform={getPlatform()}
                 // @ts-ignore
-                size={repoDetailData?.size}
+                size={imageDetailData?.size}
                 // @ts-ignore
-                lastUpdated={repoDetailData?.lastUpdated}
+                lastUpdated={imageDetailData?.lastUpdated}
               />
             </Grid>
           </Grid>

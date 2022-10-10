@@ -9,6 +9,7 @@ import { Card, CardContent, Divider, Grid, Stack, Typography } from '@mui/materi
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
 import Monitor from '../assets/Monitor.png';
+import { isEmpty } from 'lodash';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -116,23 +117,28 @@ function HistoryLayers(props) {
   const [historyData, setHistoryData] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
-  const { name } = props;
+  const { name, history } = props;
 
   useEffect(() => {
-    api
-      .get(`${host()}${endpoints.layersDetailsForImage(name)}`)
-      .then((response) => {
-        if (response.data && response.data.data) {
-          let layersHistory = response.data.data.Image;
-          setHistoryData(layersHistory?.History);
-          setIsLoaded(true);
-        }
-      })
-      .catch((e) => {
-        console.error(e);
-        setHistoryData([]);
-        setIsLoaded(false);
-      });
+    if (history && !isEmpty(history)) {
+      setHistoryData(history);
+      setIsLoaded(true);
+    } else {
+      api
+        .get(`${host()}${endpoints.layersDetailsForImage(name)}`)
+        .then((response) => {
+          if (response.data && response.data.data) {
+            let layersHistory = response.data.data.Image;
+            setHistoryData(layersHistory?.History);
+            setIsLoaded(true);
+          }
+        })
+        .catch((e) => {
+          console.error(e);
+          setHistoryData([]);
+          setIsLoaded(false);
+        });
+    }
   }, [name]);
 
   return (
