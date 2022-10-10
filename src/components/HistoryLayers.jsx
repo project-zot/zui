@@ -197,6 +197,11 @@ function HistoryLayers(props) {
             <Typography variant="body1" align="left" className={classes.title} sx={{ backgroundColor: '#F7F7F7' }}>
               {historyData[selectedIndex].HistoryDescription?.CreatedBy}
             </Typography>
+            {!historyData[selectedIndex].HistoryDescription?.EmptyLayer ? (
+              <Typography>#: {historyData[selectedIndex].Layer?.Digest}</Typography>
+            ) : (
+              <Typography></Typography>
+            )}
           </CardContent>
         </Card>
       )}
