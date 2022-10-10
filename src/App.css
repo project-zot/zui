@@ -18,7 +18,10 @@
 
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
-    animation: App-logo-spin infinite 20s linear;
+    animation: bounce 1s;
+    animation-direction: alternate;
+    animation-timing-function: cubic-bezier(.5, 0.05, 1, .5);
+    animation-iteration-count: infinite;
   }
 }
 
@@ -44,4 +47,27 @@
   to {
     transform: rotate(360deg);
   }
+}
+
+@-webkit-keyframes bounce { 
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+      transform: translate3d(0, 50px, 0);
+  }
+} 
+
+@keyframes bounce { 
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+      transform: translate3d(0, 50px, 0);
+  } 
+}
+
+.bounce { 
+  -webkit-animation-name: bounce; 
+  animation-name: bounce; 
 }

@@ -72,6 +72,7 @@ function Explore() {
   };
 
   useEffect(() => {
+    setIsLoading(true);
     api
       .get(`${host()}${endpoints.globalSearch({ searchQuery: search, filter: buildFilterQuery() })}`)
       .then((response) => {
@@ -88,10 +89,6 @@ function Explore() {
         console.error(e);
       });
   }, [search, queryParams, imageFilters, osFilters, archFilters]);
-
-  useEffect(() => {
-    setIsLoading(false);
-  }, []);
 
   const renderRepoCards = () => {
     return (
@@ -148,47 +145,50 @@ function Explore() {
 
   return (
     <Container maxWidth="lg">
-      {isLoading && <Loading />}
-      <Grid container className={classes.gridWrapper}>
-        <Grid container item xs={12}>
-          <Grid item xs={0}></Grid>
-          <Grid item xs={12}>
-            <Stack direction="row" className={classes.resultsRow}>
-              <Typography variant="body2" className={classes.results}>
-                Results {exploreData.length}
-              </Typography>
-              {/* <FormControl  sx={{m:'1', minWidth:"4.6875rem"}} className={classes.sortForm} size="small">
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Grid container className={classes.gridWrapper}>
+          <Grid container item xs={12}>
+            <Grid item xs={0}></Grid>
+            <Grid item xs={12}>
+              <Stack direction="row" className={classes.resultsRow}>
+                <Typography variant="body2" className={classes.results}>
+                  Results {exploreData.length}
+                </Typography>
+                {/* <FormControl  sx={{m:'1', minWidth:"4.6875rem"}} className={classes.sortForm} size="small">
                                   <InputLabel>Sort</InputLabel>
                                   <Select label="Sort" value={sortFilter}  onChange={handleSortChange}  MenuProps={{disableScrollLock: true}}>
                                     <MenuItem value='relevance'>Relevance</MenuItem>                            
                                   </Select>
                                 </FormControl> */}
-            </Stack>
-          </Grid>
-        </Grid>
-        <Grid container item xs={12} spacing={5} pt={1}>
-          <Grid item xs={3}>
-            {renderFilterCards()}
-          </Grid>
-          <Grid item xs={9}>
-            {!(exploreData && exploreData.length) ? (
-              <Grid container className={classes.nodataWrapper}>
-                <div style={{ marginTop: 20 }}>
-                  <div style={{}}>
-                    <Alert style={{ marginTop: 10, width: '100%' }} variant="outlined" severity="warning">
-                      Looks like we don&apos;t have anything matching that search. Try searching something else.
-                    </Alert>
-                  </div>
-                </div>
-              </Grid>
-            ) : (
-              <Stack direction="column" spacing={2}>
-                {renderRepoCards()}
               </Stack>
-            )}
+            </Grid>
+          </Grid>
+          <Grid container item xs={12} spacing={5} pt={1}>
+            <Grid item xs={3}>
+              {renderFilterCards()}
+            </Grid>
+            <Grid item xs={9}>
+              {!(exploreData && exploreData.length) ? (
+                <Grid container className={classes.nodataWrapper}>
+                  <div style={{ marginTop: 20 }}>
+                    <div style={{}}>
+                      <Alert style={{ marginTop: 10, width: '100%' }} variant="outlined" severity="warning">
+                        Looks like we don&apos;t have anything matching that search. Try searching something else.
+                      </Alert>
+                    </div>
+                  </div>
+                </Grid>
+              ) : (
+                <Stack direction="column" spacing={2}>
+                  {renderRepoCards()}
+                </Stack>
+              )}
+            </Grid>
           </Grid>
         </Grid>
-      </Grid>
+      )}
     </Container>
   );
 }

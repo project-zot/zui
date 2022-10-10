@@ -13,6 +13,7 @@ import PestControlIcon from '@mui/icons-material/PestControl';
 import Monitor from '../assets/Monitor.png';
 import { isEmpty } from 'lodash';
 import { Link } from 'react-router-dom';
+import Loading from './Loading';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -258,10 +259,11 @@ function VulnerabilitiyCard(props) {
 function VulnerabilitiesDetails(props) {
   const classes = useStyles();
   const [cveData, setCveData] = useState({});
-  // const [isLoading, setIsLoading] = useState(true);
+  const [isLoading, setIsLoading] = useState(true);
   const { name } = props;
 
   useEffect(() => {
+    setIsLoading(true);
     api
       .get(`${host()}${endpoints.vulnerabilitiesForRepo(name)}`)
       .then((response) => {
@@ -271,7 +273,7 @@ function VulnerabilitiesDetails(props) {
             cveList: cveInfo?.CVEList
           };
           setCveData(cveListData);
-          // setIsLoading(false);
+          setIsLoading(false);
         }
       })
       .catch((e) => {
@@ -323,9 +325,13 @@ function VulnerabilitiesDetails(props) {
           width: '100%'
         }}
       />
-      {renderCVEs(
-        // @ts-ignore
-        cveData?.cveList
+      {isLoading ? (
+        <Loading />
+      ) : (
+        renderCVEs(
+          // @ts-ignore
+          cveData?.cveList
+        )
       )}
     </div>
   );
