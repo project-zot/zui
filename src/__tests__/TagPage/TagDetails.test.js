@@ -57,11 +57,19 @@ const mockImage = {
   }
 };
 
+// mock clipboard copy fn
+const mockCopyToClipboard = jest.fn();
+Object.assign(navigator, {
+  clipboard: {
+    writeText: mockCopyToClipboard
+  }
+});
+
 jest.mock('react-router-dom', () => ({
   // @ts-ignore
   ...jest.requireActual('react-router-dom'),
   useParams: () => {
-    return { name: 'test' };
+    return { name: 'test', tag: '1.0.1' };
   }
 }));
 
@@ -96,5 +104,13 @@ describe('Tags details', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetails />);
     expect(await screen.findByTestId('tagDetailsMetadata-container')).toBeInTheDocument();
+  });
+
+  it('should copy the pull string to clipboard', async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
+    render(<TagDetails />);
+    fireEvent.click(await screen.findByTestId('pullcopy-btn'));
+    await waitFor(() => expect(mockCopyToClipboard).toHaveBeenCalledWith('docker pull http://localhost/test:1.0.1'));
   });
 });

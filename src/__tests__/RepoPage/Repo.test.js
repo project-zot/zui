@@ -22,14 +22,6 @@ jest.mock('react-router-dom', () => ({
   }
 }));
 
-// mock clipboard copy fn
-const mockCopyToClipboard = jest.fn();
-Object.assign(navigator, {
-  clipboard: {
-    writeText: mockCopyToClipboard
-  }
-});
-
 const mockRepoDetailsData = {
   ExpandedRepoInfo: {
     Manifests: [
@@ -75,13 +67,5 @@ describe('Repo details component', () => {
     fireEvent.click(await screen.findByText(/tags/i));
     expect(await screen.findByTestId('tags-container')).toBeInTheDocument();
     expect(screen.queryByTestId('overview-container')).not.toBeInTheDocument();
-  });
-
-  it('should copy the pull string to clipboard', async () => {
-    // @ts-ignore
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
-    render(<RepoDetails />);
-    fireEvent.click(await screen.findByTestId('pullcopy-btn'));
-    await waitFor(() => expect(mockCopyToClipboard).toHaveBeenCalledWith('Pull test'));
   });
 });

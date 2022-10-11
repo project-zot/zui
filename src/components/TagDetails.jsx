@@ -6,7 +6,21 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { api, endpoints } from '../api';
 
 // components
-import { Box, Card, CardContent, CardMedia, Grid, Stack, Tab, Typography } from '@mui/material';
+import {
+  Box,
+  Card,
+  CardContent,
+  CardMedia,
+  Grid,
+  FormControl,
+  IconButton,
+  Stack,
+  Select,
+  MenuItem,
+  Tab,
+  Typography
+} from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
 
@@ -122,11 +136,12 @@ function TagDetails() {
   // @ts-ignore
   //const [isLoading, setIsLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState('Layers');
-  const [fullName, setFullName] = useState('');
   const abortController = useMemo(() => new AbortController(), []);
 
   // get url param from <Route here (i.e. image name)
   const { name, tag } = useParams();
+  const [fullName, setFullName] = useState(name + ':' + tag);
+  const [pullString, setPullString] = useState(`docker pull ${host()}/${fullName}`);
   const classes = useStyles();
   // const { description, overviewTitle, dependencies, dependents } = props;
 
@@ -151,7 +166,6 @@ function TagDetails() {
           };
           setImageDetailData(imageData);
           setFullName(imageData.name + ':' + imageData.tag);
-
           //setIsLoading(false);
         }
       })
@@ -185,6 +199,10 @@ function TagDetails() {
   // @ts-ignore
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
+  };
+
+  const handleSelectionChange = (event) => {
+    setPullString(event.target.value);
   };
 
   return (
@@ -227,6 +245,43 @@ function TagDetails() {
                 }
               </Typography>
             </Grid>
+            <Grid item xs={4}>
+              <Stack direction="row">
+                <Grid item xs={10}>
+                  <Typography variant="body1" sx={{ color: '#52637A', fontSize: '1rem', paddingTop: '0.5rem' }}>
+                    Copy and pull to pull this image
+                  </Typography>
+                </Grid>
+                <Grid item xs={2}>
+                  <IconButton
+                    aria-label="copy"
+                    onClick={() => navigator.clipboard.writeText(pullString)}
+                    data-testid="pullcopy-btn"
+                  >
+                    <ContentCopyIcon />
+                  </IconButton>
+                </Grid>
+              </Stack>
+              <FormControl sx={{ m: 1, paddingLeft: '1.5rem' }} variant="outlined">
+                <Select
+                  className={classes.inputForm}
+                  value={pullString}
+                  onChange={handleSelectionChange}
+                  inputProps={{ 'aria-label': 'Without label' }}
+                  sx={{ m: 1, width: '20.625rem', borderRadius: '0.5rem', color: '#14191F', alignContent: 'left' }}
+                >
+                  <MenuItem value={`docker pull ${host()}/${fullName}`}>
+                    docker pull {host()}/{fullName}
+                  </MenuItem>
+                  <MenuItem value={`podman pull ${host()}/${fullName}`}>
+                    podman pull {host()}/{fullName}
+                  </MenuItem>
+                  <MenuItem value={`skopeo copy docker://${host()}/${fullName}`}>
+                    skopeo copy docker://{host()}/{fullName}
+                  </MenuItem>
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
           <Grid container>
             <Grid item xs={8} className={classes.tabs}>
@@ -238,13 +293,8 @@ function TagDetails() {
                     sx={{ '& button.Mui-selected': { color: '#14191F', fontWeight: '600' } }}
                   >
                     <Tab value="Layers" label="Layers" className={classes.tabContent} />
-                    <Tab
-                      value="DependsOn"
-                      label="Dependencies"
-                      className={classes.tabContent}
-                      data-testid="dependencies-tab"
-                    />
-                    <Tab value="IsDependentOn" label="Dependants" className={classes.tabContent} />
+                    <Tab value="DependsOn" label="Uses" className={classes.tabContent} data-testid="dependencies-tab" />
+                    <Tab value="IsDependentOn" label="Used by" className={classes.tabContent} />
                     <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent} />
                   </TabList>
                   <Grid container>
