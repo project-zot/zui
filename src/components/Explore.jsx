@@ -1,5 +1,5 @@
 // react global
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // components
 import RepoCard from './RepoCard.jsx';
@@ -58,6 +58,7 @@ function Explore() {
   const [imageFilters, setImageFilters] = useState(false);
   const [osFilters, setOSFilters] = useState('');
   const [archFilters, setArchFilters] = useState('');
+  const abortController = useMemo(() => new AbortController(), []);
   const classes = useStyles();
 
   const buildFilterQuery = () => {
@@ -74,7 +75,10 @@ function Explore() {
   useEffect(() => {
     setIsLoading(true);
     api
-      .get(`${host()}${endpoints.globalSearch({ searchQuery: search, filter: buildFilterQuery() })}`)
+      .get(
+        `${host()}${endpoints.globalSearch({ searchQuery: search, filter: buildFilterQuery() })}`,
+        abortController.signal
+      )
       .then((response) => {
         if (response.data && response.data.data) {
           let repoList = response.data.data.GlobalSearch.Repos;
@@ -88,6 +92,9 @@ function Explore() {
       .catch((e) => {
         console.error(e);
       });
+    return () => {
+      abortController.abort();
+    };
   }, [search, queryParams, imageFilters, osFilters, archFilters]);
 
   const renderRepoCards = () => {

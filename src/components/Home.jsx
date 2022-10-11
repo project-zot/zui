@@ -2,7 +2,7 @@ import { Grid, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { api, endpoints } from 'api';
 import { host } from '../host';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import PreviewCard from './PreviewCard';
 import RepoCard from './RepoCard';
 import { mapToRepo } from 'utilities/objectModels';
@@ -61,34 +61,34 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function Home({ data, updateData }) {
+function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [homeData, setHomeData] = useState([]);
+  const abortController = useMemo(() => new AbortController(), []);
   const classes = useStyles();
 
   useEffect(() => {
     window.scrollTo(0, 0);
     setIsLoading(true);
     api
-      .get(`${host()}${endpoints.repoList}`)
+      .get(`${host()}${endpoints.repoList}`, abortController.signal)
       .then((response) => {
         if (response.data && response.data.data) {
           let repoList = response.data.data.RepoListWithNewestImage;
           let repoData = repoList.map((responseRepo) => {
             return mapToRepo(responseRepo);
           });
-          updateData(repoData);
+          setHomeData(repoData);
           setIsLoading(false);
         }
       })
       .catch((e) => {
         console.error(e);
       });
-  }, [updateData]);
-
-  useEffect(() => {
-    setHomeData(data);
-  }, [data]);
+    return () => {
+      abortController.abort();
+    };
+  }, []);
 
   const renderPreviewCards = () => {
     return (

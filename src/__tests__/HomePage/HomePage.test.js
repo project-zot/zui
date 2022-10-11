@@ -15,7 +15,7 @@ it('renders the homepage component', () => {
   render(
     <BrowserRouter>
       <Routes>
-        <Route path="*" element={<HomePage data={[]} updateData={() => {}} />} />
+        <Route path="*" element={<HomePage />} />
       </Routes>
     </BrowserRouter>
   );

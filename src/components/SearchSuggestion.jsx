@@ -75,6 +75,7 @@ function SearchSuggestion() {
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestionData, setSuggestionData] = useState([]);
   const navigate = useNavigate();
+  const abortController = useMemo(() => new AbortController(), []);
   const classes = useStyles();
 
   const handleSuggestionSelected = (event) => {
@@ -94,7 +95,10 @@ function SearchSuggestion() {
     setSearchQuery(value);
     if (value !== '' && value.length > 1) {
       api
-        .get(`${host()}${endpoints.globalSearch({ searchQuery: value, pageNumber: 1, pageSize: 9 })}`)
+        .get(
+          `${host()}${endpoints.globalSearch({ searchQuery: value, pageNumber: 1, pageSize: 9 })}`,
+          abortController.signal
+        )
         .then((suggestionResponse) => {
           if (suggestionResponse.data.data.GlobalSearch.Repos) {
             const suggestionParsedData = suggestionResponse.data.data.GlobalSearch.Repos.map((el) => mapToRepo(el));
@@ -114,6 +118,7 @@ function SearchSuggestion() {
   useEffect(() => {
     return () => {
       debounceSuggestions.cancel();
+      abortController.abort();
     };
   });
 

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // utility
 import { api, endpoints } from '../api';
@@ -71,11 +71,12 @@ function IsDependentOn(props) {
   const { name } = props;
   const classes = useStyles();
   const [isLoading, setIsLoading] = useState(true);
+  const abortController = useMemo(() => new AbortController(), []);
 
   useEffect(() => {
     setIsLoading(true);
     api
-      .get(`${host()}${endpoints.isDependentOnForImage(name)}`)
+      .get(`${host()}${endpoints.isDependentOnForImage(name)}`, abortController.signal)
       .then((response) => {
         if (response.data && response.data.data) {
           let images = response.data.data.DerivedImageList;
@@ -87,6 +88,9 @@ function IsDependentOn(props) {
         console.error(e);
         setIsLoading(false);
       });
+    return () => {
+      abortController.abort();
+    };
   }, []);
 
   const renderDependents = () => {

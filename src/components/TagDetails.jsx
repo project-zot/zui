@@ -1,6 +1,6 @@
 // react global
 import { useParams } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // utility
 import { api, endpoints } from '../api';
@@ -123,6 +123,7 @@ function TagDetails() {
   //const [isLoading, setIsLoading] = useState(false);
   const [selectedTab, setSelectedTab] = useState('Layers');
   const [fullName, setFullName] = useState('');
+  const abortController = useMemo(() => new AbortController(), []);
 
   // get url param from <Route here (i.e. image name)
   const { name, tag } = useParams();
@@ -134,7 +135,7 @@ function TagDetails() {
     setSelectedTab('Layers');
     window?.scrollTo(0, 0);
     api
-      .get(`${host()}${endpoints.detailedImageInfo(name, tag)}`)
+      .get(`${host()}${endpoints.detailedImageInfo(name, tag)}`, abortController.signal)
       .then((response) => {
         if (response.data && response.data.data) {
           let imageInfo = response.data.data.Image;
@@ -158,6 +159,9 @@ function TagDetails() {
         console.error(e);
         setImageDetailData({});
       });
+    return () => {
+      abortController.abort();
+    };
   }, [name, tag]);
   //function that returns a random element from an array
   // function getRandom(list) {

@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { api } from 'api';
 import Home from 'components/Home';
-import React, { useState } from 'react';
+import React from 'react';
 
 // useNavigate mock
 const mockedUsedNavigate = jest.fn();
@@ -11,10 +11,6 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedUsedNavigate
 }));
 
-const StateHomeWrapper = () => {
-  const [data, useData] = useState([]);
-  return <Home data={data} updateData={useData} />;
-};
 const mockImageList = {
   RepoListWithNewestImage: [
     {
@@ -55,6 +51,11 @@ const mockImageList = {
     }
   ]
 };
+
+beforeEach(() => {
+  window.scrollTo = jest.fn();
+});
+
 afterEach(() => {
   // restore the spy created with spyOn
   jest.restoreAllMocks();
@@ -64,7 +65,7 @@ describe('Home component', () => {
   it('fetches image data and renders popular, bookmarks and recently updated', async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
-    render(<StateHomeWrapper />);
+    render(<Home />);
     await waitFor(() => expect(screen.getAllByText(/alpine/i)).toHaveLength(2));
     await waitFor(() => expect(screen.getAllByText(/mongo/i)).toHaveLength(2));
     await waitFor(() => expect(screen.getAllByText(/node/i)).toHaveLength(1));
@@ -74,7 +75,7 @@ describe('Home component', () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-    render(<StateHomeWrapper />);
+    render(<Home />);
     await waitFor(() => expect(error).toBeCalledTimes(1));
   });
 });

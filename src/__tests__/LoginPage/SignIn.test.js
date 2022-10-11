@@ -38,7 +38,7 @@ describe('Sign in form', () => {
   beforeEach(() => {
     // mock auth check request
     // @ts-ignore
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 401, data: {} });
+    jest.spyOn(api, 'get').mockRejectedValue({ status: 401, data: {} });
   });
 
   it('should change username and password values on user input', async () => {
@@ -53,16 +53,16 @@ describe('Sign in form', () => {
 
   it('should display error if username and password values are empty after change', async () => {
     render(<SignIn isAuthEnabled={true} setIsAuthEnabled={() => {}} isLoggedIn={false} setIsLoggedIn={() => {}} />);
-    const usernameInput = screen.getByLabelText(/^Username/i);
-    const passwordInput = screen.getByLabelText(/^Enter Password/i);
+    const usernameInput = await screen.findByLabelText(/^Username/i);
+    const passwordInput = await screen.findByLabelText(/^Enter Password/i);
     userEvent.click(usernameInput);
     userEvent.type(usernameInput, 't');
     userEvent.type(usernameInput, '{backspace}');
     userEvent.click(passwordInput);
     userEvent.type(passwordInput, 't');
     userEvent.type(passwordInput, '{backspace}');
-    const usernameError = screen.getByText(/enter a username/i);
-    const passwordError = screen.getByText(/enter a password/i);
+    const usernameError = await screen.findByText(/enter a username/i);
+    const passwordError = await screen.findByText(/enter a password/i);
     await waitFor(() => expect(usernameError).toBeInTheDocument());
     await waitFor(() => expect(passwordError).toBeInTheDocument());
   });
