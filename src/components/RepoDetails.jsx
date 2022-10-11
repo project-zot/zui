@@ -7,24 +7,9 @@ import { api, endpoints } from '../api';
 
 // components
 import Tags from './Tags.jsx';
-import {
-  Box,
-  Card,
-  CardContent,
-  CardMedia,
-  Chip,
-  FormControl,
-  Grid,
-  IconButton,
-  InputAdornment,
-  OutlinedInput,
-  Stack,
-  Tab,
-  Typography
-} from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Chip, Grid, Stack, Tab, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 
 // placeholder images
 import repocube1 from '../assets/repocube-1.png';
@@ -108,6 +93,7 @@ const useStyles = makeStyles(() => ({
     letterSpacing: '0.01rem'
   },
   inputForm: {
+    textAlign: 'left',
     '& fieldset': {
       border: '0.125rem solid #52637A'
     }
@@ -135,7 +121,6 @@ function RepoDetails() {
   // @ts-ignore
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('Overview');
-
   // get url param from <Route here (i.e. image name)
   const { name } = useParams();
   const abortController = useMemo(() => new AbortController(), []);
@@ -306,35 +291,6 @@ function RepoDetails() {
                     {platformChips()}
                   </Stack>
                 </Grid>
-                <Grid item xs={4}>
-                  <Typography variant="body1" sx={{ color: '#52637A', fontSize: '1rem' }}>
-                    Copy and pull to pull this image
-                  </Typography>
-                  <FormControl sx={{ m: 1, paddingLeft: '1.5rem' }} variant="outlined">
-                    <OutlinedInput
-                      // value={`Pull ${name}`}
-                      value="N/A"
-                      className={classes.inputForm}
-                      sx={{ m: 1, width: '20.625rem', borderRadius: '0.5rem', color: '#14191F' }}
-                      endAdornment={
-                        <InputAdornment position="end">
-                          <IconButton
-                            aria-label="copy"
-                            edge="end"
-                            onClick={() => navigator.clipboard.writeText(`Pull ${name}`)}
-                            data-testid="pullcopy-btn"
-                          >
-                            <ContentCopyIcon />
-                          </IconButton>
-                        </InputAdornment>
-                      }
-                      aria-describedby="outlined-weight-helper-text"
-                      inputProps={{
-                        'aria-label': 'weight'
-                      }}
-                    />
-                  </FormControl>
-                </Grid>
               </Grid>
               <Grid container>
                 <Grid item xs={8} className={classes.tabs}>
@@ -379,7 +335,7 @@ function RepoDetails() {
                 <Grid item xs={4} className={classes.metadata}>
                   <RepoDetailsMetadata
                     // @ts-ignore
-                    weeklyDownloads={repoDetailData?.downloads}
+                    totalDownloads={repoDetailData?.downloads}
                     // @ts-ignore
                     repoURL={repoDetailData?.source}
                     // @ts-ignore
@@ -398,5 +354,4 @@ function RepoDetails() {
     </>
   );
 }
-
 export default RepoDetails;

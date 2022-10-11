@@ -35,7 +35,7 @@ const useStyles = makeStyles(() => ({
 
 function RepoDetailsMetadata(props) {
   const classes = useStyles();
-  const { repoURL, weeklyDownloads, lastUpdated, size } = props;
+  const { repoURL, totalDownloads, lastUpdated, size } = props;
   // @ts-ignore
   const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
     unit: 'days'
@@ -58,10 +58,10 @@ function RepoDetailsMetadata(props) {
         <Card variant="outlined" className={classes.card}>
           <CardContent>
             <Typography variant="body2" align="left" className={classes.metadataHeader}>
-              Weekly downloads
+              Total downloads
             </Typography>
             <Typography variant="body1" align="left" className={classes.metadataBody}>
-              {weeklyDownloads || `N/A`}
+              {totalDownloads || `N/A`}
             </Typography>
           </CardContent>
         </Card>
