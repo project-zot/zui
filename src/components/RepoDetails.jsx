@@ -1,6 +1,6 @@
 // react global
 import { useParams } from 'react-router-dom';
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // utility
 import { api, endpoints } from '../api';
@@ -138,11 +138,12 @@ function RepoDetails() {
 
   // get url param from <Route here (i.e. image name)
   const { name } = useParams();
+  const abortController = useMemo(() => new AbortController(), []);
   const classes = useStyles();
 
   useEffect(() => {
     api
-      .get(`${host()}${endpoints.detailedRepoInfo(name)}`)
+      .get(`${host()}${endpoints.detailedRepoInfo(name)}`, abortController.signal)
       .then((response) => {
         if (response.data && response.data.data) {
           let repoInfo = response.data.data.ExpandedRepoInfo;
@@ -169,6 +170,9 @@ function RepoDetails() {
         setRepoDetailData({});
         setIsLoading(false);
       });
+    return () => {
+      abortController.abort();
+    };
   }, [name]);
   //function that returns a random element from an array
   // function getRandom(list) {

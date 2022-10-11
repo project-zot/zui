@@ -1,5 +1,5 @@
 // react global
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { host } from '../host';
 // utility
@@ -107,6 +107,7 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
   const [requestProcessing, setRequestProcessing] = useState(false);
   const [requestError, setRequestError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const abortController = useMemo(() => new AbortController(), []);
   const navigate = useNavigate();
   const classes = useStyles();
 
@@ -117,7 +118,7 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
       navigate('/home');
     } else {
       api
-        .get(`${host()}/v2/`)
+        .get(`${host()}/v2/`, abortController.signal)
         .then((response) => {
           if (response.status === 200) {
             setIsAuthEnabled(false);
@@ -131,6 +132,9 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
           setIsLoading(false);
         });
     }
+    return () => {
+      abortController.abort();
+    };
   }, []);
 
   const handleClick = (event) => {
@@ -146,7 +150,7 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
       };
     }
     api
-      .get(`${host()}${endpoints.repoList}`, cfg)
+      .get(`${host()}${endpoints.repoList}`, abortController.signal, cfg)
       .then((response) => {
         if (response.data && response.data.data) {
           if (isAuthEnabled) {

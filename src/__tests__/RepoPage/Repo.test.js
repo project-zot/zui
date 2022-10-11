@@ -71,9 +71,9 @@ describe('Repo details component', () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
     render(<RepoDetails />);
-    expect(screen.getByTestId('overview-container')).toBeInTheDocument();
+    expect(await screen.findByTestId('overview-container')).toBeInTheDocument();
     fireEvent.click(await screen.findByText(/tags/i));
-    expect(screen.getByTestId('tags-container')).toBeInTheDocument();
+    expect(await screen.findByTestId('tags-container')).toBeInTheDocument();
     expect(screen.queryByTestId('overview-container')).not.toBeInTheDocument();
   });
 
@@ -81,7 +81,7 @@ describe('Repo details component', () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
     render(<RepoDetails />);
-    fireEvent.click(screen.getByTestId('pullcopy-btn'));
+    fireEvent.click(await screen.findByTestId('pullcopy-btn'));
     await waitFor(() => expect(mockCopyToClipboard).toHaveBeenCalledWith('Pull test'));
   });
 });

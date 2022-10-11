@@ -77,6 +77,13 @@ describe('Explore component', () => {
     expect(await screen.findByText(/nodeUnique/i)).toBeInTheDocument();
   });
 
+  it('displays the no data message if no data is received', async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: { GlobalSearch: { Repos: [] } } } });
+    render(<StateExploreWrapper />);
+    expect(await screen.findByText(/Looks like/i)).toBeInTheDocument();
+  });
+
   it("should log an error when data can't be fetched", async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });

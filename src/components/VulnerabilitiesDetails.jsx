@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // utility
 import { api, endpoints } from '../api';
@@ -260,12 +260,13 @@ function VulnerabilitiesDetails(props) {
   const classes = useStyles();
   const [cveData, setCveData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
+  const abortController = useMemo(() => new AbortController(), []);
   const { name } = props;
 
   useEffect(() => {
     setIsLoading(true);
     api
-      .get(`${host()}${endpoints.vulnerabilitiesForRepo(name)}`)
+      .get(`${host()}${endpoints.vulnerabilitiesForRepo(name)}`, abortController.signal)
       .then((response) => {
         if (response.data && response.data.data) {
           let cveInfo = response.data.data.CVEListForImage;
@@ -280,6 +281,9 @@ function VulnerabilitiesDetails(props) {
         console.error(e);
         setCveData({});
       });
+    return () => {
+      abortController.abort();
+    };
   }, []);
 
   const renderCVEs = (cves) => {

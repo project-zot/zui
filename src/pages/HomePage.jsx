@@ -25,7 +25,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function HomePage({ data, updateData }) {
+function HomePage() {
   const classes = useStyles();
 
   return (
@@ -34,7 +34,7 @@ function HomePage({ data, updateData }) {
       <Container className={classes.container}>
         <Grid container className={classes.gridWrapper}>
           <Grid item className={classes.tile}>
-            <Home data={data} updateData={updateData} />
+            <Home />
           </Grid>
         </Grid>
       </Container>

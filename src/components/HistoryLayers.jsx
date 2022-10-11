@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import transform from 'utilities/transform';
 
 // utility
@@ -118,6 +118,7 @@ function HistoryLayers(props) {
   const [historyData, setHistoryData] = useState([]);
   const [selectedIndex, setSelectedIndex] = useState(0);
   const [isLoaded, setIsLoaded] = useState(false);
+  const abortController = useMemo(() => new AbortController(), []);
   const { name, history } = props;
 
   useEffect(() => {
@@ -126,7 +127,7 @@ function HistoryLayers(props) {
       setIsLoaded(true);
     } else {
       api
-        .get(`${host()}${endpoints.layersDetailsForImage(name)}`)
+        .get(`${host()}${endpoints.layersDetailsForImage(name)}`, abortController.signal)
         .then((response) => {
           if (response.data && response.data.data) {
             let layersHistory = response.data.data.Image;
@@ -140,6 +141,9 @@ function HistoryLayers(props) {
           setIsLoaded(false);
         });
     }
+    return () => {
+      abortController.abort();
+    };
   }, [name]);
 
   const renderHistoryData = () => {
