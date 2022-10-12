@@ -73,6 +73,10 @@ jest.mock('react-router-dom', () => ({
   }
 }));
 
+jest.mock('../../host', () => ({
+  host: () => 'http://localhost'
+}));
+
 beforeEach(() => {
   window.scrollTo = jest.fn();
 });
@@ -107,8 +111,10 @@ describe('Tags details', () => {
   });
 
   it('should copy the pull string to clipboard', async () => {
-    // @ts-ignore
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
+    jest
+      .spyOn(api, 'get')
+      // @ts-ignore
+      .mockResolvedValue({ status: 200, data: { data: { ...mockImage, RepoName: 'test', Tag: '1.0.1' } } });
     render(<TagDetails />);
     fireEvent.click(await screen.findByTestId('pullcopy-btn'));
     await waitFor(() => expect(mockCopyToClipboard).toHaveBeenCalledWith('docker pull http://localhost/test:1.0.1'));
