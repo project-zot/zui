@@ -26,36 +26,36 @@ const api = {
     };
   },
 
-  get(urli, abortSignal, cfg) {
-    let config = isEmpty(cfg) ? this.getRequestCfg() : cfg;
-    if (!isEmpty(abortSignal) && isEmpty(config.signal)) {
-      config = { ...config, signal: abortSignal };
+  get(urli, cfg) {
+    if (isEmpty(cfg)) {
+      return axios.get(urli, this.getRequestCfg());
+    } else {
+      return axios.get(urli, cfg);
     }
-    return axios.get(urli, config);
   },
 
-  post(urli, payload, abortSignal, cfg) {
-    let config = isEmpty(cfg) ? this.getRequestCfg() : cfg;
-    if (!isEmpty(abortSignal) && isEmpty(config.signal)) {
-      config = { ...config, signal: abortSignal };
+  // This method creates the POST request with axios
+  // If caller specifies the request configuration to be sent (@param cfg), it adds it to the request
+  // If caller doesn't specfiy the request configuration, it adds the default config to the request
+  // This allows caller to pass in any desired request configuration, based on the specifc need
+  post(urli, payload, cfg) {
+    // generic post - generate config for request
+    if (isEmpty(cfg)) {
+      return axios.post(urli, payload, this.getRequestCfg());
+      // custom post - use passed in config
+      // TODO:: validate config object before sending request
+    } else {
+      return axios.post(urli, payload, cfg);
     }
-    return axios.post(urli, payload, config);
   },
 
-  put(urli, payload, abortSignal, cfg) {
-    let config = isEmpty(cfg) ? this.getRequestCfg() : cfg;
-    if (!isEmpty(abortSignal) && isEmpty(config.signal)) {
-      config = { ...config, signal: abortSignal };
-    }
-    return axios.put(urli, payload, config);
+  put(urli, payload) {
+    return axios.put(urli, payload, this.getRequestCfg());
   },
 
-  delete(urli, abortSignal, cfg) {
-    let config = isEmpty(cfg) ? this.getRequestCfg() : cfg;
-    if (!isEmpty(abortSignal) && isEmpty(config.signal)) {
-      config = { ...config, signal: abortSignal };
-    }
-    return axios.delete(urli, config);
+  delete(urli, cfg) {
+    let requestCfg = isEmpty(cfg) ? this.getRequestCfg() : cfg;
+    return axios.delete(urli, requestCfg);
   }
 };
 
@@ -78,8 +78,8 @@ const endpoints = {
     const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
     const paginationParam = `requestedPage: {limit:${pageSize} offset:${(pageNumber - 1) * pageSize}}`;
     let filterParam = `,filter: {`;
-    if (filter.Os) filterParam += ` Os:${!isEmpty(filter.Os) ? `"${filter.Os}"` : '""'}`;
-    if (filter.Arch) filterParam += ` Arch:${!isEmpty(filter.Arch) ? `"${filter.Arch}"` : '""'}`;
+    if (filter.Os) filterParam += ` Os:${!isEmpty(filter.Os) ? `${JSON.stringify(filter.Os)}` : '""'}`;
+    if (filter.Arch) filterParam += ` Arch:${!isEmpty(filter.Arch) ? `${JSON.stringify(filter.Arch)}` : '""'}`;
     if (filter.HasToBeSigned) filterParam += ` HasToBeSigned: ${filter.HasToBeSigned}`;
     filterParam += '}';
     if (Object.keys(filter).length === 0) filterParam = '';
