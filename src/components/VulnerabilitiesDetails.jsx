@@ -204,9 +204,6 @@ function VulnerabilitiyCard(props) {
     <Card className={classes.card} raised>
       <CardContent className={classes.content}>
         <Stack sx={{ flexDirection: 'row' }}>
-          <Typography variant="body1" align="left" className={classes.title}>
-            ID:{' '}
-          </Typography>
           <Typography variant="body1" align="left" className={classes.values}>
             {' '}
             {cve.Id}
@@ -214,9 +211,6 @@ function VulnerabilitiyCard(props) {
         </Stack>
         {vulnerabilityCheck(cve.Severity)}
         <Stack sx={{ flexDirection: 'row' }}>
-          <Typography variant="body1" align="left" className={classes.title}>
-            Title:{' '}
-          </Typography>
           <Typography variant="body1" align="left" className={classes.values}>
             {' '}
             {cve.Title}
@@ -261,12 +255,12 @@ function VulnerabilitiesDetails(props) {
   const [cveData, setCveData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const abortController = useMemo(() => new AbortController(), []);
-  const { name } = props;
+  const { name, tag } = props;
 
   useEffect(() => {
     setIsLoading(true);
     api
-      .get(`${host()}${endpoints.vulnerabilitiesForRepo(name)}`, abortController.signal)
+      .get(`${host()}${endpoints.vulnerabilitiesForRepo(`${name}:${tag}`)}`, abortController.signal)
       .then((response) => {
         if (response.data && response.data.data) {
           let cveInfo = response.data.data.CVEListForImage;
