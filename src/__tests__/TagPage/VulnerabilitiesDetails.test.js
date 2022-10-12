@@ -456,7 +456,7 @@ describe('Vulnerabilties page', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
-    await waitFor(() => expect(screen.getAllByText(/Title/i)).toHaveLength(20));
+    await waitFor(() => expect(screen.getAllByText(/Fixed in/i)).toHaveLength(20));
   });
 
   it('renders no vulnerabilities if there are not any', async () => {

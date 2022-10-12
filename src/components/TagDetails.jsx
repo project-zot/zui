@@ -315,7 +315,7 @@ function TagDetails() {
                         <IsDependentOn name={fullName} />
                       </TabPanel>
                       <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
-                        <VulnerabilitiesDetails name={name} />
+                        <VulnerabilitiesDetails name={name} tag={tag} />
                       </TabPanel>
                     </Grid>
                   </Grid>
