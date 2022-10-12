@@ -4,7 +4,7 @@ import React from 'react';
 import filterConstants from 'utilities/filterConstants';
 
 const StateFilterCardWrapper = () => {
-  return <FilterCard title="Products" filters={filterConstants.osFilters} updateFilters={() => {}} />;
+  return <FilterCard title="Products" filters={filterConstants.osFilters} updateFilters={() => {}} filterValue={[]} />;
 };
 
 describe('Filters components', () => {
