@@ -60,8 +60,10 @@ const api = {
 };
 
 const endpoints = {
-  repoList:
-    '/v2/_zot/ext/search?query={RepoListWithNewestImage(){Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag  Description  Licenses Title Source Documentation History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}} Vendor Labels} DownloadCount}}',
+  repoList: ({ pageNumber = 1, pageSize = 15 } = {}) =>
+    `/v2/_zot/ext/search?query={RepoListWithNewestImage(requestedPage: {limit:${pageSize} offset:${
+      (pageNumber - 1) * pageNumber
+    }}){Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag  Description  Licenses Title Source Documentation History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}} Vendor Labels} DownloadCount}}`,
   detailedRepoInfo: (name) =>
     `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Digest Tag Layers {Size Digest}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName Layers {Size Digest} Digest Tag Title Documentation DownloadCount Source Description History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}}}}}}`,
   detailedImageInfo: (name, tag) =>

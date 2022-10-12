@@ -71,7 +71,7 @@ function Home() {
     window.scrollTo(0, 0);
     setIsLoading(true);
     api
-      .get(`${host()}${endpoints.repoList}`, abortController.signal)
+      .get(`${host()}${endpoints.repoList()}`, abortController.signal)
       .then((response) => {
         if (response.data && response.data.data) {
           let repoList = response.data.data.RepoListWithNewestImage;
