@@ -82,7 +82,7 @@ const useStyles = makeStyles(() => ({
 function RepoCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { name, vendor, platforms, description, isSigned, lastUpdated, version } = props;
+  const { name, vendor, platforms, description, downloads, isSigned, lastUpdated, version } = props;
 
   //function that returns a random element from an array
   // function getRandom(list) {
@@ -225,12 +225,8 @@ function RepoCard(props) {
                 className={classes.contentRight}
               >
                 <Stack direction="column" alignItems="flex-end">
-                  {/* <Typography variant="body2">
-                    Downloads • {downloads || "-"}
-                  </Typography>
-                  <Typography variant="body2">
-                    Rating • {rating || "-"}
-                  </Typography> */}
+                  <Typography variant="body2">Downloads • {!isNaN(downloads) ? downloads : `not available`}</Typography>
+                  {/* <Typography variant="body2">Rating • {rating || '-'}</Typography> */}
                 </Stack>
                 {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
               </Stack>
