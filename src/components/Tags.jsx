@@ -97,7 +97,7 @@ function TagCard(props) {
             Last pushed
           </Typography>
           <Typography variant="caption" sx={{ fontWeight: '600', fontSize: '0.8125rem' }}>
-            {lastDate || '----'} by {vendors || 'N/A'}
+            {lastDate || '---'} by {vendors || 'N/A Summary?.Vendors'}
           </Typography>
         </Stack>
 
@@ -187,6 +187,7 @@ export default function Tags(props) {
   const classes = useStyles();
   const { data } = props;
   const { images, lastUpdated, vendors, size, platforms } = data;
+  console.log(JSON.stringify(data));
 
   return (
     <Card className={classes.tagCard} data-testid="tags-container">
