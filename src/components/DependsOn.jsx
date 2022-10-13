@@ -4,12 +4,11 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { api, endpoints } from '../api';
 
 // components
-import { Divider, Typography, Card, CardContent } from '@mui/material';
+import { Divider, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { Link } from 'react-router-dom';
 import { host } from '../host';
-import Monitor from '../assets/Monitor.png';
 import Loading from './Loading';
+import RepoCard from './RepoCard';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -95,22 +94,22 @@ function DependsOn(props) {
 
   const renderDependencies = () => {
     return images?.length ? (
-      <Card className={classes.card} raised>
-        <CardContent>
-          <Typography className={classes.content}>
-            {images.map((dependence, index) => {
-              return (
-                <Link key={index} className={classes.link} to={`/image/${encodeURIComponent(dependence.RepoName)}`}>
-                  {dependence.RepoName}
-                </Link>
-              );
-            })}
-          </Typography>
-        </CardContent>
-      </Card>
+      images.map((dependence, index) => {
+        return (
+          <RepoCard
+            name={dependence.RepoName}
+            version={dependence.Tag}
+            description={dependence.Description}
+            vendor={dependence.Vendor}
+            platforms={[dependence.Platform]}
+            isSigned={dependence.IsSigned}
+            key={index}
+            lastUpdated={dependence.LastUpdated}
+          />
+        );
+      })
     ) : (
       <div>
-        <img src={Monitor} alt="Monitor" className={classes.monitor}></img>
         <Typography className={classes.none}> Nothing found </Typography>
       </div>
     );
@@ -118,16 +117,6 @@ function DependsOn(props) {
 
   return (
     <div data-testid="depends-on-container">
-      <Typography
-        variant="h4"
-        gutterBottom
-        component="div"
-        align="left"
-        className={classes.title}
-        style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.5rem', fontWeight: '600', paddingTop: '0.5rem' }}
-      >
-        Depends On
-      </Typography>
       <Divider
         variant="fullWidth"
         sx={{ margin: '5% 0% 5% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}

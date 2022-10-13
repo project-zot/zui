@@ -74,8 +74,10 @@ const endpoints = {
     `/v2/_zot/ext/search?query={Image(image: "${name}"){History {Layer {Size Digest Score} HistoryDescription {Created CreatedBy Author Comment EmptyLayer} }}}`,
   imageListWithCVEFixed: (cveId, repoName) =>
     `/v2/_zot/ext/search?query={ImageListWithCVEFixed(id:"${cveId}", image:"${repoName}") {Tag}}`,
-  dependsOnForImage: (name) => `/v2/_zot/ext/search?query={BaseImageList(image: "${name}"){RepoName}}`,
-  isDependentOnForImage: (name) => `/v2/_zot/ext/search?query={DerivedImageList(image: "${name}"){RepoName}}`,
+  dependsOnForImage: (name) =>
+    `/v2/_zot/ext/search?query={BaseImageList(image: "${name}"){RepoName Tag Description Vendor LastUpdated Platform {Os Arch} IsSigned}}`,
+  isDependentOnForImage: (name) =>
+    `/v2/_zot/ext/search?query={DerivedImageList(image: "${name}"){RepoName Tag Description Vendor LastUpdated Platform {Os Arch} IsSigned}}`,
   globalSearch: ({ searchQuery = '""', pageNumber = 1, pageSize = 15, filter = {} }) => {
     const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
     const paginationParam = `requestedPage: {limit:${pageSize} offset:${(pageNumber - 1) * pageSize}}`;

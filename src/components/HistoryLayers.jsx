@@ -8,7 +8,6 @@ import { api, endpoints } from '../api';
 import { Card, CardContent, Divider, Grid, Stack, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
-import Monitor from '../assets/Monitor.png';
 import { isEmpty } from 'lodash';
 import Loading from './Loading';
 
@@ -210,7 +209,6 @@ function HistoryLayers(props) {
         </Card>
       ) : (
         <div>
-          <img src={Monitor} alt="Monitor" className={classes.monitor}></img>
           <Typography className={classes.none}> No Layers </Typography>
         </div>
       )}

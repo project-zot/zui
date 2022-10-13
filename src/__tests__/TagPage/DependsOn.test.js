@@ -51,7 +51,7 @@ describe('Dependencies tab', () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: mockDependenciesList });
     render(<RouterDependsWrapper />);
-    expect(await screen.findAllByRole('link')).toHaveLength(4);
+    expect(await screen.findAllByText(/published/i)).toHaveLength(4);
   });
 
   it('renders no dependencies if there are not any', async () => {
