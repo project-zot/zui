@@ -109,15 +109,10 @@ function Explore() {
             version={item.latestVersion}
             description={item.description}
             isSigned={item.isSigned}
-            tags={item.tags}
             vendor={item.vendor}
             platforms={item.platforms}
-            size={item.size}
-            licenses={item.licenses}
             key={index}
-            data={item}
             lastUpdated={item.lastUpdated}
-            shown={true}
           />
         );
       })

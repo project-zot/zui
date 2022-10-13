@@ -35,14 +35,9 @@ describe('Repo card component', () => {
         name={mockImage.name}
         version={mockImage.latestVersion}
         description={mockImage.description}
-        tags={mockImage.tags}
         vendor={mockImage.vendor}
-        size={mockImage.size}
-        licenses={mockImage.licenses}
         key={1}
-        data={mockImage}
         lastUpdated={mockImage.lastUpdated}
-        shown={true}
       />
     );
     const cardTitle = await screen.findByText('alpine');

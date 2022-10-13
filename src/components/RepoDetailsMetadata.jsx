@@ -61,7 +61,7 @@ function RepoDetailsMetadata(props) {
               Total downloads
             </Typography>
             <Typography variant="body1" align="left" className={classes.metadataBody}>
-              {totalDownloads || `not available`}
+              {!isNaN(totalDownloads) ? totalDownloads : `not available`}
             </Typography>
           </CardContent>
         </Card>

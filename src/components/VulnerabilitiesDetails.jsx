@@ -10,7 +10,6 @@ import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
 import PestControlOutlinedIcon from '@mui/icons-material/PestControlOutlined';
 import PestControlIcon from '@mui/icons-material/PestControl';
-import Monitor from '../assets/Monitor.png';
 import { isEmpty } from 'lodash';
 import { Link } from 'react-router-dom';
 import Loading from './Loading';
@@ -291,7 +290,6 @@ function VulnerabilitiesDetails(props) {
     } else {
       return (
         <div>
-          <img src={Monitor} alt="Monitor" className={classes.monitor}></img>
           <Typography className={classes.none}> No Vulnerabilities </Typography>{' '}
         </div>
       );
