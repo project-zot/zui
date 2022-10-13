@@ -166,7 +166,7 @@ function RepoCard(props) {
   };
 
   const getVendor = () => {
-    return `${vendor || 'N/A NewestImage.Vendor'} •`;
+    return `${vendor || 'Vendor not available'} •`;
   };
   const getVersion = () => {
     return `published ${version} •`;
@@ -200,7 +200,7 @@ function RepoCard(props) {
                 {/* <Chip label="Verified licensee" sx={{ backgroundColor: "#E8F5E9", color: "#388E3C" }} variant="filled" onDelete={() => { return }} deleteIcon={vulnerabilityCheck()} /> */}
               </Stack>
               <Typography className={classes.versionLast} pt={1} sx={{ fontSize: 12 }} gutterBottom noWrap>
-                {description || 'N/A NewestImage.Description'}
+                {description || 'Description not available'}
               </Typography>
               <Stack alignItems="center" direction="row" spacing={2} pt={1}>
                 {platformChips()}

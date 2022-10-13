@@ -49,7 +49,7 @@ function RepoDetailsMetadata(props) {
               Repository
             </Typography>
             <Typography variant="body1" align="left" className={classes.metadataBody}>
-              {repoURL || `N/A Source`}
+              {repoURL || `not available`}
             </Typography>
           </CardContent>
         </Card>
@@ -61,7 +61,7 @@ function RepoDetailsMetadata(props) {
               Total downloads
             </Typography>
             <Typography variant="body1" align="left" className={classes.metadataBody}>
-              {totalDownloads || `N/A DownloadCount`}
+              {totalDownloads || `not available`}
             </Typography>
           </CardContent>
         </Card>
