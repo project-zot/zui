@@ -118,6 +118,7 @@ const randomImage = () => {
 
 function RepoDetails() {
   const [repoDetailData, setRepoDetailData] = useState({});
+  const [tags, setTags] = useState([]);
   // @ts-ignore
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('Overview');
@@ -147,6 +148,7 @@ function RepoDetails() {
             overview: repoInfo.Summary?.NewestImage.Documentation
           };
           setRepoDetailData(imageData);
+          setTags(imageData.images);
         }
         setIsLoading(false);
       })
@@ -154,6 +156,7 @@ function RepoDetails() {
         console.error(e);
         setRepoDetailData({});
         setIsLoading(false);
+        setTags([]);
       });
     return () => {
       abortController.abort();
@@ -313,7 +316,7 @@ function RepoDetails() {
                             {renderOverview()}
                           </TabPanel>
                           <TabPanel value="Tags" className={classes.tabPanel}>
-                            <Tags data={repoDetailData} />
+                            <Tags tags={tags} />
                           </TabPanel>
                           {/* <TabPanel value="Dependencies" className={classes.tabPanel}>
                                   {renderDependencies()}

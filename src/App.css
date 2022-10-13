@@ -20,7 +20,7 @@
   .App-logo {
     animation: bounce 1s;
     animation-direction: alternate;
-    animation-timing-function: cubic-bezier(.5, 0.05, 1, .5);
+    animation-timing-function: cubic-bezier(0.5, 0.05, 1, 0.5);
     animation-iteration-count: infinite;
   }
 }
@@ -49,25 +49,25 @@
   }
 }
 
-@-webkit-keyframes bounce { 
+@-webkit-keyframes bounce {
   from {
     transform: translate3d(0, 0, 0);
   }
   to {
-      transform: translate3d(0, 50px, 0);
+    transform: translate3d(0, 50px, 0);
   }
-} 
-
-@keyframes bounce { 
-  from {
-    transform: translate3d(0, 0, 0);
-  }
-  to {
-      transform: translate3d(0, 50px, 0);
-  } 
 }
 
-.bounce { 
-  -webkit-animation-name: bounce; 
-  animation-name: bounce; 
+@keyframes bounce {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(0, 50px, 0);
+  }
+}
+
+.bounce {
+  -webkit-animation-name: bounce;
+  animation-name: bounce;
 }
