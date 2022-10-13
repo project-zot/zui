@@ -14,6 +14,10 @@ import repocube2 from '../assets/repocube-2.png';
 import repocube3 from '../assets/repocube-3.png';
 import repocube4 from '../assets/repocube-4.png';
 
+//icons
+import GppBadOutlinedIcon from '@mui/icons-material/GppBadOutlined';
+import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
+
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -78,7 +82,7 @@ const useStyles = makeStyles(() => ({
 function RepoCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { name, vendor, platforms, description, lastUpdated, version } = props;
+  const { name, vendor, platforms, description, isSigned, lastUpdated, version } = props;
 
   //function that returns a random element from an array
   // function getRandom(list) {
@@ -101,14 +105,38 @@ function RepoCard(props) {
   //   return(getRandom(arrVulnerability));
   // };
 
-  // const signatureCheck = () => {
-  //   const unverifiedSignature = <Chip label="Unverified Signature" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppBadOutlinedIcon sx={{ color: "#E53935!important" }} />}/>;
-  //   const untrustedSignature = <Chip label="Untrusted Signature" sx={{backgroundColor: "#ECEFF1",color: "#52637A",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppMaybeOutlinedIcon sx={{ color: "#52637A!important" }} />}/>;
-  //   const verifiedSignature = <Chip label="Verified Signature" sx={{backgroundColor: "#E8F5E9",color: "#388E3C",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppGoodOutlinedIcon sx={{ color: "#388E3C!important" }} />}/>;
-
-  //   const arrSignature = [unverifiedSignature, untrustedSignature, verifiedSignature]
-  //   return(getRandom(arrSignature));
-  // }
+  const signatureCheck = () => {
+    const unverifiedSignature = (
+      <Chip
+        label="Unverified Signature"
+        sx={{ backgroundColor: '#FEEBEE', color: '#E53935', fontSize: '0.8125rem' }}
+        variant="filled"
+        onDelete={() => {
+          return;
+        }}
+        deleteIcon={<GppBadOutlinedIcon sx={{ color: '#E53935!important' }} />}
+        data-testid="unverified-chip"
+      />
+    );
+    //const untrustedSignature = <Chip label="Untrusted Signature" sx={{backgroundColor: "#ECEFF1",color: "#52637A",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppMaybeOutlinedIcon sx={{ color: "#52637A!important" }} />}/>;
+    const verifiedSignature = (
+      <Chip
+        label="Verified Signature"
+        sx={{ backgroundColor: '#E8F5E9', color: '#388E3C', fontSize: '0.8125rem' }}
+        variant="filled"
+        onDelete={() => {
+          return;
+        }}
+        deleteIcon={<GppGoodOutlinedIcon sx={{ color: '#388E3C!important' }} />}
+        data-testid="verified-chip"
+      />
+    );
+    if (isSigned) {
+      return verifiedSignature;
+    } else {
+      return unverifiedSignature;
+    }
+  };
 
   const platformChips = () => {
     // if platforms not received, mock data
@@ -167,8 +195,8 @@ function RepoCard(props) {
                 <Typography variant="h5" component="div">
                   {name}
                 </Typography>
-                {/* {vulnerabilityCheck()}
-                {signatureCheck()} */}
+                {/* {vulnerabilityCheck()} */}
+                {signatureCheck()}
                 {/* <Chip label="Verified licensee" sx={{ backgroundColor: "#E8F5E9", color: "#388E3C" }} variant="filled" onDelete={() => { return }} deleteIcon={vulnerabilityCheck()} /> */}
               </Stack>
               <Typography className={classes.versionLast} pt={1} sx={{ fontSize: 12 }} gutterBottom noWrap>

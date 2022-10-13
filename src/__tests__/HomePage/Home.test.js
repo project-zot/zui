@@ -20,6 +20,7 @@ const mockImageList = {
       NewestImage: {
         Tag: 'latest',
         Description: 'w',
+        IsSigned: false,
         Licenses: '',
         Vendor: '',
         Labels: ''
@@ -32,6 +33,7 @@ const mockImageList = {
       NewestImage: {
         Tag: 'latest',
         Description: '',
+        IsSigned: true,
         Licenses: '',
         Vendor: '',
         Labels: ''
@@ -44,6 +46,7 @@ const mockImageList = {
       NewestImage: {
         Tag: 'latest',
         Description: '',
+        IsSigned: true,
         Licenses: '',
         Vendor: '',
         Labels: ''
@@ -69,6 +72,16 @@ describe('Home component', () => {
     await waitFor(() => expect(screen.getAllByText(/alpine/i)).toHaveLength(2));
     await waitFor(() => expect(screen.getAllByText(/mongo/i)).toHaveLength(2));
     await waitFor(() => expect(screen.getAllByText(/node/i)).toHaveLength(1));
+  });
+
+  it('renders signature chips', async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    render(<Home />);
+    expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(2);
+    expect(await screen.findAllByTestId('unverified-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('verified-chip')).toHaveLength(1);
   });
 
   it("should log an error when data can't be fetched", async () => {

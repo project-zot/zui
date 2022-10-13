@@ -9,6 +9,11 @@ import repocube2 from '../assets/repocube-2.png';
 import repocube3 from '../assets/repocube-3.png';
 import repocube4 from '../assets/repocube-4.png';
 
+//icons
+import GppBadOutlinedIcon from '@mui/icons-material/GppBadOutlined';
+import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
+//import GppMaybeOutlinedIcon from '@mui/icons-material/GppMaybeOutlined';
+
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
   return Math.floor(Math.random() * (max - min + 1) + min);
@@ -68,7 +73,7 @@ const useStyles = makeStyles(() => ({
 function PreviewCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { name } = props;
+  const { name, isSigned } = props;
 
   const goToDetails = () => {
     navigate(`/image/${encodeURIComponent(name)}`);
@@ -86,14 +91,40 @@ function PreviewCard(props) {
   //   return(getRandom(arrVulnerability));
   // }
 
-  // const signatureCheck = () => {
-  //   const unverifiedSignature = <GppBadOutlinedIcon sx={{ color: "#E53935!important", padding:"0.2rem", background: "#FEEBEE", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
-  //   const untrustedSignature = <GppMaybeOutlinedIcon sx={{ color: "#52637A!important", padding:"0.2rem", background: "#ECEFF1", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
-  //   const verifiedSignature = <GppGoodOutlinedIcon sx={{ color: "#43A047!important", padding:"0.2rem", background: "#E8F5E9", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
-
-  //   const arrSignature = [unverifiedSignature, untrustedSignature, verifiedSignature]
-  //   return(getRandom(arrSignature));
-  // }
+  const signatureCheck = () => {
+    const unverifiedSignature = (
+      <GppBadOutlinedIcon
+        sx={{
+          color: '#E53935!important',
+          padding: '0.2rem',
+          background: '#FEEBEE',
+          borderRadius: '1rem',
+          height: '1.5rem',
+          width: '1.6rem'
+        }}
+        data-testid="unverified-icon"
+      />
+    );
+    //const untrustedSignature = <GppMaybeOutlinedIcon sx={{ color: "#52637A!important", padding:"0.2rem", background: "#ECEFF1", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
+    const verifiedSignature = (
+      <GppGoodOutlinedIcon
+        sx={{
+          color: '#43A047!important',
+          padding: '0.2rem',
+          background: '#E8F5E9',
+          borderRadius: '1rem',
+          height: '1.5rem',
+          width: '1.6rem'
+        }}
+        data-testid="verified-icon"
+      />
+    );
+    if (isSigned) {
+      return verifiedSignature;
+    } else {
+      return unverifiedSignature;
+    }
+  };
 
   return (
     <Card variant="outlined" className={classes.card}>
@@ -118,7 +149,7 @@ function PreviewCard(props) {
                     size: '1.5rem',
                     lineHeight: '2rem',
                     color: '#220052',
-                    width: '10rem',
+                    width: '8rem',
                     whiteSpace: 'nowrap',
                     overflow: 'hidden',
                     textOverflow: 'ellipsis'
@@ -126,8 +157,8 @@ function PreviewCard(props) {
                 >
                   {name}
                 </Typography>
-                {/* {vulnerabilityCheck()}
-                {signatureCheck()} */}
+                {/* {vulnerabilityCheck()} */}
+                {signatureCheck()}
               </Stack>
             </Grid>
             <Grid item xs={12} mt={2}></Grid>
