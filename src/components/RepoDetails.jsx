@@ -222,7 +222,7 @@ function RepoDetails() {
           >
             {
               // @ts-ignore
-              repoDetailData.description || 'N/A NewestImage.Description'
+              repoDetailData.description || 'Description not available'
             }
           </Typography>
         </CardContent>
@@ -281,7 +281,7 @@ function RepoDetails() {
                   >
                     {
                       // @ts-ignore
-                      repoDetailData?.title || 'N/A NewestImage.Title'
+                      repoDetailData?.title || 'Title not available'
                     }
                   </Typography>
                   <Stack alignItems="center" sx={{ paddingLeft: '4rem' }} direction="row" spacing={2} pt={1}>
