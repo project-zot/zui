@@ -30,6 +30,7 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: 'w',
+          IsSigned: true,
           Licenses: '',
           Vendor: '',
           Labels: ''
@@ -42,6 +43,7 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
+          IsSigned: false,
           Licenses: '',
           Vendor: '',
           Labels: ''
@@ -54,6 +56,7 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
+          IsSigned: false,
           Licenses: '',
           Vendor: '',
           Labels: ''
@@ -82,6 +85,14 @@ describe('Explore component', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: { GlobalSearch: { Repos: [] } } } });
     render(<StateExploreWrapper />);
     expect(await screen.findByText(/Looks like/i)).toBeInTheDocument();
+  });
+
+  it('renders signature chips', async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    render(<StateExploreWrapper />);
+    expect(await screen.findAllByTestId('unverified-chip')).toHaveLength(2);
+    expect(await screen.findAllByTestId('verified-chip')).toHaveLength(1);
   });
 
   it("should log an error when data can't be fetched", async () => {
