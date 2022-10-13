@@ -210,9 +210,6 @@ function RepoDetails() {
     return (
       <Card className={classes.card} data-testid="overview-container">
         <CardContent>
-          <Typography variant="h4" align="left">
-            Quickstart
-          </Typography>
           <Typography
             variant="body1"
             sx={{
@@ -225,7 +222,7 @@ function RepoDetails() {
           >
             {
               // @ts-ignore
-              repoDetailData.description || 'N/A'
+              repoDetailData.description || 'N/A NewestImage.Description'
             }
           </Typography>
         </CardContent>
@@ -284,7 +281,7 @@ function RepoDetails() {
                   >
                     {
                       // @ts-ignore
-                      repoDetailData?.title || 'N/A'
+                      repoDetailData?.title || 'N/A NewestImage.Title'
                     }
                   </Typography>
                   <Stack alignItems="center" sx={{ paddingLeft: '4rem' }} direction="row" spacing={2} pt={1}>
