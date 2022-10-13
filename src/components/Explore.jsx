@@ -108,6 +108,7 @@ function Explore() {
             name={item.name}
             version={item.latestVersion}
             description={item.description}
+            isSigned={item.isSigned}
             tags={item.tags}
             vendor={item.vendor}
             platforms={item.platforms}

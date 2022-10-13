@@ -85,7 +85,7 @@ const endpoints = {
     if (filter.HasToBeSigned) filterParam += ` HasToBeSigned: ${filter.HasToBeSigned}`;
     filterParam += '}';
     if (Object.keys(filter).length === 0) filterParam = '';
-    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam} ${filterParam}) {Repos {Name LastUpdated Size Platforms { Os Arch } NewestImage { Tag Description Licenses Vendor Labels } DownloadCount}}}`;
+    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam} ${filterParam}) {Repos {Name LastUpdated Size Platforms { Os Arch } NewestImage { Tag Description IsSigned Licenses Vendor Labels } DownloadCount}}}`;
   }
 };
 
