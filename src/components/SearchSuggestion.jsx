@@ -7,7 +7,7 @@ import { api, endpoints } from 'api';
 import { host } from 'host';
 import { mapToRepo } from 'utilities/objectModels';
 import { createSearchParams, useNavigate } from 'react-router-dom';
-import { debounce } from 'lodash';
+import { debounce, isEmpty } from 'lodash';
 import { useCombobox } from 'downshift';
 
 const useStyles = makeStyles(() => ({
@@ -26,6 +26,15 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
     border: '0.125rem solid #E7E7E7',
+    borderRadius: '2.5rem',
+    zIndex: 1155
+  },
+  searchFailed: {
+    position: 'relative',
+    minWidth: '100%',
+    flexDirection: 'row',
+    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
+    border: '0.125rem solid #ff0303',
     borderRadius: '2.5rem',
     zIndex: 1155
   },
@@ -74,6 +83,8 @@ const useStyles = makeStyles(() => ({
 function SearchSuggestion() {
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestionData, setSuggestionData] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isFailedSearch, setIsFailedSearch] = useState(false);
   const navigate = useNavigate();
   const abortController = useMemo(() => new AbortController(), []);
   const classes = useStyles();
@@ -94,6 +105,8 @@ function SearchSuggestion() {
     const value = event.inputValue;
     setSearchQuery(value);
     if (value !== '' && value.length > 1) {
+      setIsLoading(true);
+      setIsFailedSearch(false);
       api
         .get(
           `${host()}${endpoints.globalSearch({ searchQuery: value, pageNumber: 1, pageSize: 9 })}`,
@@ -103,10 +116,15 @@ function SearchSuggestion() {
           if (suggestionResponse.data.data.GlobalSearch.Repos) {
             const suggestionParsedData = suggestionResponse.data.data.GlobalSearch.Repos.map((el) => mapToRepo(el));
             setSuggestionData(suggestionParsedData);
+            if (isEmpty(suggestionParsedData)) {
+              setIsFailedSearch(true);
+            }
           }
+          setIsLoading(false);
         })
         .catch((e) => {
           console.error(e);
+          setIsLoading(false);
         });
     }
   };
@@ -158,7 +176,7 @@ function SearchSuggestion() {
   return (
     <div className={classes.searchContainer}>
       <Stack
-        className={classes.search}
+        className={isFailedSearch && !isLoading ? classes.searchFailed : classes.search}
         direction="row"
         alignItems="center"
         justifyContent="space-between"
