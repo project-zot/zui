@@ -75,9 +75,9 @@ const endpoints = {
   imageListWithCVEFixed: (cveId, repoName) =>
     `/v2/_zot/ext/search?query={ImageListWithCVEFixed(id:"${cveId}", image:"${repoName}") {Tag}}`,
   dependsOnForImage: (name) =>
-    `/v2/_zot/ext/search?query={BaseImageList(image: "${name}"){RepoName Tag Description Vendor LastUpdated Platform {Os Arch} IsSigned}}`,
+    `/v2/_zot/ext/search?query={BaseImageList(image: "${name}"){RepoName Tag Description Vendor DownloadCount LastUpdated Platform {Os Arch} IsSigned}}`,
   isDependentOnForImage: (name) =>
-    `/v2/_zot/ext/search?query={DerivedImageList(image: "${name}"){RepoName Tag Description Vendor LastUpdated Platform {Os Arch} IsSigned}}`,
+    `/v2/_zot/ext/search?query={DerivedImageList(image: "${name}"){RepoName Tag Description Vendor DownloadCount LastUpdated Platform {Os Arch} IsSigned}}`,
   globalSearch: ({ searchQuery = '""', pageNumber = 1, pageSize = 15, filter = {} }) => {
     const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
     const paginationParam = `requestedPage: {limit:${pageSize} offset:${(pageNumber - 1) * pageSize}}`;
