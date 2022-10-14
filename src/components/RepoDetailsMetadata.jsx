@@ -74,7 +74,7 @@ function RepoDetailsMetadata(props) {
                 Last publish
               </Typography>
               <Typography variant="body1" align="left" className={classes.metadataBody}>
-                {lastDate || `35 days ago`}
+                {lastDate || `Timestamp N/A`}
               </Typography>
             </CardContent>
           </Card>

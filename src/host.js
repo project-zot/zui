@@ -12,4 +12,12 @@ const host = (manualHost = null) => {
   return hostConfig.default;
 };
 
-export { host };
+const hostRoot = () => {
+  if (hostConfig.auto) {
+    return window.location.host;
+  }
+  // remove http protocol
+  return hostConfig.default.replace(/^https?:\/\//, '');
+};
+
+export { host, hostRoot };

@@ -5,7 +5,7 @@ import { useNavigate } from 'react-router-dom';
 // utility
 import { DateTime } from 'luxon';
 // components
-import { Card, CardActionArea, CardMedia, CardContent, Typography, Stack, Chip, Grid } from '@mui/material';
+import { Card, CardActionArea, CardMedia, CardContent, Typography, Stack, Chip, Grid, Tooltip } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 // placeholder images
@@ -71,11 +71,18 @@ const useStyles = makeStyles(() => ({
   },
   vendor: {
     color: '#14191F',
-    fontSize: '1rem'
+    fontSize: '1rem',
+    maxWidth: '50%',
+    textOverflow: 'ellipsis'
   },
   versionLast: {
     color: '#52637A',
-    fontSize: '1rem'
+    fontSize: '1rem',
+    textOverflow: 'ellipsis'
+  },
+  cardTitle: {
+    textOverflow: 'ellipsis',
+    maxWidth: '40%'
   }
 }));
 
@@ -192,29 +199,39 @@ function RepoCard(props) {
                   image={randomImage()}
                   alt="icon"
                 />
-                <Typography variant="h5" component="div">
-                  {name}
-                </Typography>
+                <Tooltip title={name} placement="top">
+                  <Typography variant="h5" component="div" noWrap className={classes.cardTitle}>
+                    {name}
+                  </Typography>
+                </Tooltip>
                 {/* {vulnerabilityCheck()} */}
                 {signatureCheck()}
                 {/* <Chip label="Verified licensee" sx={{ backgroundColor: "#E8F5E9", color: "#388E3C" }} variant="filled" onDelete={() => { return }} deleteIcon={vulnerabilityCheck()} /> */}
               </Stack>
-              <Typography className={classes.versionLast} pt={1} sx={{ fontSize: 12 }} gutterBottom noWrap>
-                {description || 'Description not available'}
-              </Typography>
+              <Tooltip title={description || 'Description not available'} placement="top">
+                <Typography className={classes.versionLast} pt={1} sx={{ fontSize: 12 }} gutterBottom noWrap>
+                  {description || 'Description not available'}
+                </Typography>
+              </Tooltip>
               <Stack alignItems="center" direction="row" spacing={2} pt={1}>
                 {platformChips()}
               </Stack>
               <Stack alignItems="center" direction="row" spacing={1} pt={2}>
-                <Typography className={classes.vendor} variant="body2">
-                  {getVendor()}
-                </Typography>
-                <Typography className={classes.versionLast} variant="body2">
-                  {getVersion()}
-                </Typography>
-                <Typography className={classes.versionLast} variant="body2">
-                  {getLast()}
-                </Typography>
+                <Tooltip title={getVendor()} placement="top">
+                  <Typography className={classes.vendor} variant="body2" noWrap>
+                    {getVendor()}
+                  </Typography>
+                </Tooltip>
+                <Tooltip title={getVersion()} placement="top">
+                  <Typography className={classes.versionLast} variant="body2" noWrap>
+                    {getVersion()}
+                  </Typography>
+                </Tooltip>
+                <Tooltip title={getLast()} placement="top">
+                  <Typography className={classes.versionLast} variant="body2" noWrap>
+                    {getLast()}
+                  </Typography>
+                </Tooltip>
               </Stack>
             </Grid>
             <Grid item xs={2}>

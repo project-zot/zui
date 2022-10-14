@@ -1,4 +1,4 @@
-import { Card, CardActionArea, CardContent, CardMedia, Grid, Stack, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, CardMedia, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -142,21 +142,23 @@ function PreviewCard(props) {
                   image={randomImage()}
                   alt="icon"
                 />
-                <Typography
-                  variant="h5"
-                  component="div"
-                  sx={{
-                    size: '1.5rem',
-                    lineHeight: '2rem',
-                    color: '#220052',
-                    width: '8rem',
-                    whiteSpace: 'nowrap',
-                    overflow: 'hidden',
-                    textOverflow: 'ellipsis'
-                  }}
-                >
-                  {name}
-                </Typography>
+                <Tooltip title={name} placement="top">
+                  <Typography
+                    variant="h5"
+                    component="div"
+                    sx={{
+                      size: '1.5rem',
+                      lineHeight: '2rem',
+                      color: '#220052',
+                      width: '8rem',
+                      whiteSpace: 'nowrap',
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis'
+                    }}
+                  >
+                    {name}
+                  </Typography>
+                </Tooltip>
                 {/* {vulnerabilityCheck()} */}
                 {signatureCheck()}
               </Stack>
