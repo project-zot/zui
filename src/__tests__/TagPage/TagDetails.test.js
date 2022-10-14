@@ -74,7 +74,8 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock('../../host', () => ({
-  host: () => 'http://localhost'
+  host: () => 'http://localhost',
+  hostRoot: () => 'localhost'
 }));
 
 beforeEach(() => {
@@ -117,6 +118,6 @@ describe('Tags details', () => {
       .mockResolvedValue({ status: 200, data: { data: { ...mockImage, RepoName: 'test', Tag: '1.0.1' } } });
     render(<TagDetails />);
     fireEvent.click(await screen.findByTestId('pullcopy-btn'));
-    await waitFor(() => expect(mockCopyToClipboard).toHaveBeenCalledWith('docker pull http://localhost/test:1.0.1'));
+    await waitFor(() => expect(mockCopyToClipboard).toHaveBeenCalledWith('docker pull localhost/test:1.0.1'));
   });
 });

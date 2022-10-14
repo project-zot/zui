@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import makeStyles from '@mui/styles/makeStyles';
-import { host } from '../host';
+import { host, hostRoot } from '../host';
 
 // placeholder images
 import repocube1 from '../assets/repocube-1.png';
@@ -141,9 +141,8 @@ function TagDetails() {
   // get url param from <Route here (i.e. image name)
   const { name, tag } = useParams();
   const [fullName, setFullName] = useState(name + ':' + tag);
-  const [pullString, setPullString] = useState(`docker pull ${host()}/${fullName}`);
+  const [pullString, setPullString] = useState(`docker pull ${hostRoot()}/${fullName}`);
   const classes = useStyles();
-  // const { description, overviewTitle, dependencies, dependents } = props;
 
   useEffect(() => {
     // if same-page navigation because of tag update, following 2 lines help ux
@@ -222,11 +221,7 @@ function TagDetails() {
                   alt="icon"
                 />
                 <Typography variant="h3" className={classes.repoName}>
-                  {name}:
-                  {
-                    // @ts-ignore
-                    tag
-                  }
+                  {name}:{tag}
                 </Typography>
                 {/* {vulnerabilityCheck()}
                       {signatureCheck()} */}
@@ -270,14 +265,14 @@ function TagDetails() {
                   inputProps={{ 'aria-label': 'Without label' }}
                   sx={{ m: 1, width: '20.625rem', borderRadius: '0.5rem', color: '#14191F', alignContent: 'left' }}
                 >
-                  <MenuItem value={`docker pull ${host()}/${fullName}`}>
-                    docker pull {host()}/{fullName}
+                  <MenuItem value={`docker pull ${hostRoot()}/${fullName}`}>
+                    docker pull {hostRoot()}/{fullName}
                   </MenuItem>
-                  <MenuItem value={`podman pull ${host()}/${fullName}`}>
-                    podman pull {host()}/{fullName}
+                  <MenuItem value={`podman pull ${hostRoot()}/${fullName}`}>
+                    podman pull {hostRoot()}/{fullName}
                   </MenuItem>
-                  <MenuItem value={`skopeo copy docker://${host()}/${fullName}`}>
-                    skopeo copy docker://{host()}/{fullName}
+                  <MenuItem value={`skopeo copy docker://${hostRoot()}/${fullName}`}>
+                    skopeo copy docker://{hostRoot()}/{fullName}
                   </MenuItem>
                 </Select>
               </FormControl>

@@ -50,6 +50,9 @@ const useStyles = makeStyles(() => ({
     color: '#606060',
     padding: '2% 3% 2% 3%',
     width: '100%'
+  },
+  clickCursor: {
+    cursor: 'pointer'
   }
 }));
 
@@ -127,6 +130,7 @@ function TagCard(props) {
                   onClick={() => {
                     navigator.clipboard.writeText(digest);
                   }}
+                  className={classes.clickCursor}
                 >
                   <TableCell style={{ color: '#696969' }}>
                     <Typography variant="body1">{digest?.substr(0, 12)}</Typography>
