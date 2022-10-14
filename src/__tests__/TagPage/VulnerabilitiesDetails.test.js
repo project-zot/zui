@@ -456,7 +456,7 @@ describe('Vulnerabilties page', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
-    await waitFor(() => expect(screen.getAllByText(/Fixed in/i)).toHaveLength(20));
+    await waitFor(() => expect(screen.getAllByText(/see fix tags/i)).toHaveLength(20));
   });
 
   it('renders no vulnerabilities if there are not any', async () => {
@@ -497,6 +497,7 @@ describe('Vulnerabilties page', () => {
       .mockResolvedValue({ status: 200, data: { data: mockCVEFixed } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
-    await waitFor(() => expect(screen.getAllByText('1.0.16')).toHaveLength(20));
+    fireEvent.click(screen.getAllByText(/see fix tags/i)[0]);
+    await waitFor(() => expect(screen.getByText('1.0.16')).toBeInTheDocument());
   });
 });

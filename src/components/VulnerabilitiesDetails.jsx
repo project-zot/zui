@@ -165,11 +165,15 @@ const vulnerabilityCheck = (status) => {
 function VulnerabilitiyCard(props) {
   const classes = useStyles();
   const { cve, name } = props;
-  const [open, setOpen] = useState(false);
+  const [openDesc, setOpenDesc] = useState(false);
+  const [openFixed, setOpenFixed] = useState(false);
   const [loadingFixed, setLoadingFixed] = useState(true);
   const [fixedInfo, setFixedInfo] = useState([]);
 
   useEffect(() => {
+    if (!openFixed || !isEmpty(fixedInfo)) {
+      return;
+    }
     setLoadingFixed(true);
     api
       .get(`${host()}${endpoints.imageListWithCVEFixed(cve.Id, name)}`)
@@ -183,7 +187,7 @@ function VulnerabilitiyCard(props) {
       .catch((e) => {
         console.error(e);
       });
-  }, []);
+  }, [openFixed]);
 
   const renderFixedVer = () => {
     if (!isEmpty(fixedInfo)) {
@@ -215,15 +219,6 @@ function VulnerabilitiyCard(props) {
             {cve.Title}
           </Typography>
         </Stack>
-        <Stack sx={{ flexDirection: 'row' }}>
-          <Typography variant="body1" align="left" className={classes.title}>
-            Fixed In:{' '}
-          </Typography>
-          <Typography variant="body1" align="left" className={classes.values} noWrap>
-            {' '}
-            {loadingFixed ? 'Loading...' : renderFixedVer()}
-          </Typography>
-        </Stack>
         <Typography
           sx={{
             color: '#1479FF',
@@ -232,11 +227,31 @@ function VulnerabilitiyCard(props) {
             fontWeight: '600',
             cursor: 'pointer'
           }}
-          onClick={() => setOpen(!open)}
+          onClick={() => setOpenFixed(!openFixed)}
         >
-          {!open ? 'See description' : 'Hide description'}
+          {!openFixed ? 'See fix tags' : 'Hide fix tags'}
         </Typography>
-        <Collapse in={open} timeout="auto" unmountOnExit>
+        <Collapse in={openFixed} timeout="auto" unmountOnExit>
+          <Box>
+            <Typography variant="body2" align="left" sx={{ color: '#0F2139', fontSize: '1rem' }}>
+              {' '}
+              {loadingFixed ? 'Loading...' : renderFixedVer()}{' '}
+            </Typography>
+          </Box>
+        </Collapse>
+        <Typography
+          sx={{
+            color: '#1479FF',
+            paddingTop: '1rem',
+            fontSize: '0.8125rem',
+            fontWeight: '600',
+            cursor: 'pointer'
+          }}
+          onClick={() => setOpenDesc(!openDesc)}
+        >
+          {!openDesc ? 'See description' : 'Hide description'}
+        </Typography>
+        <Collapse in={openDesc} timeout="auto" unmountOnExit>
           <Box>
             <Typography variant="body2" align="left" sx={{ color: '#0F2139', fontSize: '1rem' }}>
               {' '}
