@@ -183,7 +183,6 @@ const renderTags = (tags) => {
 export default function Tags(props) {
   const classes = useStyles();
   const { tags } = props;
-  console.log(JSON.stringify(tags));
   return (
     <Card className={classes.tagCard} data-testid="tags-container">
       <CardContent className={classes.content}>
