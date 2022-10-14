@@ -101,6 +101,7 @@ function IsDependentOn(props) {
             version={dependence.Tag}
             description={dependence.Description}
             vendor={dependence.Vendor}
+            downloads={dependence.DownloadCount}
             isSigned={dependence.IsSigned}
             platforms={[dependence.Platform]}
             key={index}
