@@ -13,6 +13,7 @@ import PestControlIcon from '@mui/icons-material/PestControl';
 import { isEmpty } from 'lodash';
 import { Link } from 'react-router-dom';
 import Loading from './Loading';
+import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -67,6 +68,18 @@ const useStyles = makeStyles(() => ({
     color: '#52637A',
     fontSize: '1.4rem',
     fontWeight: '600'
+  },
+  dropdown: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  dropdownText: {
+    color: '#1479FF',
+    paddingTop: '1rem',
+    fontSize: '1rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    textAlign: 'center'
   }
 }));
 
@@ -219,38 +232,30 @@ function VulnerabilitiyCard(props) {
             {cve.Title}
           </Typography>
         </Stack>
-        <Typography
-          sx={{
-            color: '#1479FF',
-            paddingTop: '1rem',
-            fontSize: '0.8125rem',
-            fontWeight: '600',
-            cursor: 'pointer'
-          }}
-          onClick={() => setOpenFixed(!openFixed)}
-        >
-          {!openFixed ? 'See fix tags' : 'Hide fix tags'}
-        </Typography>
+        <Stack className={classes.dropdown} onClick={() => setOpenFixed(!openFixed)}>
+          {!openFixed ? (
+            <KeyboardArrowRight className={classes.dropdownText} />
+          ) : (
+            <KeyboardArrowDown className={classes.dropdownText} />
+          )}
+          <Typography className={classes.dropdownText}>Fixed in</Typography>
+        </Stack>
         <Collapse in={openFixed} timeout="auto" unmountOnExit>
           <Box>
-            <Typography variant="body2" align="left" sx={{ color: '#0F2139', fontSize: '1rem' }}>
+            <Typography variant="body2" align="left" sx={{ color: '#0F2139', fontSize: '1rem', width: '100%' }}>
               {' '}
               {loadingFixed ? 'Loading...' : renderFixedVer()}{' '}
             </Typography>
           </Box>
         </Collapse>
-        <Typography
-          sx={{
-            color: '#1479FF',
-            paddingTop: '1rem',
-            fontSize: '0.8125rem',
-            fontWeight: '600',
-            cursor: 'pointer'
-          }}
-          onClick={() => setOpenDesc(!openDesc)}
-        >
-          {!openDesc ? 'See description' : 'Hide description'}
-        </Typography>
+        <Stack className={classes.dropdown} onClick={() => setOpenDesc(!openDesc)}>
+          {!openDesc ? (
+            <KeyboardArrowRight className={classes.dropdownText} />
+          ) : (
+            <KeyboardArrowDown className={classes.dropdownText} />
+          )}
+          <Typography className={classes.dropdownText}>Description</Typography>
+        </Stack>
         <Collapse in={openDesc} timeout="auto" unmountOnExit>
           <Box>
             <Typography variant="body2" align="left" sx={{ color: '#0F2139', fontSize: '1rem' }}>
@@ -312,7 +317,7 @@ function VulnerabilitiesDetails(props) {
   };
 
   return (
-    <div>
+    <>
       <Typography
         variant="h4"
         gutterBottom
@@ -344,7 +349,7 @@ function VulnerabilitiesDetails(props) {
           cveData?.cveList
         )
       )}
-    </div>
+    </>
   );
 }
 

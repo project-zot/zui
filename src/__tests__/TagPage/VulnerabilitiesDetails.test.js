@@ -456,7 +456,7 @@ describe('Vulnerabilties page', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
-    await waitFor(() => expect(screen.getAllByText(/see fix tags/i)).toHaveLength(20));
+    await waitFor(() => expect(screen.getAllByText(/fixed in/i)).toHaveLength(20));
   });
 
   it('renders no vulnerabilities if there are not any', async () => {
@@ -473,11 +473,16 @@ describe('Vulnerabilties page', () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
-    await waitFor(() => expect(screen.getAllByText(/see description/i)).toHaveLength(20));
-    const openText = screen.getAllByText(/see description/i);
+    await waitFor(() => expect(screen.getAllByText(/description/i)).toHaveLength(20));
+    const openText = screen.getAllByText(/description/i);
     fireEvent.click(openText[0]);
-    await waitFor(() => expect(screen.getAllByText(/hide description/i)).toHaveLength(1));
-    await waitFor(() => expect(screen.getAllByText(/see description/i)).toHaveLength(19));
+    await waitFor(() =>
+      expect(screen.getAllByText(/CPAN 2.28 allows Signature Verification Bypass./i)).toHaveLength(1)
+    );
+    fireEvent.click(openText[0]);
+    await waitFor(() =>
+      expect(screen.queryByText(/CPAN 2.28 allows Signature Verification Bypass./i)).not.toBeInTheDocument()
+    );
   });
 
   it("should log an error when data can't be fetched", async () => {
@@ -497,7 +502,7 @@ describe('Vulnerabilties page', () => {
       .mockResolvedValue({ status: 200, data: { data: mockCVEFixed } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
-    fireEvent.click(screen.getAllByText(/see fix tags/i)[0]);
+    fireEvent.click(screen.getAllByText(/fixed in/i)[0]);
     await waitFor(() => expect(screen.getByText('1.0.16')).toBeInTheDocument());
   });
 });
