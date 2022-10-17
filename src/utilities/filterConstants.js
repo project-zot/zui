@@ -19,32 +19,39 @@ const imageFilters = [
 
 const archFilters = [
   {
-    label: 'ARM',
-    value: 'arm'
+    label: 'arm',
+    value: 'arm',
+    tooltip: '32-bit ARM'
   },
   {
-    label: 'ARM 64',
-    value: 'arm64'
+    label: 'arm64',
+    value: 'arm64',
+    tooltip: '64-bit ARM'
   },
   {
-    label: 'IBM POWER',
-    value: 'ppc64'
+    label: 'ppc64',
+    value: 'ppc64',
+    tooltip: 'PowerPC 64-bit, big-endian'
   },
   {
-    label: 'IBM Z',
-    value: 's390x'
+    label: 's390x',
+    value: 's390x',
+    tooltip: 'IBM System z 64-bit, big-endian'
   },
   {
-    label: 'PowerPC 64 LE',
-    value: 'ppc64le'
+    label: 'ppc64le',
+    value: 'ppc64le',
+    tooltip: 'PowerPC 64-bit, little-endian'
   },
   {
-    label: 'x86',
-    value: '386'
+    label: '386',
+    value: '386',
+    tooltip: '32-bit x86'
   },
   {
-    label: 'x86-64',
-    value: 'amd64'
+    label: 'amd64',
+    value: 'amd64',
+    tooltip: '64-bit x86'
   }
 ];
 
