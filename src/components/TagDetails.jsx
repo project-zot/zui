@@ -244,7 +244,7 @@ function TagDetails() {
               <Stack direction="row">
                 <Grid item xs={10}>
                   <Typography variant="body1" sx={{ color: '#52637A', fontSize: '1rem', paddingTop: '0.75rem' }}>
-                    Copy and pull to pull this image
+                    Pull this image
                   </Typography>
                 </Grid>
                 <Grid item xs={2}>
