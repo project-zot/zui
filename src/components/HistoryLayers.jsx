@@ -175,7 +175,7 @@ function HistoryLayers(props) {
   };
 
   return (
-    <div>
+    <>
       <Typography
         variant="h4"
         gutterBottom
@@ -214,7 +214,7 @@ function HistoryLayers(props) {
       )}
 
       {!isLoaded ? <Loading /> : renderHistoryData()}
-    </div>
+    </>
   );
 }
 
