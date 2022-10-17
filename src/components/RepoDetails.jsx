@@ -145,7 +145,8 @@ function RepoDetails() {
             title: repoInfo.Summary?.NewestImage.Title,
             source: repoInfo.Summary?.NewestImage.Source,
             downloads: repoInfo.Summary?.NewestImage.DownloadCount,
-            overview: repoInfo.Summary?.NewestImage.Documentation
+            overview: repoInfo.Summary?.NewestImage.Documentation,
+            license: repoInfo.Summary?.NewestImage.Licenses
           };
           setRepoDetailData(imageData);
           setTags(imageData.images);
@@ -344,6 +345,8 @@ function RepoDetails() {
                     size={repoDetailData?.size}
                     // @ts-ignore
                     latestTag={repoDetailData?.newestTag}
+                    // @ts-ignore
+                    license={repoDetailData?.license}
                   />
                 </Grid>
               </Grid>

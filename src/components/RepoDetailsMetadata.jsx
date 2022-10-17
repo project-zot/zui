@@ -1,6 +1,7 @@
 import { Card, CardContent, Grid, Typography, Tooltip } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { DateTime } from 'luxon';
+import Markdown from 'markdown-to-jsx';
 import React from 'react';
 import transform from '../utilities/transform';
 
@@ -35,7 +36,7 @@ const useStyles = makeStyles(() => ({
 
 function RepoDetailsMetadata(props) {
   const classes = useStyles();
-  const { repoURL, totalDownloads, lastUpdated, size } = props;
+  const { repoURL, totalDownloads, lastUpdated, size, license } = props;
   // @ts-ignore
   const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
     unit: ['weeks', 'days', 'hours', 'minutes']
@@ -90,6 +91,22 @@ function RepoDetailsMetadata(props) {
               <Typography variant="body1" align="left" className={classes.metadataBody}>
                 {transform.formatBytes(size) || `----`}
               </Typography>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <Grid container item xs={12} spacing={2}>
+        <Grid item xs={12}>
+          <Card variant="outlined" className={classes.card}>
+            <CardContent>
+              <Typography variant="body2" align="left" className={classes.metadataHeader}>
+                License
+              </Typography>
+              <Tooltip title={license || ' '} placement="top">
+                <Typography variant="body1" align="left" className={classes.metadataBody}>
+                  {license ? <Markdown>{license}</Markdown> : `License info not available`}
+                </Typography>
+              </Tooltip>
             </CardContent>
           </Card>
         </Grid>

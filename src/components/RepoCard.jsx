@@ -17,6 +17,7 @@ import repocube4 from '../assets/repocube-4.png';
 //icons
 import GppBadOutlinedIcon from '@mui/icons-material/GppBadOutlined';
 import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
+import Markdown from 'markdown-to-jsx';
 
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
@@ -219,7 +220,7 @@ function RepoCard(props) {
               <Stack alignItems="center" direction="row" spacing={1} pt={2}>
                 <Tooltip title={getVendor()} placement="top">
                   <Typography className={classes.vendor} variant="body2" noWrap>
-                    {getVendor()}
+                    {<Markdown options={{ forceInline: true }}>{getVendor()}</Markdown>}
                   </Typography>
                 </Tooltip>
                 <Tooltip title={getVersion()} placement="top">

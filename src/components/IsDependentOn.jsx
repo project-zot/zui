@@ -8,7 +8,7 @@ import { Divider, Typography, Stack } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
 import Loading from './Loading';
-import RepoCard from './RepoCard';
+import TagCard from './TagCard';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -96,14 +96,14 @@ function IsDependentOn(props) {
     return images?.length ? (
       images.map((dependence, index) => {
         return (
-          <RepoCard
-            name={dependence.RepoName}
-            version={dependence.Tag}
-            description={dependence.Description}
+          <TagCard
+            repoName={dependence.RepoName}
+            tag={dependence.Tag}
             vendor={dependence.Vendor}
-            downloads={dependence.DownloadCount}
+            platform={dependence.Platform}
             isSigned={dependence.IsSigned}
-            platforms={[dependence.Platform]}
+            size={dependence.Size}
+            digest={dependence.Digest}
             key={index}
             lastUpdated={dependence.LastUpdated}
           />
