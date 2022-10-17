@@ -233,7 +233,7 @@ function TagDetails() {
                 gutterBottom
                 align="left"
               >
-                Digest:{' '}
+                DIGEST:{' '}
                 {
                   // @ts-ignore
                   imageDetailData?.digest
