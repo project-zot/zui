@@ -15,6 +15,10 @@ const mockImage = {
       Os: 'linux',
       Arch: 'amd64'
     },
+    Vulnerabilities: {
+      MaxSeverity: 'CRITICAL',
+      Count: 10
+    },
     Vendor: 'CentOS',
     History: [
       {
@@ -54,6 +58,106 @@ const mockImage = {
         }
       }
     ]
+  }
+};
+
+const mockImageNone = {
+  Image: {
+    RepoName: 'centos',
+    Tag: '8',
+    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+    LastUpdated: '2020-12-08T00:22:52.526672082Z',
+    Size: '75183423',
+    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+    Platform: {
+      Os: 'linux',
+      Arch: 'amd64'
+    },
+    Vulnerabilities: {
+      MaxSeverity: 'NONE',
+      Count: 10
+    },
+    Vendor: 'CentOS'
+  }
+};
+
+const mockImageUnknown = {
+  Image: {
+    RepoName: 'centos',
+    Tag: '8',
+    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+    LastUpdated: '2020-12-08T00:22:52.526672082Z',
+    Size: '75183423',
+    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+    Platform: {
+      Os: 'linux',
+      Arch: 'amd64'
+    },
+    Vulnerabilities: {
+      MaxSeverity: 'UNKNOWN',
+      Count: 10
+    },
+    Vendor: 'CentOS'
+  }
+};
+
+const mockImageLow = {
+  Image: {
+    RepoName: 'centos',
+    Tag: '8',
+    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+    LastUpdated: '2020-12-08T00:22:52.526672082Z',
+    Size: '75183423',
+    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+    Platform: {
+      Os: 'linux',
+      Arch: 'amd64'
+    },
+    Vulnerabilities: {
+      MaxSeverity: 'LOW',
+      Count: 10
+    },
+    Vendor: 'CentOS'
+  }
+};
+
+const mockImageMedium = {
+  Image: {
+    RepoName: 'centos',
+    Tag: '8',
+    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+    LastUpdated: '2020-12-08T00:22:52.526672082Z',
+    Size: '75183423',
+    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+    Platform: {
+      Os: 'linux',
+      Arch: 'amd64'
+    },
+    Vulnerabilities: {
+      MaxSeverity: 'MEDIUM',
+      Count: 10
+    },
+    Vendor: 'CentOS'
+  }
+};
+
+const mockImageHigh = {
+  Image: {
+    RepoName: 'centos',
+    Tag: '8',
+    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+    LastUpdated: '2020-12-08T00:22:52.526672082Z',
+    Size: '75183423',
+    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+    Platform: {
+      Os: 'linux',
+      Arch: 'amd64'
+    },
+    Vulnerabilities: {
+      MaxSeverity: 'HIGH',
+      Count: 10
+    },
+    Vendor: 'CentOS'
   }
 };
 
@@ -104,11 +208,39 @@ describe('Tags details', () => {
     render(<TagDetails />);
     await waitFor(() => expect(error).toBeCalledTimes(1));
   });
+
   it('should show tag details metadata', async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetails />);
     expect(await screen.findByTestId('tagDetailsMetadata-container')).toBeInTheDocument();
+  });
+
+  it('renders vulnerability chips', async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
+    render(<TagDetails />);
+    expect(await screen.findAllByTestId('critical-vulnerability-chip')).toHaveLength(1);
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageNone } });
+    render(<TagDetails />);
+    expect(await screen.findAllByTestId('none-vulnerability-chip')).toHaveLength(1);
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageUnknown } });
+    render(<TagDetails />);
+    expect(await screen.findAllByTestId('unknown-vulnerability-chip')).toHaveLength(1);
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageLow } });
+    render(<TagDetails />);
+    expect(await screen.findAllByTestId('low-vulnerability-chip')).toHaveLength(1);
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageMedium } });
+    render(<TagDetails />);
+    expect(await screen.findAllByTestId('medium-vulnerability-chip')).toHaveLength(1);
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageHigh } });
+    render(<TagDetails />);
+    expect(await screen.findAllByTestId('high-vulnerability-chip')).toHaveLength(1);
   });
 
   it('should copy the pull string to clipboard', async () => {

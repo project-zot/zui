@@ -96,7 +96,14 @@ function Home() {
       homeData.slice(0, 4).map((item, index) => {
         return (
           <Grid item xs={3} key={index}>
-            <PreviewCard name={item.name} lastUpdated={item.lastUpdated} isSigned={item.isSigned} logo={item.logo} />
+            <PreviewCard
+              name={item.name}
+              lastUpdated={item.lastUpdated}
+              isSigned={item.isSigned}
+              vulnerabiltySeverity={item.vulnerabiltySeverity}
+              vulnerabilityCount={item.vulnerabilityCount}
+              logo={item.logo}
+            />
           </Grid>
         );
       })
@@ -140,6 +147,8 @@ function Home() {
             vendor={item.vendor}
             platforms={item.platforms}
             key={index}
+            vulnerabiltySeverity={item.vulnerabiltySeverity}
+            vulnerabilityCount={item.vulnerabilityCount}
             lastUpdated={item.lastUpdated}
             logo={item.logo}
           />

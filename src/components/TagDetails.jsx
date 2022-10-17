@@ -1,3 +1,4 @@
+// @ts-nocheck
 // react global
 import { useParams } from 'react-router-dom';
 import React, { useEffect, useMemo, useState } from 'react';
@@ -11,6 +12,7 @@ import {
   Card,
   CardContent,
   CardMedia,
+  Chip,
   Grid,
   FormControl,
   IconButton,
@@ -18,11 +20,18 @@ import {
   Select,
   MenuItem,
   Tab,
+  Tooltip,
   Typography
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import makeStyles from '@mui/styles/makeStyles';
 import { host, hostRoot } from '../host';
+
+//icons
+import GppBadOutlinedIcon from '@mui/icons-material/GppBadOutlined';
+import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
+import PestControlOutlinedIcon from '@mui/icons-material/PestControlOutlined';
+import PestControlIcon from '@mui/icons-material/PestControl';
 
 // placeholder images
 import repocube1 from '../assets/repocube-1.png';
@@ -166,6 +175,9 @@ function TagDetails() {
             vendor: imageInfo.Vendor,
             history: imageInfo.History,
             license: imageInfo.Licenses,
+            vulnerabiltySeverity: imageInfo.Vulnerabilities?.MaxSeverity,
+            vulnerabilityCount: imageInfo.Vulnerabilities?.Count,
+            isSigned: imageInfo.IsSigned,
             logo: imageInfo.Logo
           };
           setImageDetailData(imageData);
@@ -182,14 +194,134 @@ function TagDetails() {
     };
   }, [name, tag]);
 
-  // const signatureCheck = () => {
-  //   const unverifiedSignature = <Chip label="Unverified Signature" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppBadOutlinedIcon sx={{ color: "#E53935!important" }} />}/>;
-  //   const untrustedSignature = <Chip label="Untrusted Signature" sx={{backgroundColor: "#ECEFF1",color: "#52637A",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppMaybeOutlinedIcon sx={{ color: "#52637A!important" }} />}/>;
-  //   const verifiedSignature = <Chip label="Verified Signature" sx={{backgroundColor: "#E8F5E9",color: "#388E3C",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppGoodOutlinedIcon sx={{ color: "#388E3C!important" }} />}/>;
+  const signatureCheck = () => {
+    const unverifiedSignature = (
+      <Chip
+        label="Unverified Signature"
+        sx={{ backgroundColor: '#FEEBEE', color: '#E53935', fontSize: '0.8125rem' }}
+        variant="filled"
+        onDelete={() => {
+          return;
+        }}
+        deleteIcon={<GppBadOutlinedIcon sx={{ color: '#E53935!important' }} />}
+      />
+    );
+    const verifiedSignature = (
+      <Chip
+        label="Verified Signature"
+        sx={{ backgroundColor: '#E8F5E9', color: '#388E3C', fontSize: '0.8125rem' }}
+        variant="filled"
+        onDelete={() => {
+          return;
+        }}
+        deleteIcon={<GppGoodOutlinedIcon sx={{ color: '#388E3C!important' }} />}
+      />
+    );
+    // @ts-ignore
+    if (imageDetailData.isSigned) {
+      return verifiedSignature;
+    } else {
+      return unverifiedSignature;
+    }
+  };
 
-  //   const arrSignature = [unverifiedSignature, untrustedSignature, verifiedSignature]
-  //   return(getRandom(arrSignature));
-  // }
+  const vulnerabilityCheck = () => {
+    const noneVulnerability = (
+      <Chip
+        label="None Vulnerability"
+        sx={{ backgroundColor: '#E8F5E9', color: '#388E3C', fontSize: '0.8125rem' }}
+        variant="filled"
+        onDelete={() => {
+          return;
+        }}
+        deleteIcon={<PestControlOutlinedIcon sx={{ color: '#388E3C!important' }} />}
+        data-testid="none-vulnerability-chip"
+      />
+    );
+    const unknownVulnerability = (
+      <Chip
+        label="Unknown Vulnerability"
+        sx={{ backgroundColor: '#ECEFF1', color: '#52637A', fontSize: '0.8125rem' }}
+        variant="filled"
+        onDelete={() => {
+          return;
+        }}
+        deleteIcon={<PestControlOutlinedIcon sx={{ color: '#52637A!important' }} />}
+        data-testid="unknown-vulnerability-chip"
+      />
+    );
+    const lowVulnerability = (
+      <Chip
+        label="Low Vulnerability"
+        sx={{ backgroundColor: '#FFF3E0', color: '#FB8C00', fontSize: '0.8125rem' }}
+        variant="filled"
+        onDelete={() => {
+          return;
+        }}
+        deleteIcon={<PestControlOutlinedIcon sx={{ color: '#FB8C00!important' }} />}
+        data-testid="low-vulnerability-chip"
+      />
+    );
+    const mediumVulnerability = (
+      <Chip
+        label="Medium Vulnerability"
+        sx={{ backgroundColor: '#FFF3E0', color: '#FB8C00', fontSize: '0.8125rem' }}
+        variant="filled"
+        onDelete={() => {
+          return;
+        }}
+        deleteIcon={<PestControlIcon sx={{ color: '#FB8C00!important' }} />}
+        data-testid="medium-vulnerability-chip"
+      />
+    );
+    const highVulnerability = (
+      <Chip
+        label="High Vulnerability"
+        sx={{ backgroundColor: '#FEEBEE', color: '#E53935', fontSize: '0.8125rem' }}
+        variant="filled"
+        onDelete={() => {
+          return;
+        }}
+        deleteIcon={<PestControlOutlinedIcon sx={{ color: '#E53935!important' }} />}
+        data-testid="high-vulnerability-chip"
+      />
+    );
+    const criticalVulnerability = (
+      <Chip
+        label="Critical Vulnerability"
+        sx={{ backgroundColor: '#FEEBEE', color: '#E53935', fontSize: '0.8125rem' }}
+        variant="filled"
+        onDelete={() => {
+          return;
+        }}
+        deleteIcon={<PestControlIcon sx={{ color: '#E53935!important' }} />}
+        data-testid="critical-vulnerability-chip"
+      />
+    );
+    let result;
+    // @ts-ignore
+    switch (imageDetailData.vulnerabiltySeverity) {
+      case 'NONE':
+        result = noneVulnerability;
+        break;
+      case 'LOW':
+        result = lowVulnerability;
+        break;
+      case 'MEDIUM':
+        result = mediumVulnerability;
+        break;
+      case 'HIGH':
+        result = highVulnerability;
+        break;
+      case 'CRITICAL':
+        result = criticalVulnerability;
+        break;
+      default:
+        result = unknownVulnerability;
+    }
+
+    return result;
+  };
 
   const getPlatform = () => {
     // @ts-ignore
@@ -225,15 +357,25 @@ function TagDetails() {
                       image={
                         // @ts-ignore
                         // eslint-disable-next-line prettier/prettier
-                        !isEmpty(imageDetailData?.logo) ? `data:image/  png;base64, ${imageDetailData?.logo}` : randomImage()
+                        !isEmpty(imageDetailData?.logo)
+                          ? `data:image/  png;base64, ${imageDetailData?.logo}`
+                          : randomImage()
                       }
                       alt="icon"
                     />
                     <Typography variant="h3" className={classes.repoName}>
                       {name}:{tag}
                     </Typography>
-                    {/* {vulnerabilityCheck()}
-                      {signatureCheck()} */}
+                    <Tooltip
+                      title={
+                        // @ts-ignore
+                        !isNaN(imageDetailData.vulnerabilityCount) ? imageDetailData.vulnerabilityCount : ''
+                      }
+                      placement="top"
+                    >
+                      {vulnerabilityCheck()}
+                    </Tooltip>
+                    {signatureCheck()}
                     {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
                   </Stack>
                   <Typography
