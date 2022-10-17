@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, Typography } from '@mui/material';
+import { Card, CardContent, Grid, Typography, Tooltip } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -37,7 +37,7 @@ function TagDetailsMetadata(props) {
   const classes = useStyles();
   const { platform, lastUpdated, size } = props;
   const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
-    unit: 'days'
+    unit: ['weeks', 'days', 'hours', 'minutes']
   });
   return (
     <Grid container spacing={1} data-testid="tagDetailsMetadata-container">
@@ -72,9 +72,11 @@ function TagDetailsMetadata(props) {
               <Typography variant="body2" align="left" className={classes.metadataHeader}>
                 Last Published
               </Typography>
-              <Typography variant="body1" align="left" className={classes.metadataBody}>
-                {lastDate || `----`}
-              </Typography>
+              <Tooltip title={lastUpdated?.slice(0, 16) || ' '} placement="top">
+                <Typography variant="body1" align="left" className={classes.metadataBody}>
+                  {lastDate || `----`}
+                </Typography>
+              </Tooltip>
             </CardContent>
           </Card>
         </Grid>
