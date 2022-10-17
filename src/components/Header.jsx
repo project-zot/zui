@@ -19,7 +19,7 @@ import Avatar from '@mui/material/Avatar';
 
 // styling
 import makeStyles from '@mui/styles/makeStyles';
-import logo from '../assets/Zot-white-text.svg';
+import logo from '../assets/zotLogo.svg';
 //import placeholderProfileButton from '../assets/Profile_button_placeholder.svg';
 import { useState, useRef } from 'react';
 import SearchSuggestion from './SearchSuggestion';
@@ -57,7 +57,7 @@ const useStyles = makeStyles(() => ({
   },
   logoWrapper: {},
   logo: {
-    width: '143px'
+    width: '130px'
   },
   userAvatar: {
     height: 46,

@@ -4,7 +4,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { api, endpoints } from '../api';
 
 // components
-import { Divider, Typography } from '@mui/material';
+import { Divider, Typography, Stack } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
 import Loading from './Loading';
@@ -122,7 +122,9 @@ function IsDependentOn(props) {
         variant="fullWidth"
         sx={{ margin: '5% 0% 5% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}
       />
-      {isLoading ? <Loading /> : renderDependents()}
+      <Stack direction="column" spacing={2}>
+        {isLoading ? <Loading /> : renderDependents()}
+      </Stack>
     </div>
   );
 }

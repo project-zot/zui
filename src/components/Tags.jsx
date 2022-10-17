@@ -177,7 +177,7 @@ const renderTags = (tags) => {
           tag={tag.Tag}
           lastUpdated={tag.LastUpdated}
           digest={tag.Digest}
-          vendors={tag.Vendors}
+          vendors={tag.Vendor}
           size={tag.Size}
           platform={tag.Platform}
         />
