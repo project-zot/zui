@@ -30,10 +30,14 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: 'w',
-          IsSigned: true,
+          IsSigned: false,
           Licenses: '',
           Vendor: '',
-          Labels: ''
+          Labels: '',
+          Vulnerabilities: {
+            MaxSeverity: 'LOW',
+            Count: 7
+          }
         }
       },
       {
@@ -43,23 +47,82 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: false,
+          IsSigned: true,
           Licenses: '',
           Vendor: '',
-          Labels: ''
+          Labels: '',
+          Vulnerabilities: {
+            MaxSeverity: 'HIGH',
+            Count: 2
+          }
         }
       },
       {
-        Name: 'nodeUnique',
+        Name: 'node',
         Size: '369311301',
         LastUpdated: '2022-08-23T00:20:40.144281895Z',
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: false,
+          IsSigned: true,
           Licenses: '',
           Vendor: '',
-          Labels: ''
+          Labels: '',
+          Vulnerabilities: {
+            MaxSeverity: 'CRITICAL',
+            Count: 10
+          }
+        }
+      },
+      {
+        Name: 'centos',
+        Size: '369311301',
+        LastUpdated: '2022-08-23T00:20:40.144281895Z',
+        NewestImage: {
+          Tag: 'latest',
+          Description: '',
+          IsSigned: true,
+          Licenses: '',
+          Vendor: '',
+          Labels: '',
+          Vulnerabilities: {
+            MaxSeverity: 'NONE',
+            Count: 10
+          }
+        }
+      },
+      {
+        Name: 'debian',
+        Size: '369311301',
+        LastUpdated: '2022-08-23T00:20:40.144281895Z',
+        NewestImage: {
+          Tag: 'latest',
+          Description: '',
+          IsSigned: true,
+          Licenses: '',
+          Vendor: '',
+          Labels: '',
+          Vulnerabilities: {
+            MaxSeverity: 'MEDIUM',
+            Count: 10
+          }
+        }
+      },
+      {
+        Name: 'mysql',
+        Size: '369311301',
+        LastUpdated: '2022-08-23T00:20:40.144281895Z',
+        NewestImage: {
+          Tag: 'latest',
+          Description: '',
+          IsSigned: true,
+          Licenses: '',
+          Vendor: '',
+          Labels: '',
+          Vulnerabilities: {
+            MaxSeverity: 'UNKNOWN',
+            Count: 10
+          }
         }
       }
     ]
@@ -77,7 +140,7 @@ describe('Explore component', () => {
     render(<StateExploreWrapper />);
     expect(await screen.findByText(/alpine/i)).toBeInTheDocument();
     expect(await screen.findByText(/mongo/i)).toBeInTheDocument();
-    expect(await screen.findByText(/nodeUnique/i)).toBeInTheDocument();
+    expect(await screen.findByText(/centos/i)).toBeInTheDocument();
   });
 
   it('displays the no data message if no data is received', async () => {
@@ -91,8 +154,20 @@ describe('Explore component', () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
-    expect(await screen.findAllByTestId('unverified-chip')).toHaveLength(2);
-    expect(await screen.findAllByTestId('verified-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('unverified-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('verified-chip')).toHaveLength(5);
+  });
+
+  it('renders vulnerability chips', async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    render(<StateExploreWrapper />);
+    expect(await screen.findAllByTestId('low-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('high-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('critical-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('none-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('medium-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('unknown-vulnerability-chip')).toHaveLength(1);
   });
 
   it("should log an error when data can't be fetched", async () => {

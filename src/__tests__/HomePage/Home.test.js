@@ -23,7 +23,11 @@ const mockImageList = {
         IsSigned: false,
         Licenses: '',
         Vendor: '',
-        Labels: ''
+        Labels: '',
+        Vulnerabilities: {
+          MaxSeverity: 'LOW',
+          Count: 7
+        }
       }
     },
     {
@@ -36,7 +40,11 @@ const mockImageList = {
         IsSigned: true,
         Licenses: '',
         Vendor: '',
-        Labels: ''
+        Labels: '',
+        Vulnerabilities: {
+          MaxSeverity: 'HIGH',
+          Count: 2
+        }
       }
     },
     {
@@ -49,7 +57,62 @@ const mockImageList = {
         IsSigned: true,
         Licenses: '',
         Vendor: '',
-        Labels: ''
+        Labels: '',
+        Vulnerabilities: {
+          MaxSeverity: 'CRITICAL',
+          Count: 10
+        }
+      }
+    },
+    {
+      Name: 'centos',
+      Size: '369311301',
+      LastUpdated: '2022-08-23T00:20:40.144281895Z',
+      NewestImage: {
+        Tag: 'latest',
+        Description: '',
+        IsSigned: true,
+        Licenses: '',
+        Vendor: '',
+        Labels: '',
+        Vulnerabilities: {
+          MaxSeverity: 'NONE',
+          Count: 10
+        }
+      }
+    },
+    {
+      Name: 'debian',
+      Size: '369311301',
+      LastUpdated: '2022-08-23T00:20:40.144281895Z',
+      NewestImage: {
+        Tag: 'latest',
+        Description: '',
+        IsSigned: true,
+        Licenses: '',
+        Vendor: '',
+        Labels: '',
+        Vulnerabilities: {
+          MaxSeverity: 'MEDIUM',
+          Count: 10
+        }
+      }
+    },
+    {
+      Name: 'mysql',
+      Size: '369311301',
+      LastUpdated: '2022-08-23T00:20:40.144281895Z',
+      NewestImage: {
+        Tag: 'latest',
+        Description: '',
+        IsSigned: true,
+        Licenses: '',
+        Vendor: '',
+        Labels: '',
+        Vulnerabilities: {
+          MaxSeverity: 'UNKNOWN',
+          Count: 10
+        }
       }
     }
   ]
@@ -79,9 +142,19 @@ describe('Home component', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<Home />);
     expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(1);
-    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(2);
+    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(3);
     expect(await screen.findAllByTestId('unverified-chip')).toHaveLength(1);
     expect(await screen.findAllByTestId('verified-chip')).toHaveLength(1);
+  });
+
+  it('renders vulnerability icons', async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    render(<Home />);
+    expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('critical-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('none-vulnerability-icon')).toHaveLength(1);
   });
 
   it("should log an error when data can't be fetched", async () => {

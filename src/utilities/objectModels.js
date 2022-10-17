@@ -11,7 +11,9 @@ const mapToRepo = (responseRepo) => {
     vendor: responseRepo.NewestImage?.Vendor,
     logo: responseRepo.NewestImage?.Logo,
     lastUpdated: responseRepo.LastUpdated,
-    downloads: responseRepo.DownloadCount
+    downloads: responseRepo.DownloadCount,
+    vulnerabiltySeverity: responseRepo.NewestImage?.Vulnerabilities?.MaxSeverity,
+    vulnerabilityCount: responseRepo.NewestImage?.Vulnerabilities?.Count
   };
 };
 

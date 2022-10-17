@@ -78,8 +78,8 @@ function DependsOn(props) {
       .get(`${host()}${endpoints.dependsOnForImage(name)}`, abortController.signal)
       .then((response) => {
         if (response.data && response.data.data) {
-          let images = response.data.data.BaseImageList;
-          setImages(images);
+          let imagesData = response.data.data.BaseImageList;
+          setImages(imagesData);
         }
         setIsLoading(false);
       })
@@ -105,6 +105,7 @@ function DependsOn(props) {
             size={dependence.Size}
             digest={dependence.Digest}
             key={index}
+            vulnerabiltySeverity={dependence.Vulnerabilities?.MaxSeverity}
             lastUpdated={dependence.LastUpdated}
           />
         );
