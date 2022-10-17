@@ -180,7 +180,7 @@ function RepoCard(props) {
   };
   const getLast = () => {
     const lastDate = lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 });
-    return `${lastDate.toRelative({ unit: 'days' })}`;
+    return `${lastDate.toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })}`;
   };
 
   return (
@@ -227,7 +227,7 @@ function RepoCard(props) {
                     {getVersion()}
                   </Typography>
                 </Tooltip>
-                <Tooltip title={getLast()} placement="top">
+                <Tooltip title={lastUpdated?.slice(0, 16) || ' '} placement="top">
                   <Typography className={classes.versionLast} variant="body2" noWrap>
                     {getLast()}
                   </Typography>

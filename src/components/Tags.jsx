@@ -13,7 +13,7 @@ import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Typography from '@mui/material/Typography';
 import transform from 'utilities/transform';
-import { Card, CardContent, Divider, Stack } from '@mui/material';
+import { Card, CardContent, Divider, Stack, Tooltip } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 
 const useStyles = makeStyles(() => ({
@@ -64,7 +64,7 @@ function TagCard(props) {
   const classes = useStyles();
   // @ts-ignore
   const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
-    unit: 'days'
+    unit: ['weeks', 'days', 'hours', 'minutes']
   });
   const navigate = useNavigate();
 
@@ -91,9 +91,11 @@ function TagCard(props) {
           <Typography variant="caption" sx={{ fontWeight: '400', fontSize: '0.8125rem' }}>
             Last pushed
           </Typography>
-          <Typography variant="caption" sx={{ fontWeight: '600', fontSize: '0.8125rem' }}>
-            {lastDate || 'Date not available'} by {vendors || 'Vendor not available'}
-          </Typography>
+          <Tooltip title={lastUpdated?.slice(0, 16) || ' '} placement="top">
+            <Typography variant="caption" sx={{ fontWeight: '600', fontSize: '0.8125rem' }}>
+              {lastDate || 'Date not available'} by {vendors || 'Vendor not available'}
+            </Typography>
+          </Tooltip>
         </Stack>
 
         <Typography

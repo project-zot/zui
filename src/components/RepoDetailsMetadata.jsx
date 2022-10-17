@@ -1,4 +1,4 @@
-import { Card, CardContent, Grid, Typography } from '@mui/material';
+import { Card, CardContent, Grid, Typography, Tooltip } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { DateTime } from 'luxon';
 import React from 'react';
@@ -38,7 +38,7 @@ function RepoDetailsMetadata(props) {
   const { repoURL, totalDownloads, lastUpdated, size } = props;
   // @ts-ignore
   const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
-    unit: 'days'
+    unit: ['weeks', 'days', 'hours', 'minutes']
   });
   return (
     <Grid container spacing={1}>
@@ -73,9 +73,11 @@ function RepoDetailsMetadata(props) {
               <Typography variant="body2" align="left" className={classes.metadataHeader}>
                 Last publish
               </Typography>
-              <Typography variant="body1" align="left" className={classes.metadataBody}>
-                {lastDate || `Timestamp N/A`}
-              </Typography>
+              <Tooltip title={lastUpdated?.slice(0, 16) || ' '} placement="top">
+                <Typography variant="body1" align="left" className={classes.metadataBody}>
+                  {lastDate || `Timestamp N/A`}
+                </Typography>
+              </Tooltip>
             </CardContent>
           </Card>
         </Grid>
