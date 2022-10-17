@@ -160,14 +160,27 @@ function HistoryLayers(props) {
                 </Typography>
               </Stack>
             </Grid>
-            <Typography variant="body1" align="left" className={classes.title} sx={{ backgroundColor: '#F7F7F7' }}>
-              {historyData[selectedIndex].HistoryDescription?.CreatedBy}
-            </Typography>
-            {!historyData[selectedIndex].HistoryDescription?.EmptyLayer ? (
-              <Typography data-testid="hash-typography">#: {historyData[selectedIndex].Layer?.Digest}</Typography>
-            ) : (
-              <Typography data-testid="no-hash-typography"></Typography>
-            )}
+            <Stack direction="column" spacing={2}>
+              <Typography variant="body1" align="left" className={classes.title} sx={{ backgroundColor: '#F7F7F7' }}>
+                {historyData[selectedIndex].HistoryDescription?.CreatedBy}
+              </Typography>
+              {!historyData[selectedIndex].HistoryDescription?.EmptyLayer ? (
+                <>
+                  <Typography variant="body1" align="left" className={classes.title}>
+                    DIGEST
+                  </Typography>
+                  <Typography
+                    data-testid="hash-typography"
+                    className={classes.title}
+                    sx={{ backgroundColor: '#F7F7F7' }}
+                  >
+                    {historyData[selectedIndex].Layer?.Digest}
+                  </Typography>
+                </>
+              ) : (
+                <Typography data-testid="no-hash-typography" sx={{ backgroundColor: '#F7F7F7' }}></Typography>
+              )}
+            </Stack>
           </CardContent>
         </Card>
       )
@@ -189,31 +202,32 @@ function HistoryLayers(props) {
         variant="fullWidth"
         sx={{ margin: '5% 0% 0% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}
       />
-      {historyData ? (
-        <Card className={classes.card} raised>
-          <CardContent className={classes.content}>
-            {historyData.map((layer, index) => {
-              return (
-                <div key={`${layer?.Layer?.Size}${index}`} onClick={() => setSelectedIndex(index)}>
-                  <LayerCard
-                    key={`${layer?.Layer?.Size}${index}`}
-                    index={index + 1}
-                    isSelected={selectedIndex === index}
-                    layer={layer?.Layer}
-                    historyDescription={layer?.HistoryDescription}
-                  />
-                </div>
-              );
-            })}
-          </CardContent>
-        </Card>
-      ) : (
-        <div>
-          <Typography className={classes.none}> No Layers </Typography>
-        </div>
-      )}
-
-      {!isLoaded ? <Loading /> : renderHistoryData()}
+      <Stack direction="column" spacing={2}>
+        {historyData ? (
+          <Card className={classes.card} raised>
+            <CardContent className={classes.content}>
+              {historyData.map((layer, index) => {
+                return (
+                  <div key={`${layer?.Layer?.Size}${index}`} onClick={() => setSelectedIndex(index)}>
+                    <LayerCard
+                      key={`${layer?.Layer?.Size}${index}`}
+                      index={index + 1}
+                      isSelected={selectedIndex === index}
+                      layer={layer?.Layer}
+                      historyDescription={layer?.HistoryDescription}
+                    />
+                  </div>
+                );
+              })}
+            </CardContent>
+          </Card>
+        ) : (
+          <div>
+            <Typography className={classes.none}> No Layers </Typography>
+          </div>
+        )}
+        {!isLoaded ? <Loading /> : renderHistoryData()}
+      </Stack>
     </>
   );
 }
