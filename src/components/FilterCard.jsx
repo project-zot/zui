@@ -1,4 +1,4 @@
-import { Card, CardContent, Checkbox, FormControlLabel, Stack, Typography } from '@mui/material';
+import { Card, CardContent, Checkbox, FormControlLabel, Stack, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 
@@ -44,15 +44,16 @@ function FilterCard(props) {
     const filterRows = filters;
     return filterRows.map((filter, index) => {
       return (
-        <FormControlLabel
-          key={index}
-          componentsProps={{ typography: { variant: 'body2' } }}
-          control={<Checkbox />}
-          label={filter.label}
-          id={title}
-          // checked={filter.label === selectedFilter}
-          onChange={() => handleFilterClicked(event, filter.label, filter.value)}
-        />
+        <Tooltip key={index} title={filter.tooltip ?? filter.label} placement="right">
+          <FormControlLabel
+            componentsProps={{ typography: { variant: 'body2' } }}
+            control={<Checkbox />}
+            label={filter.label}
+            id={title}
+            // checked={filter.label === selectedFilter}
+            onChange={() => handleFilterClicked(event, filter.label, filter.value)}
+          />
+        </Tooltip>
       );
     });
   };
