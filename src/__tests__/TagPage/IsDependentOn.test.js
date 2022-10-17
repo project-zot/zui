@@ -8,16 +8,20 @@ const mockDependentsList = {
   data: {
     DerivedImageList: [
       {
-        RepoName: 'project-stacker/c3/static-ubuntu-amd64'
+        RepoName: 'project-stacker/c3/static-ubuntu-amd64',
+        Tag: 'tag1'
       },
       {
-        RepoName: 'tag2'
+        RepoName: 'tag2',
+        Tag: 'tag2'
       },
       {
-        RepoName: 'tag3'
+        RepoName: 'tag3',
+        Tag: 'tag3'
       },
       {
-        RepoName: 'tag4'
+        RepoName: 'tag4',
+        Tag: 'tag4'
       }
     ]
   }
@@ -51,7 +55,7 @@ describe('Dependents tab', () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: mockDependentsList });
     render(<RouterDependsWrapper />);
-    expect(await screen.findAllByText(/published/i)).toHaveLength(4);
+    expect(await screen.findAllByText(/tag/i)).toHaveLength(8);
   });
 
   it('renders no dependents if there are not any', async () => {

@@ -161,7 +161,8 @@ function TagDetails() {
             digest: imageInfo.ConfigDigest,
             platform: imageInfo.Platform,
             vendor: imageInfo.Vendor,
-            history: imageInfo.History
+            history: imageInfo.History,
+            license: imageInfo.Licenses
           };
           setImageDetailData(imageData);
           setFullName(imageData.name + ':' + imageData.tag);
@@ -325,6 +326,8 @@ function TagDetails() {
                 size={imageDetailData?.size}
                 // @ts-ignore
                 lastUpdated={imageDetailData?.lastUpdated}
+                // @ts-ignore
+                license={imageDetailData?.license}
               />
             </Grid>
           </Grid>
