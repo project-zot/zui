@@ -19,6 +19,7 @@ import repocube4 from '../assets/repocube-4.png';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import RepoDetailsMetadata from './RepoDetailsMetadata';
 import Loading from './Loading';
+import { isEmpty } from 'lodash';
 
 // @ts-ignore
 const useStyles = makeStyles(() => ({
@@ -141,12 +142,13 @@ function RepoDetails() {
             platforms: repoInfo.Summary?.Platforms,
             vendors: repoInfo.Summary?.Vendors,
             newestTag: repoInfo.Summary?.NewestImage,
-            description: repoInfo.Summary?.NewestImage.Description,
-            title: repoInfo.Summary?.NewestImage.Title,
-            source: repoInfo.Summary?.NewestImage.Source,
-            downloads: repoInfo.Summary?.NewestImage.DownloadCount,
-            overview: repoInfo.Summary?.NewestImage.Documentation,
-            license: repoInfo.Summary?.NewestImage.Licenses
+            description: repoInfo.Summary?.NewestImage?.Description,
+            title: repoInfo.Summary?.NewestImage?.Title,
+            source: repoInfo.Summary?.NewestImage?.Source,
+            downloads: repoInfo.Summary?.NewestImage?.DownloadCount,
+            overview: repoInfo.Summary?.NewestImage?.Documentation,
+            license: repoInfo.Summary?.NewestImage?.Licenses,
+            logo: repoInfo.Summary?.NewestImage?.Logo
           };
           setRepoDetailData(imageData);
           setTags(imageData.images);
@@ -163,19 +165,6 @@ function RepoDetails() {
       abortController.abort();
     };
   }, [name]);
-  //function that returns a random element from an array
-  // function getRandom(list) {
-  //   return list[Math.floor(Math.random() * list.length)];
-  // }
-
-  // const signatureCheck = () => {
-  //   const unverifiedSignature = <Chip label="Unverified Signature" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppBadOutlinedIcon sx={{ color: "#E53935!important" }} />}/>;
-  //   const untrustedSignature = <Chip label="Untrusted Signature" sx={{backgroundColor: "#ECEFF1",color: "#52637A",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppMaybeOutlinedIcon sx={{ color: "#52637A!important" }} />}/>;
-  //   const verifiedSignature = <Chip label="Verified Signature" sx={{backgroundColor: "#E8F5E9",color: "#388E3C",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppGoodOutlinedIcon sx={{ color: "#388E3C!important" }} />}/>;
-
-  //   const arrSignature = [unverifiedSignature, untrustedSignature, verifiedSignature]
-  //   return(getRandom(arrSignature));
-  // }
 
   const platformChips = () => {
     // @ts-ignore
@@ -234,22 +223,6 @@ function RepoDetails() {
     );
   };
 
-  // const renderDependencies = () => {
-  //   return (<Card className={classes.card}>
-  //       <CardContent>
-  //         <Typography variant="h4" align="left">Dependecies ({dependencies || '---'})</Typography>
-  //       </CardContent>
-  //     </Card>);
-  // };
-
-  // const renderDependents = () => {
-  //   return (<Card className={classes.card}>
-  //       <CardContent>
-  //         <Typography variant="h4" align="left">Dependents ({dependents || '---'})</Typography>
-  //       </CardContent>
-  //     </Card>);
-  // };
-
   return (
     <>
       {isLoading ? (
@@ -267,7 +240,9 @@ function RepoDetails() {
                         img: classes.avatar
                       }}
                       component="img"
-                      image={randomImage()}
+                      // @ts-ignore
+                      // eslint-disable-next-line prettier/prettier
+                      image={!isEmpty(repoDetailData?.logo) ? `data:image/png;base64, ${repoDetailData?.logo}` : randomImage()}
                       alt="icon"
                     />
                     <Typography variant="h3" className={classes.repoName}>
@@ -304,12 +279,6 @@ function RepoDetails() {
                       >
                         <Tab value="Overview" label="Overview" className={classes.tabContent} />
                         <Tab value="Tags" label="Tags" className={classes.tabContent} />
-                        {/* <Tab value="Dependencies" label={`${dependencies || 0} Dependencies`} className={classes.tabContent}/>
-                            <Tab value="Dependents" label={`${dependents || 0} Dependents`} className={classes.tabContent}/>
-                            <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent}/>
-                            <Tab value="6" label="Tab 6" className={classes.tabContent}/>
-                            <Tab value="7" label="Tab 7" className={classes.tabContent}/>
-                            <Tab value="8" label="Tab 8" className={classes.tabContent}/> */}
                       </TabList>
                       <Grid container>
                         <Grid item xs={12}>
@@ -319,15 +288,6 @@ function RepoDetails() {
                           <TabPanel value="Tags" className={classes.tabPanel}>
                             <Tags tags={tags} />
                           </TabPanel>
-                          {/* <TabPanel value="Dependencies" className={classes.tabPanel}>
-                                  {renderDependencies()}
-                                </TabPanel>
-                                <TabPanel value="Dependents" className={classes.tabPanel}>
-                                  {renderDependents()}
-                                </TabPanel>
-                                <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
-                                  {renderVulnerabilities()}
-                                </TabPanel> */}
                         </Grid>
                       </Grid>
                     </Box>

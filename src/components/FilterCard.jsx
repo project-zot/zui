@@ -44,7 +44,7 @@ function FilterCard(props) {
     const filterRows = filters;
     return filterRows.map((filter, index) => {
       return (
-        <Tooltip key={index} title={filter.tooltip ?? filter.label} placement="right">
+        <Tooltip key={index} title={filter.tooltip ?? filter.label} placement="top" arrow>
           <FormControlLabel
             componentsProps={{ typography: { variant: 'body2' } }}
             control={<Checkbox />}
