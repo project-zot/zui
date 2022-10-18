@@ -1,10 +1,10 @@
 const osFilters = [
   {
-    label: 'Windows',
+    label: 'windows',
     value: 'windows'
   },
   {
-    label: 'Linux',
+    label: 'linux',
     value: 'linux'
   }
 ];
