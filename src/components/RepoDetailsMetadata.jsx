@@ -1,7 +1,7 @@
 import { Card, CardContent, Grid, Typography, Tooltip } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { DateTime } from 'luxon';
-import Markdown from 'markdown-to-jsx';
+import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import React from 'react';
 import transform from '../utilities/transform';
 
