@@ -104,9 +104,9 @@ function SearchSuggestion() {
   const handleSeachChange = (event) => {
     const value = event.inputValue;
     setSearchQuery(value);
+    setIsFailedSearch(false);
     if (value !== '' && value.length > 1) {
       setIsLoading(true);
-      setIsFailedSearch(false);
       api
         .get(
           `${host()}${endpoints.globalSearch({ searchQuery: value, pageNumber: 1, pageSize: 9 })}`,
