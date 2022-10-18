@@ -17,7 +17,7 @@ import repocube4 from '../assets/repocube-4.png';
 //icons
 import GppBadOutlinedIcon from '@mui/icons-material/GppBadOutlined';
 import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
-import Markdown from 'markdown-to-jsx';
+import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
