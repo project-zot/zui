@@ -19,6 +19,7 @@ import {
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import transform from 'utilities/transform';
 import { DateTime } from 'luxon';
+import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
 
 const useStyles = makeStyles(() => ({
   tagCard: {
@@ -57,6 +58,18 @@ const useStyles = makeStyles(() => ({
   },
   clickCursor: {
     cursor: 'pointer'
+  },
+  dropdown: {
+    flexDirection: 'row',
+    alignItems: 'center'
+  },
+  dropdownText: {
+    color: '#1479FF',
+    paddingTop: '1rem',
+    fontSize: '1rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    textAlign: 'center'
   }
 }));
 
@@ -107,19 +120,24 @@ export default function TagCard(props) {
             </Typography>
           </Tooltip>
         </Stack>
-
-        <Typography
-          sx={{
-            color: '#1479FF',
-            paddingTop: '1rem',
-            fontSize: '0.8125rem',
-            fontWeight: '600',
-            cursor: 'pointer'
-          }}
-          onClick={() => setOpen(!open)}
-        >
-          {!open ? 'See digest' : 'Hide digest'}
-        </Typography>
+        <Stack direction="row" onClick={() => setOpen(!open)}>
+          {!open ? (
+            <KeyboardArrowRight className={classes.dropdownText} />
+          ) : (
+            <KeyboardArrowDown className={classes.dropdownText} />
+          )}
+          <Typography
+            sx={{
+              color: '#1479FF',
+              paddingTop: '1rem',
+              fontSize: '0.8125rem',
+              fontWeight: '600',
+              cursor: 'pointer'
+            }}
+          >
+            DIGEST
+          </Typography>
+        </Stack>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <Box>
             <Table size="small" padding="none" sx={{ [`& .${tableCellClasses.root}`]: { borderBottom: 'none' } }}>
@@ -145,7 +163,7 @@ export default function TagCard(props) {
                   className={classes.clickCursor}
                 >
                   <TableCell style={{ color: '#696969' }}>
-                    <Tooltip title={digest || ''} placement="right">
+                    <Tooltip title={digest || ''} placement="top">
                       <Typography variant="body1">{digest?.substr(0, 12)}</Typography>
                     </Tooltip>
                   </TableCell>
