@@ -72,8 +72,12 @@ export default function TagCard(props) {
   });
   const navigate = useNavigate();
 
-  const goToTags = (tag) => {
-    navigate(`tag/${tag}`);
+  const goToTags = () => {
+    if (repoName) {
+      navigate(`/image/${encodeURIComponent(repoName)}/tag/${tag}`);
+    } else {
+      navigate(`tag/${tag}`);
+    }
   };
 
   return (
@@ -86,7 +90,7 @@ export default function TagCard(props) {
           variant="body1"
           align="left"
           sx={{ color: '#1479FF', fontSize: '1rem', textDecorationLine: 'underline', cursor: 'pointer' }}
-          onClick={() => goToTags(tag)}
+          onClick={() => goToTags()}
         >
           {repoName && `${repoName}:`}
           {tag}
