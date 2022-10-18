@@ -102,7 +102,7 @@ describe('Tags details', () => {
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<TagDetails />);
-    await waitFor(() => expect(error).toBeCalledTimes(2));
+    await waitFor(() => expect(error).toBeCalledTimes(1));
   });
   it('should show tag details metadata', async () => {
     // @ts-ignore

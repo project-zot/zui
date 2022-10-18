@@ -114,6 +114,7 @@ function Explore() {
             platforms={item.platforms}
             key={index}
             lastUpdated={item.lastUpdated}
+            logo={item.logo}
           />
         );
       })

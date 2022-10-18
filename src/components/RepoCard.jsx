@@ -18,6 +18,7 @@ import repocube4 from '../assets/repocube-4.png';
 import GppBadOutlinedIcon from '@mui/icons-material/GppBadOutlined';
 import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
+import { isEmpty } from 'lodash';
 
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
@@ -90,12 +91,7 @@ const useStyles = makeStyles(() => ({
 function RepoCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { name, vendor, platforms, description, downloads, isSigned, lastUpdated, version } = props;
-
-  //function that returns a random element from an array
-  // function getRandom(list) {
-  //   return list[Math.floor(Math.random() * list.length)];
-  // }
+  const { name, vendor, platforms, description, downloads, isSigned, lastUpdated, version, logo } = props;
 
   const goToDetails = () => {
     navigate(`/image/${encodeURIComponent(name)}`);
@@ -197,7 +193,7 @@ function RepoCard(props) {
                     img: classes.avatar
                   }}
                   component="img"
-                  image={randomImage()}
+                  image={!isEmpty(logo) ? `data:image/png;base64, ${logo}` : randomImage()}
                   alt="icon"
                 />
                 <Tooltip title={name} placement="top">

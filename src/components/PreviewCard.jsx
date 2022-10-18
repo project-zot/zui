@@ -12,6 +12,7 @@ import repocube4 from '../assets/repocube-4.png';
 //icons
 import GppBadOutlinedIcon from '@mui/icons-material/GppBadOutlined';
 import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
+import { isEmpty } from 'lodash';
 //import GppMaybeOutlinedIcon from '@mui/icons-material/GppMaybeOutlined';
 
 // temporary utility to get image
@@ -73,7 +74,7 @@ const useStyles = makeStyles(() => ({
 function PreviewCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { name, isSigned } = props;
+  const { name, isSigned, logo } = props;
 
   const goToDetails = () => {
     navigate(`/image/${encodeURIComponent(name)}`);
@@ -139,7 +140,7 @@ function PreviewCard(props) {
                     img: classes.avatar
                   }}
                   component="img"
-                  image={randomImage()}
+                  image={!isEmpty(logo) ? `data:image/png;base64, ${logo}` : randomImage()}
                   alt="icon"
                 />
                 <Tooltip title={name} placement="top">

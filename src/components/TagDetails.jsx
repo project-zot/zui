@@ -35,6 +35,8 @@ import VulnerabilitiesDetails from './VulnerabilitiesDetails';
 import HistoryLayers from './HistoryLayers';
 import DependsOn from './DependsOn';
 import IsDependentOn from './IsDependentOn';
+import { isEmpty } from 'lodash';
+import Loading from './Loading';
 
 // @ts-ignore
 const useStyles = makeStyles(() => ({
@@ -133,8 +135,7 @@ const randomImage = () => {
 
 function TagDetails() {
   const [imageDetailData, setImageDetailData] = useState({});
-  // @ts-ignore
-  //const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('Layers');
   const abortController = useMemo(() => new AbortController(), []);
 
@@ -148,6 +149,7 @@ function TagDetails() {
     // if same-page navigation because of tag update, following 2 lines help ux
     setSelectedTab('Layers');
     window?.scrollTo(0, 0);
+    setIsLoading(true);
     api
       .get(`${host()}${endpoints.detailedImageInfo(name, tag)}`, abortController.signal)
       .then((response) => {
@@ -162,11 +164,12 @@ function TagDetails() {
             platform: imageInfo.Platform,
             vendor: imageInfo.Vendor,
             history: imageInfo.History,
-            license: imageInfo.Licenses
+            license: imageInfo.Licenses,
+            logo: imageInfo.Logo
           };
           setImageDetailData(imageData);
           setFullName(imageData.name + ':' + imageData.tag);
-          //setIsLoading(false);
+          setIsLoading(false);
         }
       })
       .catch((e) => {
@@ -177,10 +180,6 @@ function TagDetails() {
       abortController.abort();
     };
   }, [name, tag]);
-  //function that returns a random element from an array
-  // function getRandom(list) {
-  //   return list[Math.floor(Math.random() * list.length)];
-  // }
 
   // const signatureCheck = () => {
   //   const unverifiedSignature = <Chip label="Unverified Signature" sx={{backgroundColor: "#FEEBEE",color: "#E53935",fontSize: "0.8125rem",}} variant="filled" onDelete={() => { return; }} deleteIcon={ <GppBadOutlinedIcon sx={{ color: "#E53935!important" }} />}/>;
@@ -206,134 +205,152 @@ function TagDetails() {
   };
 
   return (
-    <div className={classes.pageWrapper}>
-      <Card className={classes.cardRoot}>
-        <CardContent>
-          <Grid container className={classes.header}>
-            <Grid item xs={8}>
-              <Stack alignItems="center" direction="row" spacing={2}>
-                <CardMedia
-                  classes={{
-                    root: classes.media,
-                    img: classes.avatar
-                  }}
-                  component="img"
-                  image={randomImage()}
-                  alt="icon"
-                />
-                <Typography variant="h3" className={classes.repoName}>
-                  {name}:{tag}
-                </Typography>
-                {/* {vulnerabilityCheck()}
+    <>
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <div className={classes.pageWrapper}>
+          <Card className={classes.cardRoot}>
+            <CardContent>
+              <Grid container className={classes.header}>
+                <Grid item xs={8}>
+                  <Stack alignItems="center" direction="row" spacing={2}>
+                    <CardMedia
+                      classes={{
+                        root: classes.media,
+                        img: classes.avatar
+                      }}
+                      component="img"
+                      image={
+                        // @ts-ignore
+                        // eslint-disable-next-line prettier/prettier
+                        !isEmpty(imageDetailData?.logo) ? `data:image/  png;base64, ${imageDetailData?.logo}` : randomImage()
+                      }
+                      alt="icon"
+                    />
+                    <Typography variant="h3" className={classes.repoName}>
+                      {name}:{tag}
+                    </Typography>
+                    {/* {vulnerabilityCheck()}
                       {signatureCheck()} */}
-                {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
-              </Stack>
-              <Typography
-                pt={1}
-                sx={{ fontSize: 16, lineHeight: '1.5rem', color: 'rgba(0, 0, 0, 0.6)', paddingLeft: '4rem' }}
-                gutterBottom
-                align="left"
-              >
-                DIGEST:{' '}
-                {
-                  // @ts-ignore
-                  imageDetailData?.digest
-                }
-              </Typography>
-            </Grid>
-            <Grid item xs={4}>
-              <Stack direction="row">
-                <Grid item xs={10}>
-                  <Typography variant="body1" sx={{ color: '#52637A', fontSize: '1rem', paddingTop: '0.75rem' }}>
-                    Pull this image
+                    {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
+                  </Stack>
+                  <Typography
+                    pt={1}
+                    sx={{ fontSize: 16, lineHeight: '1.5rem', color: 'rgba(0, 0, 0, 0.6)', paddingLeft: '4rem' }}
+                    gutterBottom
+                    align="left"
+                  >
+                    DIGEST:{' '}
+                    {
+                      // @ts-ignore
+                      imageDetailData?.digest
+                    }
                   </Typography>
                 </Grid>
-                <Grid item xs={2}>
-                  <IconButton
-                    aria-label="copy"
-                    onClick={() => navigator.clipboard.writeText(pullString)}
-                    data-testid="pullcopy-btn"
-                  >
-                    <ContentCopyIcon />
-                  </IconButton>
-                </Grid>
-              </Stack>
-              <FormControl sx={{ m: 1, paddingLeft: '1.5rem' }} variant="outlined">
-                <Select
-                  className={classes.inputForm}
-                  value={pullString}
-                  onChange={handleSelectionChange}
-                  inputProps={{ 'aria-label': 'Without label' }}
-                  sx={{ m: 1, width: '20.625rem', borderRadius: '0.5rem', color: '#14191F', alignContent: 'left' }}
-                >
-                  <MenuItem value={`docker pull ${hostRoot()}/${fullName}`}>
-                    docker pull {hostRoot()}/{fullName}
-                  </MenuItem>
-                  <MenuItem value={`podman pull ${hostRoot()}/${fullName}`}>
-                    podman pull {hostRoot()}/{fullName}
-                  </MenuItem>
-                  <MenuItem value={`skopeo copy docker://${hostRoot()}/${fullName}`}>
-                    skopeo copy docker://{hostRoot()}/{fullName}
-                  </MenuItem>
-                </Select>
-              </FormControl>
-            </Grid>
-          </Grid>
-          <Grid container>
-            <Grid item xs={8} className={classes.tabs}>
-              <TabContext value={selectedTab}>
-                <Box>
-                  <TabList
-                    onChange={handleTabChange}
-                    TabIndicatorProps={{ className: classes.selectedTab }}
-                    sx={{ '& button.Mui-selected': { color: '#14191F', fontWeight: '600' } }}
-                  >
-                    <Tab value="Layers" label="Layers" className={classes.tabContent} />
-                    <Tab value="DependsOn" label="Uses" className={classes.tabContent} data-testid="dependencies-tab" />
-                    <Tab value="IsDependentOn" label="Used by" className={classes.tabContent} />
-                    <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent} />
-                  </TabList>
-                  <Grid container>
-                    <Grid item xs={12}>
-                      <TabPanel value="Layers" className={classes.tabPanel}>
-                        <HistoryLayers
-                          name={fullName}
-                          history={
-                            // @ts-ignore
-                            imageDetailData.history
-                          }
-                        />
-                      </TabPanel>
-                      <TabPanel value="DependsOn" className={classes.tabPanel}>
-                        <DependsOn name={fullName} />
-                      </TabPanel>
-                      <TabPanel value="IsDependentOn" className={classes.tabPanel}>
-                        <IsDependentOn name={fullName} />
-                      </TabPanel>
-                      <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
-                        <VulnerabilitiesDetails name={name} tag={tag} />
-                      </TabPanel>
+                <Grid item xs={4} justifyContent="flex-start">
+                  <Stack direction="row">
+                    <Grid item xs={10}>
+                      <Typography
+                        variant="body1"
+                        sx={{ color: '#52637A', fontSize: '1rem', paddingTop: '0.75rem', textAlign: 'left' }}
+                      >
+                        Pull this image
+                      </Typography>
                     </Grid>
-                  </Grid>
-                </Box>
-              </TabContext>
-            </Grid>
-            <Grid item xs={4} className={classes.metadata}>
-              <TagDetailsMetadata
-                // @ts-ignore
-                platform={getPlatform()}
-                // @ts-ignore
-                size={imageDetailData?.size}
-                // @ts-ignore
-                lastUpdated={imageDetailData?.lastUpdated}
-                // @ts-ignore
-                license={imageDetailData?.license}
-              />
-            </Grid>
-          </Grid>
-        </CardContent>
-      </Card>
-    </div>
+                    <Grid item xs={2}>
+                      <IconButton
+                        aria-label="copy"
+                        onClick={() => navigator.clipboard.writeText(pullString)}
+                        data-testid="pullcopy-btn"
+                      >
+                        <ContentCopyIcon />
+                      </IconButton>
+                    </Grid>
+                  </Stack>
+                  <FormControl sx={{ m: 1 }} variant="outlined">
+                    <Select
+                      className={classes.inputForm}
+                      value={pullString}
+                      onChange={handleSelectionChange}
+                      inputProps={{ 'aria-label': 'Without label' }}
+                      sx={{ m: 1, width: '20.625rem', borderRadius: '0.5rem', color: '#14191F', alignContent: 'left' }}
+                    >
+                      <MenuItem value={`docker pull ${hostRoot()}/${fullName}`}>
+                        docker pull {hostRoot()}/{fullName}
+                      </MenuItem>
+                      <MenuItem value={`podman pull ${hostRoot()}/${fullName}`}>
+                        podman pull {hostRoot()}/{fullName}
+                      </MenuItem>
+                      <MenuItem value={`skopeo copy docker://${hostRoot()}/${fullName}`}>
+                        skopeo copy docker://{hostRoot()}/{fullName}
+                      </MenuItem>
+                    </Select>
+                  </FormControl>
+                </Grid>
+              </Grid>
+              <Grid container>
+                <Grid item xs={8} className={classes.tabs}>
+                  <TabContext value={selectedTab}>
+                    <Box>
+                      <TabList
+                        onChange={handleTabChange}
+                        TabIndicatorProps={{ className: classes.selectedTab }}
+                        sx={{ '& button.Mui-selected': { color: '#14191F', fontWeight: '600' } }}
+                      >
+                        <Tab value="Layers" label="Layers" className={classes.tabContent} />
+                        <Tab
+                          value="DependsOn"
+                          label="Uses"
+                          className={classes.tabContent}
+                          data-testid="dependencies-tab"
+                        />
+                        <Tab value="IsDependentOn" label="Used by" className={classes.tabContent} />
+                        <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent} />
+                      </TabList>
+                      <Grid container>
+                        <Grid item xs={12}>
+                          <TabPanel value="Layers" className={classes.tabPanel}>
+                            <HistoryLayers
+                              name={fullName}
+                              history={
+                                // @ts-ignore
+                                imageDetailData.history
+                              }
+                            />
+                          </TabPanel>
+                          <TabPanel value="DependsOn" className={classes.tabPanel}>
+                            <DependsOn name={fullName} />
+                          </TabPanel>
+                          <TabPanel value="IsDependentOn" className={classes.tabPanel}>
+                            <IsDependentOn name={fullName} />
+                          </TabPanel>
+                          <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
+                            <VulnerabilitiesDetails name={name} tag={tag} />
+                          </TabPanel>
+                        </Grid>
+                      </Grid>
+                    </Box>
+                  </TabContext>
+                </Grid>
+                <Grid item xs={4} className={classes.metadata}>
+                  <TagDetailsMetadata
+                    // @ts-ignore
+                    platform={getPlatform()}
+                    // @ts-ignore
+                    size={imageDetailData?.size}
+                    // @ts-ignore
+                    lastUpdated={imageDetailData?.lastUpdated}
+                    // @ts-ignore
+                    license={imageDetailData?.license}
+                  />
+                </Grid>
+              </Grid>
+            </CardContent>
+          </Card>
+        </div>
+      )}
+    </>
   );
 }
 

@@ -96,7 +96,7 @@ function Home() {
       homeData.slice(0, 4).map((item, index) => {
         return (
           <Grid item xs={3} key={index}>
-            <PreviewCard name={item.name} lastUpdated={item.lastUpdated} isSigned={item.isSigned} />
+            <PreviewCard name={item.name} lastUpdated={item.lastUpdated} isSigned={item.isSigned} logo={item.logo} />
           </Grid>
         );
       })
@@ -141,6 +141,7 @@ function Home() {
             platforms={item.platforms}
             key={index}
             lastUpdated={item.lastUpdated}
+            logo={item.logo}
           />
         );
       })

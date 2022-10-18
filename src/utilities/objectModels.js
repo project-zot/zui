@@ -9,6 +9,7 @@ const mapToRepo = (responseRepo) => {
     licenses: responseRepo.NewestImage?.Licenses,
     size: responseRepo.Size,
     vendor: responseRepo.NewestImage?.Vendor,
+    logo: responseRepo.NewestImage?.Logo,
     lastUpdated: responseRepo.LastUpdated,
     downloads: responseRepo.DownloadCount
   };
