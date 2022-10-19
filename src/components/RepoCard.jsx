@@ -48,7 +48,8 @@ const useStyles = makeStyles(() => ({
   },
   avatar: {
     height: '1.4375rem',
-    width: '1.4375rem'
+    width: '1.4375rem',
+    objectFit: 'fill'
   },
   cardBtn: {
     height: '100%',

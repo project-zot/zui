@@ -1,4 +1,4 @@
-import { InputBase, List, ListItem, Stack, Typography } from '@mui/material';
+import { Avatar, InputBase, List, ListItem, Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import PhotoIcon from '@mui/icons-material/Photo';
 import SearchIcon from '@mui/icons-material/Search';
@@ -75,8 +75,20 @@ const useStyles = makeStyles(() => ({
     height: '2.75rem',
     padding: '0 5%'
   },
+  searchItemIconBg: {
+    backgroundColor: '#FFFFFF',
+    height: '1.5rem',
+    width: '1.5rem',
+    display: 'flex',
+    justifyContent: 'center',
+    alignItems: 'center',
+    overflow: 'hidden'
+  },
   searchItemIcon: {
-    color: '#0000008A'
+    color: '#0000008A',
+    minHeight: '100%',
+    minWidth: '100%',
+    objectFit: 'fill'
   }
 }));
 
@@ -147,7 +159,8 @@ function SearchSuggestion() {
     getItemProps,
     highlightedIndex,
     getComboboxProps,
-    isOpen
+    isOpen,
+    openMenu
     // closeMenu
   } = useCombobox({
     items: suggestionData,
@@ -166,7 +179,16 @@ function SearchSuggestion() {
         spacing={2}
       >
         <Stack direction="row" spacing={2}>
-          <PhotoIcon className={classes.searchItemIcon} />
+          <Avatar
+            variant="square"
+            classes={{
+              root: classes.searchItemIconBg,
+              img: classes.searchItemIcon
+            }}
+            src={`data:image/png;base64, ${suggestion.logo}`}
+          >
+            <PhotoIcon className={classes.searchItemIcon} />
+          </Avatar>
           <Typography>{suggestion.name}</Typography>
         </Stack>
       </ListItem>
@@ -188,6 +210,7 @@ function SearchSuggestion() {
           placeholder="Search for content..."
           className={classes.input}
           onKeyUp={handleSearch}
+          onFocus={() => openMenu()}
           {...getInputProps()}
         />
         <div onClick={handleSearch} className={classes.searchIcon}>
