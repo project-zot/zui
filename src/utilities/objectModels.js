@@ -15,4 +15,14 @@ const mapToRepo = (responseRepo) => {
   };
 };
 
-export { mapToRepo };
+const mapToImage = (responseImage) => {
+  return {
+    repoName: responseImage.RepoName,
+    tag: responseImage.Tag,
+    // frontend only prop to increase interop with Repo objects and code reusability
+    name: `${responseImage.RepoName}:${responseImage.Tag}`,
+    logo: responseImage.Logo
+  };
+};
+
+export { mapToRepo, mapToImage };

@@ -125,12 +125,6 @@ function Explore() {
     return (
       <Stack spacing={2}>
         <FilterCard
-          title="Images"
-          filters={filterConstants.imageFilters}
-          filterValue={imageFilters}
-          updateFilters={setImageFilters}
-        />
-        <FilterCard
           title="Operating system"
           filters={filterConstants.osFilters}
           filterValue={osFilters}
@@ -141,6 +135,12 @@ function Explore() {
           filters={filterConstants.archFilters}
           filterValue={archFilters}
           updateFilters={setArchFilters}
+        />
+        <FilterCard
+          title="Additional filters"
+          filters={filterConstants.imageFilters}
+          filterValue={imageFilters}
+          updateFilters={setImageFilters}
         />
       </Stack>
     );
