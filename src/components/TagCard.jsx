@@ -144,10 +144,10 @@ export default function TagCard(props) {
               <TableHead>
                 <TableRow>
                   <TableCell style={{ color: '#696969' }}>
-                    <Typography variant="body1">Digest</Typography>
+                    <Typography variant="body1">DIGEST</Typography>
                   </TableCell>
                   <TableCell style={{ color: '#696969' }}>
-                    <Typography variant="body1">OS/ARCH</Typography>
+                    <Typography variant="body1">OS/Arch</Typography>
                   </TableCell>
                   <TableCell style={{ color: '#696969' }}>
                     <Typography variant="body1">Size</Typography>
