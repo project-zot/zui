@@ -5,7 +5,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import React, { useEffect, useMemo, useState } from 'react';
 import { api, endpoints } from 'api';
 import { host } from 'host';
-import { mapToRepo } from 'utilities/objectModels';
+import { mapToImage, mapToRepo } from 'utilities/objectModels';
 import { createSearchParams, useNavigate } from 'react-router-dom';
 import { debounce, isEmpty } from 'lodash';
 import { useCombobox } from 'downshift';
@@ -103,7 +103,12 @@ function SearchSuggestion() {
 
   const handleSuggestionSelected = (event) => {
     const name = event.selectedItem?.name;
-    navigate(`/image/${encodeURIComponent(name)}`);
+    if (name?.includes(':')) {
+      const splitName = name.split(':');
+      navigate(`/image/${encodeURIComponent(splitName[0])}/tag/${splitName[1]}`);
+    } else {
+      navigate(`/image/${encodeURIComponent(name)}`);
+    }
   };
 
   const handleSearch = (event) => {
@@ -113,31 +118,65 @@ function SearchSuggestion() {
     }
   };
 
+  const repoSearch = (value) => {
+    api
+      .get(
+        `${host()}${endpoints.globalSearch({ searchQuery: value, pageNumber: 1, pageSize: 9 })}`,
+        abortController.signal
+      )
+      .then((suggestionResponse) => {
+        if (suggestionResponse.data.data.GlobalSearch.Repos) {
+          const suggestionParsedData = suggestionResponse.data.data.GlobalSearch.Repos.map((el) => mapToRepo(el));
+          setSuggestionData(suggestionParsedData);
+          if (isEmpty(suggestionParsedData)) {
+            setIsFailedSearch(true);
+          }
+        }
+        setIsLoading(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        setIsLoading(false);
+        setIsFailedSearch(true);
+      });
+  };
+
+  const imageSearch = (value) => {
+    api
+      .get(
+        `${host()}${endpoints.imageSuggestions({ searchQuery: value, pageNumber: 1, pageSize: 9 })}`,
+        abortController.signal
+      )
+      .then((suggestionResponse) => {
+        if (suggestionResponse.data.data.GlobalSearch.Images) {
+          const suggestionParsedData = suggestionResponse.data.data.GlobalSearch.Images.map((el) => mapToImage(el));
+          setSuggestionData(suggestionParsedData);
+          if (isEmpty(suggestionParsedData)) {
+            setIsFailedSearch(true);
+          }
+        }
+        setIsLoading(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        setIsLoading(false);
+        setIsFailedSearch(true);
+      });
+  };
+
   const handleSeachChange = (event) => {
     const value = event.inputValue;
     setSearchQuery(value);
     setIsFailedSearch(false);
-    if (value !== '' && value.length > 1) {
+    setSuggestionData([]);
+    if (value !== '') {
       setIsLoading(true);
-      api
-        .get(
-          `${host()}${endpoints.globalSearch({ searchQuery: value, pageNumber: 1, pageSize: 9 })}`,
-          abortController.signal
-        )
-        .then((suggestionResponse) => {
-          if (suggestionResponse.data.data.GlobalSearch.Repos) {
-            const suggestionParsedData = suggestionResponse.data.data.GlobalSearch.Repos.map((el) => mapToRepo(el));
-            setSuggestionData(suggestionParsedData);
-            if (isEmpty(suggestionParsedData)) {
-              setIsFailedSearch(true);
-            }
-          }
-          setIsLoading(false);
-        })
-        .catch((e) => {
-          console.error(e);
-          setIsLoading(false);
-        });
+      // if search term inclused the ':' character, search for images, if not, search repos
+      if (value?.includes(':')) {
+        imageSearch(value);
+      } else {
+        repoSearch(value);
+      }
     }
   };
 
@@ -219,9 +258,35 @@ function SearchSuggestion() {
       </Stack>
       <List
         {...getMenuProps()}
-        className={isOpen && suggestionData?.length > 0 ? classes.resultsWrapper : classes.resultsWrapperHidden}
+        className={isOpen && !isLoading ? classes.resultsWrapper : classes.resultsWrapperHidden}
       >
         {isOpen && suggestionData?.length > 0 && renderSuggestions()}
+        {isOpen && isEmpty(searchQuery) && (
+          <>
+            <ListItem
+              className={classes.searchItem}
+              style={{ color: '#52637A', fontSize: '1rem', textOverflow: 'ellipsis' }}
+              {...getItemProps({ item: '', index: 0 })}
+              spacing={2}
+              onClick={() => {}}
+            >
+              <Stack direction="row" spacing={2}>
+                <Typography>Press Enter for advanced search</Typography>
+              </Stack>
+            </ListItem>
+            <ListItem
+              className={classes.searchItem}
+              style={{ color: '#52637A', fontSize: '1rem', textOverflow: 'ellipsis' }}
+              {...getItemProps({ item: '', index: 0 })}
+              spacing={2}
+              onClick={() => {}}
+            >
+              <Stack direction="row" spacing={2}>
+                <Typography>Use the &apos;:&apos; character to search for tags</Typography>
+              </Stack>
+            </ListItem>
+          </>
+        )}
       </List>
     </div>
   );

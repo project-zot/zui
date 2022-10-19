@@ -88,6 +88,11 @@ const endpoints = {
     filterParam += '}';
     if (Object.keys(filter).length === 0) filterParam = '';
     return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam} ${filterParam}) {Repos {Name LastUpdated Size Platforms { Os Arch } NewestImage { Tag Description IsSigned Logo Licenses Vendor Labels } DownloadCount}}}`;
+  },
+  imageSuggestions: ({ searchQuery = '""', pageNumber = 1, pageSize = 15 }) => {
+    const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
+    const paginationParam = `requestedPage: {limit:${pageSize} offset:${(pageNumber - 1) * pageSize} sortBy:RELEVANCE}`;
+    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam}) {Images {RepoName Tag Logo}}}`;
   }
 };
 

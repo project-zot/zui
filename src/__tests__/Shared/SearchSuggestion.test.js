@@ -1,4 +1,4 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import SearchSuggestion from 'components/SearchSuggestion';
@@ -54,6 +54,12 @@ const mockImageList = {
           Labels: ''
         }
       }
+    ],
+    Images: [
+      {
+        RepoName: 'debian',
+        Tag: 'testTag'
+      }
     ]
   }
 };
@@ -72,5 +78,47 @@ describe('Search component', () => {
     expect(searchInput).toBeInTheDocument();
     userEvent.type(searchInput, 'test');
     expect(await screen.findByText(/alpine/i)).toBeInTheDocument();
+  });
+
+  it('should navigate to repo page when a repo suggestion is clicked', async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    render(<SearchSuggestion />);
+    const searchInput = screen.getByPlaceholderText(/search for content/i);
+    userEvent.type(searchInput, 'test');
+    const suggestionItemRepo = await screen.findByText(/alpine/i);
+    userEvent.click(suggestionItemRepo);
+    await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith('/image/alpine'));
+  });
+
+  it('should navigate to repo page when a image suggestion is clicked', async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    render(<SearchSuggestion />);
+    const searchInput = screen.getByPlaceholderText(/search for content/i);
+    userEvent.type(searchInput, 'debian:test');
+    const suggestionItemImage = await screen.findByText(/debian:testTag/i);
+    userEvent.click(suggestionItemImage);
+    await waitFor(() => expect(mockedUsedNavigate).toHaveBeenCalledWith('/image/debian/tag/testTag'));
+  });
+
+  it('should log an error if it doesnt receive an ok response for repo search', async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    render(<SearchSuggestion />);
+    const searchInput = screen.getByPlaceholderText(/search for content/i);
+    userEvent.type(searchInput, 'debian');
+    await waitFor(() => expect(error).toBeCalledTimes(1));
+  });
+
+  it('should log an error if it doesnt receive an ok response for image search', async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
+    const error = jest.spyOn(console, 'error').mockImplementation(() => {});
+    render(<SearchSuggestion />);
+    const searchInput = screen.getByPlaceholderText(/search for content/i);
+    userEvent.type(searchInput, 'debian:test');
+    await waitFor(() => expect(error).toBeCalledTimes(1));
   });
 });
