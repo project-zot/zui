@@ -183,7 +183,7 @@ function Home() {
       {renderBookmarks()} */}
           <Stack></Stack>
           <Typography variant="h4" align="left" className={classes.sectionTitle}>
-            Recently updated repositories
+            Recently updated images
           </Typography>
           {renderRecentlyUpdated()}
         </Stack>
