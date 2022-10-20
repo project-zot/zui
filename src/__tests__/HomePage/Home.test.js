@@ -137,22 +137,20 @@ describe('Home component', () => {
     await waitFor(() => expect(screen.getAllByText(/node/i)).toHaveLength(1));
   });
 
-  it('renders signature chips', async () => {
+  it('renders signature icons', async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<Home />);
-    expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(1);
-    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(3);
-    expect(await screen.findAllByTestId('unverified-chip')).toHaveLength(1);
-    expect(await screen.findAllByTestId('verified-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(2);
+    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(4);
   });
 
   it('renders vulnerability icons', async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<Home />);
-    expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(1);
-    expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(2);
+    expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(2);
     expect(await screen.findAllByTestId('critical-vulnerability-icon')).toHaveLength(1);
     expect(await screen.findAllByTestId('none-vulnerability-icon')).toHaveLength(1);
   });

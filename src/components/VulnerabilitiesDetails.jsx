@@ -5,15 +5,14 @@ import { api, endpoints } from '../api';
 
 // components
 import Collapse from '@mui/material/Collapse';
-import { Box, Card, CardContent, Divider, Chip, Stack, Typography } from '@mui/material';
+import { Box, Card, CardContent, Divider, Stack, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
-import PestControlOutlinedIcon from '@mui/icons-material/PestControlOutlined';
-import PestControlIcon from '@mui/icons-material/PestControl';
 import { isEmpty } from 'lodash';
 import { Link } from 'react-router-dom';
 import Loading from './Loading';
 import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
+import { VulnerabilityChipCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -83,98 +82,6 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const vulnerabilityCheck = (status) => {
-  const noneVulnerability = (
-    <Chip
-      label="None"
-      sx={{ backgroundColor: '#E8F5E9', color: '#388E3C', fontSize: '0.8125rem' }}
-      variant="filled"
-      onDelete={() => {
-        return;
-      }}
-      deleteIcon={<PestControlOutlinedIcon sx={{ color: '#388E3C!important' }} />}
-    />
-  );
-  const unknownVulnerability = (
-    <Chip
-      label="Unknown"
-      sx={{ backgroundColor: '#ECEFF1', color: '#52637A', fontSize: '0.8125rem' }}
-      variant="filled"
-      onDelete={() => {
-        return;
-      }}
-      deleteIcon={<PestControlOutlinedIcon sx={{ color: '#52637A!important' }} />}
-    />
-  );
-  const lowVulnerability = (
-    <Chip
-      label="Low"
-      sx={{ backgroundColor: '#FFF3E0', color: '#FB8C00', fontSize: '0.8125rem' }}
-      variant="filled"
-      onDelete={() => {
-        return;
-      }}
-      deleteIcon={<PestControlOutlinedIcon sx={{ color: '#FB8C00!important' }} />}
-    />
-  );
-  const mediumVulnerability = (
-    <Chip
-      label="Medium"
-      sx={{ backgroundColor: '#FFF3E0', color: '#FB8C00', fontSize: '0.8125rem' }}
-      variant="filled"
-      onDelete={() => {
-        return;
-      }}
-      deleteIcon={<PestControlIcon sx={{ color: '#FB8C00!important' }} />}
-    />
-  );
-  const highVulnerability = (
-    <Chip
-      label="High"
-      sx={{ backgroundColor: '#FEEBEE', color: '#E53935', fontSize: '0.8125rem' }}
-      variant="filled"
-      onDelete={() => {
-        return;
-      }}
-      deleteIcon={<PestControlOutlinedIcon sx={{ color: '#E53935!important' }} />}
-    />
-  );
-  const criticalVulnerability = (
-    <Chip
-      label="Critical"
-      sx={{ backgroundColor: '#FEEBEE', color: '#E53935', fontSize: '0.8125rem' }}
-      variant="filled"
-      onDelete={() => {
-        return;
-      }}
-      deleteIcon={<PestControlIcon sx={{ color: '#E53935!important' }} />}
-    />
-  );
-
-  let result;
-  switch (status) {
-    case 'NONE':
-      result = noneVulnerability;
-      break;
-    case 'LOW':
-      result = lowVulnerability;
-      break;
-    case 'MEDIUM':
-      result = mediumVulnerability;
-      break;
-    case 'HIGH':
-      result = highVulnerability;
-      break;
-    case 'CRITICAL':
-      result = criticalVulnerability;
-      break;
-    default:
-      result = unknownVulnerability;
-  }
-
-  return result;
-};
-
 function VulnerabilitiyCard(props) {
   const classes = useStyles();
   const { cve, name } = props;
@@ -225,7 +132,7 @@ function VulnerabilitiyCard(props) {
             {cve.Id}
           </Typography>
         </Stack>
-        {vulnerabilityCheck(cve.Severity)}
+        <VulnerabilityChipCheck vulnerabilitySeverity={cve.Severity} />
         <Stack sx={{ flexDirection: 'row' }}>
           <Typography variant="body1" align="left" className={classes.values}>
             {' '}

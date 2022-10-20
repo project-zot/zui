@@ -7,7 +7,7 @@ import { api, endpoints } from '../api';
 
 // components
 import Tags from './Tags.jsx';
-import { Box, Card, CardContent, CardMedia, Chip, Grid, Stack, Tab, Tooltip, Typography } from '@mui/material';
+import { Box, Card, CardContent, CardMedia, Chip, Grid, Stack, Tab, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
 
@@ -18,14 +18,10 @@ import repocube3 from '../assets/repocube-3.png';
 import repocube4 from '../assets/repocube-4.png';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
-//icons
-import GppBadOutlinedIcon from '@mui/icons-material/GppBadOutlined';
-import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
-import PestControlOutlinedIcon from '@mui/icons-material/PestControlOutlined';
-import PestControlIcon from '@mui/icons-material/PestControl';
 import RepoDetailsMetadata from './RepoDetailsMetadata';
 import Loading from './Loading';
 import { isEmpty } from 'lodash';
+import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 
 // @ts-ignore
 const useStyles = makeStyles(() => ({
@@ -176,135 +172,6 @@ function RepoDetails() {
     };
   }, [name]);
 
-  const signatureCheck = () => {
-    const unverifiedSignature = (
-      <Chip
-        label="Unverified Signature"
-        sx={{ backgroundColor: '#FEEBEE', color: '#E53935', fontSize: '0.8125rem' }}
-        variant="filled"
-        onDelete={() => {
-          return;
-        }}
-        deleteIcon={<GppBadOutlinedIcon sx={{ color: '#E53935!important' }} />}
-      />
-    );
-    const verifiedSignature = (
-      <Chip
-        label="Verified Signature"
-        sx={{ backgroundColor: '#E8F5E9', color: '#388E3C', fontSize: '0.8125rem' }}
-        variant="filled"
-        onDelete={() => {
-          return;
-        }}
-        deleteIcon={<GppGoodOutlinedIcon sx={{ color: '#388E3C!important' }} />}
-      />
-    );
-    // @ts-ignore
-    if (repoDetailData.isSigned) {
-      return verifiedSignature;
-    } else {
-      return unverifiedSignature;
-    }
-  };
-
-  const vulnerabilityCheck = () => {
-    const noneVulnerability = (
-      <Chip
-        label="None Vulnerability"
-        sx={{ backgroundColor: '#E8F5E9', color: '#388E3C', fontSize: '0.8125rem' }}
-        variant="filled"
-        onDelete={() => {
-          return;
-        }}
-        deleteIcon={<PestControlOutlinedIcon sx={{ color: '#388E3C!important' }} />}
-        data-testid="none-vulnerability-chip"
-      />
-    );
-    const unknownVulnerability = (
-      <Chip
-        label="Unknown Vulnerability"
-        sx={{ backgroundColor: '#ECEFF1', color: '#52637A', fontSize: '0.8125rem' }}
-        variant="filled"
-        onDelete={() => {
-          return;
-        }}
-        deleteIcon={<PestControlOutlinedIcon sx={{ color: '#52637A!important' }} />}
-        data-testid="unknown-vulnerability-chip"
-      />
-    );
-    const lowVulnerability = (
-      <Chip
-        label="Low Vulnerability"
-        sx={{ backgroundColor: '#FFF3E0', color: '#FB8C00', fontSize: '0.8125rem' }}
-        variant="filled"
-        onDelete={() => {
-          return;
-        }}
-        deleteIcon={<PestControlOutlinedIcon sx={{ color: '#FB8C00!important' }} />}
-        data-testid="low-vulnerability-chip"
-      />
-    );
-    const mediumVulnerability = (
-      <Chip
-        label="Medium Vulnerability"
-        sx={{ backgroundColor: '#FFF3E0', color: '#FB8C00', fontSize: '0.8125rem' }}
-        variant="filled"
-        onDelete={() => {
-          return;
-        }}
-        deleteIcon={<PestControlIcon sx={{ color: '#FB8C00!important' }} />}
-        data-testid="medium-vulnerability-chip"
-      />
-    );
-    const highVulnerability = (
-      <Chip
-        label="High Vulnerability"
-        sx={{ backgroundColor: '#FEEBEE', color: '#E53935', fontSize: '0.8125rem' }}
-        variant="filled"
-        onDelete={() => {
-          return;
-        }}
-        deleteIcon={<PestControlOutlinedIcon sx={{ color: '#E53935!important' }} />}
-        data-testid="high-vulnerability-chip"
-      />
-    );
-    const criticalVulnerability = (
-      <Chip
-        label="Critical Vulnerability"
-        sx={{ backgroundColor: '#FEEBEE', color: '#E53935', fontSize: '0.8125rem' }}
-        variant="filled"
-        onDelete={() => {
-          return;
-        }}
-        deleteIcon={<PestControlIcon sx={{ color: '#E53935!important' }} />}
-        data-testid="critical-vulnerability-chip"
-      />
-    );
-    let result;
-    // @ts-ignore
-    switch (repoDetailData.vulnerabiltySeverity) {
-      case 'NONE':
-        result = noneVulnerability;
-        break;
-      case 'LOW':
-        result = lowVulnerability;
-        break;
-      case 'MEDIUM':
-        result = mediumVulnerability;
-        break;
-      case 'HIGH':
-        result = highVulnerability;
-        break;
-      case 'CRITICAL':
-        result = criticalVulnerability;
-        break;
-      default:
-        result = unknownVulnerability;
-    }
-
-    return result;
-  };
-
   const platformChips = () => {
     // @ts-ignore
     const platforms = repoDetailData?.platforms || [];
@@ -382,22 +249,30 @@ function RepoDetails() {
                       component="img"
                       // @ts-ignore
                       // eslint-disable-next-line prettier/prettier
-                      image={!isEmpty(repoDetailData?.logo) ? `data:image/png;base64, ${repoDetailData?.logo}` : randomImage()}
+                      image={
+                        // @ts-ignore
+                        !isEmpty(repoDetailData?.logo)
+                          ? // @ts-ignore
+                            `data:image/png;base64, ${repoDetailData?.logo}`
+                          : randomImage()
+                      }
                       alt="icon"
                     />
                     <Typography variant="h3" className={classes.repoName}>
                       {name}
                     </Typography>
-                    <Tooltip
-                      title={
+                    <VulnerabilityIconCheck
+                      vulnerabilitySeverity={
                         // @ts-ignore
-                        !isNaN(repoDetailData.vulnerabilityCount) ? repoDetailData.vulnerabilityCount : ''
+                        repoDetailData.vulnerabiltySeverity
                       }
-                      placement="top"
-                    >
-                      {vulnerabilityCheck()}
-                    </Tooltip>
-                    {signatureCheck()}
+                    />
+                    <SignatureIconCheck
+                      isSigned={
+                        // @ts-ignore
+                        repoDetailData.isSigned
+                      }
+                    />
                     {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
                   </Stack>
                   <Typography
