@@ -247,9 +247,9 @@ describe('Tags details', () => {
     jest
       .spyOn(api, 'get')
       // @ts-ignore
-      .mockResolvedValue({ status: 200, data: { data: { ...mockImage, RepoName: 'test', Tag: '1.0.1' } } });
+      .mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetails />);
     fireEvent.click(await screen.findByTestId('pullcopy-btn'));
-    await waitFor(() => expect(mockCopyToClipboard).toHaveBeenCalledWith('docker pull localhost/test:1.0.1'));
+    await waitFor(() => expect(mockCopyToClipboard).toHaveBeenCalledWith('docker pull localhost/centos:8'));
   });
 });
