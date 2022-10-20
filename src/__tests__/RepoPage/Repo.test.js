@@ -167,31 +167,31 @@ describe('Repo details component', () => {
     expect(await screen.findByText('test')).toBeInTheDocument();
   });
 
-  it('renders vulnerability chips', async () => {
+  it('renders vulnerability icons', async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
     render(<RepoDetails />);
-    expect(await screen.findAllByTestId('critical-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('critical-vulnerability-icon')).toHaveLength(1);
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsNone } });
     render(<RepoDetails />);
-    expect(await screen.findAllByTestId('none-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('none-vulnerability-icon')).toHaveLength(1);
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsUnknown } });
     render(<RepoDetails />);
-    expect(await screen.findAllByTestId('unknown-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('unknown-vulnerability-icon')).toHaveLength(1);
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsLow } });
     render(<RepoDetails />);
-    expect(await screen.findAllByTestId('low-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(1);
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsMedium } });
     render(<RepoDetails />);
-    expect(await screen.findAllByTestId('medium-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('medium-vulnerability-icon')).toHaveLength(1);
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsHigh } });
     render(<RepoDetails />);
-    expect(await screen.findAllByTestId('high-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(1);
   });
 
   it("should log error if data can't be fetched", async () => {

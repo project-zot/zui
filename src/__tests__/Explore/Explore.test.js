@@ -150,24 +150,24 @@ describe('Explore component', () => {
     expect(await screen.findByText(/Looks like/i)).toBeInTheDocument();
   });
 
-  it('renders signature chips', async () => {
+  it('renders signature icons', async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
-    expect(await screen.findAllByTestId('unverified-chip')).toHaveLength(1);
-    expect(await screen.findAllByTestId('verified-chip')).toHaveLength(5);
+    expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(5);
   });
 
-  it('renders vulnerability chips', async () => {
+  it('renders vulnerability icons', async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
-    expect(await screen.findAllByTestId('low-vulnerability-chip')).toHaveLength(1);
-    expect(await screen.findAllByTestId('high-vulnerability-chip')).toHaveLength(1);
-    expect(await screen.findAllByTestId('critical-vulnerability-chip')).toHaveLength(1);
-    expect(await screen.findAllByTestId('none-vulnerability-chip')).toHaveLength(1);
-    expect(await screen.findAllByTestId('medium-vulnerability-chip')).toHaveLength(1);
-    expect(await screen.findAllByTestId('unknown-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('critical-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('none-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('medium-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('unknown-vulnerability-icon')).toHaveLength(1);
   });
 
   it("should log an error when data can't be fetched", async () => {

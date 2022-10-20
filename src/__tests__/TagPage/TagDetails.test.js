@@ -216,31 +216,31 @@ describe('Tags details', () => {
     expect(await screen.findByTestId('tagDetailsMetadata-container')).toBeInTheDocument();
   });
 
-  it('renders vulnerability chips', async () => {
+  it('renders vulnerability icons', async () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetails />);
-    expect(await screen.findAllByTestId('critical-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('critical-vulnerability-icon')).toHaveLength(1);
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageNone } });
     render(<TagDetails />);
-    expect(await screen.findAllByTestId('none-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('none-vulnerability-icon')).toHaveLength(1);
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageUnknown } });
     render(<TagDetails />);
-    expect(await screen.findAllByTestId('unknown-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('unknown-vulnerability-icon')).toHaveLength(1);
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageLow } });
     render(<TagDetails />);
-    expect(await screen.findAllByTestId('low-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(1);
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageMedium } });
     render(<TagDetails />);
-    expect(await screen.findAllByTestId('medium-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('medium-vulnerability-icon')).toHaveLength(1);
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageHigh } });
     render(<TagDetails />);
-    expect(await screen.findAllByTestId('high-vulnerability-chip')).toHaveLength(1);
+    expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(1);
   });
 
   it('should copy the pull string to clipboard', async () => {

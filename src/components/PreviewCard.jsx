@@ -9,13 +9,8 @@ import repocube2 from '../assets/repocube-2.png';
 import repocube3 from '../assets/repocube-3.png';
 import repocube4 from '../assets/repocube-4.png';
 
-//icons
-import GppBadOutlinedIcon from '@mui/icons-material/GppBadOutlined';
-import GppGoodOutlinedIcon from '@mui/icons-material/GppGoodOutlined';
-import PestControlOutlinedIcon from '@mui/icons-material/PestControlOutlined';
-import PestControlIcon from '@mui/icons-material/PestControl';
 import { isEmpty } from 'lodash';
-//import GppMaybeOutlinedIcon from '@mui/icons-material/GppMaybeOutlined';
+import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
@@ -72,149 +67,10 @@ const useStyles = makeStyles(() => ({
 function PreviewCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { name, isSigned, vulnerabiltySeverity, vulnerabilityCount, logo } = props;
+  const { name, isSigned, vulnerabiltySeverity, logo } = props;
 
   const goToDetails = () => {
     navigate(`/image/${encodeURIComponent(name)}`);
-  };
-
-  const vulnerabilityCheck = () => {
-    const noneVulnerability = (
-      <PestControlOutlinedIcon
-        sx={{
-          color: '#43A047!important',
-          padding: '0.2rem',
-          background: '#E8F5E9',
-          borderRadius: '1rem',
-          height: '1.5rem',
-          width: '1.6rem'
-        }}
-        data-testid="none-vulnerability-icon"
-      />
-    );
-    const unknownVulnerability = (
-      <PestControlOutlinedIcon
-        sx={{
-          color: '#52637A!important',
-          padding: '0.2rem',
-          background: '#ECEFF1',
-          borderRadius: '1rem',
-          height: '1.5rem',
-          width: '1.6rem'
-        }}
-        data-testid="unknown-vulnerability-icon"
-      />
-    );
-    const lowVulnerability = (
-      <PestControlOutlinedIcon
-        sx={{
-          color: '#FB8C00!important',
-          padding: '0.2rem',
-          background: '#FFF3E0',
-          borderRadius: '1rem',
-          height: '1.5rem',
-          width: '1.6rem'
-        }}
-        data-testid="low-vulnerability-icon"
-      />
-    );
-    const mediumVulnerability = (
-      <PestControlIcon
-        sx={{
-          color: '#FB8C00!important',
-          padding: '0.2rem',
-          background: '#FFF3E0',
-          borderRadius: '1rem',
-          height: '1.5rem',
-          width: '1.6rem'
-        }}
-        data-testid="medium-vulnerability-icon"
-      />
-    );
-    const highVulnerability = (
-      <PestControlOutlinedIcon
-        sx={{
-          color: '#E53935!important',
-          padding: '0.2rem',
-          background: '#FEEBEE',
-          borderRadius: '1rem',
-          height: '1.5rem',
-          width: '1.6rem'
-        }}
-        data-testid="high-vulnerability-icon"
-      />
-    );
-    const criticalVulnerability = (
-      <PestControlIcon
-        sx={{
-          color: '#E53935!important',
-          padding: '0.2rem',
-          background: '#FEEBEE',
-          borderRadius: '1rem',
-          height: '1.5rem',
-          width: '1.6rem'
-        }}
-        data-testid="critical-vulnerability-icon"
-      />
-    );
-
-    let result;
-    switch (vulnerabiltySeverity) {
-      case 'NONE':
-        result = noneVulnerability;
-        break;
-      case 'LOW':
-        result = lowVulnerability;
-        break;
-      case 'MEDIUM':
-        result = mediumVulnerability;
-        break;
-      case 'HIGH':
-        result = highVulnerability;
-        break;
-      case 'CRITICAL':
-        result = criticalVulnerability;
-        break;
-      default:
-        result = unknownVulnerability;
-    }
-
-    return result;
-  };
-
-  const signatureCheck = () => {
-    const unverifiedSignature = (
-      <GppBadOutlinedIcon
-        sx={{
-          color: '#E53935!important',
-          padding: '0.2rem',
-          background: '#FEEBEE',
-          borderRadius: '1rem',
-          height: '1.5rem',
-          width: '1.6rem'
-        }}
-        data-testid="unverified-icon"
-      />
-    );
-    //const untrustedSignature = <GppMaybeOutlinedIcon sx={{ color: "#52637A!important", padding:"0.2rem", background: "#ECEFF1", borderRadius: "1rem", height:"1.5rem", width:"1.6rem" }} />;
-    const verifiedSignature = (
-      <GppGoodOutlinedIcon
-        sx={{
-          color: '#43A047!important',
-          padding: '0.2rem',
-          background: '#E8F5E9',
-          borderRadius: '1rem',
-          height: '1.5rem',
-          width: '1.6rem'
-        }}
-        data-testid="verified-icon"
-      />
-    );
-    if (isSigned) {
-      return verifiedSignature;
-    } else {
-      return unverifiedSignature;
-    }
   };
 
   return (
@@ -251,10 +107,8 @@ function PreviewCard(props) {
                   </Typography>
                 </Tooltip>
                 <Stack direction="row" spacing={0.5} sx={{ marginLeft: 'auto', marginRight: 0 }}>
-                  <Tooltip title={!isNaN(vulnerabilityCount) ? vulnerabilityCount : ''} placement="top">
-                    {vulnerabilityCheck()}
-                  </Tooltip>
-                  {signatureCheck()}
+                  <VulnerabilityIconCheck vulnerabilitySeverity={vulnerabiltySeverity} />
+                  <SignatureIconCheck isSigned={isSigned} />
                 </Stack>
               </Stack>
             </Grid>
