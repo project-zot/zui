@@ -1,5 +1,3 @@
-// @ts-nocheck
-// react global
 import { useParams } from 'react-router-dom';
 import React, { useEffect, useMemo, useState } from 'react';
 
@@ -21,11 +19,13 @@ import {
   MenuItem,
   Tab,
   Tooltip,
-  Typography
+  Typography,
+  Snackbar,
+  Alert
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import makeStyles from '@mui/styles/makeStyles';
-import { host, hostRoot } from '../host';
+import { host } from '../host';
 
 //icons
 import GppBadOutlinedIcon from '@mui/icons-material/GppBadOutlined';
@@ -46,6 +46,7 @@ import DependsOn from './DependsOn';
 import IsDependentOn from './IsDependentOn';
 import { isEmpty } from 'lodash';
 import Loading from './Loading';
+import { dockerPull, podmanPull, skopeoPull } from 'utilities/pullStrings';
 
 // @ts-ignore
 const useStyles = makeStyles(() => ({
@@ -120,16 +121,24 @@ const useStyles = makeStyles(() => ({
     lineHeight: '1.125rem',
     letterSpacing: '0.01rem'
   },
-  inputForm: {
+  copyStringSelect: {
     '& fieldset': {
       border: '0.125rem solid #52637A'
-    }
+    },
+    m: '0.5rem 0',
+    width: '20.625rem',
+    borderRadius: '0.5rem',
+    color: '#14191F',
+    alignContent: 'left'
   },
   cardRoot: {
     boxShadow: 'none!important'
   },
   header: {
     paddingLeft: '2rem'
+  },
+  textEllipsis: {
+    textOverflow: 'ellipsis'
   }
 }));
 
@@ -152,7 +161,9 @@ function TagDetails() {
   // get url param from <Route here (i.e. image name)
   const { name, tag } = useParams();
   const [fullName, setFullName] = useState(name + ':' + tag);
-  const [pullString, setPullString] = useState(`docker pull ${hostRoot()}/${fullName}`);
+
+  const [pullString, setPullString] = useState('');
+  const [snackBarOpen, setSnackbarOpen] = useState(false);
   const classes = useStyles();
 
   useEffect(() => {
@@ -182,6 +193,7 @@ function TagDetails() {
           };
           setImageDetailData(imageData);
           setFullName(imageData.name + ':' + imageData.tag);
+          setPullString(dockerPull(imageData.name + ':' + imageData.tag));
           setIsLoading(false);
         }
       })
@@ -337,6 +349,14 @@ function TagDetails() {
     setPullString(event.target.value);
   };
 
+  const handleSnackbarClose = (event, reason) => {
+    if (reason === 'clickaway') {
+      return;
+    }
+
+    setSnackbarOpen(false);
+  };
+
   return (
     <>
       {isLoading ? (
@@ -357,9 +377,7 @@ function TagDetails() {
                       image={
                         // @ts-ignore
                         // eslint-disable-next-line prettier/prettier
-                        !isEmpty(imageDetailData?.logo)
-                          ? `data:image/  png;base64, ${imageDetailData?.logo}`
-                          : randomImage()
+                        !isEmpty(imageDetailData?.logo) ? `data:image/  png;base64, ${imageDetailData?.logo}` : randomImage()
                       }
                       alt="icon"
                     />
@@ -392,7 +410,7 @@ function TagDetails() {
                   </Typography>
                 </Grid>
                 <Grid item xs={4} justifyContent="flex-start">
-                  <Stack direction="row">
+                  <Grid container>
                     <Grid item xs={10}>
                       <Typography
                         variant="body1"
@@ -404,29 +422,35 @@ function TagDetails() {
                     <Grid item xs={2}>
                       <IconButton
                         aria-label="copy"
-                        onClick={() => navigator.clipboard.writeText(pullString)}
+                        onClick={() => {
+                          navigator.clipboard.writeText(pullString);
+                          setSnackbarOpen(true);
+                        }}
                         data-testid="pullcopy-btn"
                       >
                         <ContentCopyIcon />
                       </IconButton>
                     </Grid>
-                  </Stack>
-                  <FormControl sx={{ m: 1 }} variant="outlined">
+                  </Grid>
+                  <FormControl variant="outlined" sx={{ width: '100%' }}>
                     <Select
-                      className={classes.inputForm}
+                      className={classes.copyStringSelect}
                       value={pullString}
                       onChange={handleSelectionChange}
                       inputProps={{ 'aria-label': 'Without label' }}
-                      sx={{ m: 1, width: '20.625rem', borderRadius: '0.5rem', color: '#14191F', alignContent: 'left' }}
+                      MenuProps={{
+                        disableScrollLock: true,
+                        classes: { root: classes.copyStringSelect, list: classes.textEllipsis }
+                      }}
                     >
-                      <MenuItem value={`docker pull ${hostRoot()}/${fullName}`}>
-                        docker pull {hostRoot()}/{fullName}
+                      <MenuItem value={dockerPull(fullName)}>
+                        <Typography noWrap>{dockerPull(fullName)}</Typography>
                       </MenuItem>
-                      <MenuItem value={`podman pull ${hostRoot()}/${fullName}`}>
-                        podman pull {hostRoot()}/{fullName}
+                      <MenuItem value={podmanPull(fullName)}>
+                        <Typography noWrap>{podmanPull(fullName)}</Typography>
                       </MenuItem>
-                      <MenuItem value={`skopeo copy docker://${hostRoot()}/${fullName}`}>
-                        skopeo copy docker://{hostRoot()}/{fullName}
+                      <MenuItem value={skopeoPull(fullName)}>
+                        <Typography noWrap>{skopeoPull(fullName)}</Typography>
                       </MenuItem>
                     </Select>
                   </FormControl>
@@ -493,6 +517,16 @@ function TagDetails() {
           </Card>
         </div>
       )}
+      <Snackbar
+        open={snackBarOpen}
+        onClose={handleSnackbarClose}
+        autoHideDuration={3000}
+        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
+      >
+        <Alert variant="filled" severity="success" sx={{ width: '100%' }}>
+          Copied!
+        </Alert>
+      </Snackbar>
     </>
   );
 }
