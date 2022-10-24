@@ -15,6 +15,7 @@ const useStyles = makeStyles(() => ({
     display: 'inline-block',
     backgroundColor: '#FFFFFF',
     boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
+    borderRadius: '2.5rem',
     minWidth: '60%',
     marginLeft: 16,
     position: 'relative',
