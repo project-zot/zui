@@ -3,7 +3,6 @@ import { makeStyles } from '@mui/styles';
 import { api, endpoints } from 'api';
 import { host } from '../host';
 import React, { useEffect, useMemo, useState } from 'react';
-import PreviewCard from './PreviewCard';
 import RepoCard from './RepoCard';
 import { mapToRepo } from 'utilities/objectModels';
 import Loading from './Loading';
@@ -90,21 +89,25 @@ function Home() {
     };
   }, []);
 
-  const renderPreviewCards = () => {
+  const renderMostPopular = () => {
     return (
       homeData &&
       homeData.slice(0, 4).map((item, index) => {
         return (
-          <Grid item xs={3} key={index}>
-            <PreviewCard
-              name={item.name}
-              lastUpdated={item.lastUpdated}
-              isSigned={item.isSigned}
-              vulnerabiltySeverity={item.vulnerabiltySeverity}
-              vulnerabilityCount={item.vulnerabilityCount}
-              logo={item.logo}
-            />
-          </Grid>
+          <RepoCard
+            name={item.name}
+            version={item.latestVersion}
+            description={item.description}
+            downloads={item.downloads}
+            isSigned={item.isSigned}
+            vendor={item.vendor}
+            platforms={item.platforms}
+            key={index}
+            vulnerabiltySeverity={item.vulnerabiltySeverity}
+            vulnerabilityCount={item.vulnerabilityCount}
+            lastUpdated={item.lastUpdated}
+            logo={item.logo}
+          />
         );
       })
     );
@@ -173,10 +176,7 @@ function Home() {
               </Typography>
             </Stack>
           </Grid>
-          <Grid container spacing={1}>
-            {renderPreviewCards()}
-          </Grid>{' '}
-          <Grid></Grid>
+          {renderMostPopular()}
           {/* <Typography variant="h4" align="left" className={classes.sectionTitle}>
         Bookmarks
       </Typography>

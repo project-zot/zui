@@ -83,7 +83,7 @@ const useStyles = makeStyles(() => ({
   },
   cardTitle: {
     textOverflow: 'ellipsis',
-    maxWidth: '40%'
+    maxWidth: '70%'
   }
 }));
 
