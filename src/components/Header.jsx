@@ -15,7 +15,6 @@ import {
   Stack
   //IconButton
 } from '@mui/material';
-import Avatar from '@mui/material/Avatar';
 
 // styling
 import makeStyles from '@mui/styles/makeStyles';
@@ -95,7 +94,7 @@ function Header() {
       <Toolbar className={classes.header}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ minWidth: '60%' }}>
           <Link to="/home" className={classes.logoWrapper}>
-            <Avatar alt="zot" src={logo} className={classes.logo} variant="square" />
+            <img alt="zot" src={logo} className={classes.logo} />
           </Link>
           {path !== '/' && <SearchSuggestion />}
           <div></div>
