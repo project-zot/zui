@@ -91,6 +91,14 @@ const useStyles = makeStyles(() => ({
     marginTop: '8rem',
     paddingLeft: '1.5rem'
   },
+  pull: {
+    paddingLeft: '1.5rem',
+    flex: 'none',
+    alignSelf: 'stretch',
+    flexGrow: 0,
+    order: 0,
+    width: '100%'
+  },
   card: {
     marginBottom: 2,
     display: 'flex',
@@ -119,7 +127,6 @@ const useStyles = makeStyles(() => ({
       border: '0.125rem solid #52637A'
     },
     m: '0.5rem 0',
-    width: '20.625rem',
     borderRadius: '0.5rem',
     color: '#14191F',
     alignContent: 'left'
@@ -229,8 +236,8 @@ function TagDetails() {
         <div className={classes.pageWrapper}>
           <Card className={classes.cardRoot}>
             <CardContent>
-              <Grid container className={classes.header}>
-                <Grid item xs={8}>
+              <Grid container>
+                <Grid item xs={8} className={classes.header}>
                   <Stack alignItems="center" direction="row" spacing={2}>
                     <CardMedia
                       classes={{
@@ -278,7 +285,7 @@ function TagDetails() {
                     }
                   </Typography>
                 </Grid>
-                <Grid item xs={4} justifyContent="flex-start">
+                <Grid item xs={4} className={classes.pull}>
                   <Grid container>
                     <Grid item xs={10}>
                       <Typography
