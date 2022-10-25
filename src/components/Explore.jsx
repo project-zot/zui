@@ -113,8 +113,10 @@ function Explore() {
             vendor={item.vendor}
             platforms={item.platforms}
             key={index}
-            vulnerabiltySeverity={item.vulnerabiltySeverity}
-            vulnerabilityCount={item.vulnerabilityCount}
+            vulnerabilityData={{
+              vulnerabilitySeverity: item.vulnerabiltySeverity,
+              count: item.vulnerabilityCount
+            }}
             lastUpdated={item.lastUpdated}
             logo={item.logo}
           />

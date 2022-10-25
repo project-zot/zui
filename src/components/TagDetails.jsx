@@ -194,12 +194,13 @@ function TagDetails() {
           setImageDetailData(imageData);
           setFullName(imageData.name + ':' + imageData.tag);
           setPullString(dockerPull(imageData.name + ':' + imageData.tag));
-          setIsLoading(false);
         }
+        setIsLoading(false);
       })
       .catch((e) => {
         console.error(e);
         setImageDetailData({});
+        setIsLoading(false);
       });
     return () => {
       abortController.abort();
@@ -263,6 +264,8 @@ function TagDetails() {
                         // @ts-ignore
                         imageDetailData.vulnerabiltySeverity
                       }
+                      // @ts-ignore
+                      count={imageDetailData.vulnerabilityCount}
                     />
                     <SignatureIconCheck
                       isSigned={
