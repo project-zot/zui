@@ -90,18 +90,8 @@ const useStyles = makeStyles(() => ({
 function RepoCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const {
-    name,
-    vendor,
-    platforms,
-    description,
-    downloads,
-    isSigned,
-    lastUpdated,
-    logo,
-    version,
-    vulnerabiltySeverity
-  } = props;
+  const { name, vendor, platforms, description, downloads, isSigned, lastUpdated, logo, version, vulnerabilityData } =
+    props;
 
   const goToDetails = () => {
     navigate(`/image/${encodeURIComponent(name)}`);
@@ -166,7 +156,7 @@ function RepoCard(props) {
                     {name}
                   </Typography>
                 </Tooltip>
-                <VulnerabilityIconCheck vulnerabilitySeverity={vulnerabiltySeverity} />
+                <VulnerabilityIconCheck {...vulnerabilityData} />
                 <SignatureIconCheck isSigned={isSigned} />
                 {/* <Chip label="Verified licensee" sx={{ backgroundColor: "#E8F5E9", color: "#388E3C" }} variant="filled" onDelete={() => { return }} deleteIcon={vulnerabilityCheck()} /> */}
               </Stack>

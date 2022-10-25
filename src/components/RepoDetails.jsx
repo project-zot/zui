@@ -266,6 +266,8 @@ function RepoDetails() {
                         // @ts-ignore
                         repoDetailData.vulnerabiltySeverity
                       }
+                      // @ts-ignore
+                      count={repoDetailData?.vulnerabilityCount}
                     />
                     <SignatureIconCheck
                       isSigned={

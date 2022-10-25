@@ -81,25 +81,25 @@ const mockImageNone = {
   }
 };
 
-// const mockImageUnknown = {
-//   Image: {
-//     RepoName: 'centos',
-//     Tag: '8',
-//     Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
-//     LastUpdated: '2020-12-08T00:22:52.526672082Z',
-//     Size: '75183423',
-//     ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
-//     Platform: {
-//       Os: 'linux',
-//       Arch: 'amd64'
-//     },
-//     Vulnerabilities: {
-//       MaxSeverity: 'UNKNOWN',
-//       Count: 10
-//     },
-//     Vendor: 'CentOS'
-//   }
-// };
+const mockImageUnknown = {
+  Image: {
+    RepoName: 'centos',
+    Tag: '8',
+    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+    LastUpdated: '2020-12-08T00:22:52.526672082Z',
+    Size: '75183423',
+    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+    Platform: {
+      Os: 'linux',
+      Arch: 'amd64'
+    },
+    Vulnerabilities: {
+      MaxSeverity: 'UNKNOWN',
+      Count: 10
+    },
+    Vendor: 'CentOS'
+  }
+};
 
 const mockImageLow = {
   Image: {
@@ -220,27 +220,27 @@ describe('Tags details', () => {
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetails />);
-    expect(await screen.findAllByTestId('critical-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findByTestId('critical-vulnerability-icon')).toBeInTheDocument();
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageNone } });
     render(<TagDetails />);
-    expect(await screen.findAllByTestId('none-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findByTestId('none-vulnerability-icon')).toBeInTheDocument();
     // @ts-ignore
-    // jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageUnknown } });
-    // render(<TagDetails />);
-    // expect(await screen.findAllByTestId('unknown-vulnerability-icon')).toHaveLength(1);
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageUnknown } });
+    render(<TagDetails />);
+    expect(await screen.findByTestId('unknown-vulnerability-icon')).toBeInTheDocument();
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageLow } });
     render(<TagDetails />);
-    expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findByTestId('low-vulnerability-icon')).toBeInTheDocument();
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageMedium } });
     render(<TagDetails />);
-    expect(await screen.findAllByTestId('medium-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findByTestId('medium-vulnerability-icon')).toBeInTheDocument();
     // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageHigh } });
     render(<TagDetails />);
-    expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findByTestId('high-vulnerability-icon')).toBeInTheDocument();
   });
 
   it('should copy the pull string to clipboard', async () => {

@@ -63,7 +63,7 @@ const endpoints = {
   repoList: ({ pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={RepoListWithNewestImage(requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
-    }}){Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description  Licenses Logo Title Source IsSigned Documentation History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}} Vendor Labels} DownloadCount}}`,
+    }}){Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description  Licenses Logo Title Source IsSigned Documentation Vendor Labels} DownloadCount}}`,
   detailedRepoInfo: (name) =>
     `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Digest Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor Size Platform {Os Arch}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName IsSigned Vulnerabilities {MaxSeverity Count} Layers {Size Digest} Digest Tag Logo Title Documentation DownloadCount Source Description Licenses History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}}}}}}`,
   detailedImageInfo: (name, tag) =>
