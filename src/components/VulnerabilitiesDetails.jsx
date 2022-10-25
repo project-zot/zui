@@ -194,11 +194,12 @@ function VulnerabilitiesDetails(props) {
             cveList: cveInfo?.CVEList
           };
           setCveData(cveListData);
-          setIsLoading(false);
         }
+        setIsLoading(false);
       })
       .catch((e) => {
         console.error(e);
+        setIsLoading(false);
         setCveData({});
       });
     return () => {
