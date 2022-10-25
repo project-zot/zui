@@ -114,8 +114,9 @@ function SearchSuggestion() {
 
   const handleSearch = (event) => {
     const { key, type } = event;
+    const { value } = event.target;
     if (key === 'Enter' || type === 'click') {
-      navigate({ pathname: `/explore`, search: createSearchParams({ search: searchQuery }).toString() });
+      navigate({ pathname: `/explore`, search: createSearchParams({ search: value || '' }).toString() });
     }
   };
 
@@ -166,12 +167,15 @@ function SearchSuggestion() {
   };
 
   const handleSeachChange = (event) => {
-    const value = event.inputValue;
+    const value = event?.inputValue;
     setSearchQuery(value);
     setIsFailedSearch(false);
+    setIsLoading(true);
     setSuggestionData([]);
+  };
+
+  const searchCall = (value) => {
     if (value !== '') {
-      setIsLoading(true);
       // if search term inclused the ':' character, search for images, if not, search repos
       if (value?.includes(':')) {
         imageSearch(value);
@@ -182,8 +186,12 @@ function SearchSuggestion() {
   };
 
   const debounceSuggestions = useMemo(() => {
-    return debounce(handleSeachChange, 300);
+    return debounce(searchCall, 300);
   }, []);
+
+  useEffect(() => {
+    debounceSuggestions(searchQuery);
+  }, [searchQuery]);
 
   useEffect(() => {
     return () => {
@@ -204,7 +212,7 @@ function SearchSuggestion() {
     // closeMenu
   } = useCombobox({
     items: suggestionData,
-    onInputValueChange: debounceSuggestions,
+    onInputValueChange: handleSeachChange,
     onSelectedItemChange: handleSuggestionSelected,
     itemToString: (item) => item.name ?? ''
   });
@@ -259,7 +267,7 @@ function SearchSuggestion() {
       </Stack>
       <List
         {...getMenuProps()}
-        className={isOpen && !isLoading ? classes.resultsWrapper : classes.resultsWrapperHidden}
+        className={isOpen && !isLoading && !isFailedSearch ? classes.resultsWrapper : classes.resultsWrapperHidden}
       >
         {isOpen && suggestionData?.length > 0 && renderSuggestions()}
         {isOpen && isEmpty(searchQuery) && (
