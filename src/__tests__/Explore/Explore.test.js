@@ -1,4 +1,5 @@
 import { render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import Explore from 'components/Explore';
 import React from 'react';
@@ -176,5 +177,17 @@ describe('Explore component', () => {
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<StateExploreWrapper />);
     await waitFor(() => expect(error).toBeCalledTimes(1));
+  });
+
+  it("should render the sort filter and be able to change it's value", async () => {
+    // @ts-ignore
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    render(<StateExploreWrapper />);
+    const selectFilter = await screen.findByText('Relevance');
+    expect(selectFilter).toBeInTheDocument();
+    userEvent.click(selectFilter);
+    const newOption = await screen.findByText('Alphabetical');
+    userEvent.click(newOption);
+    expect(await screen.findByText('Alphabetical')).toBeInTheDocument();
   });
 });
