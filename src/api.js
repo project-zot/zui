@@ -1,6 +1,7 @@
 // @ts-nocheck
 import axios from 'axios';
 import { isEmpty } from 'lodash';
+import { sortByCriteria } from 'utilities/sortCriteria';
 
 const api = {
   // This method returns the generic request configuration for axios
@@ -78,9 +79,17 @@ const endpoints = {
     `/v2/_zot/ext/search?query={BaseImageList(image: "${name}"){RepoName Tag Description Digest Vendor DownloadCount LastUpdated Size Platform {Os Arch} IsSigned Vulnerabilities {MaxSeverity Count}}}`,
   isDependentOnForImage: (name) =>
     `/v2/_zot/ext/search?query={DerivedImageList(image: "${name}"){RepoName Tag Description Digest Vendor DownloadCount LastUpdated Size Platform {Os Arch} IsSigned Vulnerabilities {MaxSeverity Count}}}`,
-  globalSearch: ({ searchQuery = '""', pageNumber = 1, pageSize = 15, filter = {} }) => {
+  globalSearch: ({
+    searchQuery = '""',
+    pageNumber = 1,
+    pageSize = 15,
+    sortBy = sortByCriteria.relevance.value,
+    filter = {}
+  }) => {
     const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
-    const paginationParam = `requestedPage: {limit:${pageSize} offset:${(pageNumber - 1) * pageSize}}`;
+    const paginationParam = `requestedPage: {limit:${pageSize} offset:${
+      (pageNumber - 1) * pageSize
+    } sortBy: ${sortBy}}`;
     let filterParam = `,filter: {`;
     if (filter.Os) filterParam += ` Os:${!isEmpty(filter.Os) ? `${JSON.stringify(filter.Os)}` : '""'}`;
     if (filter.Arch) filterParam += ` Arch:${!isEmpty(filter.Arch) ? `${JSON.stringify(filter.Arch)}` : '""'}`;

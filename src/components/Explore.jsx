@@ -6,7 +6,7 @@ import RepoCard from './RepoCard.jsx';
 import Loading from './Loading';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
-import { Container, Grid, Stack } from '@mui/material';
+import { Container, FormControl, Grid, InputLabel, MenuItem, Select, Stack } from '@mui/material';
 
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -18,6 +18,7 @@ import { useSearchParams } from 'react-router-dom';
 import FilterCard from './FilterCard.jsx';
 import { isEmpty } from 'lodash';
 import filterConstants from 'utilities/filterConstants.js';
+import { sortByCriteria } from 'utilities/sortCriteria.js';
 
 const useStyles = makeStyles(() => ({
   gridWrapper: {
@@ -46,14 +47,16 @@ const useStyles = makeStyles(() => ({
   sortForm: {
     backgroundColor: '#ffffff',
     borderColor: '#E0E0E0',
-    borderRadius: '0.375em'
+    borderRadius: '0.375em',
+    width: '25%',
+    textAlign: 'left'
   }
 }));
 
 function Explore() {
   const [isLoading, setIsLoading] = useState(true);
   const [exploreData, setExploreData] = useState([]);
-  // const [sortFilter, setSortFilter] = useState('');
+  const [sortFilter, setSortFilter] = useState(sortByCriteria.relevance.value);
   const [queryParams] = useSearchParams();
   const search = queryParams.get('search');
   // filtercard filters
@@ -78,7 +81,7 @@ function Explore() {
     setIsLoading(true);
     api
       .get(
-        `${host()}${endpoints.globalSearch({ searchQuery: search, filter: buildFilterQuery() })}`,
+        `${host()}${endpoints.globalSearch({ searchQuery: search, sortBy: sortFilter, filter: buildFilterQuery() })}`,
         abortController.signal
       )
       .then((response) => {
@@ -93,11 +96,12 @@ function Explore() {
       })
       .catch((e) => {
         console.error(e);
+        setIsLoading(false);
       });
     return () => {
       abortController.abort();
     };
-  }, [search, queryParams, imageFilters, osFilters, archFilters]);
+  }, [search, queryParams, imageFilters, osFilters, archFilters, sortFilter]);
 
   const renderRepoCards = () => {
     return (
@@ -150,26 +154,35 @@ function Explore() {
     );
   };
 
-  // const handleSortChange = (event) => {
-  //   setSortFilter(event.target.value);
-  // };
+  const handleSortChange = (event) => {
+    setSortFilter(event.target.value);
+  };
 
   return (
     <Container maxWidth="lg">
       <Grid container className={classes.gridWrapper}>
         <Grid container item xs={12}>
-          <Grid item xs={0}></Grid>
-          <Grid item xs={12}>
+          <Grid item xs={3}></Grid>
+          <Grid item xs={9}>
             <Stack direction="row" className={classes.resultsRow}>
               <Typography variant="body2" className={classes.results}>
                 Results {exploreData.length}
               </Typography>
-              {/* <FormControl  sx={{m:'1', minWidth:"4.6875rem"}} className={classes.sortForm} size="small">
-                                  <InputLabel>Sort</InputLabel>
-                                  <Select label="Sort" value={sortFilter}  onChange={handleSortChange}  MenuProps={{disableScrollLock: true}}>
-                                    <MenuItem value='relevance'>Relevance</MenuItem>                            
-                                  </Select>
-                                </FormControl> */}
+              <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
+                <InputLabel>Sort</InputLabel>
+                <Select
+                  label="Sort"
+                  value={sortFilter}
+                  onChange={handleSortChange}
+                  MenuProps={{ disableScrollLock: true }}
+                >
+                  {Object.values(sortByCriteria).map((el) => (
+                    <MenuItem key={el.value} value={el.value}>
+                      {el.label}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
             </Stack>
           </Grid>
         </Grid>
