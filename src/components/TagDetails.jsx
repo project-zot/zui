@@ -85,7 +85,8 @@ const useStyles = makeStyles(() => ({
   },
   tabPanel: {
     height: '100%',
-    paddingLeft: '0rem!important'
+    paddingLeft: '0rem!important',
+    marginRight: '2rem!important'
   },
   metadata: {
     marginTop: '8rem',
@@ -111,7 +112,6 @@ const useStyles = makeStyles(() => ({
     alignSelf: 'stretch',
     flexGrow: 0,
     order: 0,
-    width: '100%',
     boxShadow: 'none!important'
   },
   platformText: {
@@ -138,7 +138,8 @@ const useStyles = makeStyles(() => ({
     paddingLeft: '2rem'
   },
   textEllipsis: {
-    textOverflow: 'ellipsis'
+    textOverflow: 'ellipsis',
+    overflow: 'hidden'
   }
 }));
 
@@ -322,13 +323,13 @@ function TagDetails() {
                         classes: { root: classes.copyStringSelect, list: classes.textEllipsis }
                       }}
                     >
-                      <MenuItem value={dockerPull(fullName)}>
+                      <MenuItem className={classes.textEllipsis} value={dockerPull(fullName)}>
                         <Typography noWrap>{dockerPull(fullName)}</Typography>
                       </MenuItem>
-                      <MenuItem value={podmanPull(fullName)}>
+                      <MenuItem className={classes.textEllipsis} value={podmanPull(fullName)}>
                         <Typography noWrap>{podmanPull(fullName)}</Typography>
                       </MenuItem>
-                      <MenuItem value={skopeoPull(fullName)}>
+                      <MenuItem className={classes.textEllipsis} value={skopeoPull(fullName)}>
                         <Typography noWrap>{skopeoPull(fullName)}</Typography>
                       </MenuItem>
                     </Select>

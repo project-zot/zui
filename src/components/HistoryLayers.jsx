@@ -60,7 +60,8 @@ const useStyles = makeStyles(() => ({
     fontSize: '1rem',
     fontWeight: '400',
     paddingBottom: '0.5rem',
-    paddingTop: '0.5rem'
+    paddingTop: '0.5rem',
+    textAlign: 'right'
   },
   monitor: {
     width: '27.25rem',
@@ -103,7 +104,7 @@ function LayerCard(props) {
         </Grid>
       </Grid>
       <Grid item xs={2}>
-        <Typography variant="body1" align="left" className={classes.values}>
+        <Typography variant="body1" align="right" className={classes.values}>
           {' '}
           {transform.formatBytes(size)}{' '}
         </Typography>
@@ -150,12 +151,12 @@ function HistoryLayers(props) {
       historyData && (
         <Card className={classes.card} raised>
           <CardContent className={classes.content}>
-            <Grid item xs={11}>
+            <Grid item xs={12}>
               <Stack sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                 <Typography variant="body1" align="left" className={classes.title}>
                   Command
                 </Typography>
-                <Typography variant="body1" align="left" className={classes.values}>
+                <Typography variant="body1" align="right" className={classes.values}>
                   {transform.formatBytes(historyData[selectedIndex].Layer?.Size)}
                 </Typography>
               </Stack>
