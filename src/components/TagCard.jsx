@@ -1,21 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { useNavigate } from 'react-router-dom';
-import {
-  Box,
-  Card,
-  CardContent,
-  Collapse,
-  Stack,
-  Table,
-  TableBody,
-  TableCell,
-  tableCellClasses,
-  TableHead,
-  TableRow,
-  Tooltip,
-  Typography
-} from '@mui/material';
+import { Box, Card, CardContent, Collapse, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import transform from 'utilities/transform';
 import { DateTime } from 'luxon';
@@ -140,44 +126,34 @@ export default function TagCard(props) {
         </Stack>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <Box>
-            <Table size="small" padding="none" sx={{ [`& .${tableCellClasses.root}`]: { borderBottom: 'none' } }}>
-              <TableHead>
-                <TableRow>
-                  <TableCell style={{ color: '#696969' }}>
-                    <Typography variant="body1">DIGEST</Typography>
-                  </TableCell>
-                  <TableCell style={{ color: '#696969' }}>
-                    <Typography variant="body1">OS/Arch</Typography>
-                  </TableCell>
-                  <TableCell style={{ color: '#696969' }}>
-                    <Typography variant="body1">Size</Typography>
-                  </TableCell>
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                <TableRow
-                  key={digest}
-                  onClick={() => {
-                    navigator.clipboard.writeText(digest);
-                  }}
-                  className={classes.clickCursor}
-                >
-                  <TableCell style={{ color: '#696969' }}>
-                    <Tooltip title={digest || ''} placement="top">
-                      <Typography variant="body1">{digest?.substr(0, 12)}</Typography>
-                    </Tooltip>
-                  </TableCell>
-                  <TableCell style={{ color: '#696969' }}>
-                    <Typography variant="body1">
-                      {platform?.Os}/{platform?.Arch}
-                    </Typography>
-                  </TableCell>
-                  <TableCell component="th" scope="row" style={{ color: '#696969' }}>
-                    <Typography variant="body1">{transform.formatBytes(size)}</Typography>
-                  </TableCell>
-                </TableRow>
-              </TableBody>
-            </Table>
+            <Grid container item xs={12} direction={'row'}>
+              <Grid item xs={4}>
+                <Typography variant="body1">DIGEST</Typography>
+              </Grid>
+              <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Typography variant="body1">OS/Arch</Typography>
+              </Grid>
+              <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Typography variant="body1"> Size </Typography>
+              </Grid>
+            </Grid>
+            <Grid container item xs={12} direction={'row'}>
+              <Grid item xs={4}>
+                <Tooltip title={digest || ''} placement="top">
+                  <Typography variant="body1">{digest?.substr(0, 12)}</Typography>
+                </Tooltip>
+              </Grid>
+              <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                <Typography variant="body1">
+                  {platform?.Os}/{platform?.Arch}
+                </Typography>
+              </Grid>
+              <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+                <Typography sx={{ textAlign: 'right' }} variant="body1">
+                  {transform.formatBytes(size)}
+                </Typography>
+              </Grid>
+            </Grid>
           </Box>
         </Collapse>
       </CardContent>
