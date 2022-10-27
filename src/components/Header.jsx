@@ -12,7 +12,8 @@ import {
   ClickAwayListener,
   Paper,
   Grow,
-  Stack
+  Stack,
+  Grid
   //IconButton
 } from '@mui/material';
 
@@ -20,10 +21,19 @@ import {
 import makeStyles from '@mui/styles/makeStyles';
 import logo from '../assets/zotLogo.svg';
 //import placeholderProfileButton from '../assets/Profile_button_placeholder.svg';
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect } from 'react';
 import SearchSuggestion from './SearchSuggestion';
 
 const useStyles = makeStyles(() => ({
+  barOpen: {
+    position: 'sticky',
+    minHeight: '10%'
+  },
+  barClosed: {
+    position: 'sticky',
+    minHeight: '10%',
+    backgroundColor: 'red'
+  },
   header: {
     display: 'flex',
     flexDirection: 'row',
@@ -64,10 +74,48 @@ const useStyles = makeStyles(() => ({
   },
   link: {
     color: '#000'
+  },
+  grid: {
+    display: 'flex',
+    flexDirection: 'row',
+    justifyContent: 'center'
   }
 }));
 
+function setNavShow() {
+  const [show, setShow] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(null);
+
+  const controlNavbar = () => {
+    if (typeof window !== 'undefined') {
+      if (window.scrollY < lastScrollY) {
+        // if scroll down hide the navbar
+        setShow(true);
+      } else {
+        setShow(false);
+      }
+
+      // remember current page location to use in the next move
+      setLastScrollY(window.scrollY);
+    }
+  };
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', controlNavbar);
+
+      // cleanup function
+      return () => {
+        window.removeEventListener('scroll', controlNavbar);
+      };
+    }
+  }, [lastScrollY]);
+  return show;
+}
+
 function Header() {
+  const show = setNavShow();
+  console.log(show);
   const classes = useStyles();
   const path = useLocation().pathname;
   // const navigate = useNavigate();
@@ -88,17 +136,23 @@ function Header() {
 
     setOpen(false);
   };
-
   return (
-    <AppBar sx={{ position: 'sticky', minHeight: '10%' }}>
+    <AppBar position="sticky">
       <Toolbar className={classes.header}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ minWidth: '60%' }}>
-          <Link to="/home" className={classes.logoWrapper}>
-            <img alt="zot" src={logo} className={classes.logo} />
-          </Link>
-          {path !== '/' && <SearchSuggestion />}
-          <div></div>
-          {/* <IconButton
+          <Grid container className={classes.grid}>
+            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'start' }}>
+              <Link to="/home" className={classes.grid}>
+                <img alt="zot" src={logo} className={classes.logo} />
+              </Link>
+            </Grid>
+            <Grid item xs={8}>
+              {path !== '/' && <SearchSuggestion />}
+            </Grid>
+            <Grid item xs={2}>
+              <div>{''}</div>
+            </Grid>
+            {/* <IconButton
             ref={anchorRef}
             id="composition-button"
             aria-controls={open ? 'composition-menu' : undefined}
@@ -108,31 +162,32 @@ function Header() {
           >
             <Avatar alt="profile" src={placeholderProfileButton} className={classes.userAvatar} variant="rounded" />
           </IconButton> */}
-          <Popper
-            open={open}
-            anchorEl={anchorRef.current}
-            role={undefined}
-            placement="bottom-start"
-            transition
-            disablePortal
-          >
-            {({ TransitionProps, placement }) => (
-              <Grow
-                {...TransitionProps}
-                style={{
-                  transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom'
-                }}
-              >
-                <Paper>
-                  <ClickAwayListener onClickAway={handleToggle}>
-                    <MenuList autoFocusItem={open} id="composition-menu" aria-labelledby="composition-button">
-                      <MenuItem onClick={handleClose}>Logout</MenuItem>
-                    </MenuList>
-                  </ClickAwayListener>
-                </Paper>
-              </Grow>
-            )}
-          </Popper>
+            <Popper
+              open={open}
+              anchorEl={anchorRef.current}
+              role={undefined}
+              placement="bottom-start"
+              transition
+              disablePortal
+            >
+              {({ TransitionProps, placement }) => (
+                <Grow
+                  {...TransitionProps}
+                  style={{
+                    transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom'
+                  }}
+                >
+                  <Paper>
+                    <ClickAwayListener onClickAway={handleToggle}>
+                      <MenuList autoFocusItem={open} id="composition-menu" aria-labelledby="composition-button">
+                        <MenuItem onClick={handleClose}>Logout</MenuItem>
+                      </MenuList>
+                    </ClickAwayListener>
+                  </Paper>
+                </Grow>
+              )}
+            </Popper>
+          </Grid>
         </Stack>
       </Toolbar>
     </AppBar>
