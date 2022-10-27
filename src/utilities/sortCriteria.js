@@ -15,10 +15,10 @@ export const sortByCriteria = {
     value: 'ALPHABETIC_DSC',
     label: 'Alphabetical desc'
   },
-  stars: {
-    value: 'STARS',
-    label: 'Most starred'
-  },
+  // stars: {
+  //   value: 'STARS',
+  //   label: 'Most starred'
+  // },
   downloads: {
     value: 'DOWNLOADS',
     label: 'Most downloaded'
