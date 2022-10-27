@@ -94,11 +94,7 @@ const useStyles = makeStyles(() => ({
   },
   pull: {
     paddingLeft: '1.5rem',
-    flex: 'none',
-    alignSelf: 'stretch',
-    flexGrow: 0,
-    order: 0,
-    width: '100%'
+    justifyContent: 'flex-start'
   },
   card: {
     marginBottom: 2,
@@ -127,6 +123,7 @@ const useStyles = makeStyles(() => ({
       border: '0.125rem solid #52637A'
     },
     m: '0.5rem 0',
+    width: '20.625rem',
     borderRadius: '0.5rem',
     color: '#14191F',
     alignContent: 'left'
