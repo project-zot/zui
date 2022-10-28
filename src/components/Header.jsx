@@ -115,7 +115,6 @@ function setNavShow() {
 
 function Header() {
   const show = setNavShow();
-  console.log(show);
   const classes = useStyles();
   const path = useLocation().pathname;
   // const navigate = useNavigate();
@@ -137,7 +136,7 @@ function Header() {
     setOpen(false);
   };
   return (
-    <AppBar position="sticky">
+    <AppBar position={show ? 'fixed' : 'absolute'} sx={{ height: '10vh' }}>
       <Toolbar className={classes.header}>
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ minWidth: '60%' }}>
           <Grid container className={classes.grid}>
