@@ -28,7 +28,7 @@ function App() {
             <Route path="/home" element={<HomePage />} />
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/image/:name" element={<RepoPage />} />
-            <Route path="/image/:name/tag/:tag" element={<TagPage />} />
+            <Route path="/image/:reponame/tag/:tag" element={<TagPage />} />
           </Route>
           <Route element={<AuthWrapper isLoggedIn={!isLoggedIn} redirect="/" />}>
             <Route

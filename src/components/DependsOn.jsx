@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo } from 'react';
+import { isEmpty } from 'lodash';
 
 // utility
 import { api, endpoints } from '../api';
@@ -9,6 +10,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
 import Loading from './Loading';
 import TagCard from './TagCard';
+import { mapToImage } from 'utilities/objectModels';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -78,7 +80,7 @@ function DependsOn(props) {
       .get(`${host()}${endpoints.dependsOnForImage(name)}`, abortController.signal)
       .then((response) => {
         if (response.data && response.data.data) {
-          let imagesData = response.data.data.BaseImageList;
+          let imagesData = response.data.data.BaseImageList?.map((img) => mapToImage(img));
           setImages(imagesData);
         }
         setIsLoading(false);
@@ -93,20 +95,19 @@ function DependsOn(props) {
   }, []);
 
   const renderDependencies = () => {
-    return images?.length ? (
+    return !isEmpty(images) ? (
       images.map((dependence, index) => {
         return (
           <TagCard
-            repoName={dependence.RepoName}
-            tag={dependence.Tag}
-            vendor={dependence.Vendor}
-            platform={dependence.Platform}
-            isSigned={dependence.IsSigned}
-            size={dependence.Size}
-            digest={dependence.Digest}
+            repoName={dependence.repoName}
+            tag={dependence.tag}
+            vendor={dependence.vendor}
+            platform={dependence.platform}
+            isSigned={dependence.isSigned}
+            size={dependence.size}
+            digest={dependence.digest}
             key={index}
-            vulnerabiltySeverity={dependence.Vulnerabilities?.MaxSeverity}
-            lastUpdated={dependence.LastUpdated}
+            lastUpdated={dependence.lastUpdated}
           />
         );
       })

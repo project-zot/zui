@@ -1,4 +1,3 @@
-// @ts-nocheck
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { sortByCriteria } from 'utilities/sortCriteria';

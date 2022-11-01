@@ -452,7 +452,6 @@ afterEach(() => {
 
 describe('Vulnerabilties page', () => {
   it('renders the vulnerabilities if there are any', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
@@ -460,7 +459,6 @@ describe('Vulnerabilties page', () => {
   });
 
   it('renders no vulnerabilities if there are not any', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({
       status: 200,
       data: { data: { CVEListForImage: { Tag: '', CVEList: [] } } }
@@ -470,7 +468,6 @@ describe('Vulnerabilties page', () => {
   });
 
   it('should open and close description dropdown for vulnerabilities', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText(/description/i)).toHaveLength(20));
@@ -486,7 +483,6 @@ describe('Vulnerabilties page', () => {
   });
 
   it("should log an error when data can't be fetched", async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<StateVulnerabilitiesWrapper />);
@@ -496,9 +492,9 @@ describe('Vulnerabilties page', () => {
   it('should find out which version fixes the CVEs', async () => {
     jest
       .spyOn(api, 'get')
-      // @ts-ignore
+
       .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
-      // @ts-ignore
+
       .mockResolvedValue({ status: 200, data: { data: mockCVEFixed } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));

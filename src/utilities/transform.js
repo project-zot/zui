@@ -15,7 +15,7 @@ const transform = {
     let value = bytes / Math.pow(k, unitIdx);
 
     // minimum 2 significant digits
-    // @ts-ignore
+
     value = value < 10 ? value.toPrecision(2) : Math.round(value);
 
     return value + ' ' + DATA_UNITS[unitIdx];
