@@ -4,7 +4,6 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 jest.mock('react-router-dom', () => ({
-  // @ts-ignore
   ...jest.requireActual('react-router-dom'),
   useLocation: () => ({
     pathname: 'localhost:3000/image/test',

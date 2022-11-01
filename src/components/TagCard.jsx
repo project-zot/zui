@@ -65,7 +65,7 @@ export default function TagCard(props) {
   //const tags = data && data.tags;
   const [open, setOpen] = useState(false);
   const classes = useStyles();
-  // @ts-ignore
+
   const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
     unit: ['weeks', 'days', 'hours', 'minutes']
   });

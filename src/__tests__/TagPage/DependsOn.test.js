@@ -56,7 +56,6 @@ const RouterDependsWrapper = () => {
 // useNavigate mock
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
-  // @ts-ignore
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedUsedNavigate
 }));
@@ -68,14 +67,12 @@ afterEach(() => {
 
 describe('Dependencies tab', () => {
   it('should render the dependencies if there are any', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: mockDependenciesList });
     render(<RouterDependsWrapper />);
     expect(await screen.findAllByText(/Tag/i)).toHaveLength(8);
   });
 
   it('renders no dependencies if there are not any', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({
       status: 200,
       data: { data: { BaseImageList: [] } }
@@ -85,7 +82,6 @@ describe('Dependencies tab', () => {
   });
 
   it("should log an error when data can't be fetched", async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<RouterDependsWrapper />);

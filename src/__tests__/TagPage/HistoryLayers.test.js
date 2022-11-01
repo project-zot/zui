@@ -33,14 +33,12 @@ afterEach(() => {
 
 describe('Layers page', () => {
   it('renders the layers if there are any', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: { Image: { History: mockLayersList } } } });
     render(<HistoryLayers name="alpine:latest" />);
     expect(await screen.findAllByTestId('layer-card-container')).toHaveLength(2);
   });
 
   it('renders no layers if there are not any', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({
       status: 200,
       data: { data: { History: { Tag: '', mockLayersList: [] } } }
@@ -50,7 +48,6 @@ describe('Layers page', () => {
   });
 
   it('renders hash layers', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: { Image: { History: mockLayersList } } } });
     render(<HistoryLayers name="alpine:latest" />);
     expect(await screen.findAllByTestId('hash-typography')).toHaveLength(1);
@@ -60,7 +57,6 @@ describe('Layers page', () => {
   });
 
   it("should log an error when data can't be fetched", async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<HistoryLayers name="alpine:latest" />);

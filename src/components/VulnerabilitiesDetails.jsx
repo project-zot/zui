@@ -13,6 +13,7 @@ import { Link } from 'react-router-dom';
 import Loading from './Loading';
 import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
 import { VulnerabilityChipCheck } from 'utilities/vulnerabilityAndSignatureCheck';
+import { mapCVEInfo } from 'utilities/objectModels';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -96,7 +97,7 @@ function VulnerabilitiyCard(props) {
     }
     setLoadingFixed(true);
     api
-      .get(`${host()}${endpoints.imageListWithCVEFixed(cve.Id, name)}`)
+      .get(`${host()}${endpoints.imageListWithCVEFixed(cve.id, name)}`)
       .then((response) => {
         if (response.data && response.data.data) {
           const fixedTagsList = response.data.data.ImageListWithCVEFixed?.map((e) => e.Tag);
@@ -129,14 +130,14 @@ function VulnerabilitiyCard(props) {
         <Stack sx={{ flexDirection: 'row' }}>
           <Typography variant="body1" align="left" className={classes.values}>
             {' '}
-            {cve.Id}
+            {cve.id}
           </Typography>
         </Stack>
-        <VulnerabilityChipCheck vulnerabilitySeverity={cve.Severity} />
+        <VulnerabilityChipCheck vulnerabilitySeverity={cve.severity} />
         <Stack sx={{ flexDirection: 'row' }}>
           <Typography variant="body1" align="left" className={classes.values}>
             {' '}
-            {cve.Title}
+            {cve.title}
           </Typography>
         </Stack>
         <Stack className={classes.dropdown} onClick={() => setOpenFixed(!openFixed)}>
@@ -167,7 +168,7 @@ function VulnerabilitiyCard(props) {
           <Box>
             <Typography variant="body2" align="left" sx={{ color: '#0F2139', fontSize: '1rem' }}>
               {' '}
-              {cve.Description}{' '}
+              {cve.description}{' '}
             </Typography>
           </Box>
         </Collapse>
@@ -190,9 +191,7 @@ function VulnerabilitiesDetails(props) {
       .then((response) => {
         if (response.data && response.data.data) {
           let cveInfo = response.data.data.CVEListForImage;
-          let cveListData = {
-            cveList: cveInfo?.CVEList
-          };
+          let cveListData = mapCVEInfo(cveInfo);
           setCveData(cveListData);
         }
         setIsLoading(false);
@@ -249,14 +248,7 @@ function VulnerabilitiesDetails(props) {
           width: '100%'
         }}
       />
-      {isLoading ? (
-        <Loading />
-      ) : (
-        renderCVEs(
-          // @ts-ignore
-          cveData?.cveList
-        )
-      )}
+      {isLoading ? <Loading /> : renderCVEs(cveData?.cveList)}
     </>
   );
 }

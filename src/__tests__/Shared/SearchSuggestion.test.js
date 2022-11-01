@@ -7,7 +7,6 @@ import React from 'react';
 // router mock
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
-  // @ts-ignore
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedUsedNavigate
 }));
@@ -71,7 +70,6 @@ afterEach(() => {
 
 describe('Search component', () => {
   it('should display suggestions when user searches', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<SearchSuggestion />);
     const searchInput = screen.getByPlaceholderText(/search for content/i);
@@ -81,7 +79,6 @@ describe('Search component', () => {
   });
 
   it('should navigate to repo page when a repo suggestion is clicked', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<SearchSuggestion />);
     const searchInput = screen.getByPlaceholderText(/search for content/i);
@@ -92,7 +89,6 @@ describe('Search component', () => {
   });
 
   it('should navigate to repo page when a image suggestion is clicked', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<SearchSuggestion />);
     const searchInput = screen.getByPlaceholderText(/search for content/i);
@@ -103,7 +99,6 @@ describe('Search component', () => {
   });
 
   it('should log an error if it doesnt receive an ok response for repo search', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<SearchSuggestion />);
@@ -113,7 +108,6 @@ describe('Search component', () => {
   });
 
   it('should log an error if it doesnt receive an ok response for image search', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<SearchSuggestion />);

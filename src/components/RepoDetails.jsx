@@ -22,8 +22,8 @@ import RepoDetailsMetadata from './RepoDetailsMetadata';
 import Loading from './Loading';
 import { isEmpty } from 'lodash';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
+import { mapToRepoFromRepoInfo } from 'utilities/objectModels';
 
-// @ts-ignore
 const useStyles = makeStyles(() => ({
   pageWrapper: {
     backgroundColor: '#FFFFFF',
@@ -123,7 +123,7 @@ const randomImage = () => {
 function RepoDetails() {
   const [repoDetailData, setRepoDetailData] = useState({});
   const [tags, setTags] = useState([]);
-  // @ts-ignore
+
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('Overview');
   // get url param from <Route here (i.e. image name)
@@ -137,25 +137,7 @@ function RepoDetails() {
       .then((response) => {
         if (response.data && response.data.data) {
           let repoInfo = response.data.data.ExpandedRepoInfo;
-          let imageData = {
-            name: name,
-            images: repoInfo.Images,
-            lastUpdated: repoInfo.Summary?.LastUpdated,
-            size: repoInfo.Summary?.Size,
-            platforms: repoInfo.Summary?.Platforms,
-            vendors: repoInfo.Summary?.Vendors,
-            newestTag: repoInfo.Summary?.NewestImage,
-            description: repoInfo.Summary?.NewestImage?.Description,
-            title: repoInfo.Summary?.NewestImage?.Title,
-            source: repoInfo.Summary?.NewestImage?.Source,
-            downloads: repoInfo.Summary?.NewestImage?.DownloadCount,
-            overview: repoInfo.Summary?.NewestImage?.Documentation,
-            license: repoInfo.Summary?.NewestImage?.Licenses,
-            vulnerabiltySeverity: repoInfo.Summary?.NewestImage?.Vulnerabilities?.MaxSeverity,
-            vulnerabilityCount: repoInfo.Summary?.NewestImage?.Vulnerabilities?.Count,
-            isSigned: repoInfo.Summary?.NewestImage?.IsSigned,
-            logo: repoInfo.Summary?.NewestImage?.Logo
-          };
+          let imageData = mapToRepoFromRepoInfo(repoInfo);
           setRepoDetailData(imageData);
           setTags(imageData.images);
         }
@@ -173,7 +155,6 @@ function RepoDetails() {
   }, [name]);
 
   const platformChips = () => {
-    // @ts-ignore
     const platforms = repoDetailData?.platforms || [];
 
     return platforms.map((platform, index) => (
@@ -200,8 +181,6 @@ function RepoDetails() {
     ));
   };
 
-  // @ts-ignore
-  // @ts-ignore
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
@@ -220,10 +199,7 @@ function RepoDetails() {
               alignSelf: 'stretch'
             }}
           >
-            {
-              // @ts-ignore
-              repoDetailData.description || 'Description not available'
-            }
+            {repoDetailData.description || 'Description not available'}
           </Typography>
         </CardContent>
       </Card>
@@ -247,13 +223,10 @@ function RepoDetails() {
                         img: classes.avatar
                       }}
                       component="img"
-                      // @ts-ignore
                       // eslint-disable-next-line prettier/prettier
                       image={
-                        // @ts-ignore
                         !isEmpty(repoDetailData?.logo)
-                          ? // @ts-ignore
-                            `data:image/png;base64, ${repoDetailData?.logo}`
+                          ? `data:image/png;base64, ${repoDetailData?.logo}`
                           : randomImage()
                       }
                       alt="icon"
@@ -262,19 +235,10 @@ function RepoDetails() {
                       {name}
                     </Typography>
                     <VulnerabilityIconCheck
-                      vulnerabilitySeverity={
-                        // @ts-ignore
-                        repoDetailData.vulnerabiltySeverity
-                      }
-                      // @ts-ignore
+                      vulnerabilitySeverity={repoDetailData.vulnerabiltySeverity}
                       count={repoDetailData?.vulnerabilityCount}
                     />
-                    <SignatureIconCheck
-                      isSigned={
-                        // @ts-ignore
-                        repoDetailData.isSigned
-                      }
-                    />
+                    <SignatureIconCheck isSigned={repoDetailData.isSigned} />
                     {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
                   </Stack>
                   <Typography
@@ -283,10 +247,7 @@ function RepoDetails() {
                     gutterBottom
                     align="left"
                   >
-                    {
-                      // @ts-ignore
-                      repoDetailData?.title || 'Title not available'
-                    }
+                    {repoDetailData?.title || 'Title not available'}
                   </Typography>
                   <Stack alignItems="center" sx={{ paddingLeft: '4rem' }} direction="row" spacing={2} pt={1}>
                     {platformChips()}
@@ -320,17 +281,11 @@ function RepoDetails() {
                 </Grid>
                 <Grid item xs={4} className={classes.metadata}>
                   <RepoDetailsMetadata
-                    // @ts-ignore
                     totalDownloads={repoDetailData?.downloads}
-                    // @ts-ignore
                     repoURL={repoDetailData?.source}
-                    // @ts-ignore
                     lastUpdated={repoDetailData?.lastUpdated}
-                    // @ts-ignore
                     size={repoDetailData?.size}
-                    // @ts-ignore
                     latestTag={repoDetailData?.newestTag}
-                    // @ts-ignore
                     license={repoDetailData?.license}
                   />
                 </Grid>

@@ -170,7 +170,6 @@ Object.assign(navigator, {
 });
 
 jest.mock('react-router-dom', () => ({
-  // @ts-ignore
   ...jest.requireActual('react-router-dom'),
   useParams: () => {
     return { name: 'test', tag: '1.0.1' };
@@ -193,7 +192,6 @@ afterEach(() => {
 
 describe('Tags details', () => {
   it('should show tabs and allow nagivation between them', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetails />);
     const dependenciesTab = await screen.findByTestId('dependencies-tab');
@@ -210,34 +208,32 @@ describe('Tags details', () => {
   });
 
   it('should show tag details metadata', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetails />);
     expect(await screen.findByTestId('tagDetailsMetadata-container')).toBeInTheDocument();
   });
 
   it('renders vulnerability icons', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetails />);
     expect(await screen.findByTestId('critical-vulnerability-icon')).toBeInTheDocument();
-    // @ts-ignore
+
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageNone } });
     render(<TagDetails />);
     expect(await screen.findByTestId('none-vulnerability-icon')).toBeInTheDocument();
-    // @ts-ignore
+
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageUnknown } });
     render(<TagDetails />);
     expect(await screen.findByTestId('unknown-vulnerability-icon')).toBeInTheDocument();
-    // @ts-ignore
+
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageLow } });
     render(<TagDetails />);
     expect(await screen.findByTestId('low-vulnerability-icon')).toBeInTheDocument();
-    // @ts-ignore
+
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageMedium } });
     render(<TagDetails />);
     expect(await screen.findByTestId('medium-vulnerability-icon')).toBeInTheDocument();
-    // @ts-ignore
+
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageHigh } });
     render(<TagDetails />);
     expect(await screen.findByTestId('high-vulnerability-icon')).toBeInTheDocument();
@@ -246,7 +242,7 @@ describe('Tags details', () => {
   it('should copy the pull string to clipboard', async () => {
     jest
       .spyOn(api, 'get')
-      // @ts-ignore
+
       .mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetails />);
     fireEvent.click(await screen.findByTestId('pullcopy-btn'));

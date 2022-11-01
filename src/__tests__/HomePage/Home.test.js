@@ -6,7 +6,6 @@ import React from 'react';
 // useNavigate mock
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
-  // @ts-ignore
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedUsedNavigate
 }));
@@ -129,7 +128,6 @@ afterEach(() => {
 
 describe('Home component', () => {
   it('fetches image data and renders popular, bookmarks and recently updated', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<Home />);
     await waitFor(() => expect(screen.getAllByText(/alpine/i)).toHaveLength(2));
@@ -138,7 +136,6 @@ describe('Home component', () => {
   });
 
   it('renders signature icons', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<Home />);
     expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(2);
@@ -146,7 +143,6 @@ describe('Home component', () => {
   });
 
   it('renders vulnerability icons', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<Home />);
     expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(2);
@@ -156,7 +152,6 @@ describe('Home component', () => {
   });
 
   it("should log an error when data can't be fetched", async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<Home />);

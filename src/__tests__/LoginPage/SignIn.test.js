@@ -7,7 +7,6 @@ import userEvent from '@testing-library/user-event';
 // useNavigate mock
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
-  // @ts-ignore
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedUsedNavigate
 }));
@@ -25,7 +24,6 @@ describe('Signin component automatic navigation', () => {
 
   it('navigates to homepage when auth is disabled', async () => {
     // mock request to check auth
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: {} });
     render(<SignIn isAuthEnabled={true} setIsAuthEnabled={() => {}} isLoggedIn={false} setIsLoggedIn={() => {}} />);
     await waitFor(() => {
@@ -37,7 +35,6 @@ describe('Signin component automatic navigation', () => {
 describe('Sign in form', () => {
   beforeEach(() => {
     // mock auth check request
-    // @ts-ignore
     jest.spyOn(api, 'get').mockRejectedValue({ status: 401, data: {} });
   });
 
@@ -70,7 +67,6 @@ describe('Sign in form', () => {
   it('should log in the user and navigate to homepage if login is successful', async () => {
     render(<SignIn isAuthEnabled={true} setIsAuthEnabled={() => {}} isLoggedIn={false} setIsLoggedIn={() => {}} />);
     const submitButton = await screen.findByText('Continue');
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: {} } });
     fireEvent.click(submitButton);
     await waitFor(() => {

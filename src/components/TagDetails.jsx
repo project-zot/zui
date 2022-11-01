@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 
 // utility
 import { api, endpoints } from '../api';
-
+import { mapToImage } from '../utilities/objectModels';
 // components
 import {
   Box,
@@ -41,7 +41,6 @@ import Loading from './Loading';
 import { dockerPull, podmanPull, skopeoPull } from 'utilities/pullStrings';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 
-// @ts-ignore
 const useStyles = makeStyles(() => ({
   pageWrapper: {
     backgroundColor: '#FFFFFF',
@@ -157,8 +156,7 @@ function TagDetails() {
   const abortController = useMemo(() => new AbortController(), []);
 
   // get url param from <Route here (i.e. image name)
-  const { name, tag } = useParams();
-  const [fullName, setFullName] = useState(name + ':' + tag);
+  const { reponame, tag } = useParams();
 
   const [pullString, setPullString] = useState('');
   const [snackBarOpen, setSnackbarOpen] = useState(false);
@@ -170,28 +168,13 @@ function TagDetails() {
     window?.scrollTo(0, 0);
     setIsLoading(true);
     api
-      .get(`${host()}${endpoints.detailedImageInfo(name, tag)}`, abortController.signal)
+      .get(`${host()}${endpoints.detailedImageInfo(reponame, tag)}`, abortController.signal)
       .then((response) => {
         if (response.data && response.data.data) {
           let imageInfo = response.data.data.Image;
-          let imageData = {
-            name: imageInfo.RepoName,
-            tag: imageInfo.Tag,
-            lastUpdated: imageInfo.LastUpdated,
-            size: imageInfo.Size,
-            digest: imageInfo.ConfigDigest,
-            platform: imageInfo.Platform,
-            vendor: imageInfo.Vendor,
-            history: imageInfo.History,
-            license: imageInfo.Licenses,
-            vulnerabiltySeverity: imageInfo.Vulnerabilities?.MaxSeverity,
-            vulnerabilityCount: imageInfo.Vulnerabilities?.Count,
-            isSigned: imageInfo.IsSigned,
-            logo: imageInfo.Logo
-          };
+          let imageData = mapToImage(imageInfo);
           setImageDetailData(imageData);
-          setFullName(imageData.name + ':' + imageData.tag);
-          setPullString(dockerPull(imageData.name + ':' + imageData.tag));
+          setPullString(dockerPull(imageData.name));
         }
         setIsLoading(false);
       })
@@ -203,14 +186,12 @@ function TagDetails() {
     return () => {
       abortController.abort();
     };
-  }, [name, tag]);
+  }, [reponame, tag]);
 
   const getPlatform = () => {
-    // @ts-ignore
     return imageDetailData?.platform ? imageDetailData.platform : '--/--';
   };
 
-  // @ts-ignore
   const handleTabChange = (event, newValue) => {
     setSelectedTab(newValue);
   };
@@ -245,32 +226,20 @@ function TagDetails() {
                       }}
                       component="img"
                       image={
-                        // @ts-ignore
-                        // eslint-disable-next-line prettier/prettier
                         !isEmpty(imageDetailData?.logo)
-                          ? // @ts-ignore
-                            `data:image/  png;base64, ${imageDetailData?.logo}`
+                          ? `data:image/  png;base64, ${imageDetailData?.logo}`
                           : randomImage()
                       }
                       alt="icon"
                     />
                     <Typography variant="h3" className={classes.repoName}>
-                      {name}:{tag}
+                      {reponame}:{tag}
                     </Typography>
                     <VulnerabilityIconCheck
-                      vulnerabilitySeverity={
-                        // @ts-ignore
-                        imageDetailData.vulnerabiltySeverity
-                      }
-                      // @ts-ignore
+                      vulnerabilitySeverity={imageDetailData.vulnerabiltySeverity}
                       count={imageDetailData.vulnerabilityCount}
                     />
-                    <SignatureIconCheck
-                      isSigned={
-                        // @ts-ignore
-                        imageDetailData.isSigned
-                      }
-                    />
+                    <SignatureIconCheck isSigned={imageDetailData.isSigned} />
                     {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
                   </Stack>
                   <Typography
@@ -279,11 +248,7 @@ function TagDetails() {
                     gutterBottom
                     align="left"
                   >
-                    DIGEST:{' '}
-                    {
-                      // @ts-ignore
-                      imageDetailData?.digest
-                    }
+                    DIGEST: {imageDetailData?.digest}
                   </Typography>
                 </Grid>
                 <Grid item xs={4} className={classes.pull}>
@@ -320,14 +285,14 @@ function TagDetails() {
                         classes: { root: classes.copyStringSelect, list: classes.textEllipsis }
                       }}
                     >
-                      <MenuItem className={classes.textEllipsis} value={dockerPull(fullName)}>
-                        <Typography noWrap>{dockerPull(fullName)}</Typography>
+                      <MenuItem className={classes.textEllipsis} value={dockerPull(imageDetailData.name)}>
+                        <Typography noWrap>{dockerPull(imageDetailData.name)}</Typography>
                       </MenuItem>
-                      <MenuItem className={classes.textEllipsis} value={podmanPull(fullName)}>
-                        <Typography noWrap>{podmanPull(fullName)}</Typography>
+                      <MenuItem className={classes.textEllipsis} value={podmanPull(imageDetailData.name)}>
+                        <Typography noWrap>{podmanPull(imageDetailData.name)}</Typography>
                       </MenuItem>
-                      <MenuItem className={classes.textEllipsis} value={skopeoPull(fullName)}>
-                        <Typography noWrap>{skopeoPull(fullName)}</Typography>
+                      <MenuItem className={classes.textEllipsis} value={skopeoPull(imageDetailData.name)}>
+                        <Typography noWrap>{skopeoPull(imageDetailData.name)}</Typography>
                       </MenuItem>
                     </Select>
                   </FormControl>
@@ -355,22 +320,16 @@ function TagDetails() {
                       <Grid container>
                         <Grid item xs={12}>
                           <TabPanel value="Layers" className={classes.tabPanel}>
-                            <HistoryLayers
-                              name={fullName}
-                              history={
-                                // @ts-ignore
-                                imageDetailData.history
-                              }
-                            />
+                            <HistoryLayers name={imageDetailData.name} history={imageDetailData.history} />
                           </TabPanel>
                           <TabPanel value="DependsOn" className={classes.tabPanel}>
-                            <DependsOn name={fullName} />
+                            <DependsOn name={imageDetailData.name} />
                           </TabPanel>
                           <TabPanel value="IsDependentOn" className={classes.tabPanel}>
-                            <IsDependentOn name={fullName} />
+                            <IsDependentOn name={imageDetailData.name} />
                           </TabPanel>
                           <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
-                            <VulnerabilitiesDetails name={name} tag={tag} />
+                            <VulnerabilitiesDetails name={reponame} tag={tag} />
                           </TabPanel>
                         </Grid>
                       </Grid>
@@ -379,13 +338,9 @@ function TagDetails() {
                 </Grid>
                 <Grid item xs={4} className={classes.metadata}>
                   <TagDetailsMetadata
-                    // @ts-ignore
                     platform={getPlatform()}
-                    // @ts-ignore
                     size={imageDetailData?.size}
-                    // @ts-ignore
                     lastUpdated={imageDetailData?.lastUpdated}
-                    // @ts-ignore
                     license={imageDetailData?.license}
                   />
                 </Grid>

@@ -12,7 +12,6 @@ const mockUseLocationValue = {
 };
 
 jest.mock('react-router-dom', () => ({
-  // @ts-ignore
   ...jest.requireActual('react-router-dom'),
   useParams: () => {
     return { name: 'test' };
@@ -161,34 +160,27 @@ afterEach(() => {
 
 describe('Repo details component', () => {
   it('fetches repo detailed data and renders', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
     render(<RepoDetails />);
     expect(await screen.findByText('test')).toBeInTheDocument();
   });
 
   it('renders vulnerability icons', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
     render(<RepoDetails />);
     expect(await screen.findAllByTestId('critical-vulnerability-icon')).toHaveLength(1);
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsNone } });
     render(<RepoDetails />);
     expect(await screen.findAllByTestId('none-vulnerability-icon')).toHaveLength(1);
-    // @ts-ignore
     // jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsUnknown } });
     // render(<RepoDetails />);
     // expect(await screen.findAllByTestId('unknown-vulnerability-icon')).toHaveLength(1);
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsLow } });
     render(<RepoDetails />);
     expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(1);
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsMedium } });
     render(<RepoDetails />);
     expect(await screen.findAllByTestId('medium-vulnerability-icon')).toHaveLength(1);
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsHigh } });
     render(<RepoDetails />);
     expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(1);
@@ -202,7 +194,6 @@ describe('Repo details component', () => {
   });
 
   it('should switch between tabs', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
     render(<RepoDetails />);
     expect(await screen.findByTestId('overview-container')).toBeInTheDocument();

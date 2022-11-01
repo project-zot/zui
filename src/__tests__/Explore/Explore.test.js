@@ -8,7 +8,6 @@ import { MemoryRouter } from 'react-router-dom';
 // router mock
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
-  // @ts-ignore
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedUsedNavigate
 }));
@@ -136,7 +135,6 @@ afterEach(() => {
 
 describe('Explore component', () => {
   it("fetches image data and renders the list of images based on it's filters", async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
     expect(await screen.findByText(/alpine/i)).toBeInTheDocument();
@@ -145,14 +143,12 @@ describe('Explore component', () => {
   });
 
   it('displays the no data message if no data is received', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: { GlobalSearch: { Repos: [] } } } });
     render(<StateExploreWrapper />);
     expect(await screen.findByText(/Looks like/i)).toBeInTheDocument();
   });
 
   it('renders signature icons', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
     expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(1);
@@ -160,7 +156,6 @@ describe('Explore component', () => {
   });
 
   it('renders vulnerability icons', async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
     expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(1);
@@ -172,7 +167,6 @@ describe('Explore component', () => {
   });
 
   it("should log an error when data can't be fetched", async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<StateExploreWrapper />);
@@ -180,7 +174,6 @@ describe('Explore component', () => {
   });
 
   it("should render the sort filter and be able to change it's value", async () => {
-    // @ts-ignore
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
     const selectFilter = await screen.findByText('Relevance');

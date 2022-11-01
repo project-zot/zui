@@ -6,7 +6,6 @@ import RepoCard from 'components/RepoCard';
 // usenavigate mock
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
-  // @ts-ignore
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedUsedNavigate
 }));
