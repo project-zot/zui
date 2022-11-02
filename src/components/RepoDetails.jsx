@@ -1,5 +1,6 @@
 // react global
 import React, { useEffect, useMemo, useState } from 'react';
+import Sticky from 'react-sticky-el';
 
 // utility
 import { api, endpoints } from '../api';
@@ -107,6 +108,12 @@ const useStyles = makeStyles(() => ({
   },
   header: {
     paddingLeft: '2rem'
+  },
+  sticky: {
+    cursor: 'pointer',
+    backgroundColor: '#fff',
+    borderBottom: '0.0625rem solid #BDBDBD',
+    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)'
   }
 }));
 
@@ -226,31 +233,53 @@ function RepoDetails() {
             <CardContent>
               <Grid container className={classes.header}>
                 <Grid item xs={8}>
-                  <Stack alignItems="center" direction="row" spacing={2}>
-                    <CardMedia
-                      classes={{
-                        root: classes.media,
-                        img: classes.avatar
+                  <Sticky>
+                    <Stack
+                      onClick={() => {
+                        window.scrollTo({ top: 0, left: 0, behavior: 'smooth' });
                       }}
-                      component="img"
-                      // eslint-disable-next-line prettier/prettier
-                      image={
-                        !isEmpty(repoDetailData?.logo)
-                          ? `data:image/png;base64, ${repoDetailData?.logo}`
-                          : randomImage()
-                      }
-                      alt="icon"
-                    />
-                    <Typography variant="h3" className={classes.repoName}>
-                      {name}
-                    </Typography>
-                    <VulnerabilityIconCheck
-                      vulnerabilitySeverity={repoDetailData.vulnerabiltySeverity}
-                      count={repoDetailData?.vulnerabilityCount}
-                    />
-                    <SignatureIconCheck isSigned={repoDetailData.isSigned} />
-                    {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
-                  </Stack>
+                      className={classes.sticky}
+                      alignItems="center"
+                      direction="row"
+                      spacing={2}
+                    >
+                      <CardMedia
+                        classes={{
+                          root: classes.media,
+                          img: classes.avatar
+                        }}
+                        component="img"
+                        // @ts-ignore
+                        // eslint-disable-next-line prettier/prettier
+                        image={
+                          // @ts-ignore
+                          !isEmpty(repoDetailData?.logo)
+                            ? // @ts-ignore
+                              `data:image/png;base64, ${repoDetailData?.logo}`
+                            : randomImage()
+                        }
+                        alt="icon"
+                      />
+                      <Typography variant="h3" className={classes.repoName}>
+                        {name}
+                      </Typography>
+                      <VulnerabilityIconCheck
+                        vulnerabilitySeverity={
+                          // @ts-ignore
+                          repoDetailData.vulnerabiltySeverity
+                        }
+                        // @ts-ignore
+                        count={repoDetailData?.vulnerabilityCount}
+                      />
+                      <SignatureIconCheck
+                        isSigned={
+                          // @ts-ignore
+                          repoDetailData.isSigned
+                        }
+                      />
+                      {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
+                    </Stack>
+                  </Sticky>
                   <Typography
                     pt={1}
                     sx={{ fontSize: 16, lineHeight: '1.5rem', color: 'rgba(0, 0, 0, 0.6)', paddingLeft: '4rem' }}
