@@ -1,5 +1,5 @@
 // react global
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 // components
 import RepoCard from './RepoCard.jsx';
@@ -19,6 +19,7 @@ import FilterCard from './FilterCard.jsx';
 import { isEmpty } from 'lodash';
 import filterConstants from 'utilities/filterConstants.js';
 import { sortByCriteria } from 'utilities/sortCriteria.js';
+import { EXPLORE_PAGE_SIZE } from 'utilities/paginationConstants.js';
 
 const useStyles = makeStyles(() => ({
   gridWrapper: {
@@ -63,6 +64,11 @@ function Explore() {
   const [imageFilters, setImageFilters] = useState(false);
   const [osFilters, setOSFilters] = useState([]);
   const [archFilters, setArchFilters] = useState([]);
+  // pagination props
+  const [pageNumber, setPageNumber] = useState(1);
+  const [totalItems, setTotalItems] = useState(0);
+  const [isEndOfList, setIsEndOfList] = useState(false);
+  const listBottom = useRef(null);
   const abortController = useMemo(() => new AbortController(), []);
   const classes = useStyles();
 
@@ -77,11 +83,17 @@ function Explore() {
     return filter;
   };
 
-  useEffect(() => {
+  const getPaginatedResults = () => {
     setIsLoading(true);
     api
       .get(
-        `${host()}${endpoints.globalSearch({ searchQuery: search, sortBy: sortFilter, filter: buildFilterQuery() })}`,
+        `${host()}${endpoints.globalSearch({
+          searchQuery: search,
+          pageNumber,
+          pageSize: EXPLORE_PAGE_SIZE,
+          sortBy: sortFilter,
+          filter: buildFilterQuery()
+        })}`,
         abortController.signal
       )
       .then((response) => {
@@ -90,18 +102,70 @@ function Explore() {
           let repoData = repoList.map((responseRepo) => {
             return mapToRepo(responseRepo);
           });
-          setExploreData(repoData);
+          setTotalItems(response.data.data.GlobalSearch.Page?.TotalCount);
+          setIsEndOfList(response.data.data.GlobalSearch.Page?.ItemCount < EXPLORE_PAGE_SIZE);
+          setExploreData((previousState) => [...previousState, ...repoData]);
           setIsLoading(false);
         }
       })
       .catch((e) => {
         console.error(e);
         setIsLoading(false);
+        setIsEndOfList(true);
       });
+  };
+
+  useEffect(() => {
+    if (isLoading) return;
+    getPaginatedResults();
     return () => {
       abortController.abort();
     };
+  }, [pageNumber]);
+
+  const resetPagination = () => {
+    if (pageNumber === 1) {
+      getPaginatedResults();
+    } else {
+      setPageNumber(1);
+    }
+    setIsEndOfList(false);
+    setExploreData([]);
+  };
+
+  // if filters changed, reset pagination and restart lookup
+  useEffect(() => {
+    resetPagination();
   }, [search, queryParams, imageFilters, osFilters, archFilters, sortFilter]);
+
+  const handleSortChange = (event) => {
+    setSortFilter(event.target.value);
+  };
+
+  // setup intersection obeserver for infinite scroll
+  useEffect(() => {
+    if (isLoading || isEndOfList) return;
+    const handleIntersection = (entries) => {
+      if (isLoading || isEndOfList) return;
+      const [target] = entries;
+      if (target?.isIntersecting) {
+        setPageNumber((pageNumber) => pageNumber + 1);
+      }
+    };
+    const intersectionObserver = new IntersectionObserver(handleIntersection, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0
+    });
+
+    if (listBottom.current) {
+      intersectionObserver.observe(listBottom.current);
+    }
+
+    return () => {
+      intersectionObserver.disconnect();
+    };
+  }, [isLoading, isEndOfList]);
 
   const renderRepoCards = () => {
     return (
@@ -154,8 +218,14 @@ function Explore() {
     );
   };
 
-  const handleSortChange = (event) => {
-    setSortFilter(event.target.value);
+  const renderListBottom = () => {
+    if (isLoading) {
+      return <Loading />;
+    }
+    if (!isLoading && !isEndOfList) {
+      return <div ref={listBottom} />;
+    }
+    return '';
   };
 
   return (
@@ -166,7 +236,7 @@ function Explore() {
           <Grid item xs={9}>
             <Stack direction="row" className={classes.resultsRow}>
               <Typography variant="body2" className={classes.results}>
-                Results {exploreData.length}
+                Showing {exploreData?.length} results out of {totalItems}
               </Typography>
               <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
                 <InputLabel>Sort</InputLabel>
@@ -201,7 +271,8 @@ function Explore() {
               </Grid>
             ) : (
               <Stack direction="column" spacing={2}>
-                {isLoading ? <Loading /> : renderRepoCards()}
+                {renderRepoCards()}
+                {renderListBottom()}
               </Stack>
             )}
           </Grid>

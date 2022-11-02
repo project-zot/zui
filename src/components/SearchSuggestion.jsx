@@ -6,9 +6,10 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { api, endpoints } from 'api';
 import { host } from 'host';
 import { mapToImage, mapToRepo } from 'utilities/objectModels';
-import { createSearchParams, useNavigate } from 'react-router-dom';
+import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { debounce, isEmpty } from 'lodash';
 import { useCombobox } from 'downshift';
+import { HEADER_SEARCH_PAGE_SIZE } from 'utilities/paginationConstants';
 
 const useStyles = makeStyles(() => ({
   searchContainer: {
@@ -94,12 +95,16 @@ const useStyles = makeStyles(() => ({
 }));
 
 function SearchSuggestion() {
-  const [searchQuery, setSearchQuery] = useState('');
+  const [queryParams] = useSearchParams();
+  const search = queryParams.get('search');
+
+  const [searchQuery, setSearchQuery] = useState(search || '');
   const [suggestionData, setSuggestionData] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [isFailedSearch, setIsFailedSearch] = useState(false);
   const navigate = useNavigate();
   const abortController = useMemo(() => new AbortController(), []);
+
   const classes = useStyles();
 
   const handleSuggestionSelected = (event) => {
@@ -114,16 +119,15 @@ function SearchSuggestion() {
 
   const handleSearch = (event) => {
     const { key, type } = event;
-    const { value } = event.target;
     if (key === 'Enter' || type === 'click') {
-      navigate({ pathname: `/explore`, search: createSearchParams({ search: value || '' }).toString() });
+      navigate({ pathname: `/explore`, search: createSearchParams({ search: inputValue || '' }).toString() });
     }
   };
 
   const repoSearch = (value) => {
     api
       .get(
-        `${host()}${endpoints.globalSearch({ searchQuery: value, pageNumber: 1, pageSize: 9 })}`,
+        `${host()}${endpoints.globalSearch({ searchQuery: value, pageNumber: 1, pageSize: HEADER_SEARCH_PAGE_SIZE })}`,
         abortController.signal
       )
       .then((suggestionResponse) => {
@@ -198,10 +202,11 @@ function SearchSuggestion() {
       debounceSuggestions.cancel();
       abortController.abort();
     };
-  });
+  }, []);
 
   const {
     // selectedItem,
+    inputValue,
     getInputProps,
     getMenuProps,
     getItemProps,
@@ -214,7 +219,8 @@ function SearchSuggestion() {
     items: suggestionData,
     onInputValueChange: handleSeachChange,
     onSelectedItemChange: handleSuggestionSelected,
-    itemToString: (item) => item.name ?? ''
+    initialInputValue: search ?? '',
+    itemToString: (item) => item.name ?? item
   });
 
   const renderSuggestions = () => {
@@ -255,7 +261,7 @@ function SearchSuggestion() {
       >
         <InputBase
           style={{ paddingLeft: 10, height: 46, color: 'rgba(0, 0, 0, 0.6)' }}
-          placeholder="Search for content..."
+          placeholder={'Search for content...'}
           className={classes.input}
           onKeyUp={handleSearch}
           onFocus={() => openMenu()}

@@ -73,7 +73,7 @@ function Home() {
       .get(`${host()}${endpoints.repoList()}`, abortController.signal)
       .then((response) => {
         if (response.data && response.data.data) {
-          let repoList = response.data.data.RepoListWithNewestImage;
+          let repoList = response.data.data.RepoListWithNewestImage.Results;
           let repoData = repoList.map((responseRepo) => {
             return mapToRepo(responseRepo);
           });
@@ -92,7 +92,7 @@ function Home() {
   const renderMostPopular = () => {
     return (
       homeData &&
-      homeData.slice(0, 4).map((item, index) => {
+      homeData.slice(0, 3).map((item, index) => {
         return (
           <RepoCard
             name={item.name}

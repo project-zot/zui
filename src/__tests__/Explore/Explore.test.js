@@ -22,6 +22,7 @@ const StateExploreWrapper = (props) => {
 };
 const mockImageList = {
   GlobalSearch: {
+    Page: { TotalCount: 20, ItemCount: 10 },
     Repos: [
       {
         Name: 'alpine',
@@ -128,6 +129,18 @@ const mockImageList = {
     ]
   }
 };
+
+beforeEach(() => {
+  // IntersectionObserver isn't available in test environment
+  const mockIntersectionObserver = jest.fn();
+  mockIntersectionObserver.mockReturnValue({
+    observe: () => null,
+    unobserve: () => null,
+    disconnect: () => null
+  });
+  window.IntersectionObserver = mockIntersectionObserver;
+});
+
 afterEach(() => {
   // restore the spy created with spyOn
   jest.restoreAllMocks();
