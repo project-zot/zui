@@ -34,7 +34,7 @@ const useStyles = makeStyles(() => ({
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
-    background: '#FFFFFF',
+    backgroundColor: '#FFFFFF',
     borderColor: '#FFFFFF',
     borderRadius: '1.5rem',
     flex: 'none',
@@ -42,7 +42,11 @@ const useStyles = makeStyles(() => ({
     flexGrow: 0,
     order: 0,
     width: '100%',
-    maxWidth: '72rem'
+    maxWidth: '72rem',
+    '&:hover': {
+      boxShadow: '0rem 1.1875rem 1.4375rem rgba(131, 131, 131, 0.19)',
+      borderRadius: '1.5rem'
+    }
   },
   avatar: {
     height: '1.4375rem',
@@ -51,15 +55,25 @@ const useStyles = makeStyles(() => ({
   },
   cardBtn: {
     height: '100%',
-    width: '100%'
+    width: '100%',
+    borderRadius: '1.5rem',
+    borderColor: '#FFFFFF',
+    '&:hover $focusHighlight': {
+      opacity: 0
+    }
   },
+  focusHighlight: {},
   media: {
     borderRadius: '3.125rem'
   },
   content: {
     textAlign: 'left',
     color: '#606060',
-    maxHeight: '9.25rem'
+    maxHeight: '9.25rem',
+    backgroundColor: '#FFFFFF',
+    '&:hover': {
+      backgroundColor: '#FFFFFF!important'
+    }
   },
   contentRight: {
     height: '100%'
@@ -137,7 +151,13 @@ function RepoCard(props) {
 
   return (
     <Card variant="outlined" className={classes.card}>
-      <CardActionArea onClick={() => goToDetails()} className={classes.cardBtn}>
+      <CardActionArea
+        onClick={() => goToDetails()}
+        classes={{
+          root: classes.cardBtn,
+          focusHighlight: classes.focusHighlight
+        }}
+      >
         <CardContent className={classes.content}>
           <Grid container>
             <Grid item xs={10}>
