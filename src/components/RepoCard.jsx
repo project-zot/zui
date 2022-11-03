@@ -72,7 +72,7 @@ const useStyles = makeStyles(() => ({
     maxHeight: '9.25rem',
     backgroundColor: '#FFFFFF',
     '&:hover': {
-      backgroundColor: '#FFFFFF!important'
+      backgroundColor: '#FFFFFF'
     }
   },
   contentRight: {
