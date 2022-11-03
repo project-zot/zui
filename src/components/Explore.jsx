@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import RepoCard from './RepoCard.jsx';
 import Loading from './Loading';
 import Typography from '@mui/material/Typography';
+import Sticky from 'react-sticky-el';
 import Alert from '@mui/material/Alert';
 import { Container, FormControl, Grid, InputLabel, MenuItem, Select, Stack } from '@mui/material';
 
@@ -258,7 +259,7 @@ function Explore() {
         </Grid>
         <Grid container item xs={12} spacing={5} pt={1}>
           <Grid item xs={3}>
-            {renderFilterCards()}
+            <Sticky>{renderFilterCards()}</Sticky>
           </Grid>
           <Grid item xs={9}>
             {!(exploreData && exploreData.length) && !isLoading ? (
