@@ -99,7 +99,13 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, setIsLoggedIn }) {
+export default function SignIn({
+  isAuthEnabled,
+  setIsAuthEnabled,
+  isLoggedIn,
+  setIsLoggedIn,
+  wrapperSetLoading = () => {}
+}) {
   const [usernameError, setUsernameError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
   const [username, setUsername] = useState(null);
@@ -115,6 +121,7 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
     setIsLoading(true);
     if (isAuthEnabled && isLoggedIn) {
       setIsLoading(false);
+      wrapperSetLoading(false);
       navigate('/home');
     } else {
       api
@@ -124,12 +131,14 @@ export default function SignIn({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, se
             setIsAuthEnabled(false);
             setIsLoggedIn(true);
             setIsLoading(false);
+            wrapperSetLoading(false);
             navigate('/home');
           }
         })
         .catch(() => {
           setIsAuthEnabled(true);
           setIsLoading(false);
+          wrapperSetLoading(false);
         });
     }
     return () => {
