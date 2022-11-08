@@ -1,7 +1,9 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { api } from 'api';
 import Home from 'components/Home';
 import React from 'react';
+import { createSearchParams } from 'react-router-dom';
+import { sortByCriteria } from 'utilities/sortCriteria';
 
 // useNavigate mock
 const mockedUsedNavigate = jest.fn();
@@ -157,5 +159,22 @@ describe('Home component', () => {
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<Home />);
     await waitFor(() => expect(error).toBeCalledTimes(1));
+  });
+
+  it('should redirect to explore page when clicking view all popular', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    render(<Home />);
+    const viewAllButtons = await screen.findAllByText(/view all/i);
+    expect(viewAllButtons).toHaveLength(2);
+    fireEvent.click(viewAllButtons[0]);
+    expect(mockedUsedNavigate).toHaveBeenCalledWith({
+      pathname: `/explore`,
+      search: createSearchParams({ sortby: sortByCriteria.downloads.value }).toString()
+    });
+    fireEvent.click(viewAllButtons[1]);
+    expect(mockedUsedNavigate).toHaveBeenCalledWith({
+      pathname: `/explore`,
+      search: createSearchParams({ sortby: sortByCriteria.updateTime.value }).toString()
+    });
   });
 });

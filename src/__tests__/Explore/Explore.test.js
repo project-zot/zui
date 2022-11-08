@@ -3,7 +3,9 @@ import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import Explore from 'components/Explore';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { createSearchParams, MemoryRouter } from 'react-router-dom';
+import filterConstants from 'utilities/filterConstants.js';
+import { sortByCriteria } from 'utilities/sortCriteria.js';
 
 // router mock
 const mockedUsedNavigate = jest.fn();
@@ -15,7 +17,7 @@ jest.mock('react-router-dom', () => ({
 const StateExploreWrapper = (props) => {
   const queryString = props.search || '';
   return (
-    <MemoryRouter initialEntries={[queryString]}>
+    <MemoryRouter initialEntries={[`/explore?${queryString.toString()}`]}>
       <Explore />
     </MemoryRouter>
   );
@@ -195,5 +197,21 @@ describe('Explore component', () => {
     const newOption = await screen.findByText('Alphabetical');
     userEvent.click(newOption);
     expect(await screen.findByText('Alphabetical')).toBeInTheDocument();
+  });
+
+  it('should get preselected filters and sorting order from query params', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    render(
+      <StateExploreWrapper
+        search={createSearchParams({
+          filter: filterConstants.osFilters[0].value,
+          sortby: sortByCriteria.downloads.value
+        })}
+      />
+    );
+    const sortyBySelect = await screen.findByText(sortByCriteria.downloads.label);
+    expect(sortyBySelect).toBeInTheDocument();
+    const filterCheckboxes = await screen.findAllByRole('checkbox');
+    expect(filterCheckboxes[0]).toBeChecked();
   });
 });

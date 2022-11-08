@@ -85,7 +85,7 @@ const endpoints = {
     sortBy = sortByCriteria.relevance.value,
     filter = {}
   }) => {
-    const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
+    const searchParam = !isEmpty(searchQuery) ? `query:"${searchQuery}"` : `query:""`;
     const paginationParam = `requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
     } sortBy: ${sortBy}}`;

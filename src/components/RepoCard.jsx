@@ -1,6 +1,6 @@
 // react global
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, createSearchParams } from 'react-router-dom';
 
 // utility
 import { DateTime } from 'luxon';
@@ -111,14 +111,21 @@ function RepoCard(props) {
     navigate(`/image/${encodeURIComponent(name)}`);
   };
 
+  const handlePlatformChipClick = (event) => {
+    const { textContent } = event.target;
+    event.stopPropagation();
+    event.preventDefault();
+    navigate({ pathname: `/explore`, search: createSearchParams({ filter: textContent }).toString() });
+  };
+
   const platformChips = () => {
-    // if platforms not received, mock data
     const platformsOsArch = platforms || [];
     return platformsOsArch.map((platform, index) => (
       <Stack key={`stack${platform?.Os}${platform?.Arch}`} alignItems="center" direction="row" spacing={2}>
         <Chip
           key={`${name}${platform?.Os}${index}`}
           label={platform?.Os}
+          onClick={handlePlatformChipClick}
           sx={{
             backgroundColor: '#E0E5EB',
             color: '#52637A',
@@ -128,6 +135,7 @@ function RepoCard(props) {
         <Chip
           key={`${name}${platform?.Arch}${index}`}
           label={platform?.Arch}
+          onClick={handlePlatformChipClick}
           sx={{
             backgroundColor: '#E0E5EB',
             color: '#52637A',
@@ -152,7 +160,7 @@ function RepoCard(props) {
   return (
     <Card variant="outlined" className={classes.card}>
       <CardActionArea
-        onClick={() => goToDetails()}
+        onClick={goToDetails}
         classes={{
           root: classes.cardBtn,
           focusHighlight: classes.focusHighlight

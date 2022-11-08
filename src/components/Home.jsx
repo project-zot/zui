@@ -6,6 +6,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import RepoCard from './RepoCard';
 import { mapToRepo } from 'utilities/objectModels';
 import Loading from './Loading';
+import { useNavigate, createSearchParams } from 'react-router-dom';
+import { sortByCriteria } from 'utilities/sortCriteria';
 
 const useStyles = makeStyles(() => ({
   gridWrapper: {
@@ -57,12 +59,19 @@ const useStyles = makeStyles(() => ({
     lineHeight: '150%',
     letterSpacing: '0.009375rem',
     width: '65%'
+  },
+  viewAll: {
+    color: '#00000099',
+    cursor: 'pointer',
+    textAlign: 'right',
+    width: '100%'
   }
 }));
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [homeData, setHomeData] = useState([]);
+  const navigate = useNavigate();
   const abortController = useMemo(() => new AbortController(), []);
   const classes = useStyles();
 
@@ -88,6 +97,10 @@ function Home() {
       abortController.abort();
     };
   }, []);
+
+  const handleClickViewAll = (target) => {
+    navigate({ pathname: `/explore`, search: createSearchParams({ sortby: target }).toString() });
+  };
 
   const renderMostPopular = () => {
     return (
@@ -180,15 +193,31 @@ function Home() {
               </Typography>
             </Stack>
           </Grid>
+          {/* currently most popular will be by downloads until stars are implemented */}
+          <Typography
+            variant="body2"
+            className={classes.viewAll}
+            onClick={() => handleClickViewAll(sortByCriteria.downloads.value)}
+          >
+            View all
+          </Typography>
           {renderMostPopular()}
           {/* <Typography variant="h4" align="left" className={classes.sectionTitle}>
         Bookmarks
       </Typography>
       {renderBookmarks()} */}
-          <Stack></Stack>
-          <Typography variant="h4" align="left" className={classes.sectionTitle}>
-            Recently updated images
-          </Typography>
+          <Stack justifyContent="space-between" alignItems="end" direction="row" sx={{ width: '100%' }}>
+            <Typography variant="h4" align="left" className={classes.sectionTitle}>
+              Recently updated images
+            </Typography>
+            <Typography
+              variant="body2"
+              className={classes.viewAll}
+              onClick={() => handleClickViewAll(sortByCriteria.updateTime.value)}
+            >
+              View all
+            </Typography>
+          </Stack>
           {renderRecentlyUpdated()}
         </Stack>
       )}

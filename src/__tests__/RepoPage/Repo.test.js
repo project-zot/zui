@@ -2,14 +2,15 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import RepoDetails from 'components/RepoDetails';
 import React from 'react';
 import { api } from 'api';
+import { createSearchParams } from 'react-router-dom';
 
 // uselocation mock
 const mockUseLocationValue = {
   pathname: "'localhost:3000/image/test'",
-  search: '',
-  hash: '',
-  state: { lastDate: '' }
+  search: ''
 };
+
+const mockUseNavigate = jest.fn();
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -19,7 +20,7 @@ jest.mock('react-router-dom', () => ({
   useLocation: () => {
     return mockUseLocationValue;
   },
-  useNavigate: () => jest.fn()
+  useNavigate: () => mockUseNavigate
 }));
 
 const mockRepoDetailsData = {
@@ -39,7 +40,13 @@ const mockRepoDetailsData = {
           MaxSeverity: 'CRITICAL',
           Count: 15
         }
-      }
+      },
+      Platforms: [
+        {
+          Os: 'linux',
+          Arch: 'amd64'
+        }
+      ]
     }
   }
 };
@@ -200,5 +207,16 @@ describe('Repo details component', () => {
     fireEvent.click(await screen.findByText(/tags/i));
     expect(await screen.findByTestId('tags-container')).toBeInTheDocument();
     expect(screen.queryByTestId('overview-container')).not.toBeInTheDocument();
+  });
+
+  it('should render platform chips and they should redirect to explore page', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
+    render(<RepoDetails />);
+    const osChip = await screen.findByText(/linux/i);
+    fireEvent.click(osChip);
+    expect(mockUseNavigate).toHaveBeenCalledWith({
+      pathname: '/explore',
+      search: createSearchParams({ filter: 'linux' }).toString()
+    });
   });
 });

@@ -1,9 +1,9 @@
 // react global
-import { useParams } from 'react-router-dom';
 import React, { useEffect, useMemo, useState } from 'react';
 
 // utility
 import { api, endpoints } from '../api';
+import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
 
 // components
 import Tags from './Tags.jsx';
@@ -128,6 +128,7 @@ function RepoDetails() {
   const [selectedTab, setSelectedTab] = useState('Overview');
   // get url param from <Route here (i.e. image name)
   const { name } = useParams();
+  const navigate = useNavigate();
   const abortController = useMemo(() => new AbortController(), []);
   const classes = useStyles();
 
@@ -154,6 +155,13 @@ function RepoDetails() {
     };
   }, [name]);
 
+  const handlePlatformChipClick = (event) => {
+    const { textContent } = event.target;
+    event.stopPropagation();
+    event.preventDefault();
+    navigate({ pathname: `/explore`, search: createSearchParams({ filter: textContent }).toString() });
+  };
+
   const platformChips = () => {
     const platforms = repoDetailData?.platforms || [];
 
@@ -162,6 +170,7 @@ function RepoDetails() {
         <Chip
           key={`${name}${platform?.Os}${index}`}
           label={platform?.Os}
+          onClick={handlePlatformChipClick}
           sx={{
             backgroundColor: '#E0E5EB',
             color: '#52637A',
@@ -171,6 +180,7 @@ function RepoDetails() {
         <Chip
           key={`${name}${platform?.Arch}${index}`}
           label={platform?.Arch}
+          onClick={handlePlatformChipClick}
           sx={{
             backgroundColor: '#E0E5EB',
             color: '#52637A',

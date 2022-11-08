@@ -84,6 +84,27 @@ function Explore() {
     return filter;
   };
 
+  const deconstructFilterQuery = () => {
+    const preselectedFilter = queryParams.get('filter');
+    if (!isEmpty(preselectedFilter)) {
+      if (filterConstants.osFilters.map((f) => f.value).includes(preselectedFilter)) {
+        setOSFilters([...osFilters, preselectedFilter]);
+      } else if (filterConstants.archFilters.map((f) => f.value).includes(preselectedFilter)) {
+        setArchFilters([...archFilters, preselectedFilter]);
+      }
+      queryParams.delete('filter');
+    }
+    const preselectedSortOrder = queryParams.get('sortby');
+    if (!isEmpty(preselectedSortOrder)) {
+      const debug = Object.values(sortByCriteria);
+      const sortFilterValue = debug.find((sbc) => sbc.value === preselectedSortOrder);
+      if (sortFilterValue) {
+        setSortFilter(sortFilterValue.value);
+      }
+      queryParams.delete('sortby');
+    }
+  };
+
   const getPaginatedResults = () => {
     setIsLoading(true);
     api
@@ -138,6 +159,11 @@ function Explore() {
   useEffect(() => {
     resetPagination();
   }, [search, queryParams, imageFilters, osFilters, archFilters, sortFilter]);
+
+  // on component mount, check query params for preselected filters
+  useEffect(() => {
+    deconstructFilterQuery();
+  }, []);
 
   const handleSortChange = (event) => {
     setSortFilter(event.target.value);

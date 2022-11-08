@@ -1,5 +1,6 @@
 import { Card, CardContent, Checkbox, FormControlLabel, Stack, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
+import { isBoolean, isArray } from 'lodash';
 import React from 'react';
 
 const useStyles = makeStyles(() => ({
@@ -22,7 +23,7 @@ function FilterCard(props) {
 
   const handleFilterClicked = (event, changedFilterLabel, changedFilterValue) => {
     const { checked } = event.target;
-
+    // since checkboxes are controlled, we first have to manually perform the checkbox checked update
     if (checked) {
       if (filters[0]?.type === 'boolean') {
         updateFilters(checked);
@@ -40,6 +41,14 @@ function FilterCard(props) {
     }
   };
 
+  const getCheckboxStatus = (label) => {
+    if (isArray(filterValue)) {
+      return filterValue?.includes(label);
+    } else if (isBoolean(filterValue)) {
+      return filterValue;
+    }
+  };
+
   const getFilterRows = () => {
     const filterRows = filters;
     return filterRows.map((filter, index) => {
@@ -50,7 +59,7 @@ function FilterCard(props) {
             control={<Checkbox />}
             label={filter.label}
             id={title}
-            // checked={filter.label === selectedFilter}
+            checked={getCheckboxStatus(filter.label)}
             onChange={() => handleFilterClicked(event, filter.label, filter.value)}
           />
         </Tooltip>
