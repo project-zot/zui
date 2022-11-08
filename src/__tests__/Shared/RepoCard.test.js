@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react';
+import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import RepoCard from 'components/RepoCard';
+import { createSearchParams } from 'react-router-dom';
 
 // usenavigate mock
 const mockedUsedNavigate = jest.fn();
@@ -19,7 +20,8 @@ const mockImage = {
   licenses: '',
   vendor: '',
   size: '585',
-  tags: ''
+  tags: '',
+  platforms: [{ Os: 'linux', Arch: 'amd64' }]
 };
 
 afterEach(() => {
@@ -43,5 +45,25 @@ describe('Repo card component', () => {
     expect(cardTitle).toBeInTheDocument();
     userEvent.click(cardTitle);
     expect(mockedUsedNavigate).toBeCalledWith(`/image/${mockImage.name}`);
+  });
+
+  it('navigates to explore page when platform chip is clicked', async () => {
+    render(
+      <RepoCard
+        name={mockImage.name}
+        version={mockImage.latestVersion}
+        description={mockImage.description}
+        vendor={mockImage.vendor}
+        key={1}
+        lastUpdated={mockImage.lastUpdated}
+        platforms={mockImage.platforms}
+      />
+    );
+    const osChip = await screen.findByText(/linux/i);
+    fireEvent.click(osChip);
+    expect(mockedUsedNavigate).toHaveBeenCalledWith({
+      pathname: '/explore',
+      search: createSearchParams({ filter: 'linux' }).toString()
+    });
   });
 });
