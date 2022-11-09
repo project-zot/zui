@@ -1,9 +1,9 @@
 // react global
-import * as React from 'react';
+import React, { useState } from 'react';
 
 // components
 import Typography from '@mui/material/Typography';
-import { Card, CardContent, Divider } from '@mui/material';
+import { Card, CardContent, Divider, Stack, Input } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import TagCard from './TagCard';
 
@@ -50,37 +50,48 @@ const useStyles = makeStyles(() => ({
 export default function Tags(props) {
   const classes = useStyles();
   const { tags } = props;
+  const [tagsFilter, setTagsFilter] = useState('');
   const renderTags = (tags) => {
-    const cmp =
+    return (
       tags &&
-      tags.map((tag) => {
-        return (
-          <TagCard
-            key={tag.Tag}
-            tag={tag.Tag}
-            lastUpdated={tag.LastUpdated}
-            digest={tag.Digest}
-            vendor={tag.Vendor}
-            size={tag.Size}
-            platform={tag.Platform}
-          />
-        );
-      });
-    return cmp;
+      tags
+        .filter((t) => t.Tag?.includes(tagsFilter))
+        .map((tag) => {
+          return (
+            <TagCard
+              key={tag.Tag}
+              tag={tag.Tag}
+              lastUpdated={tag.LastUpdated}
+              digest={tag.Digest}
+              vendor={tag.Vendor}
+              size={tag.Size}
+              platform={tag.Platform}
+            />
+          );
+        })
+    );
+  };
+
+  const handleTagsFilterChange = (e) => {
+    const { value } = e.target;
+    setTagsFilter(value);
   };
 
   return (
     <Card className={classes.tagCard} data-testid="tags-container">
       <CardContent className={classes.content}>
-        <Typography
-          variant="h4"
-          gutterBottom
-          component="div"
-          align="left"
-          style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.5rem', fontWeight: '600' }}
-        >
-          Tags History
-        </Typography>
+        <Stack direction="row" justifyContent="space-between">
+          <Typography
+            variant="h4"
+            gutterBottom
+            component="div"
+            align="left"
+            style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.5rem', fontWeight: '600' }}
+          >
+            Tags History
+          </Typography>
+          <Input placeholder="Filter Tags" type="text" value={tagsFilter} onChange={handleTagsFilterChange}></Input>
+        </Stack>
         <Divider
           variant="fullWidth"
           sx={{
