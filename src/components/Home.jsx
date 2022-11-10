@@ -1,4 +1,4 @@
-import { Grid, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import { api, endpoints } from 'api';
 import { host } from '../host';
@@ -183,30 +183,35 @@ function Home() {
         <Loading />
       ) : (
         <Stack spacing={4} alignItems="center" className={classes.gridWrapper}>
-          <Grid container item xs={12} sx={{ mt: 2, mb: 1 }} justifyContent="center">
-            <Stack sx={{ display: 'inline' }} direction="row" justifyContent="center" spacing={1}>
-              <Typography variant="h3" className={classes.title}>
-                Most popular
-              </Typography>
-              <Typography variant="h3" className={classes.titleRed}>
-                images
-              </Typography>
-            </Stack>
-          </Grid>
-          {/* currently most popular will be by downloads until stars are implemented */}
-          <Typography
-            variant="body2"
-            className={classes.viewAll}
-            onClick={() => handleClickViewAll(sortByCriteria.downloads.value)}
+          <Stack
+            justifyContent="space-between"
+            alignItems="end"
+            direction="row"
+            sx={{ width: '100%', paddingTop: '3rem' }}
           >
-            View all
-          </Typography>
+            <Typography variant="h4" align="left" className={classes.sectionTitle}>
+              Most popular images
+            </Typography>
+            <Typography
+              variant="body2"
+              className={classes.viewAll}
+              onClick={() => handleClickViewAll(sortByCriteria.downloads.value)}
+            >
+              View all
+            </Typography>
+          </Stack>
           {renderMostPopular()}
+          {/* currently most popular will be by downloads until stars are implemented */}
           {/* <Typography variant="h4" align="left" className={classes.sectionTitle}>
         Bookmarks
       </Typography>
       {renderBookmarks()} */}
-          <Stack justifyContent="space-between" alignItems="end" direction="row" sx={{ width: '100%' }}>
+          <Stack
+            justifyContent="space-between"
+            alignItems="end"
+            direction="row"
+            sx={{ width: '100%', paddingTop: '1rem' }}
+          >
             <Typography variant="h4" align="left" className={classes.sectionTitle}>
               Recently updated images
             </Typography>
