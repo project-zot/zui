@@ -72,27 +72,49 @@ const mockRepoDetailsNone = {
   }
 };
 
-// const mockRepoDetailsUnknown = {
-//   ExpandedRepoInfo: {
-//     Images: [
-//       {
-//         Digest: '2aa7ff5ca352d4d25fc6548f9930a436aacd64d56b1bd1f9ff4423711b9c8718',
-//         Tag: 'latest'
-//       }
-//     ],
-//     Summary: {
-//       Name: 'test1',
-//       NewestImage: {
-//         RepoName: 'mongo',
-//         IsSigned: true,
-//         Vulnerabilities: {
-//           MaxSeverity: 'UNKNOWN',
-//           Count: 15
-//         }
-//       }
-//     }
-//   }
-// };
+const mockRepoDetailsUnknown = {
+  ExpandedRepoInfo: {
+    Images: [
+      {
+        Digest: '2aa7ff5ca352d4d25fc6548f9930a436aacd64d56b1bd1f9ff4423711b9c8718',
+        Tag: 'latest'
+      }
+    ],
+    Summary: {
+      Name: 'test1',
+      NewestImage: {
+        RepoName: 'mongo',
+        IsSigned: true,
+        Vulnerabilities: {
+          MaxSeverity: 'UNKNOWN',
+          Count: 15
+        }
+      }
+    }
+  }
+};
+
+const mockRepoDetailsFailed = {
+  ExpandedRepoInfo: {
+    Images: [
+      {
+        Digest: '2aa7ff5ca352d4d25fc6548f9930a436aacd64d56b1bd1f9ff4423711b9c8718',
+        Tag: 'latest'
+      }
+    ],
+    Summary: {
+      Name: 'test1',
+      NewestImage: {
+        RepoName: 'mongo',
+        IsSigned: true,
+        Vulnerabilities: {
+          MaxSeverity: '',
+          Count: 15
+        }
+      }
+    }
+  }
+};
 
 const mockRepoDetailsLow = {
   ExpandedRepoInfo: {
@@ -179,9 +201,12 @@ describe('Repo details component', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsNone } });
     render(<RepoDetails />);
     expect(await screen.findAllByTestId('none-vulnerability-icon')).toHaveLength(1);
-    // jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsUnknown } });
-    // render(<RepoDetails />);
-    // expect(await screen.findAllByTestId('unknown-vulnerability-icon')).toHaveLength(1);
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsUnknown } });
+    render(<RepoDetails />);
+    expect(await screen.findAllByTestId('unknown-vulnerability-icon')).toHaveLength(1);
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsFailed } });
+    render(<RepoDetails />);
+    expect(await screen.findAllByTestId('failed-vulnerability-icon')).toHaveLength(1);
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsLow } });
     render(<RepoDetails />);
     expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(1);

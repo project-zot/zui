@@ -127,6 +127,23 @@ const mockImageList = {
             Count: 10
           }
         }
+      },
+      {
+        Name: 'base',
+        Size: '369311301',
+        LastUpdated: '2022-08-23T00:20:40.144281895Z',
+        NewestImage: {
+          Tag: 'latest',
+          Description: '',
+          IsSigned: true,
+          Licenses: '',
+          Vendor: '',
+          Labels: '',
+          Vulnerabilities: {
+            MaxSeverity: '',
+            Count: 10
+          }
+        }
       }
     ]
   }
@@ -167,7 +184,7 @@ describe('Explore component', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
     expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(1);
-    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(5);
+    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(6);
   });
 
   it('renders vulnerability icons', async () => {
@@ -178,7 +195,8 @@ describe('Explore component', () => {
     expect(await screen.findAllByTestId('critical-vulnerability-icon')).toHaveLength(1);
     expect(await screen.findAllByTestId('none-vulnerability-icon')).toHaveLength(1);
     expect(await screen.findAllByTestId('medium-vulnerability-icon')).toHaveLength(1);
-    // expect(await screen.findAllByTestId('unknown-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('unknown-vulnerability-icon')).toHaveLength(1);
+    expect(await screen.findAllByTestId('failed-vulnerability-icon')).toHaveLength(1);
   });
 
   it("should log an error when data can't be fetched", async () => {
