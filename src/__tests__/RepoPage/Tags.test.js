@@ -66,7 +66,7 @@ describe('Tags component', () => {
 
   it('should filter tag list based on user input', async () => {
     render(<Tags tags={mockedTagsData} />);
-    const tagFilterInput = await screen.findByPlaceholderText(/Filter tags/i);
+    const tagFilterInput = await screen.findByPlaceholderText(/Search for Tags/i);
     expect(await screen.findByText(/latest/i)).toBeInTheDocument();
     expect(await screen.findByText(/bullseye/i)).toBeInTheDocument();
     userEvent.type(tagFilterInput, 'bull');

@@ -3,7 +3,8 @@ import React, { useState } from 'react';
 
 // components
 import Typography from '@mui/material/Typography';
-import { Card, CardContent, Divider, Stack, Input, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
+import { Card, CardContent, Divider, Stack, InputBase, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
+import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from '@mui/styles';
 import TagCard from './TagCard';
 import { tagsSortByCriteria } from 'utilities/sortCriteria';
@@ -45,6 +46,25 @@ const useStyles = makeStyles(() => ({
   },
   clickCursor: {
     cursor: 'pointer'
+  },
+  search: {
+    position: 'relative',
+    minWidth: '100%',
+    flexDirection: 'row',
+    marginBottom: '1.7rem',
+    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
+    border: '0.125rem solid #E7E7E7',
+    borderRadius: '1rem',
+    zIndex: 1155
+  },
+  searchIcon: {
+    color: '#52637A',
+    paddingRight: '3%'
+  },
+  input: {
+    color: '#464141',
+    marginLeft: 1,
+    width: '90%'
   }
 }));
 
@@ -116,7 +136,6 @@ export default function Tags(props) {
                 ))}
               </Select>
             </FormControl>
-            <Input placeholder="Filter Tags" type="text" value={tagsFilter} onChange={handleTagsFilterChange}></Input>
           </div>
         </Stack>
         <Divider
@@ -128,6 +147,24 @@ export default function Tags(props) {
             width: '100%'
           }}
         />
+        <Stack
+          className={classes.search}
+          direction="row"
+          alignItems="center"
+          justifyContent="space-between"
+          spacing={2}
+        >
+          <InputBase
+            style={{ paddingLeft: 10, height: 46, color: 'rgba(0, 0, 0, 0.6)' }}
+            placeholder={'Search for Tags...'}
+            className={classes.input}
+            value={tagsFilter}
+            onChange={handleTagsFilterChange}
+          />
+          <div className={classes.searchIcon}>
+            <SearchIcon />
+          </div>
+        </Stack>
         {renderTags(tags)}
       </CardContent>
     </Card>
