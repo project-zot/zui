@@ -3,9 +3,10 @@ import React, { useState } from 'react';
 
 // components
 import Typography from '@mui/material/Typography';
-import { Card, CardContent, Divider, Stack, Input } from '@mui/material';
+import { Card, CardContent, Divider, Stack, Input, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import TagCard from './TagCard';
+import { tagsSortByCriteria } from 'utilities/sortCriteria';
 
 const useStyles = makeStyles(() => ({
   tagCard: {
@@ -51,30 +52,39 @@ export default function Tags(props) {
   const classes = useStyles();
   const { tags } = props;
   const [tagsFilter, setTagsFilter] = useState('');
+  const [sortFilter, setSortFilter] = useState(tagsSortByCriteria.updateTimeDesc.value);
   const renderTags = (tags) => {
+    const selectedSort = Object.values(tagsSortByCriteria).find((sc) => sc.value === sortFilter);
+    const filteredTags = tags.filter((t) => t.Tag?.includes(tagsFilter));
+    if (selectedSort) {
+      filteredTags.sort(selectedSort.func);
+    }
     return (
       tags &&
-      tags
-        .filter((t) => t.Tag?.includes(tagsFilter))
-        .map((tag) => {
-          return (
-            <TagCard
-              key={tag.Tag}
-              tag={tag.Tag}
-              lastUpdated={tag.LastUpdated}
-              digest={tag.Digest}
-              vendor={tag.Vendor}
-              size={tag.Size}
-              platform={tag.Platform}
-            />
-          );
-        })
+      filteredTags.map((tag) => {
+        return (
+          <TagCard
+            key={tag.Tag}
+            tag={tag.Tag}
+            lastUpdated={tag.LastUpdated}
+            digest={tag.Digest}
+            vendor={tag.Vendor}
+            size={tag.Size}
+            platform={tag.Platform}
+          />
+        );
+      })
     );
   };
 
   const handleTagsFilterChange = (e) => {
     const { value } = e.target;
     setTagsFilter(value);
+  };
+
+  const handleTagsSortChange = (e) => {
+    const { value } = e.target;
+    setSortFilter(value);
   };
 
   return (
@@ -90,7 +100,24 @@ export default function Tags(props) {
           >
             Tags History
           </Typography>
-          <Input placeholder="Filter Tags" type="text" value={tagsFilter} onChange={handleTagsFilterChange}></Input>
+          <div>
+            <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
+              <InputLabel>Sort</InputLabel>
+              <Select
+                label="Sort"
+                value={sortFilter}
+                onChange={handleTagsSortChange}
+                MenuProps={{ disableScrollLock: true }}
+              >
+                {Object.values(tagsSortByCriteria).map((el) => (
+                  <MenuItem key={el.value} value={el.value}>
+                    {el.label}
+                  </MenuItem>
+                ))}
+              </Select>
+            </FormControl>
+            <Input placeholder="Filter Tags" type="text" value={tagsFilter} onChange={handleTagsFilterChange}></Input>
+          </div>
         </Stack>
         <Divider
           variant="fullWidth"

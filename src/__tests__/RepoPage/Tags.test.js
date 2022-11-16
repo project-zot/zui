@@ -73,4 +73,15 @@ describe('Tags component', () => {
     await waitFor(() => expect(screen.queryByText(/latest/i)).not.toBeInTheDocument());
     expect(await screen.findByText(/bullseye/i)).toBeInTheDocument();
   });
+
+  it('should sort tags based on the picked sort criteria', async () => {
+    render(<Tags tags={mockedTagsData} />);
+    const selectFilter = await screen.findByText('Newest');
+    expect(selectFilter).toBeInTheDocument();
+    userEvent.click(selectFilter);
+    const newOption = await screen.findByText('A - Z');
+    userEvent.click(newOption);
+    expect(await screen.findByText('A - Z')).toBeInTheDocument();
+    expect(await screen.queryByText('Newest')).not.toBeInTheDocument();
+  });
 });
