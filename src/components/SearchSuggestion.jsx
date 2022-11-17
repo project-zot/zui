@@ -75,7 +75,8 @@ const useStyles = makeStyles(() => ({
     justifyContent: 'flex-start',
     color: '#000000',
     height: '2.75rem',
-    padding: '0 5%'
+    padding: '0 5%',
+    cursor: 'pointer'
   },
   searchItemIconBg: {
     backgroundColor: '#FFFFFF',
