@@ -96,8 +96,7 @@ function Explore() {
     }
     const preselectedSortOrder = queryParams.get('sortby');
     if (!isEmpty(preselectedSortOrder)) {
-      const debug = Object.values(sortByCriteria);
-      const sortFilterValue = debug.find((sbc) => sbc.value === preselectedSortOrder);
+      const sortFilterValue = Object.values(sortByCriteria).find((sbc) => sbc.value === preselectedSortOrder);
       if (sortFilterValue) {
         setSortFilter(sortFilterValue.value);
       }
@@ -127,8 +126,8 @@ function Explore() {
           setTotalItems(response.data.data.GlobalSearch.Page?.TotalCount);
           setIsEndOfList(response.data.data.GlobalSearch.Page?.ItemCount < EXPLORE_PAGE_SIZE);
           setExploreData((previousState) => [...previousState, ...repoData]);
-          setIsLoading(false);
         }
+        setIsLoading(false);
       })
       .catch((e) => {
         console.error(e);
@@ -137,37 +136,34 @@ function Explore() {
       });
   };
 
+  const resetPagination = async () => {
+    setIsEndOfList(false);
+    setExploreData([]);
+    if (pageNumber !== 1) {
+      setPageNumber(1);
+    } else {
+      getPaginatedResults();
+    }
+  };
+
+  // if filters changed, reset pagination and restart lookup
   useEffect(() => {
     if (isLoading) return;
+    resetPagination();
+  }, [search, imageFilters, osFilters, archFilters, sortFilter]);
+
+  // on component mount or when query params change, check query params for filters
+  useEffect(() => {
+    if (isLoading) return;
+    deconstructFilterQuery();
+  }, [queryParams, isLoading]);
+
+  useEffect(() => {
     getPaginatedResults();
     return () => {
       abortController.abort();
     };
   }, [pageNumber]);
-
-  const resetPagination = () => {
-    if (pageNumber === 1) {
-      getPaginatedResults();
-    } else {
-      setPageNumber(1);
-    }
-    setIsEndOfList(false);
-    setExploreData([]);
-  };
-
-  // if filters changed, reset pagination and restart lookup
-  useEffect(() => {
-    resetPagination();
-  }, [search, queryParams, imageFilters, osFilters, archFilters, sortFilter]);
-
-  // on component mount, check query params for preselected filters
-  useEffect(() => {
-    deconstructFilterQuery();
-  }, []);
-
-  const handleSortChange = (event) => {
-    setSortFilter(event.target.value);
-  };
 
   // setup intersection obeserver for infinite scroll
   useEffect(() => {
@@ -193,6 +189,10 @@ function Explore() {
       intersectionObserver.disconnect();
     };
   }, [isLoading, isEndOfList]);
+
+  const handleSortChange = (event) => {
+    setSortFilter(event.target.value);
+  };
 
   const renderRepoCards = () => {
     return (
@@ -228,18 +228,21 @@ function Explore() {
           filters={filterConstants.osFilters}
           filterValue={osFilters}
           updateFilters={setOSFilters}
+          wrapperLoading={isLoading}
         />
         <FilterCard
           title="Architectures"
           filters={filterConstants.archFilters}
           filterValue={archFilters}
           updateFilters={setArchFilters}
+          wrapperLoading={isLoading}
         />
         <FilterCard
           title="Additional filters"
           filters={filterConstants.imageFilters}
           filterValue={imageFilters}
           updateFilters={setImageFilters}
+          wrapperLoading={isLoading}
         />
       </Stack>
     );
@@ -265,7 +268,12 @@ function Explore() {
               <Typography variant="body2" className={classes.results}>
                 Showing {exploreData?.length} results out of {totalItems}
               </Typography>
-              <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
+              <FormControl
+                sx={{ m: '1', minWidth: '4.6875rem' }}
+                disabled={isLoading}
+                className={classes.sortForm}
+                size="small"
+              >
                 <InputLabel>Sort</InputLabel>
                 <Select
                   label="Sort"
