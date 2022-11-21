@@ -18,7 +18,7 @@ const useStyles = makeStyles(() => ({
 
 function FilterCard(props) {
   const classes = useStyles();
-  const { title, filters, updateFilters, filterValue } = props;
+  const { title, filters, updateFilters, filterValue, wrapperLoading } = props;
   // const [selectedFilter, setSelectedFilter] = useState(null);
 
   const handleFilterClicked = (event, changedFilterLabel, changedFilterValue) => {
@@ -61,6 +61,7 @@ function FilterCard(props) {
             id={title}
             checked={getCheckboxStatus(filter.label)}
             onChange={() => handleFilterClicked(event, filter.label, filter.value)}
+            disabled={wrapperLoading}
           />
         </Tooltip>
       );
