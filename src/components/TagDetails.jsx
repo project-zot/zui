@@ -7,6 +7,7 @@ import { mapToImage } from '../utilities/objectModels';
 // components
 import {
   Box,
+  Button,
   Card,
   CardContent,
   CardMedia,
@@ -18,8 +19,7 @@ import {
   MenuItem,
   Tab,
   Typography,
-  Snackbar,
-  Alert
+  InputBase
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import makeStyles from '@mui/styles/makeStyles';
@@ -31,6 +31,7 @@ import repocube2 from '../assets/repocube-2.png';
 import repocube3 from '../assets/repocube-3.png';
 import repocube4 from '../assets/repocube-4.png';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TagDetailsMetadata from './TagDetailsMetadata';
 import VulnerabilitiesDetails from './VulnerabilitiesDetails';
 import HistoryLayers from './HistoryLayers';
@@ -63,10 +64,6 @@ const useStyles = makeStyles(() => ({
     width: '3rem',
     objectFit: 'fill'
   },
-  cardBtn: {
-    height: '100%',
-    width: '100%'
-  },
   media: {
     borderRadius: '3.125em'
   },
@@ -79,6 +76,10 @@ const useStyles = makeStyles(() => ({
     height: '100%'
   },
   selectedTab: {
+    background: '#D83C0E',
+    borderRadius: '1.5rem'
+  },
+  selectedPullTab: {
     background: '#D83C0E',
     borderRadius: '1.5rem'
   },
@@ -109,23 +110,14 @@ const useStyles = makeStyles(() => ({
     order: 0,
     boxShadow: 'none!important'
   },
-  platformText: {
-    backgroundColor: '#EDE7F6',
-    color: '#220052',
-    fontWeight: '400',
-    fontSize: '0.8125rem',
-    lineHeight: '1.125rem',
-    letterSpacing: '0.01rem'
-  },
   copyStringSelect: {
     '& fieldset': {
-      border: '0.125rem solid #52637A'
+      border: ' 0.0625rem solid #52637A'
     },
-    m: '0.5rem 0',
     width: '20.625rem',
-    borderRadius: '0.5rem',
     color: '#14191F',
-    alignContent: 'left'
+    borderRadius: '0.5rem',
+    textAlign: 'left'
   },
   cardRoot: {
     boxShadow: 'none!important'
@@ -133,9 +125,52 @@ const useStyles = makeStyles(() => ({
   header: {
     paddingLeft: '2rem'
   },
+  tabBox: {
+    padding: '0.5rem'
+  },
+  pullText: {
+    width: '14.5rem',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
+    textOverflow: 'ellipsis'
+  },
   textEllipsis: {
+    padding: '0rem 1rem'
+  },
+  inputTextEllipsis: {
+    width: '16.125rem',
+    whiteSpace: 'nowrap',
+    overflow: 'hidden',
     textOverflow: 'ellipsis',
-    overflow: 'hidden'
+    padding: '0rem',
+    border: 'none'
+  },
+  pullStringBox: {
+    width: '19.365rem',
+    border: '0.0625rem solid rgba(0, 0, 0, 0.23)',
+    borderRadius: '0.5rem',
+    padding: '0rem 0rem',
+    fontSize: '1rem'
+  },
+  pullStringBoxCopied: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    backgroundColor: '#2EAE4E',
+    padding: '0rem 1rem 0rem 1rem',
+    fontFamily: 'Roboto',
+    fontSize: '1rem',
+    color: '#FFFFFF',
+    width: '20.625rem',
+    border: '0.0625rem solid rgba(0, 0, 0, 0.23)',
+    borderRadius: '0.5rem',
+    height: '3.5rem',
+    textTransform: 'none',
+    '&:hover': {
+      backgroundColor: '#2EAE4E'
+    }
+  },
+  focus: {
+    backgroundColor: '#FFFFFF'
   }
 }));
 
@@ -153,13 +188,14 @@ function TagDetails() {
   const [imageDetailData, setImageDetailData] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('Layers');
+  const [selectedPullTab, setSelectedPullTab] = useState('');
   const abortController = useMemo(() => new AbortController(), []);
 
   // get url param from <Route here (i.e. image name)
   const { reponame, tag } = useParams();
 
   const [pullString, setPullString] = useState('');
-  const [snackBarOpen, setSnackbarOpen] = useState(false);
+  const [isCopied, setIsCopied] = useState(false);
   const classes = useStyles();
 
   useEffect(() => {
@@ -175,6 +211,7 @@ function TagDetails() {
           let imageData = mapToImage(imageInfo);
           setImageDetailData(imageData);
           setPullString(dockerPull(imageData.name));
+          setSelectedPullTab(dockerPull(imageData.name));
         }
         setIsLoading(false);
       })
@@ -196,16 +233,21 @@ function TagDetails() {
     setSelectedTab(newValue);
   };
 
-  const handleSelectionChange = (event) => {
-    setPullString(event.target.value);
+  const handlePullTabChange = (event, newValue) => {
+    setSelectedPullTab(newValue);
+    setPullString(newValue);
   };
 
-  const handleSnackbarClose = (event, reason) => {
-    if (reason === 'clickaway') {
-      return;
+  useEffect(() => {
+    if (isCopied) {
+      setTimeout(() => {
+        setIsCopied(false);
+      }, 3000);
     }
+  }, [isCopied]);
 
-    setSnackbarOpen(false);
+  const handleRenderPullString = () => {
+    return 'Pull Image';
   };
 
   return (
@@ -252,50 +294,174 @@ function TagDetails() {
                   </Typography>
                 </Grid>
                 <Grid item xs={4} className={classes.pull}>
-                  <Grid container>
-                    <Grid item xs={10}>
-                      <Typography
-                        variant="body1"
-                        sx={{ color: '#52637A', fontSize: '1rem', paddingTop: '0.75rem', textAlign: 'left' }}
-                      >
-                        Pull this image
-                      </Typography>
-                    </Grid>
-                    <Grid item xs={2}>
-                      <IconButton
-                        aria-label="copy"
-                        onClick={() => {
-                          navigator.clipboard.writeText(pullString);
-                          setSnackbarOpen(true);
+                  {isCopied ? (
+                    <Button className={classes.pullStringBoxCopied} data-testid="successPulled-buton">
+                      Pulled Image
+                      <CheckCircleIcon />
+                    </Button>
+                  ) : (
+                    <FormControl variant="outlined" sx={{ width: '100%', height: '3.5rem' }}>
+                      <Select
+                        className={classes.copyStringSelect}
+                        value={''}
+                        displayEmpty={true}
+                        renderValue={handleRenderPullString}
+                        inputProps={{ 'aria-label': 'Without label' }}
+                        MenuProps={{
+                          disableScrollLock: true,
+                          classes: { root: classes.copyStringSelect }
                         }}
-                        data-testid="pullcopy-btn"
+                        data-testid="pull-dropdown"
                       >
-                        <ContentCopyIcon />
-                      </IconButton>
-                    </Grid>
-                  </Grid>
-                  <FormControl variant="outlined" sx={{ width: '100%' }}>
-                    <Select
-                      className={classes.copyStringSelect}
-                      value={pullString}
-                      onChange={handleSelectionChange}
-                      inputProps={{ 'aria-label': 'Without label' }}
-                      MenuProps={{
-                        disableScrollLock: true,
-                        classes: { root: classes.copyStringSelect, list: classes.textEllipsis }
-                      }}
-                    >
-                      <MenuItem className={classes.textEllipsis} value={dockerPull(imageDetailData.name)}>
-                        <Typography noWrap>{dockerPull(imageDetailData.name)}</Typography>
-                      </MenuItem>
-                      <MenuItem className={classes.textEllipsis} value={podmanPull(imageDetailData.name)}>
-                        <Typography noWrap>{podmanPull(imageDetailData.name)}</Typography>
-                      </MenuItem>
-                      <MenuItem className={classes.textEllipsis} value={skopeoPull(imageDetailData.name)}>
-                        <Typography noWrap>{skopeoPull(imageDetailData.name)}</Typography>
-                      </MenuItem>
-                    </Select>
-                  </FormControl>
+                        <MenuItem
+                          sx={{
+                            width: '100%',
+                            overflow: 'hidden',
+                            padding: '0rem',
+                            '&:hover': { backgroundColor: '#FFFFFF' },
+                            '&:focus': { backgroundColor: '#FFFFFF' },
+                            '&.Mui-focusVisible': {
+                              backgroundColor: '#FFFFFF!important'
+                            }
+                          }}
+                          data-testid="pull-meniuItem"
+                        >
+                          <TabContext value={selectedPullTab}>
+                            <Box>
+                              <TabList
+                                onChange={handlePullTabChange}
+                                TabIndicatorProps={{ className: classes.selectedPullTab }}
+                                sx={{ '& button.Mui-selected': { color: '#14191F', fontWeight: '600' } }}
+                              >
+                                <Tab
+                                  value={dockerPull(imageDetailData.name)}
+                                  label="Docker"
+                                  className={classes.tabContent}
+                                />
+                                <Tab
+                                  value={podmanPull(imageDetailData.name)}
+                                  label="Podman"
+                                  className={classes.tabContent}
+                                />
+                                <Tab
+                                  value={skopeoPull(imageDetailData.name)}
+                                  label="Skopeo"
+                                  className={classes.tabContent}
+                                />
+                              </TabList>
+                              <Grid container>
+                                <Grid item xs={12}>
+                                  <TabPanel value={dockerPull(imageDetailData.name)} className={classes.tabPanel}>
+                                    <Box className={classes.tabBox}>
+                                      <Grid container item xs={12} className={classes.pullStringBox}>
+                                        <Grid item xs={10}>
+                                          <InputBase
+                                            classes={{ input: classes.pullText }}
+                                            className={classes.textEllipsis}
+                                            defaultValue={dockerPull(imageDetailData.name)}
+                                          />
+                                        </Grid>
+                                        <Grid
+                                          item
+                                          xs={2}
+                                          sx={{
+                                            borderLeft: '0.0625rem solid rgba(0, 0, 0, 0.23)',
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            justifyContent: 'center'
+                                          }}
+                                        >
+                                          <IconButton
+                                            aria-label="copy"
+                                            onClick={() => {
+                                              navigator.clipboard.writeText(pullString);
+                                              setIsCopied(true);
+                                            }}
+                                            data-testid="pullcopy-btn"
+                                          >
+                                            <ContentCopyIcon sx={{ fontSize: '1rem' }} />
+                                          </IconButton>
+                                        </Grid>
+                                      </Grid>
+                                    </Box>
+                                  </TabPanel>
+                                  <TabPanel value={podmanPull(imageDetailData.name)} className={classes.tabPanel}>
+                                    <Box className={classes.tabBox}>
+                                      <Grid container item xs={12} className={classes.pullStringBox}>
+                                        <Grid item xs={10}>
+                                          <InputBase
+                                            classes={{ input: classes.pullText }}
+                                            className={classes.textEllipsis}
+                                            defaultValue={podmanPull(imageDetailData.name)}
+                                            data-testid="podman-input"
+                                          />
+                                        </Grid>
+                                        <Grid
+                                          item
+                                          xs={2}
+                                          sx={{
+                                            borderLeft: '0.0625rem solid rgba(0, 0, 0, 0.23)',
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            justifyContent: 'center'
+                                          }}
+                                        >
+                                          <IconButton
+                                            aria-label="copy"
+                                            onClick={() => {
+                                              navigator.clipboard.writeText(pullString);
+                                              setIsCopied(true);
+                                            }}
+                                            data-testid="podmanPullcopy-btn"
+                                          >
+                                            <ContentCopyIcon sx={{ fontSize: '1rem' }} />
+                                          </IconButton>
+                                        </Grid>
+                                      </Grid>
+                                    </Box>
+                                  </TabPanel>
+                                  <TabPanel value={skopeoPull(imageDetailData.name)} className={classes.tabPanel}>
+                                    <Box className={classes.tabBox}>
+                                      <Grid container item xs={12} className={classes.pullStringBox}>
+                                        <Grid item xs={10}>
+                                          <InputBase
+                                            classes={{ input: classes.pullText }}
+                                            className={classes.textEllipsis}
+                                            defaultValue={skopeoPull(imageDetailData.name)}
+                                          />
+                                        </Grid>
+                                        <Grid
+                                          item
+                                          xs={2}
+                                          sx={{
+                                            borderLeft: '0.0625rem solid rgba(0, 0, 0, 0.23)',
+                                            display: 'flex',
+                                            flexDirection: 'row',
+                                            justifyContent: 'center'
+                                          }}
+                                        >
+                                          <IconButton
+                                            aria-label="copy"
+                                            onClick={() => {
+                                              navigator.clipboard.writeText(pullString);
+                                              setIsCopied(true);
+                                            }}
+                                            data-testid="skopeoPullcopy-btn"
+                                          >
+                                            <ContentCopyIcon sx={{ fontSize: '1rem' }} />
+                                          </IconButton>
+                                        </Grid>
+                                      </Grid>
+                                    </Box>
+                                  </TabPanel>
+                                </Grid>
+                              </Grid>
+                            </Box>
+                          </TabContext>
+                        </MenuItem>
+                      </Select>
+                    </FormControl>
+                  )}
                 </Grid>
               </Grid>
               <Grid container>
@@ -349,16 +515,6 @@ function TagDetails() {
           </Card>
         </div>
       )}
-      <Snackbar
-        open={snackBarOpen}
-        onClose={handleSnackbarClose}
-        autoHideDuration={3000}
-        anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
-      >
-        <Alert variant="filled" severity="success" sx={{ width: '100%' }}>
-          Copied!
-        </Alert>
-      </Snackbar>
     </>
   );
 }
