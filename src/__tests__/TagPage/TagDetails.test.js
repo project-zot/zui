@@ -1,4 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import TagDetails from 'components/TagDetails';
 import React from 'react';
@@ -263,13 +264,78 @@ describe('Tags details', () => {
     expect(await screen.findByTestId('high-vulnerability-icon')).toBeInTheDocument();
   });
 
-  it('should copy the pull string to clipboard', async () => {
+  it('should copy the docker pull string to clipboard', async () => {
     jest
       .spyOn(api, 'get')
 
       .mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetails />);
+    const dropdown = await screen.findByText('Pull Image');
+    expect(dropdown).toBeInTheDocument();
+    userEvent.click(dropdown);
+    await waitFor(() => expect(screen.queryAllByTestId('pull-meniuItem')).toHaveLength(1));
     fireEvent.click(await screen.findByTestId('pullcopy-btn'));
     await waitFor(() => expect(mockCopyToClipboard).toHaveBeenCalledWith('docker pull localhost/centos:8'));
+  });
+
+  it('should copy the podman pull string to clipboard', async () => {
+    jest
+      .spyOn(api, 'get')
+
+      .mockResolvedValue({ status: 200, data: { data: mockImage } });
+    render(<TagDetails />);
+    const dropdown = await screen.findByText('Pull Image');
+    expect(dropdown).toBeInTheDocument();
+    userEvent.click(dropdown);
+    await waitFor(() => expect(screen.queryAllByTestId('pull-meniuItem')).toHaveLength(1));
+    const podmanTab = await screen.findByText('Podman');
+    userEvent.click(podmanTab);
+    fireEvent.click(await screen.findByTestId('podmanPullcopy-btn'));
+    await waitFor(() => expect(mockCopyToClipboard).toHaveBeenCalledWith('podman pull localhost/centos:8'));
+  });
+
+  it('should copy the skopeo copy string to clipboard', async () => {
+    jest
+      .spyOn(api, 'get')
+
+      .mockResolvedValue({ status: 200, data: { data: mockImage } });
+    render(<TagDetails />);
+    const dropdown = await screen.findByText('Pull Image');
+    expect(dropdown).toBeInTheDocument();
+    userEvent.click(dropdown);
+    await waitFor(() => expect(screen.queryAllByTestId('pull-meniuItem')).toHaveLength(1));
+    const skopeoTab = await screen.findByText('Skopeo');
+    userEvent.click(skopeoTab);
+    fireEvent.click(await screen.findByTestId('skopeoPullcopy-btn'));
+    await waitFor(() => expect(mockCopyToClipboard).toHaveBeenCalledWith('skopeo copy docker://localhost/centos:8'));
+  });
+
+  it('should show pull tabs in dropdown and allow nagivation between them', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
+    render(<TagDetails />);
+    const dropdown = await screen.findByText('Pull Image');
+    expect(dropdown).toBeInTheDocument();
+    userEvent.click(dropdown);
+    await waitFor(() => expect(screen.queryAllByTestId('pull-meniuItem')).toHaveLength(1));
+    const podmanTab = await screen.findByText('Podman');
+    userEvent.click(podmanTab);
+    await waitFor(() => expect(screen.queryAllByTestId('podman-input')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByRole('tab')).toHaveLength(3));
+  });
+
+  it('should show the copied successfully button for 3 seconds', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
+    render(<TagDetails />);
+    const dropdown = await screen.findByText('Pull Image');
+    expect(dropdown).toBeInTheDocument();
+    userEvent.click(dropdown);
+    await waitFor(() => expect(screen.queryAllByTestId('pull-dropdown')).toHaveLength(1));
+    await waitFor(() => expect(screen.queryAllByTestId('successPulled-buton')).toHaveLength(0));
+    fireEvent.click(await screen.findByTestId('pullcopy-btn'));
+    await waitFor(() => expect(screen.queryAllByTestId('successPulled-buton')).toHaveLength(1));
+    await waitFor(() => expect(screen.queryAllByTestId('pull-dropdown')).toHaveLength(0));
+
+    await waitFor(() => expect(screen.queryAllByTestId('pull-dropdown')).toHaveLength(1), { timeout: 3500 });
+    await waitFor(() => expect(screen.queryAllByTestId('successPulled-buton')).toHaveLength(0));
   });
 });
