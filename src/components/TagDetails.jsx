@@ -296,7 +296,7 @@ function TagDetails() {
                 <Grid item xs={4} className={classes.pull}>
                   {isCopied ? (
                     <Button className={classes.pullStringBoxCopied} data-testid="successPulled-buton">
-                      Pulled Image
+                      Copied Pull Command
                       <CheckCircleIcon />
                     </Button>
                   ) : (
