@@ -35,7 +35,7 @@ describe('Layers page', () => {
   it('renders the layers if there are any', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: { Image: { History: mockLayersList } } } });
     render(<HistoryLayers name="alpine:latest" />);
-    expect(await screen.findAllByTestId('layer-card-container')).toHaveLength(2);
+    expect(await screen.findAllByTestId('layer-card-container')).toHaveLength(1);
   });
 
   it('renders no layers if there are not any', async () => {
@@ -44,16 +44,16 @@ describe('Layers page', () => {
       data: { data: { History: { Tag: '', mockLayersList: [] } } }
     });
     render(<HistoryLayers name="alpine:latest" />);
-    await waitFor(() => expect(screen.getAllByText('No Layers')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText(/No Layer data available/i)).toHaveLength(1));
   });
 
-  it('renders hash layers', async () => {
+  it('opens dropdown and renders layer command and digest', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: { Image: { History: mockLayersList } } } });
     render(<HistoryLayers name="alpine:latest" />);
-    expect(await screen.findAllByTestId('hash-typography')).toHaveLength(1);
-    const openText = screen.getByText(/2:/i);
-    fireEvent.click(openText);
-    expect(await screen.findAllByTestId('no-hash-typography')).toHaveLength(1);
+    expect(screen.queryAllByText(/DIGEST/i)).toHaveLength(0);
+    const openDetails = await screen.findAllByText(/details/i);
+    fireEvent.click(openDetails[0]);
+    expect(await screen.findAllByText(/DIGEST/i)).toHaveLength(1);
   });
 
   it("should log an error when data can't be fetched", async () => {
