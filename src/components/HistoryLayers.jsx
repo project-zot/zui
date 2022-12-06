@@ -1,11 +1,11 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import transform from 'utilities/transform';
 
 // utility
 import { api, endpoints } from '../api';
 
 // components
-import { Card, CardContent, Divider, Grid, Stack, Typography } from '@mui/material';
+import { Divider, Stack, Typography } from '@mui/material';
+import LayerCard from './LayerCard.jsx';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../host';
 import { isEmpty } from 'lodash';
@@ -75,56 +75,17 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function LayerCard(props) {
-  const classes = useStyles();
-  const [size, setSize] = useState(0);
-  const { index, layer, historyDescription, isSelected } = props;
-
-  useEffect(() => {
-    if (historyDescription.EmptyLayer) {
-      let s = 0;
-      setSize(s);
-    } else {
-      setSize(layer.Size);
-    }
-  }, []);
-
-  return (
-    <Grid sx={isSelected ? { backgroundColor: '#F7F7F7' } : null} container data-testid="layer-card-container">
-      <Grid item xs={10} container>
-        <Grid item xs={1}>
-          <Typography variant="body1" align="left" className={classes.title}>
-            {index}:{' '}
-          </Typography>
-        </Grid>
-        <Grid item xs={6}>
-          <Typography variant="body1" align="left" className={classes.layer}>
-            {historyDescription.CreatedBy}
-          </Typography>
-        </Grid>
-      </Grid>
-      <Grid item xs={2}>
-        <Typography variant="body1" align="right" className={classes.values}>
-          {' '}
-          {transform.formatBytes(size)}{' '}
-        </Typography>
-      </Grid>
-    </Grid>
-  );
-}
-
 function HistoryLayers(props) {
   const classes = useStyles();
   const [historyData, setHistoryData] = useState([]);
-  const [selectedIndex, setSelectedIndex] = useState(0);
-  const [isLoaded, setIsLoaded] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
   const abortController = useMemo(() => new AbortController(), []);
   const { name, history } = props;
 
   useEffect(() => {
     if (history && !isEmpty(history)) {
       setHistoryData(history);
-      setIsLoaded(true);
+      setIsLoading(false);
     } else {
       api
         .get(`${host()}${endpoints.layersDetailsForImage(name)}`, abortController.signal)
@@ -132,61 +93,19 @@ function HistoryLayers(props) {
           if (response.data && response.data.data) {
             let layersHistory = response.data.data.Image;
             setHistoryData(layersHistory?.History);
-            setIsLoaded(true);
+            setIsLoading(false);
           }
         })
         .catch((e) => {
           console.error(e);
           setHistoryData([]);
-          setIsLoaded(false);
+          setIsLoading(false);
         });
     }
     return () => {
       abortController.abort();
     };
   }, [name]);
-
-  const renderHistoryData = () => {
-    return (
-      historyData && (
-        <Card className={classes.card} raised>
-          <CardContent className={classes.content}>
-            <Grid item xs={12}>
-              <Stack sx={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
-                <Typography variant="body1" align="left" className={classes.title}>
-                  Command
-                </Typography>
-                <Typography variant="body1" align="right" className={classes.values}>
-                  {transform.formatBytes(historyData[selectedIndex].Layer?.Size)}
-                </Typography>
-              </Stack>
-            </Grid>
-            <Stack direction="column" spacing={2}>
-              <Typography variant="body1" align="left" className={classes.title} sx={{ backgroundColor: '#F7F7F7' }}>
-                {historyData[selectedIndex].HistoryDescription?.CreatedBy}
-              </Typography>
-              {!historyData[selectedIndex].HistoryDescription?.EmptyLayer ? (
-                <>
-                  <Typography variant="body1" align="left" className={classes.title}>
-                    DIGEST
-                  </Typography>
-                  <Typography
-                    data-testid="hash-typography"
-                    className={classes.title}
-                    sx={{ backgroundColor: '#F7F7F7' }}
-                  >
-                    {historyData[selectedIndex].Layer?.Digest}
-                  </Typography>
-                </>
-              ) : (
-                <Typography data-testid="no-hash-typography" sx={{ backgroundColor: '#F7F7F7' }}></Typography>
-              )}
-            </Stack>
-          </CardContent>
-        </Card>
-      )
-    );
-  };
 
   return (
     <>
@@ -195,40 +114,39 @@ function HistoryLayers(props) {
         gutterBottom
         component="div"
         align="left"
-        style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.5rem', fontWeight: '600', paddingTop: '0.5rem' }}
+        style={{
+          marginBottom: '1.7rem',
+          color: 'rgba(0, 0, 0, 0.87)',
+          fontSize: '1.5rem',
+          fontWeight: '600',
+          paddingTop: '0.5rem'
+        }}
       >
         Layers
       </Typography>
-      <Divider
-        variant="fullWidth"
-        sx={{ margin: '5% 0% 0% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}
-      />
-      <Stack direction="column" spacing={2}>
-        {historyData ? (
-          <Card className={classes.card} raised>
-            <CardContent className={classes.content}>
-              {historyData.map((layer, index) => {
-                return (
-                  <div key={`${layer?.Layer?.Size}${index}`} onClick={() => setSelectedIndex(index)}>
-                    <LayerCard
-                      key={`${layer?.Layer?.Size}${index}`}
-                      index={index + 1}
-                      isSelected={selectedIndex === index}
-                      layer={layer?.Layer}
-                      historyDescription={layer?.HistoryDescription}
-                    />
-                  </div>
-                );
-              })}
-            </CardContent>
-          </Card>
-        ) : (
-          <div>
-            <Typography className={classes.none}> No Layers </Typography>
-          </div>
-        )}
-        {!isLoaded ? <Loading /> : renderHistoryData()}
-      </Stack>
+      <Divider variant="fullWidth" sx={{ background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }} />
+      {isLoading ? (
+        <Loading />
+      ) : (
+        <Stack direction="column" spacing={2} sx={{ marginTop: '1.7rem' }} data-testid="layer-card-container">
+          {historyData ? (
+            historyData.map((layer, index) => {
+              return (
+                <LayerCard
+                  key={`${layer?.Layer?.Size}${index}`}
+                  index={index + 1}
+                  layer={layer?.Layer}
+                  historyDescription={layer?.HistoryDescription}
+                />
+              );
+            })
+          ) : (
+            <div>
+              <Typography className={classes.none}> No Layer data available </Typography>
+            </div>
+          )}
+        </Stack>
+      )}
     </>
   );
 }
