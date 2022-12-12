@@ -6,40 +6,43 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const mockDependenciesList = {
   data: {
-    BaseImageList: [
-      {
-        RepoName: 'project-stacker/c3/static-ubuntu-amd64',
-        Tag: 'tag1',
-        Vulnerabilities: {
-          MaxSeverity: 'HIGH',
-          Count: 5
+    BaseImageList: {
+      Page: { ItemCount: 4, TotalCount: 4 },
+      Results: [
+        {
+          RepoName: 'project-stacker/c3/static-ubuntu-amd64',
+          Tag: 'tag1',
+          Vulnerabilities: {
+            MaxSeverity: 'HIGH',
+            Count: 5
+          }
+        },
+        {
+          RepoName: 'tag2',
+          Tag: 'tag2',
+          Vulnerabilities: {
+            MaxSeverity: 'CRITICAL',
+            Count: 2
+          }
+        },
+        {
+          RepoName: 'tag3',
+          Tag: 'tag3',
+          Vulnerabilities: {
+            MaxSeverity: 'LOW',
+            Count: 7
+          }
+        },
+        {
+          RepoName: 'tag4',
+          Tag: 'tag4',
+          Vulnerabilities: {
+            MaxSeverity: 'HIGH',
+            Count: 5
+          }
         }
-      },
-      {
-        RepoName: 'tag2',
-        Tag: 'tag2',
-        Vulnerabilities: {
-          MaxSeverity: 'CRITICAL',
-          Count: 2
-        }
-      },
-      {
-        RepoName: 'tag3',
-        Tag: 'tag3',
-        Vulnerabilities: {
-          MaxSeverity: 'LOW',
-          Count: 7
-        }
-      },
-      {
-        RepoName: 'tag4',
-        Tag: 'tag4',
-        Vulnerabilities: {
-          MaxSeverity: 'HIGH',
-          Count: 5
-        }
-      }
-    ]
+      ]
+    }
   }
 };
 
@@ -60,6 +63,17 @@ jest.mock('react-router-dom', () => ({
   useNavigate: () => mockedUsedNavigate
 }));
 
+beforeEach(() => {
+  // IntersectionObserver isn't available in test environment
+  const mockIntersectionObserver = jest.fn();
+  mockIntersectionObserver.mockReturnValue({
+    observe: () => null,
+    unobserve: () => null,
+    disconnect: () => null
+  });
+  window.IntersectionObserver = mockIntersectionObserver;
+});
+
 afterEach(() => {
   // restore the spy created with spyOn
   jest.restoreAllMocks();
@@ -75,7 +89,7 @@ describe('Dependencies tab', () => {
   it('renders no dependencies if there are not any', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({
       status: 200,
-      data: { data: { BaseImageList: [] } }
+      data: { data: { BaseImageList: { Results: [], Page: {} } } }
     });
     render(<RouterDependsWrapper />);
     expect(await screen.findByText(/Nothing found/i)).toBeInTheDocument();

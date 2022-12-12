@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { isEmpty } from 'lodash';
 
 // utility
@@ -11,6 +11,7 @@ import { host } from '../host';
 import Loading from './Loading';
 import TagCard from './TagCard';
 import { mapToImage } from 'utilities/objectModels';
+import { EXPLORE_PAGE_SIZE } from 'utilities/paginationConstants';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -74,25 +75,68 @@ function DependsOn(props) {
   const [isLoading, setIsLoading] = useState(true);
   const abortController = useMemo(() => new AbortController(), []);
 
-  useEffect(() => {
+  // pagination props
+  const [pageNumber, setPageNumber] = useState(1);
+  const [isEndOfList, setIsEndOfList] = useState(false);
+  const listBottom = useRef(null);
+
+  const getPaginatedResults = () => {
     setIsLoading(true);
     api
-      .get(`${host()}${endpoints.dependsOnForImage(name)}`, abortController.signal)
+      .get(
+        `${host()}${endpoints.dependsOnForImage(name, { pageNumber, pageSize: EXPLORE_PAGE_SIZE })}`,
+        abortController.signal
+      )
       .then((response) => {
         if (response.data && response.data.data) {
-          let imagesData = response.data.data.BaseImageList?.map((img) => mapToImage(img));
-          setImages(imagesData);
+          let imagesData = response.data.data.BaseImageList?.Results?.map((img) => mapToImage(img));
+          const newImageList = [...images, ...imagesData];
+          setImages(newImageList);
+          setIsEndOfList(
+            response.data.data.BaseImageList.Page?.ItemCount < EXPLORE_PAGE_SIZE ||
+              newImageList.length >= response.data.data.BaseImageList?.Page?.TotalCount
+          );
         }
         setIsLoading(false);
       })
       .catch((e) => {
         console.error(e);
         setIsLoading(false);
+        setIsEndOfList(true);
       });
+  };
+
+  useEffect(() => {
+    getPaginatedResults();
     return () => {
       abortController.abort();
     };
-  }, []);
+  }, [pageNumber]);
+
+  // setup intersection obeserver for infinite scroll
+  useEffect(() => {
+    if (isLoading || isEndOfList) return;
+    const handleIntersection = (entries) => {
+      if (isLoading || isEndOfList) return;
+      const [target] = entries;
+      if (target?.isIntersecting) {
+        setPageNumber((pageNumber) => pageNumber + 1);
+      }
+    };
+    const intersectionObserver = new IntersectionObserver(handleIntersection, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0
+    });
+
+    if (listBottom.current) {
+      intersectionObserver.observe(listBottom.current);
+    }
+
+    return () => {
+      intersectionObserver.disconnect();
+    };
+  }, [isLoading, isEndOfList]);
 
   const renderDependencies = () => {
     return !isEmpty(images) ? (
@@ -112,10 +156,18 @@ function DependsOn(props) {
         );
       })
     ) : (
-      <div>
-        <Typography className={classes.none}> Nothing found </Typography>
-      </div>
+      <div>{!isLoading && <Typography className={classes.none}> Nothing found </Typography>}</div>
     );
+  };
+
+  const renderListBottom = () => {
+    if (isLoading) {
+      return <Loading />;
+    }
+    if (!isLoading && !isEndOfList) {
+      return <div ref={listBottom} />;
+    }
+    return '';
   };
 
   return (
@@ -125,7 +177,10 @@ function DependsOn(props) {
         sx={{ margin: '5% 0% 5% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}
       />
       <Stack direction="column" spacing={2}>
-        {isLoading ? <Loading /> : renderDependencies()}
+        <Stack direction="column" spacing={2}>
+          {renderDependencies()}
+          {renderListBottom()}
+        </Stack>
       </Stack>
     </div>
   );
