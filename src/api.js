@@ -74,10 +74,14 @@ const endpoints = {
     `/v2/_zot/ext/search?query={Image(image: "${name}"){History {Layer {Size Digest Score} HistoryDescription {Created CreatedBy Author Comment EmptyLayer} }}}`,
   imageListWithCVEFixed: (cveId, repoName) =>
     `/v2/_zot/ext/search?query={ImageListWithCVEFixed(id:"${cveId}", image:"${repoName}") {Tag}}`,
-  dependsOnForImage: (name) =>
-    `/v2/_zot/ext/search?query={BaseImageList(image: "${name}"){RepoName Tag Description Digest Vendor DownloadCount LastUpdated Size Platform {Os Arch} IsSigned Vulnerabilities {MaxSeverity Count}}}`,
-  isDependentOnForImage: (name) =>
-    `/v2/_zot/ext/search?query={DerivedImageList(image: "${name}"){RepoName Tag Description Digest Vendor DownloadCount LastUpdated Size Platform {Os Arch} IsSigned Vulnerabilities {MaxSeverity Count}}}`,
+  dependsOnForImage: (name, { pageNumber = 1, pageSize = 15 } = {}) =>
+    `/v2/_zot/ext/search?query={BaseImageList(image: "${name}", requestedPage: {limit:${pageSize} offset:${
+      (pageNumber - 1) * pageSize
+    }}){Page {TotalCount ItemCount} Results { RepoName Tag Description Digest Vendor DownloadCount LastUpdated Size Platform {Os Arch} IsSigned Vulnerabilities {MaxSeverity Count}}}}`,
+  isDependentOnForImage: (name, { pageNumber = 1, pageSize = 15 } = {}) =>
+    `/v2/_zot/ext/search?query={DerivedImageList(image: "${name}", requestedPage: {limit:${pageSize} offset:${
+      (pageNumber - 1) * pageSize
+    }}){Page {TotalCount ItemCount} Results {RepoName Tag Description Digest Vendor DownloadCount LastUpdated Size Platform {Os Arch} IsSigned Vulnerabilities {MaxSeverity Count}}}}`,
   globalSearch: ({
     searchQuery = '""',
     pageNumber = 1,

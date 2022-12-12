@@ -45,7 +45,7 @@ const mapToImage = (responseImage) => {
     tag: responseImage.Tag,
     lastUpdated: responseImage.LastUpdated,
     size: responseImage.Size,
-    digest: responseImage.ConfigDigest,
+    digest: responseImage.Digest || responseImage.ConfigDigest,
     platform: responseImage.Platform,
     vendor: responseImage.Vendor,
     history: responseImage.History,
