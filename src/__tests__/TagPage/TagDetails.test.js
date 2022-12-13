@@ -1,8 +1,17 @@
+import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import TagDetails from 'components/TagDetails';
-import React from 'react';
+import MockThemeProvier from '__mocks__/MockThemeProvider';
+
+const TagDetailsThemeWrapper = () => {
+  return (
+    <MockThemeProvier>
+      <TagDetails />
+    </MockThemeProvier>
+  );
+};
 
 const mockImage = {
   Image: {
@@ -222,7 +231,7 @@ afterEach(() => {
 describe('Tags details', () => {
   it('should show tabs and allow nagivation between them', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     const dependenciesTab = await screen.findByTestId('dependencies-tab');
     fireEvent.click(dependenciesTab);
     expect(await screen.findByTestId('depends-on-container')).toBeInTheDocument();
@@ -232,52 +241,49 @@ describe('Tags details', () => {
   it("should log an error when data can't be fetched", async () => {
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     await waitFor(() => expect(error).toBeCalledTimes(1));
   });
 
   it('should show tag details metadata', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     expect(await screen.findByTestId('tagDetailsMetadata-container')).toBeInTheDocument();
   });
 
   it('renders vulnerability icons', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     expect(await screen.findByTestId('critical-vulnerability-icon')).toBeInTheDocument();
 
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageNone } });
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     expect(await screen.findByTestId('none-vulnerability-icon')).toBeInTheDocument();
 
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageUnknown } });
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     expect(await screen.findByTestId('unknown-vulnerability-icon')).toBeInTheDocument();
 
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageFailed } });
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     expect(await screen.findByTestId('failed-vulnerability-icon')).toBeInTheDocument();
 
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageLow } });
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     expect(await screen.findByTestId('low-vulnerability-icon')).toBeInTheDocument();
 
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageMedium } });
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     expect(await screen.findByTestId('medium-vulnerability-icon')).toBeInTheDocument();
 
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageHigh } });
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     expect(await screen.findByTestId('high-vulnerability-icon')).toBeInTheDocument();
   });
 
   it('should copy the docker pull string to clipboard', async () => {
-    jest
-      .spyOn(api, 'get')
-
-      .mockResolvedValue({ status: 200, data: { data: mockImage } });
-    render(<TagDetails />);
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
+    render(<TagDetailsThemeWrapper />);
     const dropdown = await screen.findByText('Pull Image');
     expect(dropdown).toBeInTheDocument();
     userEvent.click(dropdown);
@@ -287,11 +293,8 @@ describe('Tags details', () => {
   });
 
   it('should copy the podman pull string to clipboard', async () => {
-    jest
-      .spyOn(api, 'get')
-
-      .mockResolvedValue({ status: 200, data: { data: mockImage } });
-    render(<TagDetails />);
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
+    render(<TagDetailsThemeWrapper />);
     const dropdown = await screen.findByText('Pull Image');
     expect(dropdown).toBeInTheDocument();
     userEvent.click(dropdown);
@@ -307,7 +310,7 @@ describe('Tags details', () => {
       .spyOn(api, 'get')
 
       .mockResolvedValue({ status: 200, data: { data: mockImage } });
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     const dropdown = await screen.findByText('Pull Image');
     expect(dropdown).toBeInTheDocument();
     userEvent.click(dropdown);
@@ -320,7 +323,7 @@ describe('Tags details', () => {
 
   it('should show pull tabs in dropdown and allow nagivation between them', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     const dropdown = await screen.findByText('Pull Image');
     expect(dropdown).toBeInTheDocument();
     userEvent.click(dropdown);
@@ -333,7 +336,7 @@ describe('Tags details', () => {
 
   it('should show the copied successfully button for 3 seconds', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
-    render(<TagDetails />);
+    render(<TagDetailsThemeWrapper />);
     const dropdown = await screen.findByText('Pull Image');
     expect(dropdown).toBeInTheDocument();
     userEvent.click(dropdown);

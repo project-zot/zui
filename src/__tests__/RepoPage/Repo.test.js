@@ -3,6 +3,15 @@ import RepoDetails from 'components/RepoDetails';
 import React from 'react';
 import { api } from 'api';
 import { createSearchParams } from 'react-router-dom';
+import MockThemeProvier from '__mocks__/MockThemeProvider';
+
+const RepoDetailsThemeWrapper = () => {
+  return (
+    <MockThemeProvier>
+      <RepoDetails />
+    </MockThemeProvier>
+  );
+};
 
 // uselocation mock
 const mockUseLocationValue = {
@@ -190,44 +199,44 @@ afterEach(() => {
 describe('Repo details component', () => {
   it('fetches repo detailed data and renders', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
-    render(<RepoDetails />);
+    render(<RepoDetailsThemeWrapper />);
     expect(await screen.findByText('test')).toBeInTheDocument();
   });
 
   it('renders vulnerability icons', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
-    render(<RepoDetails />);
+    render(<RepoDetailsThemeWrapper />);
     expect(await screen.findAllByTestId('critical-vulnerability-icon')).toHaveLength(1);
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsNone } });
-    render(<RepoDetails />);
+    render(<RepoDetailsThemeWrapper />);
     expect(await screen.findAllByTestId('none-vulnerability-icon')).toHaveLength(1);
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsUnknown } });
-    render(<RepoDetails />);
+    render(<RepoDetailsThemeWrapper />);
     expect(await screen.findAllByTestId('unknown-vulnerability-icon')).toHaveLength(1);
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsFailed } });
-    render(<RepoDetails />);
+    render(<RepoDetailsThemeWrapper />);
     expect(await screen.findAllByTestId('failed-vulnerability-icon')).toHaveLength(1);
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsLow } });
-    render(<RepoDetails />);
+    render(<RepoDetailsThemeWrapper />);
     expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(1);
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsMedium } });
-    render(<RepoDetails />);
+    render(<RepoDetailsThemeWrapper />);
     expect(await screen.findAllByTestId('medium-vulnerability-icon')).toHaveLength(1);
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsHigh } });
-    render(<RepoDetails />);
+    render(<RepoDetailsThemeWrapper />);
     expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(1);
   });
 
   it("should log error if data can't be fetched", async () => {
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-    render(<RepoDetails />);
+    render(<RepoDetailsThemeWrapper />);
     await waitFor(() => expect(error).toBeCalledTimes(1));
   });
 
   it('should switch between tabs', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
-    render(<RepoDetails />);
+    render(<RepoDetailsThemeWrapper />);
     expect(await screen.findByTestId('overview-container')).toBeInTheDocument();
     fireEvent.click(await screen.findByText(/tags/i));
     expect(await screen.findByTestId('tags-container')).toBeInTheDocument();
@@ -236,7 +245,7 @@ describe('Repo details component', () => {
 
   it('should render platform chips and they should redirect to explore page', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
-    render(<RepoDetails />);
+    render(<RepoDetailsThemeWrapper />);
     const osChip = await screen.findByText(/linux/i);
     fireEvent.click(osChip);
     expect(mockUseNavigate).toHaveBeenCalledWith({

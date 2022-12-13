@@ -10,7 +10,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
 
-const useStyles = makeStyles(() => {
+const useStyles = makeStyles((theme) => {
   return {
     exploreHeader: {
       backgroundColor: '#FFFFFF',
@@ -20,12 +20,18 @@ const useStyles = makeStyles(() => {
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'space-between',
-      padding: '2rem'
+      padding: '2rem',
+      [theme.breakpoints.down('md')]: {
+        padding: '1rem'
+      }
     },
     explore: {
       color: '#52637A',
       fontSize: '1rem',
-      letterSpacing: '0.009375rem'
+      letterSpacing: '0.009375rem',
+      [theme.breakpoints.down('md')]: {
+        fontSize: '0.8rem'
+      }
     }
   };
 });
@@ -42,7 +48,10 @@ function ExploreHeader() {
 
   return (
     <div className={classes.exploreHeader}>
-      <ArrowBackIcon sx={{ color: '#14191F', fontSize: '2rem', cursor: 'pointer' }} onClick={() => navigate(-1)} />
+      <ArrowBackIcon
+        sx={{ color: '#14191F', fontSize: { xs: '1.5rem', md: '2rem' }, cursor: 'pointer' }}
+        onClick={() => navigate(-1)}
+      />
       <Breadcrumbs separator="/" aria-label="breadcrumb">
         <Link to="/">
           <Typography variant="body1" className={classes.explore}>

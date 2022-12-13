@@ -127,28 +127,28 @@ export default function TagCard(props) {
         <Collapse in={open} timeout="auto" unmountOnExit>
           <Box>
             <Grid container item xs={12} direction={'row'}>
-              <Grid item xs={4}>
+              <Grid item xs={6} md={4}>
                 <Typography variant="body1">DIGEST</Typography>
               </Grid>
-              <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Grid item xs={6} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Typography variant="body1">OS/Arch</Typography>
               </Grid>
-              <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Grid item xs={0} md={4} className="hide-on-mobile" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Typography variant="body1"> Size </Typography>
               </Grid>
             </Grid>
             <Grid container item xs={12} direction={'row'}>
-              <Grid item xs={4}>
+              <Grid item xs={6} md={4}>
                 <Tooltip title={digest || ''} placement="top">
                   <Typography variant="body1">{digest?.substr(0, 12)}</Typography>
                 </Tooltip>
               </Grid>
-              <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Grid item xs={6} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
                 <Typography variant="body1">
                   {platform?.Os}/{platform?.Arch}
                 </Typography>
               </Grid>
-              <Grid item xs={4} sx={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Grid item xs={0} md={4} className="hide-on-mobile" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
                 <Typography sx={{ textAlign: 'right' }} variant="body1">
                   {transform.formatBytes(size)}
                 </Typography>

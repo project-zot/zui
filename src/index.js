@@ -25,6 +25,13 @@ const theme = createTheme(
   })
 );
 
+theme.typography.h4 = {
+  fontSize: '2.5rem',
+  [theme.breakpoints.down('sm')]: {
+    fontSize: '1.5rem'
+  }
+};
+
 ReactDOM.render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>

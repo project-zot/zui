@@ -42,7 +42,7 @@ import Loading from './Loading';
 import { dockerPull, podmanPull, skopeoPull } from 'utilities/pullStrings';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   pageWrapper: {
     backgroundColor: '#FFFFFF',
     height: '100vh'
@@ -55,7 +55,6 @@ const useStyles = makeStyles(() => ({
   },
   repoName: {
     fontWeight: '700',
-    fontSize: '2.5rem',
     color: '#0F2139',
     textAlign: 'left'
   },
@@ -64,13 +63,28 @@ const useStyles = makeStyles(() => ({
     width: '3rem',
     objectFit: 'fill'
   },
+  digest: {
+    textAlign: 'left',
+    fontSize: '1rem',
+    lineHeight: '1.5rem',
+    color: 'rgba(0, 0, 0, 0.6)',
+    padding: '0.5rem 0 0 4rem',
+    maxWidth: '100%',
+    [theme.breakpoints.down('md')]: {
+      padding: '0.5rem 0 0 0',
+      fontSize: '0.5rem'
+    }
+  },
   media: {
     borderRadius: '3.125em'
   },
   tabs: {
     marginTop: '3rem',
     padding: '0.5rem',
-    height: '100%'
+    height: '100%',
+    [theme.breakpoints.down('md')]: {
+      padding: '0'
+    }
   },
   tabContent: {
     height: '100%'
@@ -86,11 +100,17 @@ const useStyles = makeStyles(() => ({
   tabPanel: {
     height: '100%',
     paddingLeft: '0rem!important',
-    marginRight: '2rem!important'
+    [theme.breakpoints.down('md')]: {
+      padding: '1.5rem 0'
+    }
   },
   metadata: {
     marginTop: '8rem',
-    paddingLeft: '1.5rem'
+    paddingLeft: '1.5rem',
+    [theme.breakpoints.down('md')]: {
+      marginTop: '1rem',
+      paddingLeft: '0'
+    }
   },
   pull: {
     paddingLeft: '1.5rem',
@@ -123,7 +143,10 @@ const useStyles = makeStyles(() => ({
     boxShadow: 'none!important'
   },
   header: {
-    paddingLeft: '2rem'
+    paddingLeft: '2rem',
+    [theme.breakpoints.down('md')]: {
+      padding: '0'
+    }
   },
   tabBox: {
     padding: '0.5rem'
@@ -259,41 +282,46 @@ function TagDetails() {
           <Card className={classes.cardRoot}>
             <CardContent>
               <Grid container>
-                <Grid item xs={8} className={classes.header}>
-                  <Stack alignItems="center" direction="row" spacing={2}>
-                    <CardMedia
-                      classes={{
-                        root: classes.media,
-                        img: classes.avatar
-                      }}
-                      component="img"
-                      image={
-                        !isEmpty(imageDetailData?.logo)
-                          ? `data:image/  png;base64, ${imageDetailData?.logo}`
-                          : randomImage()
-                      }
-                      alt="icon"
-                    />
-                    <Typography variant="h3" className={classes.repoName}>
-                      {reponame}:{tag}
-                    </Typography>
-                    <VulnerabilityIconCheck
-                      vulnerabilitySeverity={imageDetailData.vulnerabiltySeverity}
-                      count={imageDetailData.vulnerabilityCount}
-                    />
-                    <SignatureIconCheck isSigned={imageDetailData.isSigned} />
-                    {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
-                  </Stack>
-                  <Typography
-                    pt={1}
-                    sx={{ fontSize: 16, lineHeight: '1.5rem', color: 'rgba(0, 0, 0, 0.6)', paddingLeft: '4rem' }}
-                    gutterBottom
-                    align="left"
+                <Grid item xs={12} md={8} className={classes.header}>
+                  <Stack
+                    alignItems="center"
+                    sx={{ width: { xs: '100%', md: 'auto' } }}
+                    direction={{ xs: 'column', md: 'row' }}
+                    spacing={2}
                   >
+                    <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
+                      <CardMedia
+                        classes={{
+                          root: classes.media,
+                          img: classes.avatar
+                        }}
+                        component="img"
+                        image={
+                          !isEmpty(imageDetailData?.logo)
+                            ? `data:image/  png;base64, ${imageDetailData?.logo}`
+                            : randomImage()
+                        }
+                        alt="icon"
+                      />
+                      <Typography variant="h4" className={classes.repoName}>
+                        <span className="hide-on-mobile">{reponame}</span>:{tag}
+                      </Typography>
+                    </Stack>
+
+                    <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
+                      <VulnerabilityIconCheck
+                        vulnerabilitySeverity={imageDetailData.vulnerabiltySeverity}
+                        count={imageDetailData.vulnerabilityCount}
+                      />
+                      <SignatureIconCheck isSigned={imageDetailData.isSigned} />
+                      {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
+                    </Stack>
+                  </Stack>
+                  <Typography gutterBottom className={classes.digest}>
                     DIGEST: {imageDetailData?.digest}
                   </Typography>
                 </Grid>
-                <Grid item xs={4} className={classes.pull}>
+                <Grid item xs={0} md={4} className={`${classes.pull} hide-on-mobile`}>
                   {isCopied ? (
                     <Button className={classes.pullStringBoxCopied} data-testid="successPulled-buton">
                       Copied Pull Command
@@ -465,13 +493,14 @@ function TagDetails() {
                 </Grid>
               </Grid>
               <Grid container>
-                <Grid item xs={8} className={classes.tabs}>
+                <Grid item xs={12} md={8} className={classes.tabs}>
                   <TabContext value={selectedTab}>
                     <Box>
                       <TabList
                         onChange={handleTabChange}
                         TabIndicatorProps={{ className: classes.selectedTab }}
                         sx={{ '& button.Mui-selected': { color: '#14191F', fontWeight: '600' } }}
+                        variant="scrollable"
                       >
                         <Tab value="Layers" label="Layers" className={classes.tabContent} />
                         <Tab
@@ -502,7 +531,7 @@ function TagDetails() {
                     </Box>
                   </TabContext>
                 </Grid>
-                <Grid item xs={4} className={classes.metadata}>
+                <Grid item xs={12} md={4} className={classes.metadata}>
                   <TagDetailsMetadata
                     platform={getPlatform()}
                     size={imageDetailData?.size}

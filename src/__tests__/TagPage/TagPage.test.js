@@ -16,6 +16,14 @@ jest.mock(
     }
 );
 
+jest.mock(
+  'components/ExploreHeader',
+  () =>
+    function ExploreHeader() {
+      return <div />;
+    }
+);
+
 it('renders the tags page component', async () => {
   render(
     <BrowserRouter>

@@ -7,7 +7,7 @@ import Loading from './Loading';
 import Typography from '@mui/material/Typography';
 import Sticky from 'react-sticky-el';
 import Alert from '@mui/material/Alert';
-import { Container, FormControl, Grid, InputLabel, MenuItem, Select, Stack } from '@mui/material';
+import { Container, FormControl, Grid, InputLabel, MenuItem, Select, Stack, Button } from '@mui/material';
 
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -21,8 +21,9 @@ import { isEmpty } from 'lodash';
 import filterConstants from 'utilities/filterConstants.js';
 import { sortByCriteria } from 'utilities/sortCriteria.js';
 import { EXPLORE_PAGE_SIZE } from 'utilities/paginationConstants.js';
+import FilterDialog from './FilterDialog.jsx';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   gridWrapper: {
     paddingTop: '2rem',
     paddingBottom: '2rem'
@@ -52,6 +53,13 @@ const useStyles = makeStyles(() => ({
     borderRadius: '0.375em',
     width: '25%',
     textAlign: 'left'
+  },
+  filterButton: {
+    borderRadius: '0.4rem',
+    marginBottom: '1rem',
+    [theme.breakpoints.up('md')]: {
+      display: 'none'
+    }
   }
 }));
 
@@ -72,6 +80,9 @@ function Explore() {
   const listBottom = useRef(null);
   const abortController = useMemo(() => new AbortController(), []);
   const classes = useStyles();
+
+  // Filterdialog props
+  const [filterDialogOpen, setFilterDialogOpen] = useState(false);
 
   const buildFilterQuery = () => {
     let filter = {};
@@ -194,6 +205,10 @@ function Explore() {
     setSortFilter(event.target.value);
   };
 
+  const handleFilterDialogOpen = () => {
+    setFilterDialogOpen(true);
+  };
+
   const renderRepoCards = () => {
     return (
       exploreData &&
@@ -250,7 +265,7 @@ function Explore() {
 
   const renderListBottom = () => {
     if (isLoading) {
-      return <Loading />;
+      return filterDialogOpen ? <div /> : <Loading />;
     }
     if (!isLoading && !isEndOfList) {
       return <div ref={listBottom} />;
@@ -262,16 +277,21 @@ function Explore() {
     <Container maxWidth="lg">
       <Grid container className={classes.gridWrapper}>
         <Grid container item xs={12}>
-          <Grid item xs={3}></Grid>
-          <Grid item xs={9}>
+          <Grid item xs={3} className="hide-on-mobile"></Grid>
+          <Grid item xs={12} md={9}>
             <Stack direction="row" className={classes.resultsRow}>
-              <Typography variant="body2" className={classes.results}>
+              <Typography variant="body2" className={`${classes.results} hide-on-mobile`}>
                 Showing {exploreData?.length} results out of {totalItems}
               </Typography>
+              {!isLoading && (
+                <Button variant="contained" onClick={handleFilterDialogOpen} className={`${classes.filterButton}`}>
+                  Filter results
+                </Button>
+              )}
               <FormControl
-                sx={{ m: '1', minWidth: '4.6875rem' }}
+                sx={{ minWidth: '4.6875rem' }}
                 disabled={isLoading}
-                className={classes.sortForm}
+                className={`${classes.sortForm} hide-on-mobile`}
                 size="small"
               >
                 <InputLabel>Sort</InputLabel>
@@ -292,20 +312,20 @@ function Explore() {
           </Grid>
         </Grid>
         <Grid container item xs={12} spacing={5} pt={1}>
-          <Grid item xs={3}>
+          <Grid item xs={3} md={3} className="hide-on-mobile">
             <Sticky>{renderFilterCards()}</Sticky>
           </Grid>
-          <Grid item xs={9}>
+          <Grid item xs={12} md={9}>
             {!(exploreData && exploreData.length) && !isLoading ? (
               <Grid container className={classes.nodataWrapper}>
                 <div style={{ marginTop: 20 }}>
-                  <Alert style={{ marginTop: 10, width: '100%' }} variant="outlined" severity="warning">
+                  <Alert style={{ marginTop: 10 }} variant="outlined" severity="warning">
                     Looks like we don&apos;t have anything matching that search. Try searching something else.
                   </Alert>
                 </div>
               </Grid>
             ) : (
-              <Stack direction="column" spacing={2}>
+              <Stack direction="column" spacing={{ xs: 4, md: 2 }}>
                 {renderRepoCards()}
                 {renderListBottom()}
               </Stack>
@@ -313,6 +333,13 @@ function Explore() {
           </Grid>
         </Grid>
       </Grid>
+      <FilterDialog
+        open={filterDialogOpen}
+        setOpen={setFilterDialogOpen}
+        sortValue={sortFilter}
+        setSortValue={setSortFilter}
+        renderFilterCards={renderFilterCards}
+      />
     </Container>
   );
 }
