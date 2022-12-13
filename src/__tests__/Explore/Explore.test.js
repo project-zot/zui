@@ -6,6 +6,7 @@ import React from 'react';
 import { createSearchParams, MemoryRouter } from 'react-router-dom';
 import filterConstants from 'utilities/filterConstants.js';
 import { sortByCriteria } from 'utilities/sortCriteria.js';
+import MockThemeProvier from '__mocks__/MockThemeProvider';
 
 // router mock
 const mockedUsedNavigate = jest.fn();
@@ -17,9 +18,11 @@ jest.mock('react-router-dom', () => ({
 const StateExploreWrapper = (props) => {
   const queryString = props.search || '';
   return (
-    <MemoryRouter initialEntries={[`/explore?${queryString.toString()}`]}>
-      <Explore />
-    </MemoryRouter>
+    <MockThemeProvier>
+      <MemoryRouter initialEntries={[`/explore?${queryString.toString()}`]}>
+        <Explore />
+      </MemoryRouter>
+    </MockThemeProvier>
   );
 };
 const mockImageList = {

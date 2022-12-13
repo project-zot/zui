@@ -37,15 +37,6 @@ const useStyles = makeStyles(() => ({
     textAlign: 'center',
     letterSpacing: '-0.02rem'
   },
-  titleRed: {
-    fontWeight: '700',
-    color: '#D83C0E',
-    width: '100%',
-    display: 'inline',
-    fontSize: '2.5rem',
-    textAlign: 'center',
-    letterSpacing: '-0.02rem'
-  },
   sectionTitle: {
     fontWeight: '700',
     color: '#000000DE',
@@ -63,8 +54,7 @@ const useStyles = makeStyles(() => ({
   viewAll: {
     color: '#00000099',
     cursor: 'pointer',
-    textAlign: 'right',
-    width: '100%'
+    textAlign: 'left'
   }
 }));
 
@@ -128,29 +118,6 @@ function Home() {
     );
   };
 
-  // const renderBookmarks = () => {
-  //   return (
-  //     homeData &&
-  //     homeData.slice(0, 2).map((item, index) => {
-  //       return (
-  //         <RepoCard
-  //           name={item.name}
-  //           version={item.latestVersion}
-  //           description={item.description}
-  //           tags={item.tags}
-  //           vendor={item.vendor}
-  //           platforms={item.platforms}
-  //           size={item.size}
-  //           licenses={item.licenses}
-  //           key={index}
-  //           data={item}
-  //           lastUpdated={item.lastUpdated}
-  //         />
-  //       );
-  //     })
-  //   );
-  // };
-
   const renderRecentlyUpdated = () => {
     return (
       homeData &&
@@ -185,31 +152,25 @@ function Home() {
         <Stack spacing={4} alignItems="center" className={classes.gridWrapper}>
           <Stack
             justifyContent="space-between"
-            alignItems="end"
-            direction="row"
+            alignItems={{ xs: 'flex-start', md: 'flex-end' }}
+            direction={{ xs: 'column', md: 'row' }}
             sx={{ width: '100%', paddingTop: '3rem' }}
           >
-            <Typography variant="h4" align="left" className={classes.sectionTitle}>
-              Most popular images
-            </Typography>
-            <Typography
-              variant="body2"
-              className={classes.viewAll}
-              onClick={() => handleClickViewAll(sortByCriteria.downloads.value)}
-            >
-              View all
-            </Typography>
+            <div>
+              <Typography variant="h4" align="left" className={classes.sectionTitle}>
+                Most popular images
+              </Typography>
+            </div>
+            <div className={classes.viewAll} onClick={() => handleClickViewAll(sortByCriteria.downloads.value)}>
+              <Typography variant="body2">View all</Typography>
+            </div>
           </Stack>
           {renderMostPopular()}
           {/* currently most popular will be by downloads until stars are implemented */}
-          {/* <Typography variant="h4" align="left" className={classes.sectionTitle}>
-        Bookmarks
-      </Typography>
-      {renderBookmarks()} */}
           <Stack
             justifyContent="space-between"
-            alignItems="end"
-            direction="row"
+            alignItems={{ xs: 'flex-start', md: 'flex-end' }}
+            direction={{ xs: 'column', md: 'row' }}
             sx={{ width: '100%', paddingTop: '1rem' }}
           >
             <Typography variant="h4" align="left" className={classes.sectionTitle}>

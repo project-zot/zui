@@ -3,25 +3,13 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 // components
-import {
-  AppBar,
-  Toolbar,
-  Popper,
-  MenuList,
-  MenuItem,
-  ClickAwayListener,
-  Paper,
-  Grow,
-  Stack,
-  Grid
-  //IconButton
-} from '@mui/material';
+import { AppBar, Toolbar, Stack, Grid } from '@mui/material';
 
 // styling
 import makeStyles from '@mui/styles/makeStyles';
 import logo from '../assets/zotLogo.svg';
-//import placeholderProfileButton from '../assets/Profile_button_placeholder.svg';
-import { useState, useRef, useEffect } from 'react';
+import logoxs from '../assets/zotLogoSmall.png';
+import { useState, useEffect } from 'react';
 import SearchSuggestion from './SearchSuggestion';
 
 const useStyles = makeStyles(() => ({
@@ -39,12 +27,15 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingLeft: 0,
+    padding: 0,
     backgroundColor: '#fff',
     height: '100%',
     width: '100%',
     borderBottom: '0.0625rem solid #BDBDBD',
     boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)'
+  },
+  headerContainer: {
+    minWidth: '60%'
   },
   searchIcon: {
     color: '#52637A',
@@ -66,7 +57,8 @@ const useStyles = makeStyles(() => ({
   },
   logoWrapper: {},
   logo: {
-    width: '130px'
+    maxWidth: '130px',
+    maxHeight: '50px'
   },
   userAvatar: {
     height: 46,
@@ -78,7 +70,8 @@ const useStyles = makeStyles(() => ({
   grid: {
     display: 'flex',
     flexDirection: 'row',
-    justifyContent: 'center'
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 }));
 
@@ -119,73 +112,32 @@ function Header() {
   const path = useLocation().pathname;
   // const navigate = useNavigate();
 
-  const [open, setOpen] = useState(false);
-  const anchorRef = useRef(null);
-
-  const handleToggle = () => {
-    setOpen((prevOpen) => !prevOpen);
-  };
-
-  const handleClose = (event) => {
-    localStorage.removeItem('token');
-    window.location.reload();
-    if (anchorRef.current && anchorRef.current.contains(event.target)) {
-      return;
-    }
-
-    setOpen(false);
-  };
   return (
     <AppBar position={show ? 'fixed' : 'absolute'} sx={{ height: '10vh' }}>
       <Toolbar className={classes.header}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ minWidth: '60%' }}>
+        <Stack direction="row" alignItems="center" justifyContent="space-between" className={classes.headerContainer}>
           <Grid container className={classes.grid}>
             <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'start' }}>
               <Link to="/home" className={classes.grid}>
-                <img alt="zot" src={logo} className={classes.logo} />
+                {/* <img
+                  alt="zot"
+                  src={logo}
+                  srcSet={`${logoxs} 192w, ${logo} 489w`}
+                  sizes="(max-width: 480px) 192px, 489px"
+                  className={classes.logo}
+                /> */}
+                <picture>
+                  <source media="(min-width:600px)" srcSet={logo} />
+                  <img alt="zot" src={logoxs} className={classes.logo} />
+                </picture>
               </Link>
             </Grid>
             <Grid item xs={8}>
               {path !== '/' && <SearchSuggestion />}
             </Grid>
-            <Grid item xs={2}>
+            <Grid item md={2} xs={0}>
               <div>{''}</div>
             </Grid>
-            {/* <IconButton
-            ref={anchorRef}
-            id="composition-button"
-            aria-controls={open ? 'composition-menu' : undefined}
-            aria-expanded={open ? 'true' : undefined}
-            aria-haspopup="true"
-            onClick={handleToggle}
-          >
-            <Avatar alt="profile" src={placeholderProfileButton} className={classes.userAvatar} variant="rounded" />
-          </IconButton> */}
-            <Popper
-              open={open}
-              anchorEl={anchorRef.current}
-              role={undefined}
-              placement="bottom-start"
-              transition
-              disablePortal
-            >
-              {({ TransitionProps, placement }) => (
-                <Grow
-                  {...TransitionProps}
-                  style={{
-                    transformOrigin: placement === 'bottom-start' ? 'left top' : 'left bottom'
-                  }}
-                >
-                  <Paper>
-                    <ClickAwayListener onClickAway={handleToggle}>
-                      <MenuList autoFocusItem={open} id="composition-menu" aria-labelledby="composition-button">
-                        <MenuItem onClick={handleClose}>Logout</MenuItem>
-                      </MenuList>
-                    </ClickAwayListener>
-                  </Paper>
-                </Grow>
-              )}
-            </Popper>
           </Grid>
         </Stack>
       </Toolbar>

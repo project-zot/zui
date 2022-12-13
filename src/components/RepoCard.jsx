@@ -168,7 +168,7 @@ function RepoCard(props) {
       >
         <CardContent className={classes.content}>
           <Grid container>
-            <Grid item xs={10}>
+            <Grid item xs={12} md={10}>
               <Stack alignItems="center" direction="row" spacing={2}>
                 <CardMedia
                   classes={{
@@ -184,9 +184,12 @@ function RepoCard(props) {
                     {name}
                   </Typography>
                 </Tooltip>
-                <VulnerabilityIconCheck {...vulnerabilityData} />
-                <SignatureIconCheck isSigned={isSigned} />
-                {/* <Chip label="Verified licensee" sx={{ backgroundColor: "#E8F5E9", color: "#388E3C" }} variant="filled" onDelete={() => { return }} deleteIcon={vulnerabilityCheck()} /> */}
+                <div className="hide-on-mobile">
+                  <VulnerabilityIconCheck {...vulnerabilityData} className="hide-on-mobile" />
+                </div>
+                <div className="hide-on-mobile">
+                  <SignatureIconCheck isSigned={isSigned} className="hide-on-mobile" />
+                </div>
               </Stack>
               <Tooltip title={description || 'Description not available'} placement="top">
                 <Typography className={classes.versionLast} pt={1} sx={{ fontSize: 12 }} gutterBottom noWrap>
@@ -197,12 +200,12 @@ function RepoCard(props) {
                 {platformChips()}
               </Stack>
               <Stack alignItems="center" direction="row" spacing={1} pt={2}>
-                <Tooltip title={getVendor()} placement="top">
+                <Tooltip title={getVendor()} placement="top" className="hide-on-mobile">
                   <Typography className={classes.vendor} variant="body2" noWrap>
                     {<Markdown options={{ forceInline: true }}>{getVendor()}</Markdown>}
                   </Typography>
                 </Tooltip>
-                <Tooltip title={getVersion()} placement="top">
+                <Tooltip title={getVersion()} placement="top" className="hide-on-mobile">
                   <Typography className={classes.versionLast} variant="body2" noWrap>
                     {getVersion()}
                   </Typography>
@@ -214,7 +217,7 @@ function RepoCard(props) {
                 </Tooltip>
               </Stack>
             </Grid>
-            <Grid item xs={2}>
+            <Grid item xs={2} md={2} className="hide-on-mobile">
               <Stack
                 alignItems="flex-end"
                 justifyContent="space-between"

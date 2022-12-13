@@ -24,7 +24,7 @@ import { isEmpty } from 'lodash';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { mapToRepoFromRepoInfo } from 'utilities/objectModels';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   pageWrapper: {
     backgroundColor: '#FFFFFF',
     height: '100vh'
@@ -37,7 +37,6 @@ const useStyles = makeStyles(() => ({
   },
   repoName: {
     fontWeight: '700',
-    fontSize: '2.5rem',
     color: '#0F2139',
     textAlign: 'left'
   },
@@ -56,7 +55,10 @@ const useStyles = makeStyles(() => ({
   tabs: {
     marginTop: '3rem',
     padding: '0.5rem',
-    height: '100%'
+    height: '100%',
+    [theme.breakpoints.down('md')]: {
+      padding: '0'
+    }
   },
   tabContent: {
     height: '100%'
@@ -67,11 +69,18 @@ const useStyles = makeStyles(() => ({
   },
   tabPanel: {
     height: '100%',
-    paddingLeft: '0rem!important'
+    paddingLeft: '0rem!important',
+    [theme.breakpoints.down('md')]: {
+      padding: '1.5rem 0'
+    }
   },
   metadata: {
     marginTop: '8rem',
-    paddingLeft: '1.5rem'
+    paddingLeft: '1.5rem',
+    [theme.breakpoints.down('md')]: {
+      marginTop: '1rem',
+      paddingLeft: '0'
+    }
   },
   card: {
     marginBottom: 2,
@@ -106,7 +115,27 @@ const useStyles = makeStyles(() => ({
     boxShadow: 'none!important'
   },
   header: {
-    paddingLeft: '2rem'
+    paddingLeft: '2rem',
+    [theme.breakpoints.down('md')]: {
+      padding: '0'
+    }
+  },
+  repoTitle: {
+    textAlign: 'left',
+    fontSize: '1rem',
+    lineHeight: '1.5rem',
+    color: 'rgba(0, 0, 0, 0.6)',
+    padding: '0.5rem 0 0 4rem',
+    [theme.breakpoints.down('md')]: {
+      padding: '0.5rem 0 0 0'
+    }
+  },
+  platformChipsContainer: {
+    alignItems: 'center',
+    padding: '0.5rem 0 0 4rem',
+    [theme.breakpoints.down('md')]: {
+      padding: '0.5rem 0 0 0'
+    }
   }
 }));
 
@@ -205,7 +234,7 @@ function RepoDetails() {
               color: 'rgba(0, 0, 0, 0.6)',
               fontSize: '1rem',
               lineHeight: '150%',
-              marginTop: '5%',
+              marginTop: '1.3rem',
               alignSelf: 'stretch'
             }}
           >
@@ -225,47 +254,46 @@ function RepoDetails() {
           <Card className={classes.cardRoot}>
             <CardContent>
               <Grid container className={classes.header}>
-                <Grid item xs={8}>
-                  <Stack alignItems="center" direction="row" spacing={2}>
-                    <CardMedia
-                      classes={{
-                        root: classes.media,
-                        img: classes.avatar
-                      }}
-                      component="img"
-                      // eslint-disable-next-line prettier/prettier
+                <Grid item xs={12} md={8}>
+                  <Stack alignItems="center" direction={{ xs: 'column', md: 'row' }} spacing={2}>
+                    <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
+                      <CardMedia
+                        classes={{
+                          root: classes.media,
+                          img: classes.avatar
+                        }}
+                        component="img"
+                        // eslint-disable-next-line prettier/prettier
                       image={
-                        !isEmpty(repoDetailData?.logo)
-                          ? `data:image/png;base64, ${repoDetailData?.logo}`
-                          : randomImage()
-                      }
-                      alt="icon"
-                    />
-                    <Typography variant="h3" className={classes.repoName}>
-                      {name}
-                    </Typography>
-                    <VulnerabilityIconCheck
-                      vulnerabilitySeverity={repoDetailData.vulnerabiltySeverity}
-                      count={repoDetailData?.vulnerabilityCount}
-                    />
-                    <SignatureIconCheck isSigned={repoDetailData.isSigned} />
-                    {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
+                          !isEmpty(repoDetailData?.logo)
+                            ? `data:image/png;base64, ${repoDetailData?.logo}`
+                            : randomImage()
+                        }
+                        alt="icon"
+                      />
+                      <Typography variant="h4" className={classes.repoName}>
+                        {name}
+                      </Typography>
+                    </Stack>
+                    <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
+                      <VulnerabilityIconCheck
+                        vulnerabilitySeverity={repoDetailData.vulnerabiltySeverity}
+                        count={repoDetailData?.vulnerabilityCount}
+                      />
+                      <SignatureIconCheck isSigned={repoDetailData.isSigned} />
+                      {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
+                    </Stack>
                   </Stack>
-                  <Typography
-                    pt={1}
-                    sx={{ fontSize: 16, lineHeight: '1.5rem', color: 'rgba(0, 0, 0, 0.6)', paddingLeft: '4rem' }}
-                    gutterBottom
-                    align="left"
-                  >
+                  <Typography gutterBottom className={classes.repoTitle}>
                     {repoDetailData?.title || 'Title not available'}
                   </Typography>
-                  <Stack alignItems="center" sx={{ paddingLeft: '4rem' }} direction="row" spacing={2} pt={1}>
+                  <Stack direction="row" spacing={2} className={classes.platformChipsContainer}>
                     {platformChips()}
                   </Stack>
                 </Grid>
               </Grid>
               <Grid container>
-                <Grid item xs={8} className={classes.tabs}>
+                <Grid item xs={12} md={8} className={classes.tabs}>
                   <TabContext value={selectedTab}>
                     <Box>
                       <TabList
@@ -289,7 +317,7 @@ function RepoDetails() {
                     </Box>
                   </TabContext>
                 </Grid>
-                <Grid item xs={4} className={classes.metadata}>
+                <Grid item xs={12} md={4} className={classes.metadata}>
                   <RepoDetailsMetadata
                     totalDownloads={repoDetailData?.downloads}
                     repoURL={repoDetailData?.source}
