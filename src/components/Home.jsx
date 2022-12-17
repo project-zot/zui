@@ -173,16 +173,20 @@ function Home() {
             direction={{ xs: 'column', md: 'row' }}
             sx={{ width: '100%', paddingTop: '1rem' }}
           >
-            <Typography variant="h4" align="left" className={classes.sectionTitle}>
-              Recently updated images
-            </Typography>
-            <Typography
-              variant="body2"
-              className={classes.viewAll}
-              onClick={() => handleClickViewAll(sortByCriteria.updateTime.value)}
-            >
-              View all
-            </Typography>
+            <div>
+              <Typography variant="h4" align="left" className={classes.sectionTitle}>
+                Recently updated images
+              </Typography>
+            </div>
+            <div>
+              <Typography
+                variant="body2"
+                className={classes.viewAll}
+                onClick={() => handleClickViewAll(sortByCriteria.updateTime.value)}
+              >
+                View all
+              </Typography>
+            </div>
           </Stack>
           {renderRecentlyUpdated()}
         </Stack>

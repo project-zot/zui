@@ -73,7 +73,7 @@
   animation-name: bounce;
 }
 
-@media (max-width: 480px) {
+@media (max-width: 550px) {
   .hide-on-mobile {
     display: none;
   }

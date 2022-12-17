@@ -42,8 +42,8 @@ const useStyles = makeStyles(() => ({
   },
   resultsWrapper: {
     margin: '0',
-    marginTop: '-2%',
-    paddingTop: '3%',
+    marginTop: '-5%',
+    paddingTop: '5%',
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
