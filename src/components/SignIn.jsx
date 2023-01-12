@@ -99,13 +99,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-export default function SignIn({
-  isAuthEnabled,
-  setIsAuthEnabled,
-  isLoggedIn,
-  setIsLoggedIn,
-  wrapperSetLoading = () => {}
-}) {
+export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = () => {} }) {
   const [usernameError, setUsernameError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
   const [username, setUsername] = useState(null);
@@ -119,7 +113,7 @@ export default function SignIn({
 
   useEffect(() => {
     setIsLoading(true);
-    if (isAuthEnabled && isLoggedIn) {
+    if (isLoggedIn) {
       setIsLoading(false);
       wrapperSetLoading(false);
       navigate('/home');
@@ -128,7 +122,7 @@ export default function SignIn({
         .get(`${host()}/v2/`, abortController.signal)
         .then((response) => {
           if (response.status === 200) {
-            setIsAuthEnabled(false);
+            localStorage.setItem('token', '-');
             setIsLoggedIn(true);
             setIsLoading(false);
             wrapperSetLoading(false);
@@ -136,7 +130,7 @@ export default function SignIn({
           }
         })
         .catch(() => {
-          setIsAuthEnabled(true);
+          localStorage.setItem('token', '-');
           setIsLoading(false);
           wrapperSetLoading(false);
         });
@@ -150,7 +144,7 @@ export default function SignIn({
     event.preventDefault();
     setRequestProcessing(true);
     let cfg = {};
-    if (isAuthEnabled) {
+    if (isLoggedIn) {
       const token = btoa(username + ':' + password);
       cfg = {
         headers: {
@@ -162,12 +156,10 @@ export default function SignIn({
       .get(`${host()}${endpoints.repoList}`, abortController.signal, cfg)
       .then((response) => {
         if (response.data && response.data.data) {
-          if (isAuthEnabled) {
-            const token = btoa(username + ':' + password);
-            localStorage.setItem('token', token);
-            setRequestProcessing(false);
-            setRequestError(false);
-          }
+          const token = btoa(username + ':' + password);
+          localStorage.setItem('token', token);
+          setRequestProcessing(false);
+          setRequestError(false);
           setIsLoggedIn(true);
           navigate('/home');
         }

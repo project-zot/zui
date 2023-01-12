@@ -20,7 +20,7 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function LoginPage({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, setIsLoggedIn }) {
+function LoginPage({ isLoggedIn, setIsLoggedIn }) {
   const [isLoading, setIsLoading] = useState(true);
   const classes = useStyles();
 
@@ -31,13 +31,7 @@ function LoginPage({ isAuthEnabled, setIsAuthEnabled, isLoggedIn, setIsLoggedIn 
         <SigninPresentation />
       </Grid>
       <Grid item xs={6} className={isLoading ? classes.loadingHidden : ''}>
-        <SignIn
-          isAuthEnabled={isAuthEnabled}
-          setIsAuthEnabled={setIsAuthEnabled}
-          isLoggedIn={isLoggedIn}
-          setIsLoggedIn={setIsLoggedIn}
-          wrapperSetLoading={setIsLoading}
-        />
+        <SignIn isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} wrapperSetLoading={setIsLoading} />
       </Grid>
     </Grid>
   );
