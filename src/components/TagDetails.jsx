@@ -41,6 +41,7 @@ import { isEmpty } from 'lodash';
 import Loading from './Loading';
 import { dockerPull, podmanPull, skopeoPull } from 'utilities/pullStrings';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
+import ReferredBy from './ReferredBy';
 
 const useStyles = makeStyles((theme) => ({
   pageWrapper: {
@@ -511,6 +512,7 @@ function TagDetails() {
                         />
                         <Tab value="IsDependentOn" label="Used by" className={classes.tabContent} />
                         <Tab value="Vulnerabilities" label="Vulnerabilities" className={classes.tabContent} />
+                        <Tab value="ReferredBy" label="Referred By" className={classes.tabContent} />
                       </TabList>
                       <Grid container>
                         <Grid item xs={12}>
@@ -525,6 +527,9 @@ function TagDetails() {
                           </TabPanel>
                           <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
                             <VulnerabilitiesDetails name={reponame} tag={tag} />
+                          </TabPanel>
+                          <TabPanel value="ReferredBy" className={classes.tabPanel}>
+                            <ReferredBy repoName={reponame} digest={imageDetailData?.digest} />
                           </TabPanel>
                         </Grid>
                       </Grid>

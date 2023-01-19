@@ -73,4 +73,12 @@ const mapCVEInfo = (cveInfo) => {
   };
 };
 
-export { mapToRepo, mapToImage, mapToRepoFromRepoInfo, mapCVEInfo };
+const mapReferrer = (referrer) => ({
+  mediaType: referrer.MediaType,
+  artifactType: referrer.ArtifactType,
+  size: referrer.Size,
+  digest: referrer.Digest,
+  annotations: referrer.Annotations?.map((annotation) => ({ key: annotation.Key, value: annotation.Value }))
+});
+
+export { mapToRepo, mapToImage, mapToRepoFromRepoInfo, mapCVEInfo, mapReferrer };
