@@ -119,13 +119,6 @@ function Header() {
           <Grid container className={classes.grid}>
             <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'start' }}>
               <Link to="/home" className={classes.grid}>
-                {/* <img
-                  alt="zot"
-                  src={logo}
-                  srcSet={`${logoxs} 192w, ${logo} 489w`}
-                  sizes="(max-width: 480px) 192px, 489px"
-                  className={classes.logo}
-                /> */}
                 <picture>
                   <source media="(min-width:600px)" srcSet={logo} />
                   <img alt="zot" src={logoxs} className={classes.logo} />

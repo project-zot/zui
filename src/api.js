@@ -105,7 +105,9 @@ const endpoints = {
     const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
     const paginationParam = `requestedPage: {limit:${pageSize} offset:${(pageNumber - 1) * pageSize} sortBy:RELEVANCE}`;
     return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam}) {Images {RepoName Tag Logo}}}`;
-  }
+  },
+  referrers: ({ repo, digest, type = '' }) =>
+    `/v2/_zot/ext/search?query={Referrers(repo: "${repo}" digest: "${digest}" type: "${type}"){MediaType ArtifactType Size Digest Annotations{Key Value}}}`
 };
 
 export { api, endpoints };

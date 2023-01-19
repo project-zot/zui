@@ -89,13 +89,15 @@ function DependsOn(props) {
       )
       .then((response) => {
         if (response.data && response.data.data) {
-          let imagesData = response.data.data.BaseImageList?.Results?.map((img) => mapToImage(img));
-          const newImageList = [...images, ...imagesData];
-          setImages(newImageList);
-          setIsEndOfList(
-            response.data.data.BaseImageList.Page?.ItemCount < EXPLORE_PAGE_SIZE ||
-              newImageList.length >= response.data.data.BaseImageList?.Page?.TotalCount
-          );
+          if (!isEmpty(response.data.data.BaseImageList?.Results)) {
+            let imagesData = response.data.data.BaseImageList?.Results?.map((img) => mapToImage(img));
+            const newImageList = [...images, ...imagesData];
+            setImages(newImageList);
+            setIsEndOfList(
+              response.data.data.BaseImageList.Page?.ItemCount < EXPLORE_PAGE_SIZE ||
+                newImageList.length >= response.data.data.BaseImageList?.Page?.TotalCount
+            );
+          }
         }
         setIsLoading(false);
       })

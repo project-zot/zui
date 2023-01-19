@@ -235,7 +235,7 @@ describe('Tags details', () => {
     const dependenciesTab = await screen.findByTestId('dependencies-tab');
     fireEvent.click(dependenciesTab);
     expect(await screen.findByTestId('depends-on-container')).toBeInTheDocument();
-    await waitFor(() => expect(screen.getAllByRole('tab')).toHaveLength(4));
+    await waitFor(() => expect(screen.getAllByRole('tab')).toHaveLength(5));
   });
 
   it("should log an error when data can't be fetched", async () => {
