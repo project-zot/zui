@@ -199,16 +199,16 @@ function VulnerabilitiesDetails(props) {
       )
       .then((response) => {
         if (response.data && response.data.data) {
-          if (!isEmpty(response.data.data.CVEListForImage?.CVEList)) {
-            let cveInfo = response.data.data.CVEListForImage.CVEList;
-            let cveListData = mapCVEInfo(cveInfo);
-            const newCVEList = [...cveData, ...cveListData];
-            setCveData(newCVEList);
-            setIsEndOfList(
-              response.data.data.CVEListForImage.Page?.ItemCount < EXPLORE_PAGE_SIZE ||
-                newCVEList.length >= response.data.data.CVEListForImage?.Page?.TotalCount
-            );
-          }
+          let cveInfo = response.data.data.CVEListForImage?.CVEList;
+          let cveListData = mapCVEInfo(cveInfo);
+          const newCVEList = [...cveData, ...cveListData];
+          setCveData(newCVEList);
+          setIsEndOfList(
+            response.data.data.CVEListForImage.Page?.ItemCount < EXPLORE_PAGE_SIZE ||
+              newCVEList.length >= response.data.data.CVEListForImage?.Page?.TotalCount
+          );
+        } else if (response.data.errors) {
+          setIsEndOfList(true);
         }
         setIsLoading(false);
       })
@@ -269,7 +269,7 @@ function VulnerabilitiesDetails(props) {
     if (!isLoading && !isEndOfList) {
       return <div ref={listBottom} />;
     }
-    return '';
+    return;
   };
 
   return (
