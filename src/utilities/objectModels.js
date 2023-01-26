@@ -60,7 +60,7 @@ const mapToImage = (responseImage) => {
 };
 
 const mapCVEInfo = (cveInfo) => {
-  const cveList = cveInfo.CVEList?.map((cve) => {
+  const cveList = cveInfo.map((cve) => {
     return {
       id: cve.Id,
       severity: cve.Severity,
@@ -68,9 +68,7 @@ const mapCVEInfo = (cveInfo) => {
       description: cve.Description
     };
   });
-  return {
-    cveList
-  };
+  return cveList;
 };
 
 const mapReferrer = (referrer) => ({

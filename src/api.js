@@ -68,8 +68,10 @@ const endpoints = {
     `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Digest Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor Size Platform {Os Arch}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName IsSigned Vulnerabilities {MaxSeverity Count} Layers {Size Digest} Digest Tag Logo Title Documentation DownloadCount Source Description Licenses History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}}}}}}`,
   detailedImageInfo: (name, tag) =>
     `/v2/_zot/ext/search?query={Image(image: "${name}:${tag}"){RepoName IsSigned Vulnerabilities {MaxSeverity Count} Tag Digest LastUpdated Size ConfigDigest Platform {Os Arch} Vendor Licenses Logo}}`,
-  vulnerabilitiesForRepo: (name) =>
-    `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}"){Tag, CVEList {Id Title Description Severity PackageList {Name InstalledVersion FixedVersion}}}}`,
+  vulnerabilitiesForRepo: (name, { pageNumber = 1, pageSize = 15 }) =>
+    `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}", requestedPage: {limit:${pageSize} offset:${
+      (pageNumber - 1) * pageSize
+    }}){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity PackageList {Name InstalledVersion FixedVersion}}}}`,
   layersDetailsForImage: (name) =>
     `/v2/_zot/ext/search?query={Image(image: "${name}"){History {Layer {Size Digest Score} HistoryDescription {Created CreatedBy Author Comment EmptyLayer} }}}`,
   imageListWithCVEFixed: (cveId, repoName) =>

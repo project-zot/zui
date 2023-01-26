@@ -15,6 +15,7 @@ const StateVulnerabilitiesWrapper = () => {
 const mockCVEList = {
   CVEListForImage: {
     Tag: '',
+    Page: { ItemCount: 20, TotalCount: 20 },
     CVEList: [
       {
         Id: 'CVE-2020-16156',
@@ -445,6 +446,17 @@ const mockCVEFixed = {
   ]
 };
 
+beforeEach(() => {
+  // IntersectionObserver isn't available in test environment
+  const mockIntersectionObserver = jest.fn();
+  mockIntersectionObserver.mockReturnValue({
+    observe: () => null,
+    unobserve: () => null,
+    disconnect: () => null
+  });
+  window.IntersectionObserver = mockIntersectionObserver;
+});
+
 afterEach(() => {
   // restore the spy created with spyOn
   jest.restoreAllMocks();
@@ -461,7 +473,7 @@ describe('Vulnerabilties page', () => {
   it('renders no vulnerabilities if there are not any', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({
       status: 200,
-      data: { data: { CVEListForImage: { Tag: '', CVEList: [] } } }
+      data: { data: { CVEListForImage: { Tag: '', Page: {}, CVEList: [] } } }
     });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('No Vulnerabilities')).toHaveLength(1));

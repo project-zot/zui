@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 
 // utility
 import { api, endpoints } from '../api';
@@ -14,6 +14,7 @@ import Loading from './Loading';
 import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
 import { VulnerabilityChipCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { mapCVEInfo } from 'utilities/objectModels';
+import { EXPLORE_PAGE_SIZE } from 'utilities/paginationConstants';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -179,48 +180,96 @@ function VulnerabilitiyCard(props) {
 
 function VulnerabilitiesDetails(props) {
   const classes = useStyles();
-  const [cveData, setCveData] = useState({});
+  const [cveData, setCveData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const abortController = useMemo(() => new AbortController(), []);
   const { name, tag } = props;
 
-  useEffect(() => {
+  // pagination props
+  const [pageNumber, setPageNumber] = useState(1);
+  const [isEndOfList, setIsEndOfList] = useState(false);
+  const listBottom = useRef(null);
+
+  const getPaginatedCVEs = () => {
     setIsLoading(true);
     api
-      .get(`${host()}${endpoints.vulnerabilitiesForRepo(`${name}:${tag}`)}`, abortController.signal)
+      .get(
+        `${host()}${endpoints.vulnerabilitiesForRepo(`${name}:${tag}`, { pageNumber, pageSize: EXPLORE_PAGE_SIZE })}`,
+        abortController.signal
+      )
       .then((response) => {
         if (response.data && response.data.data) {
-          let cveInfo = response.data.data.CVEListForImage;
-          let cveListData = mapCVEInfo(cveInfo);
-          setCveData(cveListData);
+          if (!isEmpty(response.data.data.CVEListForImage?.CVEList)) {
+            let cveInfo = response.data.data.CVEListForImage.CVEList;
+            let cveListData = mapCVEInfo(cveInfo);
+            const newCVEList = [...cveData, ...cveListData];
+            setCveData(newCVEList);
+            setIsEndOfList(
+              response.data.data.CVEListForImage.Page?.ItemCount < EXPLORE_PAGE_SIZE ||
+                newCVEList.length >= response.data.data.CVEListForImage?.Page?.TotalCount
+            );
+          }
         }
         setIsLoading(false);
       })
       .catch((e) => {
         console.error(e);
         setIsLoading(false);
-        setCveData({});
+        setCveData([]);
+        setIsEndOfList(true);
       });
+  };
+
+  useEffect(() => {
+    getPaginatedCVEs();
     return () => {
       abortController.abort();
     };
-  }, []);
+  }, [pageNumber]);
 
-  const renderCVEs = (cves) => {
-    if (cves?.length !== 0) {
-      return (
-        cves &&
-        cves.map((cve, index) => {
-          return <VulnerabilitiyCard key={index} cve={cve} name={name} />;
-        })
-      );
-    } else {
-      return (
-        <div>
-          <Typography className={classes.none}> No Vulnerabilities </Typography>{' '}
-        </div>
-      );
+  // setup intersection obeserver for infinite scroll
+  useEffect(() => {
+    if (isLoading || isEndOfList) return;
+    const handleIntersection = (entries) => {
+      if (isLoading || isEndOfList) return;
+      const [target] = entries;
+      if (target?.isIntersecting) {
+        setPageNumber((pageNumber) => pageNumber + 1);
+      }
+    };
+    const intersectionObserver = new IntersectionObserver(handleIntersection, {
+      root: null,
+      rootMargin: '0px',
+      threshold: 0
+    });
+
+    if (listBottom.current) {
+      intersectionObserver.observe(listBottom.current);
     }
+
+    return () => {
+      intersectionObserver.disconnect();
+    };
+  }, [isLoading, isEndOfList]);
+
+  const renderCVEs = () => {
+    return !isEmpty(cveData) ? (
+      cveData.map((cve, index) => {
+        return <VulnerabilitiyCard key={index} cve={cve} name={name} />;
+      })
+    ) : (
+      <div>{!isLoading && <Typography className={classes.none}> No Vulnerabilities </Typography>}</div>
+    );
+  };
+
+  const renderListBottom = () => {
+    if (isLoading) {
+      return <Loading />;
+    }
+    if (!isLoading && !isEndOfList) {
+      return <div ref={listBottom} />;
+    }
+    return '';
   };
 
   return (
@@ -248,7 +297,12 @@ function VulnerabilitiesDetails(props) {
           width: '100%'
         }}
       />
-      {isLoading ? <Loading /> : renderCVEs(cveData?.cveList)}
+      <Stack direction="column" spacing={2}>
+        <Stack direction="column" spacing={2}>
+          {renderCVEs()}
+          {renderListBottom()}
+        </Stack>
+      </Stack>
     </>
   );
 }

@@ -1,5 +1,5 @@
 import { useParams } from 'react-router-dom';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState, useRef } from 'react';
 
 // utility
 import { api, endpoints } from '../api';
@@ -214,6 +214,7 @@ function TagDetails() {
   const [selectedTab, setSelectedTab] = useState('Layers');
   const [selectedPullTab, setSelectedPullTab] = useState('');
   const abortController = useMemo(() => new AbortController(), []);
+  const mounted = useRef(false);
 
   // get url param from <Route here (i.e. image name)
   const { reponame, tag } = useParams();
@@ -223,6 +224,7 @@ function TagDetails() {
   const classes = useStyles();
 
   useEffect(() => {
+    mounted.current = true;
     // if same-page navigation because of tag update, following 2 lines help ux
     setSelectedTab('Layers');
     window?.scrollTo(0, 0);
@@ -246,6 +248,7 @@ function TagDetails() {
       });
     return () => {
       abortController.abort();
+      mounted.current = false;
     };
   }, [reponame, tag]);
 
@@ -265,7 +268,9 @@ function TagDetails() {
   useEffect(() => {
     if (isCopied) {
       setTimeout(() => {
-        setIsCopied(false);
+        if (mounted.current) {
+          setIsCopied(false);
+        }
       }, 3000);
     }
   }, [isCopied]);
