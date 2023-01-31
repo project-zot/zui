@@ -96,6 +96,8 @@ function IsDependentOn(props) {
             response.data.data.DerivedImageList?.Page?.ItemCount < EXPLORE_PAGE_SIZE ||
               newImageList.length >= response.data.data.DerivedImageList?.Page?.TotalCount
           );
+        } else if (response.data.errors) {
+          setIsEndOfList(true);
         }
         setIsLoading(false);
       })

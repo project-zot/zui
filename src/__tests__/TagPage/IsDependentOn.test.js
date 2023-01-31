@@ -101,4 +101,11 @@ describe('Dependents tab', () => {
     render(<RouterDependsWrapper />);
     await waitFor(() => expect(error).toBeCalledTimes(1));
   });
+
+  it('should stop loading if the api response contains an error', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 500, data: { errors: ['test error'] } });
+    jest.spyOn(console, 'error').mockImplementation(() => {});
+    render(<RouterDependsWrapper />);
+    expect(await screen.findByText(/Nothing found/i)).toBeInTheDocument();
+  });
 });

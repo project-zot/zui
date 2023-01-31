@@ -230,8 +230,9 @@ afterEach(() => {
 
 describe('Tags details', () => {
   it('should show tabs and allow nagivation between them', async () => {
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImage } });
     render(<TagDetailsThemeWrapper />);
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 500, data: { data: { errors: ['test error'] } } });
     const dependenciesTab = await screen.findByTestId('dependencies-tab');
     fireEvent.click(dependenciesTab);
     expect(await screen.findByTestId('depends-on-container')).toBeInTheDocument();
