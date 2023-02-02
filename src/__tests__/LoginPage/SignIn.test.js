@@ -1,6 +1,6 @@
 import { render, waitFor, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
-import SignIn from 'components/SignIn';
+import SignIn from 'components/Login/SignIn';
 import { api } from '../../api';
 import userEvent from '@testing-library/user-event';
 

@@ -5,9 +5,9 @@ import React from 'react';
 
 import makeStyles from '@mui/styles/makeStyles';
 import { Container, Grid, Stack } from '@mui/material';
-import Header from 'components/Header';
-import TagDetails from 'components/TagDetails';
-import ExploreHeader from 'components/ExploreHeader';
+import Header from 'components/Header/Header';
+import TagDetails from 'components/Tag/TagDetails';
+import ExploreHeader from 'components/Header/ExploreHeader';
 
 const useStyles = makeStyles(() => ({
   pageWrapper: {

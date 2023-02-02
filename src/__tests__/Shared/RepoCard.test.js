@@ -1,7 +1,7 @@
 import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import RepoCard from 'components/RepoCard';
+import RepoCard from 'components/Shared/RepoCard';
 import { createSearchParams } from 'react-router-dom';
 
 // usenavigate mock

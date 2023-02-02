@@ -1,6 +1,6 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import { api } from 'api';
-import Home from 'components/Home';
+import Home from 'components/Home/Home';
 import React from 'react';
 import { createSearchParams } from 'react-router-dom';
 import { sortByCriteria } from 'utilities/sortCriteria';

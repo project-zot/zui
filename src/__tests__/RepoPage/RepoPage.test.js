@@ -13,7 +13,7 @@ jest.mock('react-router-dom', () => ({
 }));
 
 jest.mock(
-  'components/RepoDetails',
+  'components/Repo/RepoDetails',
   () =>
     function RepoDetails() {
       return <div />;

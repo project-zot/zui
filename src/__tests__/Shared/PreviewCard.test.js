@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
-import PreviewCard from 'components/PreviewCard';
+import PreviewCard from 'components/Shared/PreviewCard';
 
 // usenavigate mock
 const mockedUsedNavigate = jest.fn();

@@ -3,7 +3,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { DateTime } from 'luxon';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import React from 'react';
-import transform from '../utilities/transform';
+import transform from '../../utilities/transform';
 
 const useStyles = makeStyles(() => ({
   card: {

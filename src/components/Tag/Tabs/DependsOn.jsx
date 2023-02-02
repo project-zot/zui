@@ -2,14 +2,14 @@ import React, { useEffect, useState, useMemo, useRef } from 'react';
 import { isEmpty } from 'lodash';
 
 // utility
-import { api, endpoints } from '../api';
+import { api, endpoints } from '../../../api';
 
 // components
 import { Divider, Typography, Stack } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { host } from '../host';
-import Loading from './Loading';
-import TagCard from './TagCard';
+import { host } from '../../../host';
+import Loading from '../../Shared/Loading';
+import TagCard from '../../Shared/TagCard';
 import { mapToImage } from 'utilities/objectModels';
 import { EXPLORE_PAGE_SIZE } from 'utilities/paginationConstants';
 

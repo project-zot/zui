@@ -1,9 +1,9 @@
 // react global
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { host } from '../host';
+import { host } from '../../host';
 // utility
-import { api, endpoints } from '../api';
+import { api, endpoints } from '../../api';
 
 // components
 import Button from '@mui/material/Button';
@@ -14,13 +14,13 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import TermsOfService from './TermsOfService';
-import google from '../assets/Google.png';
-import git from '../assets/Git.png';
+import google from '../../assets/Google.png';
+import git from '../../assets/Git.png';
 
 // styling
 import { makeStyles } from '@mui/styles';
 import { Card, CardContent } from '@mui/material';
-import Loading from './Loading';
+import Loading from '../Shared/Loading';
 
 const useStyles = makeStyles(() => ({
   cardContainer: {

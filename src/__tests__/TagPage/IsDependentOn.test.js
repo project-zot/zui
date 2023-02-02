@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import { api } from 'api';
-import IsDependentOn from 'components/IsDependentOn';
+import IsDependentOn from 'components/Tag/Tabs/IsDependentOn';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 

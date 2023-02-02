@@ -2,10 +2,10 @@ import React, { useEffect, useState, useMemo } from 'react';
 import { makeStyles } from '@mui/styles';
 import { isEmpty } from 'lodash';
 import { Divider, Typography, Stack } from '@mui/material';
-import ReferrerCard from './ReferrerCard';
-import Loading from './Loading';
+import ReferrerCard from '../../Shared/ReferrerCard';
+import Loading from '../../Shared/Loading';
 import { api, endpoints } from 'api';
-import { host } from '../host';
+import { host } from '../../../host';
 import { mapReferrer } from 'utilities/objectModels';
 
 const useStyles = makeStyles(() => ({

@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { api } from 'api';
-import ReferredBy from 'components/ReferredBy';
+import ReferredBy from 'components/Tag/Tabs/ReferredBy';
 import React from 'react';
 
 const mockReferrersList = {

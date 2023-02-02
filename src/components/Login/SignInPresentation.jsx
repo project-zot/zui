@@ -1,9 +1,9 @@
 import { Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
-import logoWhite from '../assets/Zot-white.svg';
-import loginDrawing from '../assets/codeReviewSignIn.png';
-import backgroundImage from '../assets/backgroundSignIn.png';
+import logoWhite from '../../assets/Zot-white.svg';
+import loginDrawing from '../../assets/codeReviewSignIn.png';
+import backgroundImage from '../../assets/backgroundSignIn.png';
 
 const useStyles = makeStyles(() => ({
   container: {

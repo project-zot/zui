@@ -9,7 +9,7 @@ afterEach(() => {
 });
 
 jest.mock(
-  'components/TagDetails',
+  'components/Tag/TagDetails',
   () =>
     function TagDetails() {
       return <div />;
@@ -17,7 +17,7 @@ jest.mock(
 );
 
 jest.mock(
-  'components/ExploreHeader',
+  'components/Header/ExploreHeader',
   () =>
     function ExploreHeader() {
       return <div />;

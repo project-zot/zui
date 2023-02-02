@@ -6,7 +6,7 @@ import Typography from '@mui/material/Typography';
 import { Card, CardContent, Divider, Stack, InputBase, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from '@mui/styles';
-import TagCard from './TagCard';
+import TagCard from '../../Shared/TagCard';
 import { tagsSortByCriteria } from 'utilities/sortCriteria';
 
 const useStyles = makeStyles(() => ({

@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { api } from 'api';
-import Explore from 'components/Explore';
+import Explore from 'components/Explore/Explore';
 import React from 'react';
 import { createSearchParams, MemoryRouter } from 'react-router-dom';
 import filterConstants from 'utilities/filterConstants.js';
