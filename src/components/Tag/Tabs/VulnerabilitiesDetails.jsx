@@ -1,16 +1,16 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 
 // utility
-import { api, endpoints } from '../api';
+import { api, endpoints } from '../../../api';
 
 // components
 import Collapse from '@mui/material/Collapse';
 import { Box, Card, CardContent, Divider, Stack, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { host } from '../host';
+import { host } from '../../../host';
 import { isEmpty } from 'lodash';
 import { Link } from 'react-router-dom';
-import Loading from './Loading';
+import Loading from '../../Shared/Loading';
 import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
 import { VulnerabilityChipCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { mapCVEInfo } from 'utilities/objectModels';

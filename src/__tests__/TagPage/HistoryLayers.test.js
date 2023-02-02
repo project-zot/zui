@@ -1,6 +1,6 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { api } from 'api';
-import HistoryLayers from 'components/HistoryLayers';
+import HistoryLayers from 'components/Tag/Tabs/HistoryLayers';
 import React from 'react';
 
 const mockLayersList = [

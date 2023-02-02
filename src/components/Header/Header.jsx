@@ -7,8 +7,8 @@ import { AppBar, Toolbar, Stack, Grid } from '@mui/material';
 
 // styling
 import makeStyles from '@mui/styles/makeStyles';
-import logo from '../assets/zotLogo.svg';
-import logoxs from '../assets/zotLogoSmall.png';
+import logo from '../../assets/zotLogo.svg';
+import logoxs from '../../assets/zotLogoSmall.png';
 import { useState, useEffect } from 'react';
 import SearchSuggestion from './SearchSuggestion';
 

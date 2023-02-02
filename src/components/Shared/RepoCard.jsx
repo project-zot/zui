@@ -9,10 +9,10 @@ import { Card, CardActionArea, CardMedia, CardContent, Typography, Stack, Chip, 
 import makeStyles from '@mui/styles/makeStyles';
 
 // placeholder images
-import repocube1 from '../assets/repocube-1.png';
-import repocube2 from '../assets/repocube-2.png';
-import repocube3 from '../assets/repocube-3.png';
-import repocube4 from '../assets/repocube-4.png';
+import repocube1 from '../../assets/repocube-1.png';
+import repocube2 from '../../assets/repocube-2.png';
+import repocube3 from '../../assets/repocube-3.png';
+import repocube4 from '../../assets/repocube-4.png';
 
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';

@@ -1,6 +1,6 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import { api } from 'api';
-import VulnerabilitiesDetails from 'components/VulnerabilitiesDetails';
+import VulnerabilitiesDetails from 'components/Tag/Tabs/VulnerabilitiesDetails';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 

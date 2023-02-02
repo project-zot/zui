@@ -4,7 +4,7 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 jest.mock(
-  'components/Home',
+  'components/Home/Home',
   () =>
     function Home() {
       return <div />;

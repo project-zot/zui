@@ -1,15 +1,15 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 // utility
-import { api, endpoints } from '../api';
+import { api, endpoints } from '../../../api';
 
 // components
 import { Divider, Stack, Typography } from '@mui/material';
-import LayerCard from './LayerCard.jsx';
+import LayerCard from '../../Shared/LayerCard.jsx';
 import makeStyles from '@mui/styles/makeStyles';
-import { host } from '../host';
+import { host } from '../../../host';
 import { isEmpty } from 'lodash';
-import Loading from './Loading';
+import Loading from '../../Shared/Loading';
 
 const useStyles = makeStyles(() => ({
   card: {

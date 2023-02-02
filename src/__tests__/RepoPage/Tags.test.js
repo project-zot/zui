@@ -1,6 +1,6 @@
 import { fireEvent, waitFor, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import Tags from 'components/Tags';
+import Tags from 'components/Repo/Tabs/Tags';
 import React from 'react';
 
 const mockedUsedNavigate = jest.fn();

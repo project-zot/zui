@@ -2,13 +2,13 @@
 import React from 'react';
 
 // components
-import SignIn from '../components/SignIn';
+import SignIn from '../components/Login/SignIn';
 
 import makeStyles from '@mui/styles/makeStyles';
 import { Grid } from '@mui/material';
-import SigninPresentation from 'components/SignInPresentation';
+import SigninPresentation from 'components/Login/SignInPresentation';
 import { useState } from 'react';
-import Loading from 'components/Loading';
+import Loading from 'components/Shared/Loading';
 
 const useStyles = makeStyles(() => ({
   container: {

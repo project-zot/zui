@@ -2,8 +2,8 @@ import { useParams } from 'react-router-dom';
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 
 // utility
-import { api, endpoints } from '../api';
-import { mapToImage } from '../utilities/objectModels';
+import { api, endpoints } from '../../api';
+import { mapToImage } from '../../utilities/objectModels';
 // components
 import {
   Box,
@@ -23,25 +23,25 @@ import {
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import makeStyles from '@mui/styles/makeStyles';
-import { host } from '../host';
+import { host } from '../../host';
 
 // placeholder images
-import repocube1 from '../assets/repocube-1.png';
-import repocube2 from '../assets/repocube-2.png';
-import repocube3 from '../assets/repocube-3.png';
-import repocube4 from '../assets/repocube-4.png';
+import repocube1 from '../../assets/repocube-1.png';
+import repocube2 from '../../assets/repocube-2.png';
+import repocube3 from '../../assets/repocube-3.png';
+import repocube4 from '../../assets/repocube-4.png';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import TagDetailsMetadata from './TagDetailsMetadata';
-import VulnerabilitiesDetails from './VulnerabilitiesDetails';
-import HistoryLayers from './HistoryLayers';
-import DependsOn from './DependsOn';
-import IsDependentOn from './IsDependentOn';
+import VulnerabilitiesDetails from './Tabs/VulnerabilitiesDetails';
+import HistoryLayers from './Tabs/HistoryLayers';
+import DependsOn from './Tabs/DependsOn';
+import IsDependentOn from './Tabs/IsDependentOn';
 import { isEmpty } from 'lodash';
-import Loading from './Loading';
+import Loading from '../Shared/Loading';
 import { dockerPull, podmanPull, skopeoPull } from 'utilities/pullStrings';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
-import ReferredBy from './ReferredBy';
+import ReferredBy from './Tabs/ReferredBy';
 
 const useStyles = makeStyles((theme) => ({
   pageWrapper: {

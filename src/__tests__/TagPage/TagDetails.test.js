@@ -2,7 +2,7 @@ import React from 'react';
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { api } from 'api';
-import TagDetails from 'components/TagDetails';
+import TagDetails from 'components/Tag/TagDetails';
 import MockThemeProvier from '__mocks__/MockThemeProvider';
 
 const TagDetailsThemeWrapper = () => {

@@ -2,8 +2,8 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 // components
-import RepoCard from './RepoCard.jsx';
-import Loading from './Loading';
+import RepoCard from '../Shared/RepoCard.jsx';
+import Loading from '../Shared/Loading';
 import Typography from '@mui/material/Typography';
 import Sticky from 'react-sticky-el';
 import Alert from '@mui/material/Alert';
@@ -12,11 +12,11 @@ import { Container, FormControl, Grid, InputLabel, MenuItem, Select, Stack, Butt
 import makeStyles from '@mui/styles/makeStyles';
 
 // utility
-import { api, endpoints } from '../api';
-import { host } from '../host';
+import { api, endpoints } from '../../api';
+import { host } from '../../host';
 import { mapToRepo } from 'utilities/objectModels.js';
 import { useSearchParams } from 'react-router-dom';
-import FilterCard from './FilterCard.jsx';
+import FilterCard from '../Shared/FilterCard.jsx';
 import { isEmpty } from 'lodash';
 import filterConstants from 'utilities/filterConstants.js';
 import { sortByCriteria } from 'utilities/sortCriteria.js';

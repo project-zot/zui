@@ -1,5 +1,5 @@
 import { fireEvent, render, screen, waitFor } from '@testing-library/react';
-import RepoDetails from 'components/RepoDetails';
+import RepoDetails from 'components/Repo/RepoDetails';
 import React from 'react';
 import { api } from 'api';
 import { createSearchParams } from 'react-router-dom';

@@ -1,5 +1,5 @@
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import FilterCard from 'components/FilterCard';
+import FilterCard from 'components/Shared/FilterCard';
 import React, { useState } from 'react';
 import filterConstants from 'utilities/filterConstants';
 

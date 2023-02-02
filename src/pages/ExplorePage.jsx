@@ -1,10 +1,10 @@
 // components
 import React from 'react';
-import Header from '../components/Header.jsx';
+import Header from '../components/Header/Header.jsx';
 
 import makeStyles from '@mui/styles/makeStyles';
 import { Container, Grid, Stack } from '@mui/material';
-import Explore from 'components/Explore.jsx';
+import Explore from 'components/Explore/Explore.jsx';
 
 const useStyles = makeStyles(() => ({
   container: {

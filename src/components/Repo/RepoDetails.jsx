@@ -2,24 +2,24 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 // utility
-import { api, endpoints } from '../api';
+import { api, endpoints } from '../../api';
 import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
 
 // components
-import Tags from './Tags.jsx';
+import Tags from './Tabs/Tags.jsx';
 import { Box, Card, CardContent, CardMedia, Chip, Grid, Stack, Tab, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
-import { host } from '../host';
+import { host } from '../../host';
 
 // placeholder images
-import repocube1 from '../assets/repocube-1.png';
-import repocube2 from '../assets/repocube-2.png';
-import repocube3 from '../assets/repocube-3.png';
-import repocube4 from '../assets/repocube-4.png';
+import repocube1 from '../../assets/repocube-1.png';
+import repocube2 from '../../assets/repocube-2.png';
+import repocube3 from '../../assets/repocube-3.png';
+import repocube4 from '../../assets/repocube-4.png';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import RepoDetailsMetadata from './RepoDetailsMetadata';
-import Loading from './Loading';
+import Loading from '../Shared/Loading';
 import { isEmpty } from 'lodash';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { mapToRepoFromRepoInfo } from 'utilities/objectModels';

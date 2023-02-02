@@ -1,7 +1,7 @@
 import { render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { api } from 'api';
-import SearchSuggestion from 'components/SearchSuggestion';
+import SearchSuggestion from 'components/Header/SearchSuggestion';
 import { MemoryRouter } from 'react-router-dom';
 import React from 'react';
 
