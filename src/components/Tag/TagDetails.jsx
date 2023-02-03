@@ -46,6 +46,8 @@ import ReferredBy from './Tabs/ReferredBy';
 const useStyles = makeStyles((theme) => ({
   pageWrapper: {
     backgroundColor: '#FFFFFF',
+    display: 'flex',
+    flexFlow: 'column',
     height: '100vh'
   },
   container: {

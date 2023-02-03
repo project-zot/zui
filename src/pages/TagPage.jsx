@@ -11,11 +11,16 @@ import ExploreHeader from 'components/Header/ExploreHeader';
 
 const useStyles = makeStyles(() => ({
   pageWrapper: {
-    height: '100%'
+    height: '100%',
+    display: 'flex',
+    flexFlow: 'column'
   },
   container: {
     paddingTop: 5,
-    paddingBottom: 5
+    paddingBottom: 5,
+    display: 'flex',
+    flexFlow: 'column',
+    height: '100%'
   },
   parentWrapper: {
     height: '100vh'
@@ -24,7 +29,10 @@ const useStyles = makeStyles(() => ({
     paddingTop: 10,
     paddingBottom: 10,
     backgroundColor: '#fff',
-    width: '100%'
+    width: '100%',
+    display: 'flex',
+    flexFlow: 'column',
+    height: '100%'
   }
 }));
 
