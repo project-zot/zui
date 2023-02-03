@@ -27,6 +27,8 @@ import { mapToRepoFromRepoInfo } from 'utilities/objectModels';
 const useStyles = makeStyles((theme) => ({
   pageWrapper: {
     backgroundColor: '#FFFFFF',
+    display: 'flex',
+    flexFlow: 'column',
     height: '100vh'
   },
   container: {
