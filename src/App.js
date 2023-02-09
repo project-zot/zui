@@ -22,7 +22,7 @@ function App() {
     <div className="App" data-testid="app-container">
       <Router>
         <Routes>
-          <Route element={<AuthWrapper isLoggedIn={isLoggedIn} redirect="/login" />}>
+          <Route element={<AuthWrapper isLoggedIn={isLoggedIn} hasHeader redirect="/login" />}>
             <Route path="/" element={<Navigate to="/home" />} />
             <Route path="/home" element={<HomePage />} />
             <Route path="/explore" element={<ExplorePage />} />
@@ -34,7 +34,6 @@ function App() {
             <Route path="/login" element={<LoginPage isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} />} />
             <Route path="*" element={<Navigate to="/login" />} />
           </Route>
-          <Route path="*" element={<Navigate to="/home" />} />
         </Routes>
       </Router>
     </div>
