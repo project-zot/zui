@@ -3,7 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { host } from '../../host';
 // utility
-import { api, endpoints } from '../../api';
+import { api } from '../../api';
 
 // components
 import Button from '@mui/material/Button';
@@ -14,8 +14,6 @@ import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import TermsOfService from './TermsOfService';
-import google from '../../assets/Google.png';
-import git from '../../assets/Git.png';
 
 // styling
 import { makeStyles } from '@mui/styles';
@@ -130,7 +128,6 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
           }
         })
         .catch(() => {
-          localStorage.setItem('token', '-');
           setIsLoading(false);
           wrapperSetLoading(false);
         });
@@ -144,18 +141,16 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
     event.preventDefault();
     setRequestProcessing(true);
     let cfg = {};
-    if (isLoggedIn) {
-      const token = btoa(username + ':' + password);
-      cfg = {
-        headers: {
-          Authorization: `Basic ${token}`
-        }
-      };
-    }
+    const token = btoa(username + ':' + password);
+    cfg = {
+      headers: {
+        Authorization: `Basic ${token}`
+      }
+    };
     api
-      .get(`${host()}${endpoints.repoList}`, abortController.signal, cfg)
+      .get(`${host()}/v2/`, abortController.signal, cfg)
       .then((response) => {
-        if (response.data && response.data.data) {
+        if (response.status === 200) {
           const token = btoa(username + ':' + password);
           localStorage.setItem('token', token);
           setRequestProcessing(false);
@@ -215,49 +210,6 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
             </Typography>
 
             <Box component="form" onSubmit={null} noValidate autoComplete="off" sx={{ mt: 1 }}>
-              <div>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  className={classes.button}
-                  sx={{
-                    mt: 3,
-                    mb: 1,
-                    background: '#161614',
-                    '&:hover': {
-                      backgroundColor: '#1565C0',
-                      color: '#FFFFFF'
-                    }
-                  }}
-                >
-                  {' '}
-                  Continue with GitHub
-                  <img src={git} alt="git logo" className={classes.gitLogo}></img>
-                </Button>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  className={classes.button}
-                  sx={{
-                    mt: 1,
-                    mb: 1,
-                    background: 'transparent',
-                    color: '#52637A',
-                    '&:hover': {
-                      backgroundColor: '#1565C0',
-                      color: '#FFFFFF'
-                    }
-                  }}
-                >
-                  {' '}
-                  Continue with Google
-                  <img src={google} alt="google logo" className={classes.gitLogo}></img>
-                </Button>
-              </div>
-              <br></br>
-              <h2 className={classes.line}>
-                <span className={classes.lineSpan}>or</span>
-              </h2>
               <TextField
                 margin="normal"
                 required
@@ -306,24 +258,6 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
                 >
                   {' '}
                   Continue
-                </Button>
-                <Button
-                  fullWidth
-                  variant="contained"
-                  className={classes.button}
-                  sx={{
-                    mt: 1,
-                    mb: 1,
-                    background: 'transparent',
-                    color: '#52637A',
-                    '&:hover': {
-                      backgroundColor: '#EFEFEF',
-                      color: '#52637A'
-                    }
-                  }}
-                >
-                  {' '}
-                  Continue as guest
                 </Button>
               </div>
             </Box>

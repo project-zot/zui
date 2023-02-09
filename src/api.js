@@ -2,6 +2,18 @@ import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { sortByCriteria } from 'utilities/sortCriteria';
 
+axios.interceptors.response.use(
+  (response) => {
+    return response;
+  },
+  (error) => {
+    if (error.response.status === 401) {
+      localStorage.clear();
+      return Promise.reject(error);
+    }
+  }
+);
+
 const api = {
   // This method returns the generic request configuration for axios
   getRequestCfg: () => {
@@ -63,11 +75,11 @@ const endpoints = {
   repoList: ({ pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={RepoListWithNewestImage(requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
-    }}){Results {Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description  Licenses Logo Title Source IsSigned Documentation Vendor Labels} DownloadCount}}}`,
+    }}){Results {Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description  Licenses Title Source IsSigned Documentation Vendor Labels} DownloadCount}}}`,
   detailedRepoInfo: (name) =>
-    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Digest Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor Size Platform {Os Arch}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName IsSigned Vulnerabilities {MaxSeverity Count} Layers {Size Digest} Digest Tag Logo Title Documentation DownloadCount Source Description Licenses History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}}}}}}`,
+    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Digest Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor Size Platform {Os Arch}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName IsSigned Vulnerabilities {MaxSeverity Count} Layers {Size Digest} Digest Tag Title Documentation DownloadCount Source Description Licenses History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}}}}}}`,
   detailedImageInfo: (name, tag) =>
-    `/v2/_zot/ext/search?query={Image(image: "${name}:${tag}"){RepoName IsSigned Vulnerabilities {MaxSeverity Count} Tag Digest LastUpdated Size ConfigDigest Platform {Os Arch} Vendor Licenses Logo}}`,
+    `/v2/_zot/ext/search?query={Image(image: "${name}:${tag}"){RepoName IsSigned Vulnerabilities {MaxSeverity Count} Tag Digest LastUpdated Size ConfigDigest Platform {Os Arch} Vendor Licenses }}`,
   vulnerabilitiesForRepo: (name, { pageNumber = 1, pageSize = 15 }) =>
     `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}", requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
@@ -101,12 +113,12 @@ const endpoints = {
     if (filter.HasToBeSigned) filterParam += ` HasToBeSigned: ${filter.HasToBeSigned}`;
     filterParam += '}';
     if (Object.keys(filter).length === 0) filterParam = '';
-    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam} ${filterParam}) {Page {TotalCount ItemCount} Repos {Name LastUpdated Size Platforms { Os Arch } NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description IsSigned Logo Licenses Vendor Labels } DownloadCount}}}`;
+    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam} ${filterParam}) {Page {TotalCount ItemCount} Repos {Name LastUpdated Size Platforms { Os Arch } NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description IsSigned Licenses Vendor Labels } DownloadCount}}}`;
   },
   imageSuggestions: ({ searchQuery = '""', pageNumber = 1, pageSize = 15 }) => {
     const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
     const paginationParam = `requestedPage: {limit:${pageSize} offset:${(pageNumber - 1) * pageSize} sortBy:RELEVANCE}`;
-    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam}) {Images {RepoName Tag Logo}}}`;
+    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam}) {Images {RepoName Tag}}}`;
   },
   referrers: ({ repo, digest, type = '' }) =>
     `/v2/_zot/ext/search?query={Referrers(repo: "${repo}" digest: "${digest}" type: "${type}"){MediaType ArtifactType Size Digest Annotations{Key Value}}}`
