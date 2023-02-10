@@ -29,7 +29,7 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#FFFFFF',
     display: 'flex',
     flexFlow: 'column',
-    height: '100vh'
+    height: '100%'
   },
   container: {
     paddingTop: 5,

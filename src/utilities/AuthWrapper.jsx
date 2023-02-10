@@ -4,7 +4,9 @@ import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles(() => ({
   topMargin: {
-    marginTop: '10vh'
+    marginTop: '10vh',
+    minHeight: '90vh',
+    height: '100%'
   }
 }));
 
