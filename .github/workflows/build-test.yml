@@ -7,6 +7,12 @@ on:
     branches: [ "main" ]
   pull_request:
     branches: [ "main" ]
+  release:
+    types:
+      - published
+
+permissions:
+  contents: write
 
 jobs:
   build-and-test:
@@ -22,20 +28,31 @@ jobs:
 
     steps:
     - name: Checkout repository
-      uses: actions/checkout@v2
+      uses: actions/checkout@v3
       with:
         fetch-depth: 2
         
     - name: Set up Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v1
+      uses: actions/setup-node@v3
       with:
         node-version: ${{ matrix.node-version }}
+        cache: 'npm'
 
     - name: Install dependencies
       run: npm install
       
     - name: Build app
       run: npm run build
-    
-      
 
+    - name: Package app
+      if: github.event_name == 'release' && github.event.action == 'published'
+      run: tar -czvf /tmp/zui.tgz ./build
+
+    - name: Publish artifacts on releases
+      if: github.event_name == 'release' && github.event.action == 'published'
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: /tmp/zui.tgz
+        tag: ${{ github.ref }}
+        overwrite: true
