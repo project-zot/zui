@@ -96,7 +96,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 function SearchSuggestion() {
-  const [queryParams] = useSearchParams();
+  const [queryParams, setQueryParams] = useSearchParams();
   const search = queryParams.get('search');
 
   const [searchQuery, setSearchQuery] = useState(search || '');
@@ -180,6 +180,7 @@ function SearchSuggestion() {
   };
 
   const searchCall = (value) => {
+    setQueryParams((prevState) => createSearchParams({ ...prevState, search: searchQuery }));
     if (value !== '') {
       // if search term inclused the ':' character, search for images, if not, search repos
       if (value?.includes(':')) {
