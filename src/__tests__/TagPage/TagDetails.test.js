@@ -4,11 +4,16 @@ import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import TagDetails from 'components/Tag/TagDetails';
 import MockThemeProvier from '__mocks__/MockThemeProvider';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
 const TagDetailsThemeWrapper = () => {
   return (
     <MockThemeProvier>
-      <TagDetails />
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<TagDetails />} />
+        </Routes>
+      </BrowserRouter>
     </MockThemeProvier>
   );
 };
@@ -191,6 +196,48 @@ const mockImageHigh = {
   }
 };
 
+const mockDependenciesList = {
+  data: {
+    BaseImageList: {
+      Page: { ItemCount: 4, TotalCount: 4 },
+      Results: [
+        {
+          RepoName: 'project-stacker/c3/static-ubuntu-amd64',
+          Tag: 'tag1',
+          Vulnerabilities: {
+            MaxSeverity: 'HIGH',
+            Count: 5
+          }
+        },
+        {
+          RepoName: 'tag2',
+          Tag: 'tag2',
+          Vulnerabilities: {
+            MaxSeverity: 'CRITICAL',
+            Count: 2
+          }
+        },
+        {
+          RepoName: 'tag3',
+          Tag: 'tag3',
+          Vulnerabilities: {
+            MaxSeverity: 'LOW',
+            Count: 7
+          }
+        },
+        {
+          RepoName: 'tag4',
+          Tag: 'tag4',
+          Vulnerabilities: {
+            MaxSeverity: 'HIGH',
+            Count: 5
+          }
+        }
+      ]
+    }
+  }
+};
+
 // mock clipboard copy fn
 const mockCopyToClipboard = jest.fn();
 Object.assign(navigator, {
@@ -232,7 +279,7 @@ describe('Tags details', () => {
   it('should show tabs and allow nagivation between them', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImage } });
     render(<TagDetailsThemeWrapper />);
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 500, data: { data: { errors: ['test error'] } } });
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: mockDependenciesList });
     const dependenciesTab = await screen.findByTestId('dependencies-tab');
     fireEvent.click(dependenciesTab);
     expect(await screen.findByTestId('depends-on-container')).toBeInTheDocument();

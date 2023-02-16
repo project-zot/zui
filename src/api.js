@@ -86,8 +86,10 @@ const endpoints = {
     }}){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity PackageList {Name InstalledVersion FixedVersion}}}}`,
   layersDetailsForImage: (name) =>
     `/v2/_zot/ext/search?query={Image(image: "${name}"){History {Layer {Size Digest Score} HistoryDescription {Created CreatedBy Author Comment EmptyLayer} }}}`,
-  imageListWithCVEFixed: (cveId, repoName) =>
-    `/v2/_zot/ext/search?query={ImageListWithCVEFixed(id:"${cveId}", image:"${repoName}") {Tag}}`,
+  imageListWithCVEFixed: (cveId, repoName, { pageNumber = 1, pageSize = 3 }) =>
+    `/v2/_zot/ext/search?query={ImageListWithCVEFixed(id:"${cveId}", image:"${repoName}", requestedPage: {limit:${pageSize} offset:${
+      (pageNumber - 1) * pageSize
+    }}) {Page {TotalCount ItemCount} Results {Tag}}}`,
   dependsOnForImage: (name, { pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={BaseImageList(image: "${name}", requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
