@@ -14,7 +14,7 @@ import Loading from '../../Shared/Loading';
 import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
 import { VulnerabilityChipCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { mapCVEInfo } from 'utilities/objectModels';
-import { EXPLORE_PAGE_SIZE } from 'utilities/paginationConstants';
+import { CVE_FIXEDIN_PAGE_SIZE, EXPLORE_PAGE_SIZE } from 'utilities/paginationConstants';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -91,25 +91,50 @@ function VulnerabilitiyCard(props) {
   const [openFixed, setOpenFixed] = useState(false);
   const [loadingFixed, setLoadingFixed] = useState(true);
   const [fixedInfo, setFixedInfo] = useState([]);
+  const abortController = useMemo(() => new AbortController(), []);
 
-  useEffect(() => {
-    if (!openFixed || !isEmpty(fixedInfo)) {
+  // pagination props
+  const [pageNumber, setPageNumber] = useState(1);
+  const [isEndOfList, setIsEndOfList] = useState(false);
+
+  const getPaginatedResults = () => {
+    if (!openFixed || isEndOfList) {
       return;
     }
     setLoadingFixed(true);
     api
-      .get(`${host()}${endpoints.imageListWithCVEFixed(cve.id, name)}`)
+      .get(
+        `${host()}${endpoints.imageListWithCVEFixed(cve.id, name, { pageNumber, pageSize: CVE_FIXEDIN_PAGE_SIZE })}`,
+        abortController.signal
+      )
       .then((response) => {
         if (response.data && response.data.data) {
-          const fixedTagsList = response.data.data.ImageListWithCVEFixed?.map((e) => e.Tag);
-          setFixedInfo(fixedTagsList);
+          const fixedTagsList = response.data.data.ImageListWithCVEFixed?.Results?.map((e) => e.Tag);
+          setFixedInfo((previousState) => [...previousState, ...fixedTagsList]);
+          setIsEndOfList(
+            [...fixedInfo, ...fixedTagsList].length >= response.data.data.ImageListWithCVEFixed?.Page?.TotalCount
+          );
         }
         setLoadingFixed(false);
       })
       .catch((e) => {
         console.error(e);
+        setIsEndOfList(true);
+        setLoadingFixed(false);
       });
-  }, [openFixed]);
+  };
+
+  useEffect(() => {
+    getPaginatedResults();
+    return () => {
+      abortController.abort();
+    };
+  }, [openFixed, pageNumber]);
+
+  const loadMore = () => {
+    if (loadingFixed || isEndOfList) return;
+    setPageNumber((pageNumber) => pageNumber + 1);
+  };
 
   const renderFixedVer = () => {
     if (!isEmpty(fixedInfo)) {
@@ -152,8 +177,28 @@ function VulnerabilitiyCard(props) {
         <Collapse in={openFixed} timeout="auto" unmountOnExit>
           <Box>
             <Typography variant="body2" align="left" sx={{ color: '#0F2139', fontSize: '1rem', width: '100%' }}>
-              {' '}
-              {loadingFixed ? 'Loading...' : renderFixedVer()}{' '}
+              {loadingFixed ? (
+                'Loading...'
+              ) : (
+                <>
+                  {renderFixedVer()}
+                  {!isEndOfList && (
+                    <Typography
+                      sx={{
+                        color: '#3366CC',
+                        fontSize: '1rem',
+                        display: 'inline',
+                        textDecorationLine: 'underline',
+                        cursor: 'pointer'
+                      }}
+                      onClick={loadMore}
+                      component="span"
+                    >
+                      Load more
+                    </Typography>
+                  )}
+                </>
+              )}
             </Typography>
           </Box>
         </Collapse>
