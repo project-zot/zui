@@ -150,6 +150,27 @@ function VulnerabilitiyCard(props) {
     }
   };
 
+  const renderLoadMore = () => {
+    return (
+      !isEndOfList && (
+        <Typography
+          sx={{
+            color: '#3366CC',
+            cursor: 'pointer',
+            fontSize: '1rem',
+            letterSpacing: '0.009375rem',
+            paddingRight: '1rem',
+            textDecorationLine: 'underline'
+          }}
+          onClick={loadMore}
+          component="div"
+        >
+          Load more
+        </Typography>
+      )
+    );
+  };
+
   return (
     <Card className={classes.card} raised>
       <CardContent className={classes.content}>
@@ -175,31 +196,15 @@ function VulnerabilitiyCard(props) {
           <Typography className={classes.dropdownText}>Fixed in</Typography>
         </Stack>
         <Collapse in={openFixed} timeout="auto" unmountOnExit>
-          <Box>
-            <Typography variant="body2" align="left" sx={{ color: '#0F2139', fontSize: '1rem', width: '100%' }}>
-              {loadingFixed ? (
-                'Loading...'
-              ) : (
-                <>
-                  {renderFixedVer()}
-                  {!isEndOfList && (
-                    <Typography
-                      sx={{
-                        color: '#3366CC',
-                        fontSize: '1rem',
-                        display: 'inline',
-                        textDecorationLine: 'underline',
-                        cursor: 'pointer'
-                      }}
-                      onClick={loadMore}
-                      component="span"
-                    >
-                      Load more
-                    </Typography>
-                  )}
-                </>
-              )}
-            </Typography>
+          <Box sx={{ width: '100%' }}>
+            {loadingFixed ? (
+              'Loading...'
+            ) : (
+              <Stack direction="row" sx={{ flexWrap: 'wrap' }}>
+                {renderFixedVer()}
+                {renderLoadMore()}
+              </Stack>
+            )}
           </Box>
         </Collapse>
         <Stack className={classes.dropdown} onClick={() => setOpenDesc(!openDesc)}>
