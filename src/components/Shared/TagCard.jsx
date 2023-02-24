@@ -62,13 +62,12 @@ const useStyles = makeStyles(() => ({
 export default function TagCard(props) {
   const { repoName, tag, lastUpdated, vendor, digest, size, platform } = props;
 
-  //const tags = data && data.tags;
   const [open, setOpen] = useState(false);
   const classes = useStyles();
 
-  const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
-    unit: ['weeks', 'days', 'hours', 'minutes']
-  });
+  const lastDate = lastUpdated
+    ? DateTime.fromISO(lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
+    : `Timestamp N/A`;
   const navigate = useNavigate();
 
   const goToTags = () => {
@@ -101,8 +100,7 @@ export default function TagCard(props) {
           </Typography>
           <Tooltip title={lastUpdated?.slice(0, 16) || ' '} placement="top">
             <Typography variant="caption" sx={{ fontWeight: '600', fontSize: '0.8125rem' }}>
-              {lastDate || 'Date not available'} by{' '}
-              <Markdown options={{ forceInline: true }}>{vendor || 'Vendor not available'}</Markdown>
+              {lastDate} by <Markdown options={{ forceInline: true }}>{vendor || 'Vendor not available'}</Markdown>
             </Typography>
           </Tooltip>
         </Stack>

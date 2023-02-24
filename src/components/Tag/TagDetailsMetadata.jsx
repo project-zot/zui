@@ -37,9 +37,9 @@ const useStyles = makeStyles(() => ({
 function TagDetailsMetadata(props) {
   const classes = useStyles();
   const { platform, lastUpdated, size, license } = props;
-  const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
-    unit: ['weeks', 'days', 'hours', 'minutes']
-  });
+  const lastDate = lastUpdated
+    ? DateTime.fromISO(lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
+    : `Timestamp N/A`;
   return (
     <Grid container spacing={1} data-testid="tagDetailsMetadata-container">
       <Grid container item xs={12}>
@@ -75,7 +75,7 @@ function TagDetailsMetadata(props) {
               </Typography>
               <Tooltip title={lastUpdated?.slice(0, 16) || ' '} placement="top">
                 <Typography variant="body1" align="left" className={classes.metadataBody}>
-                  {lastDate || `----`}
+                  {lastDate}
                 </Typography>
               </Tooltip>
             </CardContent>

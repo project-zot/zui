@@ -16,19 +16,7 @@ import { sortByCriteria } from 'utilities/sortCriteria.js';
 const useStyles = makeStyles(() => ({}));
 
 function FilterDialog(props) {
-  const {
-    open,
-    setOpen,
-    sortValue,
-    setSortValue,
-    renderFilterCards
-    // imageFilters,
-    // setImageFilters,
-    // osFilters,
-    // setOsFilters,
-    // archFilters,
-    // setArchFilters
-  } = props;
+  const { open, setOpen, sortValue, setSortValue, renderFilterCards } = props;
 
   const classes = useStyles();
 
