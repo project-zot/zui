@@ -82,13 +82,11 @@ function setNavShow() {
   const controlNavbar = () => {
     if (typeof window !== 'undefined') {
       if (window.scrollY < lastScrollY) {
-        // if scroll down hide the navbar
         setShow(true);
       } else {
         setShow(false);
       }
 
-      // remember current page location to use in the next move
       setLastScrollY(window.scrollY);
     }
   };
@@ -97,7 +95,6 @@ function setNavShow() {
     if (typeof window !== 'undefined') {
       window.addEventListener('scroll', controlNavbar);
 
-      // cleanup function
       return () => {
         window.removeEventListener('scroll', controlNavbar);
       };
@@ -110,7 +107,6 @@ function Header() {
   const show = setNavShow();
   const classes = useStyles();
   const path = useLocation().pathname;
-  // const navigate = useNavigate();
 
   return (
     <AppBar position={show ? 'fixed' : 'absolute'} sx={{ height: '10vh' }}>

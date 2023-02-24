@@ -15,7 +15,6 @@ axios.interceptors.response.use(
 );
 
 const api = {
-  // This method returns the generic request configuration for axios
   getRequestCfg: () => {
     const genericHeaders = {
       Accept: 'application/json',

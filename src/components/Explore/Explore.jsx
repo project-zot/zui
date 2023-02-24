@@ -86,7 +86,6 @@ function Explore() {
 
   const buildFilterQuery = () => {
     let filter = {};
-    // workaround until backend bugfix
     filter = !isEmpty(osFilters) ? { ...filter, Os: osFilters } : filter;
     filter = !isEmpty(archFilters) ? { ...filter, Arch: archFilters } : filter;
     if (imageFilters) {

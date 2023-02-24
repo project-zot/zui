@@ -153,8 +153,10 @@ function RepoCard(props) {
     return `published ${version} •`;
   };
   const getLast = () => {
-    const lastDate = lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 });
-    return `${lastDate.toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })}`;
+    const lastDate = lastUpdated
+      ? DateTime.fromISO(lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
+      : `Timestamp N/A`;
+    return lastDate;
   };
 
   return (

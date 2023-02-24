@@ -19,18 +19,15 @@ const useStyles = makeStyles(() => ({
 function FilterCard(props) {
   const classes = useStyles();
   const { title, filters, updateFilters, filterValue, wrapperLoading } = props;
-  // const [selectedFilter, setSelectedFilter] = useState(null);
 
   const handleFilterClicked = (event, changedFilterLabel, changedFilterValue) => {
     const { checked } = event.target;
-    // since checkboxes are controlled, we first have to manually perform the checkbox checked update
     if (checked) {
       if (filters[0]?.type === 'boolean') {
         updateFilters(checked);
       } else {
         updateFilters([...filterValue, changedFilterValue]);
       }
-      // setSelectedFilter(changedFilterLabel);
     } else {
       if (filters[0]?.type === 'boolean') {
         updateFilters(checked);

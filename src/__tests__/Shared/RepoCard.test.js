@@ -47,6 +47,23 @@ describe('Repo card component', () => {
     expect(mockedUsedNavigate).toBeCalledWith(`/image/${mockImage.name}`);
   });
 
+  it('renders placeholders for missing data', async () => {
+    render(
+      <RepoCard
+        name={mockImage.name}
+        version={mockImage.latestVersion}
+        description={mockImage.description}
+        vendor={mockImage.vendor}
+        key={1}
+      />
+    );
+    const cardTitle = await screen.findByText('alpine');
+    expect(cardTitle).toBeInTheDocument();
+    userEvent.click(cardTitle);
+    expect(mockedUsedNavigate).toBeCalledWith(`/image/${mockImage.name}`);
+    expect(await screen.findByText(/timestamp n\/a/i)).toBeInTheDocument();
+  });
+
   it('navigates to explore page when platform chip is clicked', async () => {
     render(
       <RepoCard

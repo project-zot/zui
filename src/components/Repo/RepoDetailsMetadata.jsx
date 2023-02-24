@@ -38,9 +38,9 @@ function RepoDetailsMetadata(props) {
   const classes = useStyles();
   const { repoURL, totalDownloads, lastUpdated, size, license } = props;
 
-  const lastDate = (lastUpdated ? DateTime.fromISO(lastUpdated) : DateTime.now().minus({ days: 1 })).toRelative({
-    unit: ['weeks', 'days', 'hours', 'minutes']
-  });
+  const lastDate = lastUpdated
+    ? DateTime.fromISO(lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
+    : `Timestamp N/A`;
   return (
     <Grid container spacing={1}>
       <Grid container item xs={12}>
@@ -76,7 +76,7 @@ function RepoDetailsMetadata(props) {
               </Typography>
               <Tooltip title={lastUpdated?.slice(0, 16) || ' '} placement="top">
                 <Typography variant="body1" align="left" className={classes.metadataBody}>
-                  {lastDate || `Timestamp N/A`}
+                  {lastDate}
                 </Typography>
               </Tooltip>
             </CardContent>
@@ -111,16 +111,6 @@ function RepoDetailsMetadata(props) {
           </Card>
         </Grid>
       </Grid>
-      {/* <Grid container item xs={12} spacing={2}>
-        <Grid item xs={12}>
-          <Card variant="outlined" className={classes.card}>
-            <CardContent>
-              <Typography variant="body2" align="left" className={classes.metadataHeader}>Files</Typography>
-              <Typography variant="body1" align="left" className={classes.metadataBody}>{filesNr || `----`}</Typography>
-            </CardContent>
-          </Card>
-        </Grid>
-      </Grid> */}
     </Grid>
   );
 }
