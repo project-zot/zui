@@ -45,7 +45,6 @@ jobs:
       run: npm run build
 
     - name: Package app
-      if: github.event_name == 'release' && github.event.action == 'published'
       run: tar -czvf /tmp/zui.tgz ./build
 
     - name: Publish artifacts on releases
@@ -55,4 +54,27 @@ jobs:
         repo_token: ${{ secrets.GITHUB_TOKEN }}
         file: /tmp/zui.tgz
         tag: ${{ github.ref }}
+        overwrite: true
+
+    - name: Generate commit sha
+      if: github.ref_name == 'main'
+      uses: benjlevesque/short-sha@v2.1
+      # This creates and environment variable SHA containing the short commit ID
+
+    - name: Create new tag for builds on main branch
+      if: github.ref_name == 'main'
+      uses: mathieudutour/github-tag-action@v6.1
+      with:
+        custom_tag: commit-${{ env.SHA }}
+        tag_prefix: ""
+        github_token: ${{ secrets.GITHUB_TOKEN }}
+
+    - name: Publish artifact for builds on main branch
+      if: github.ref_name == 'main'
+      uses: svenstaro/upload-release-action@v2
+      with:
+        repo_token: ${{ secrets.GITHUB_TOKEN }}
+        file: /tmp/zui.tgz
+        tag: commit-${{ env.SHA }}
+        prerelease: true  # Mark as prerelease and avoid triggering another workflow for the new tag
         overwrite: true
