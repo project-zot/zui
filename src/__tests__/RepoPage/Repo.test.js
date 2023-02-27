@@ -282,6 +282,12 @@ describe('Repo details component', () => {
     await waitFor(() => expect(error).toBeCalledTimes(1));
   });
 
+  it('should redirect to homepage if it receives invalid data', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: null, errors: ['testerror'] } });
+    render(<RepoDetailsThemeWrapper />);
+    await waitFor(() => expect(mockUseNavigate).toBeCalledWith('/home'));
+  });
+
   it('should switch between tabs', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
     render(<RepoDetailsThemeWrapper />);
