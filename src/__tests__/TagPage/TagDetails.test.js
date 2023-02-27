@@ -18,6 +18,8 @@ const TagDetailsThemeWrapper = () => {
   );
 };
 
+const mockUseNavigate = jest.fn();
+
 const mockImage = {
   Image: {
     RepoName: 'centos',
@@ -250,7 +252,8 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useParams: () => {
     return { name: 'test', tag: '1.0.1' };
-  }
+  },
+  useNavigate: () => mockUseNavigate
 }));
 
 jest.mock('../../host', () => ({
@@ -291,6 +294,12 @@ describe('Tags details', () => {
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<TagDetailsThemeWrapper />);
     await waitFor(() => expect(error).toBeCalledTimes(1));
+  });
+
+  it('should redirect to homepage if it receives invalid data', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: null, errors: ['testerror'] } });
+    render(<TagDetailsThemeWrapper />);
+    await waitFor(() => expect(mockUseNavigate).toBeCalledWith('/home'));
   });
 
   it('should show tag details metadata', async () => {

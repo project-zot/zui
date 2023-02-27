@@ -172,6 +172,8 @@ function RepoDetails() {
           let imageData = mapToRepoFromRepoInfo(repoInfo);
           setRepoDetailData(imageData);
           setTags(imageData.images);
+        } else if (!isEmpty(response.data.errors)) {
+          navigate('/home');
         }
         setIsLoading(false);
       })

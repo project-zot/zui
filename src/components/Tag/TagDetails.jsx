@@ -1,4 +1,4 @@
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 
 // utility
@@ -217,6 +217,7 @@ function TagDetails() {
   const [selectedPullTab, setSelectedPullTab] = useState('');
   const abortController = useMemo(() => new AbortController(), []);
   const mounted = useRef(false);
+  const navigate = useNavigate();
 
   // get url param from <Route here (i.e. image name)
   const { reponame, tag } = useParams();
@@ -240,6 +241,8 @@ function TagDetails() {
           setImageDetailData(imageData);
           setPullString(dockerPull(imageData.name));
           setSelectedPullTab(dockerPull(imageData.name));
+        } else if (!isEmpty(response.data.errors)) {
+          navigate('/home');
         }
         setIsLoading(false);
       })
