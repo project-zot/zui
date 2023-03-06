@@ -76,15 +76,13 @@ const endpoints = {
       (pageNumber - 1) * pageSize
     }}){Results {Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description  Licenses Title Source IsSigned Documentation Vendor Labels} DownloadCount}}}`,
   detailedRepoInfo: (name) =>
-    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Digest Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor Size Platform {Os Arch}} Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName IsSigned Vulnerabilities {MaxSeverity Count} Layers {Size Digest} Digest Tag Title Documentation DownloadCount Source Description Licenses History {Layer {Size Digest} HistoryDescription {Created CreatedBy Author Comment EmptyLayer}}}}}}`,
+    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Manifests {Digest Platform {Os Arch}} Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor Size } Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName IsSigned Vulnerabilities {MaxSeverity Count} Manifests {Digest} Tag Title Documentation DownloadCount Source Description Licenses}}}}`,
   detailedImageInfo: (name, tag) =>
-    `/v2/_zot/ext/search?query={Image(image: "${name}:${tag}"){RepoName IsSigned Vulnerabilities {MaxSeverity Count} Tag Digest LastUpdated Size ConfigDigest Platform {Os Arch} Vendor Licenses }}`,
+    `/v2/_zot/ext/search?query={Image(image: "${name}:${tag}"){RepoName IsSigned Vulnerabilities {MaxSeverity Count} Tag Manifests {History {Layer {Size Digest} HistoryDescription {CreatedBy EmptyLayer}} Digest ConfigDigest LastUpdated Size  Platform {Os Arch}} Vendor Licenses }}`,
   vulnerabilitiesForRepo: (name, { pageNumber = 1, pageSize = 15 }) =>
     `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}", requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
     }}){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity PackageList {Name InstalledVersion FixedVersion}}}}`,
-  layersDetailsForImage: (name) =>
-    `/v2/_zot/ext/search?query={Image(image: "${name}"){History {Layer {Size Digest Score} HistoryDescription {Created CreatedBy Author Comment EmptyLayer} }}}`,
   imageListWithCVEFixed: (cveId, repoName, { pageNumber = 1, pageSize = 3 }) =>
     `/v2/_zot/ext/search?query={ImageListWithCVEFixed(id:"${cveId}", image:"${repoName}", requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
@@ -92,11 +90,11 @@ const endpoints = {
   dependsOnForImage: (name, { pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={BaseImageList(image: "${name}", requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
-    }}){Page {TotalCount ItemCount} Results { RepoName Tag Description Digest Vendor DownloadCount LastUpdated Size Platform {Os Arch} IsSigned Vulnerabilities {MaxSeverity Count}}}}`,
+    }}){Page {TotalCount ItemCount} Results { RepoName Tag Description Manifests {Digest Platform {Os Arch} Size} Vendor DownloadCount LastUpdated IsSigned Vulnerabilities {MaxSeverity Count}}}}`,
   isDependentOnForImage: (name, { pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={DerivedImageList(image: "${name}", requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
-    }}){Page {TotalCount ItemCount} Results {RepoName Tag Description Digest Vendor DownloadCount LastUpdated Size Platform {Os Arch} IsSigned Vulnerabilities {MaxSeverity Count}}}}`,
+    }}){Page {TotalCount ItemCount} Results {RepoName Tag Description Manifests {Digest Platform {Os Arch} Size} Vendor DownloadCount LastUpdated IsSigned Vulnerabilities {MaxSeverity Count}}}}`,
   globalSearch: ({
     searchQuery = '""',
     pageNumber = 1,

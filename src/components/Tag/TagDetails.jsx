@@ -37,7 +37,7 @@ import VulnerabilitiesDetails from './Tabs/VulnerabilitiesDetails';
 import HistoryLayers from './Tabs/HistoryLayers';
 import DependsOn from './Tabs/DependsOn';
 import IsDependentOn from './Tabs/IsDependentOn';
-import { isEmpty } from 'lodash';
+import { isEmpty, head } from 'lodash';
 import Loading from '../Shared/Loading';
 import { dockerPull, podmanPull, skopeoPull } from 'utilities/pullStrings';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
@@ -212,6 +212,7 @@ const randomImage = () => {
 
 function TagDetails() {
   const [imageDetailData, setImageDetailData] = useState({});
+  const [selectedManifest, setSelectedManifest] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('Layers');
   const [selectedPullTab, setSelectedPullTab] = useState('');
@@ -239,6 +240,7 @@ function TagDetails() {
           let imageInfo = response.data.data.Image;
           let imageData = mapToImage(imageInfo);
           setImageDetailData(imageData);
+          setSelectedManifest(head(imageData.manifests));
           setPullString(dockerPull(imageData.name));
           setSelectedPullTab(dockerPull(imageData.name));
         } else if (!isEmpty(response.data.errors)) {
@@ -258,7 +260,7 @@ function TagDetails() {
   }, [reponame, tag]);
 
   const getPlatform = () => {
-    return imageDetailData?.platform ? imageDetailData.platform : '--/--';
+    return selectedManifest.platform ? selectedManifest.platform : '--/--';
   };
 
   const handleTabChange = (event, newValue) => {
@@ -329,7 +331,7 @@ function TagDetails() {
                     </Stack>
                   </Stack>
                   <Typography gutterBottom className={classes.digest}>
-                    DIGEST: {imageDetailData?.digest}
+                    DIGEST: {selectedManifest?.digest}
                   </Typography>
                 </Grid>
                 <Grid item xs={0} md={4} className={`${classes.pull} hide-on-mobile`}>
@@ -527,19 +529,19 @@ function TagDetails() {
                       <Grid container>
                         <Grid item xs={12}>
                           <TabPanel value="Layers" className={classes.tabPanel}>
-                            <HistoryLayers name={imageDetailData.name} history={imageDetailData.history} />
+                            <HistoryLayers name={imageDetailData.name} history={selectedManifest.history} />
                           </TabPanel>
                           <TabPanel value="DependsOn" className={classes.tabPanel}>
-                            <DependsOn name={imageDetailData.name} />
+                            <DependsOn name={imageDetailData.name} digest={selectedManifest.digest} />
                           </TabPanel>
                           <TabPanel value="IsDependentOn" className={classes.tabPanel}>
-                            <IsDependentOn name={imageDetailData.name} />
+                            <IsDependentOn name={imageDetailData.name} digest={selectedManifest.digest} />
                           </TabPanel>
                           <TabPanel value="Vulnerabilities" className={classes.tabPanel}>
                             <VulnerabilitiesDetails name={reponame} tag={tag} />
                           </TabPanel>
                           <TabPanel value="ReferredBy" className={classes.tabPanel}>
-                            <ReferredBy repoName={reponame} digest={imageDetailData?.digest} />
+                            <ReferredBy repoName={reponame} digest={selectedManifest?.digest} />
                           </TabPanel>
                         </Grid>
                       </Grid>
@@ -549,8 +551,8 @@ function TagDetails() {
                 <Grid item xs={12} md={4} className={classes.metadata}>
                   <TagDetailsMetadata
                     platform={getPlatform()}
-                    size={imageDetailData?.size}
-                    lastUpdated={imageDetailData?.lastUpdated}
+                    size={selectedManifest?.size}
+                    lastUpdated={selectedManifest?.lastUpdated}
                     license={imageDetailData?.license}
                   />
                 </Grid>

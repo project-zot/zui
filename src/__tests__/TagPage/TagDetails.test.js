@@ -24,57 +24,61 @@ const mockImage = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
-    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
-    LastUpdated: '2020-12-08T00:22:52.526672082Z',
-    Size: '75183423',
-    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
-    Platform: {
-      Os: 'linux',
-      Arch: 'amd64'
-    },
+    Manifests: [
+      {
+        Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+        LastUpdated: '2020-12-08T00:22:52.526672082Z',
+        Size: '75183423',
+        ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+        Platform: {
+          Os: 'linux',
+          Arch: 'amd64'
+        },
+        History: [
+          {
+            Layer: {
+              Size: '75181999',
+              Digest: 'sha256:7a0437f04f83f084b7ed68ad9c4a4947e12fc4e1b006b38129bac89114ec3621',
+              Score: null
+            },
+            HistoryDescription: {
+              Created: '2020-12-08T00:22:52.526672082Z',
+              CreatedBy:
+                '/bin/sh -c #(nop) ADD file:bd7a2aed6ede423b719ceb2f723e4ecdfa662b28639c8429731c878e86fb138b in / ',
+              Author: '',
+              Comment: '',
+              EmptyLayer: false
+            }
+          },
+          {
+            Layer: null,
+            HistoryDescription: {
+              Created: '2020-12-08T00:22:52.895811646Z',
+              CreatedBy:
+                '/bin/sh -c #(nop)  LABEL org.label-schema.schema-version=1.0 org.label-schema.name=CentOS Base Image org.label-schema.vendor=CentOS org.label-schema.license=GPLv2 org.label-schema.build-date=20201204',
+              Author: '',
+              Comment: '',
+              EmptyLayer: true
+            }
+          },
+          {
+            Layer: null,
+            HistoryDescription: {
+              Created: '2020-12-08T00:22:53.076477777Z',
+              CreatedBy: '/bin/sh -c #(nop)  CMD ["/bin/bash"]',
+              Author: '',
+              Comment: '',
+              EmptyLayer: true
+            }
+          }
+        ]
+      }
+    ],
     Vulnerabilities: {
       MaxSeverity: 'CRITICAL',
       Count: 10
     },
-    Vendor: 'CentOS',
-    History: [
-      {
-        Layer: {
-          Size: '75181999',
-          Digest: 'sha256:7a0437f04f83f084b7ed68ad9c4a4947e12fc4e1b006b38129bac89114ec3621',
-          Score: null
-        },
-        HistoryDescription: {
-          Created: '2020-12-08T00:22:52.526672082Z',
-          CreatedBy:
-            '/bin/sh -c #(nop) ADD file:bd7a2aed6ede423b719ceb2f723e4ecdfa662b28639c8429731c878e86fb138b in / ',
-          Author: '',
-          Comment: '',
-          EmptyLayer: false
-        }
-      },
-      {
-        Layer: null,
-        HistoryDescription: {
-          Created: '2020-12-08T00:22:52.895811646Z',
-          CreatedBy:
-            '/bin/sh -c #(nop)  LABEL org.label-schema.schema-version=1.0 org.label-schema.name=CentOS Base Image org.label-schema.vendor=CentOS org.label-schema.license=GPLv2 org.label-schema.build-date=20201204',
-          Author: '',
-          Comment: '',
-          EmptyLayer: true
-        }
-      },
-      {
-        Layer: null,
-        HistoryDescription: {
-          Created: '2020-12-08T00:22:53.076477777Z',
-          CreatedBy: '/bin/sh -c #(nop)  CMD ["/bin/bash"]',
-          Author: '',
-          Comment: '',
-          EmptyLayer: true
-        }
-      }
-    ]
+    Vendor: 'CentOS'
   }
 };
 
@@ -82,14 +86,18 @@ const mockImageNone = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
-    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
-    LastUpdated: '2020-12-08T00:22:52.526672082Z',
-    Size: '75183423',
-    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
-    Platform: {
-      Os: 'linux',
-      Arch: 'amd64'
-    },
+    Manifests: [
+      {
+        Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+        LastUpdated: '2020-12-08T00:22:52.526672082Z',
+        Size: '75183423',
+        ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+        Platform: {
+          Os: 'linux',
+          Arch: 'amd64'
+        }
+      }
+    ],
     Vulnerabilities: {
       MaxSeverity: 'NONE',
       Count: 10
@@ -102,14 +110,18 @@ const mockImageUnknown = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
-    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
-    LastUpdated: '2020-12-08T00:22:52.526672082Z',
-    Size: '75183423',
-    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
-    Platform: {
-      Os: 'linux',
-      Arch: 'amd64'
-    },
+    Manifests: [
+      {
+        Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+        LastUpdated: '2020-12-08T00:22:52.526672082Z',
+        Size: '75183423',
+        ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+        Platform: {
+          Os: 'linux',
+          Arch: 'amd64'
+        }
+      }
+    ],
     Vulnerabilities: {
       MaxSeverity: 'UNKNOWN',
       Count: 10
@@ -122,14 +134,18 @@ const mockImageFailed = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
-    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
-    LastUpdated: '2020-12-08T00:22:52.526672082Z',
-    Size: '75183423',
-    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
-    Platform: {
-      Os: 'linux',
-      Arch: 'amd64'
-    },
+    Manifests: [
+      {
+        Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+        LastUpdated: '2020-12-08T00:22:52.526672082Z',
+        Size: '75183423',
+        ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+        Platform: {
+          Os: 'linux',
+          Arch: 'amd64'
+        }
+      }
+    ],
     Vulnerabilities: {
       MaxSeverity: '',
       Count: 10
@@ -142,14 +158,18 @@ const mockImageLow = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
-    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
-    LastUpdated: '2020-12-08T00:22:52.526672082Z',
-    Size: '75183423',
-    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
-    Platform: {
-      Os: 'linux',
-      Arch: 'amd64'
-    },
+    Manifests: [
+      {
+        Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+        LastUpdated: '2020-12-08T00:22:52.526672082Z',
+        Size: '75183423',
+        ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+        Platform: {
+          Os: 'linux',
+          Arch: 'amd64'
+        }
+      }
+    ],
     Vulnerabilities: {
       MaxSeverity: 'LOW',
       Count: 10
@@ -162,14 +182,18 @@ const mockImageMedium = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
-    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
-    LastUpdated: '2020-12-08T00:22:52.526672082Z',
-    Size: '75183423',
-    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
-    Platform: {
-      Os: 'linux',
-      Arch: 'amd64'
-    },
+    Manifests: [
+      {
+        Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+        LastUpdated: '2020-12-08T00:22:52.526672082Z',
+        Size: '75183423',
+        ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+        Platform: {
+          Os: 'linux',
+          Arch: 'amd64'
+        }
+      }
+    ],
     Vulnerabilities: {
       MaxSeverity: 'MEDIUM',
       Count: 10
@@ -182,14 +206,18 @@ const mockImageHigh = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
-    Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
-    LastUpdated: '2020-12-08T00:22:52.526672082Z',
-    Size: '75183423',
-    ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
-    Platform: {
-      Os: 'linux',
-      Arch: 'amd64'
-    },
+    Manifests: [
+      {
+        Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
+        LastUpdated: '2020-12-08T00:22:52.526672082Z',
+        Size: '75183423',
+        ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+        Platform: {
+          Os: 'linux',
+          Arch: 'amd64'
+        }
+      }
+    ],
     Vulnerabilities: {
       MaxSeverity: 'HIGH',
       Count: 10
@@ -206,6 +234,7 @@ const mockDependenciesList = {
         {
           RepoName: 'project-stacker/c3/static-ubuntu-amd64',
           Tag: 'tag1',
+          Manifests: [],
           Vulnerabilities: {
             MaxSeverity: 'HIGH',
             Count: 5
@@ -214,6 +243,7 @@ const mockDependenciesList = {
         {
           RepoName: 'tag2',
           Tag: 'tag2',
+          Manifests: [],
           Vulnerabilities: {
             MaxSeverity: 'CRITICAL',
             Count: 2
@@ -222,6 +252,7 @@ const mockDependenciesList = {
         {
           RepoName: 'tag3',
           Tag: 'tag3',
+          Manifests: [],
           Vulnerabilities: {
             MaxSeverity: 'LOW',
             Count: 7
@@ -230,6 +261,7 @@ const mockDependenciesList = {
         {
           RepoName: 'tag4',
           Tag: 'tag4',
+          Manifests: [],
           Vulnerabilities: {
             MaxSeverity: 'HIGH',
             Count: 5

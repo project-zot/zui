@@ -241,7 +241,7 @@ function SearchSuggestion() {
               root: classes.searchItemIconBg,
               img: classes.searchItemIcon
             }}
-            src={`data:image/png;base64, ${suggestion.logo}`}
+            src={suggestion.logo ? `data:image/png;base64, ${suggestion.logo}` : ''}
           >
             <PhotoIcon className={classes.searchItemIcon} />
           </Avatar>
