@@ -1,6 +1,8 @@
 // react global
 import React, { useState } from 'react';
 
+import { head } from 'lodash';
+
 // components
 import Typography from '@mui/material/Typography';
 import { Card, CardContent, Divider, Stack, InputBase, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
@@ -87,10 +89,10 @@ export default function Tags(props) {
             key={tag.Tag}
             tag={tag.Tag}
             lastUpdated={tag.LastUpdated}
-            digest={tag.Digest}
+            digest={head(tag.Manifests)?.Digest}
             vendor={tag.Vendor}
             size={tag.Size}
-            platform={tag.Platform}
+            platform={head(tag.Manifests)?.Platform}
           />
         );
       })

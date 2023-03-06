@@ -1,14 +1,9 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
-// utility
-import { api, endpoints } from '../../../api';
-
 // components
 import { Divider, Stack, Typography } from '@mui/material';
 import LayerCard from '../../Shared/LayerCard.jsx';
 import makeStyles from '@mui/styles/makeStyles';
-import { host } from '../../../host';
-import { isEmpty } from 'lodash';
 import Loading from '../../Shared/Loading';
 
 const useStyles = makeStyles(() => ({
@@ -83,25 +78,8 @@ function HistoryLayers(props) {
   const { name, history } = props;
 
   useEffect(() => {
-    if (history && !isEmpty(history)) {
-      setHistoryData(history);
-      setIsLoading(false);
-    } else {
-      api
-        .get(`${host()}${endpoints.layersDetailsForImage(name)}`, abortController.signal)
-        .then((response) => {
-          if (response.data && response.data.data) {
-            let layersHistory = response.data.data.Image;
-            setHistoryData(layersHistory?.History);
-            setIsLoading(false);
-          }
-        })
-        .catch((e) => {
-          console.error(e);
-          setHistoryData([]);
-          setIsLoading(false);
-        });
-    }
+    setHistoryData(history);
+    setIsLoading(false);
     return () => {
       abortController.abort();
     };
@@ -129,7 +107,7 @@ function HistoryLayers(props) {
         <Loading />
       ) : (
         <Stack direction="column" spacing={2} sx={{ marginTop: '1.7rem' }} data-testid="layer-card-container">
-          {historyData ? (
+          {historyData?.length > 0 ? (
             historyData.map((layer, index) => {
               return (
                 <LayerCard

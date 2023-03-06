@@ -43,19 +43,37 @@ const mapToImage = (responseImage) => {
   return {
     repoName: responseImage.RepoName,
     tag: responseImage.Tag,
-    lastUpdated: responseImage.LastUpdated,
+    manifests: responseImage.Manifests?.map((manifest) => mapToManifest(manifest)) || [],
     size: responseImage.Size,
-    digest: responseImage.Digest || responseImage.ConfigDigest,
-    platform: responseImage.Platform,
-    vendor: responseImage.Vendor,
-    history: responseImage.History,
+    downloadCount: responseImage.DownloadCount,
+    lastUpdated: responseImage.LastUpdated,
+    description: responseImage.Description,
+    isSigned: responseImage.IsSigned,
     license: responseImage.Licenses,
+    labels: responseImage.Labels,
+    title: responseImage.Title,
+    source: responseImage.Source,
+    documentation: responseImage.Documentation,
+    vendor: responseImage.Vendor,
+    authors: responseImage.Authors,
     vulnerabiltySeverity: responseImage.Vulnerabilities?.MaxSeverity,
     vulnerabilityCount: responseImage.Vulnerabilities?.Count,
-    isSigned: responseImage.IsSigned,
-    logo: responseImage.Logo,
     // frontend only prop to increase interop with Repo objects and code reusability
     name: `${responseImage.RepoName}:${responseImage.Tag}`
+  };
+};
+
+const mapToManifest = (responseManifest) => {
+  return {
+    digest: responseManifest.Digest,
+    configDigest: responseManifest.ConfigDigest,
+    lastUpdated: responseManifest.LastUpdated,
+    size: responseManifest.Size,
+    platform: responseManifest.Platform,
+    downloadCount: responseManifest.DownloadCount,
+    layers: responseManifest.Layers,
+    history: responseManifest.History,
+    vulnerabilities: responseManifest.Vulnerabilities
   };
 };
 
@@ -79,4 +97,4 @@ const mapReferrer = (referrer) => ({
   annotations: referrer.Annotations?.map((annotation) => ({ key: annotation.Key, value: annotation.Value }))
 });
 
-export { mapToRepo, mapToImage, mapToRepoFromRepoInfo, mapCVEInfo, mapReferrer };
+export { mapToRepo, mapToImage, mapToRepoFromRepoInfo, mapCVEInfo, mapReferrer, mapToManifest };
