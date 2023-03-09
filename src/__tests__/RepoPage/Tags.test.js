@@ -11,37 +11,49 @@ jest.mock('react-router-dom', () => ({
 
 const mockedTagsData = [
   {
-    Digest: 'sha256:adca4815c494becc1bf053af0c4640b2d81ab1a779e6d649e1b8b92a75f1d559',
-    Tag: 'latest',
-    LastUpdated: '2022-07-19T18:06:18.818788283Z',
-    Vendor: 'test1',
-    Size: '569130088',
-    Platform: {
-      Os: 'linux',
-      Arch: 'amd64'
-    }
+    tag: 'latest',
+    vendor: 'test1',
+    manifests: [
+      {
+        lastUpdated: '2022-07-19T18:06:18.818788283Z',
+        digest: 'sha256:adca4815c494becc1bf053af0c4640b2d81ab1a779e6d649e1b8b92a75f1d559',
+        size: '569130088',
+        platform: {
+          Os: 'linux',
+          Arch: 'amd64'
+        }
+      }
+    ]
   },
   {
-    Digest: 'sha256:adca4815c494becc1bf053af0c4640b2d81ab1a779e6d649e1b8b92a75f1d559',
-    Tag: 'bullseye',
-    LastUpdated: '2022-07-19T18:06:18.818788283Z',
-    Vendor: 'test1',
-    Size: '569130088',
-    Platform: {
-      Os: 'linux',
-      Arch: 'amd64'
-    }
+    tag: 'bullseye',
+    vendor: 'test1',
+    manifests: [
+      {
+        digest: 'sha256:adca4815c494becc1bf053af0c4640b2d81ab1a779e6d649e1b8b92a75f1d559',
+        lastUpdated: '2022-07-19T18:06:18.818788283Z',
+        size: '569130088',
+        platform: {
+          Os: 'linux',
+          Arch: 'amd64'
+        }
+      }
+    ]
   },
   {
-    Digest: 'sha256:adca4815c494becc1bf053af0c4640b2d81ab1a779e6d649e1b8b92a75f1d559',
-    Tag: '1.5.2',
-    LastUpdated: '2022-07-19T18:06:18.818788283Z',
-    Vendor: 'test1',
-    Size: '569130088',
-    Platform: {
-      Os: 'linux',
-      Arch: 'amd64'
-    }
+    tag: '1.5.2',
+    vendor: 'test1',
+    manifests: [
+      {
+        lastUpdated: '2022-07-19T18:06:18.818788283Z',
+        digest: 'sha256:adca4815c494becc1bf053af0c4640b2d81ab1a779e6d649e1b8b92a75f1d559',
+        size: '569130088',
+        platform: {
+          Os: 'linux',
+          Arch: 'amd64'
+        }
+      }
+    ]
   }
 ];
 
@@ -60,7 +72,20 @@ describe('Tags component', () => {
     const tagLink = await screen.findByText('latest');
     fireEvent.click(tagLink);
     await waitFor(() => {
-      expect(mockedUsedNavigate).toHaveBeenCalledWith('tag/latest');
+      expect(mockedUsedNavigate).toHaveBeenCalledWith('tag/latest', { state: { digest: null } });
+    });
+  });
+
+  it('should navigate to specific manifest when clicking the digest', async () => {
+    render(<Tags tags={mockedTagsData} />);
+    const openBtn = screen.getAllByText(/digest/i);
+    await fireEvent.click(openBtn[0]);
+    const tagLink = await screen.findByText(/sha256:adca4/i);
+    fireEvent.click(tagLink);
+    await waitFor(() => {
+      expect(mockedUsedNavigate).toHaveBeenCalledWith('tag/latest', {
+        state: { digest: 'sha256:adca4815c494becc1bf053af0c4640b2d81ab1a779e6d649e1b8b92a75f1d559' }
+      });
     });
   });
 

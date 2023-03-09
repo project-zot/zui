@@ -20,7 +20,7 @@ import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import RepoDetailsMetadata from './RepoDetailsMetadata';
 import Loading from '../Shared/Loading';
-import { isEmpty } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { mapToRepoFromRepoInfo } from 'utilities/objectModels';
 
@@ -164,6 +164,7 @@ function RepoDetails() {
   const classes = useStyles();
 
   useEffect(() => {
+    setIsLoading(true);
     api
       .get(`${host()}${endpoints.detailedRepoInfo(name)}`, abortController.signal)
       .then((response) => {
@@ -197,22 +198,13 @@ function RepoDetails() {
 
   const platformChips = () => {
     const platforms = repoDetailData?.platforms || [];
+    const filteredPlatforms = platforms?.flatMap((platform) => [platform.Os, platform.Arch]);
 
-    return platforms.map((platform, index) => (
-      <Stack key={`stack${platform?.Os}${platform?.Arch}`} alignItems="center" direction="row" spacing={2}>
+    return uniq(filteredPlatforms).map((platform, index) => (
+      <Stack key={`stack${platform}`} alignItems="center" direction="row" spacing={2}>
         <Chip
-          key={`${name}${platform?.Os}${index}`}
-          label={platform?.Os}
-          onClick={handlePlatformChipClick}
-          sx={{
-            backgroundColor: '#E0E5EB',
-            color: '#52637A',
-            fontSize: '0.8125rem'
-          }}
-        />
-        <Chip
-          key={`${name}${platform?.Arch}${index}`}
-          label={platform?.Arch}
+          key={`${name}${platform}${index}`}
+          label={platform}
           onClick={handlePlatformChipClick}
           sx={{
             backgroundColor: '#E0E5EB',

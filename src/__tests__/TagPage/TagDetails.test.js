@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import TagDetails from 'components/Tag/TagDetails';
 import MockThemeProvier from '__mocks__/MockThemeProvider';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 const TagDetailsThemeWrapper = () => {
   return (
@@ -33,6 +33,102 @@ const mockImage = {
         Platform: {
           Os: 'linux',
           Arch: 'amd64'
+        },
+        History: [
+          {
+            Layer: {
+              Size: '75181999',
+              Digest: 'sha256:7a0437f04f83f084b7ed68ad9c4a4947e12fc4e1b006b38129bac89114ec3621',
+              Score: null
+            },
+            HistoryDescription: {
+              Created: '2020-12-08T00:22:52.526672082Z',
+              CreatedBy:
+                '/bin/sh -c #(nop) ADD file:bd7a2aed6ede423b719ceb2f723e4ecdfa662b28639c8429731c878e86fb138b in / ',
+              Author: '',
+              Comment: '',
+              EmptyLayer: false
+            }
+          },
+          {
+            Layer: null,
+            HistoryDescription: {
+              Created: '2020-12-08T00:22:52.895811646Z',
+              CreatedBy:
+                '/bin/sh -c #(nop)  LABEL org.label-schema.schema-version=1.0 org.label-schema.name=CentOS Base Image org.label-schema.vendor=CentOS org.label-schema.license=GPLv2 org.label-schema.build-date=20201204',
+              Author: '',
+              Comment: '',
+              EmptyLayer: true
+            }
+          },
+          {
+            Layer: null,
+            HistoryDescription: {
+              Created: '2020-12-08T00:22:53.076477777Z',
+              CreatedBy: '/bin/sh -c #(nop)  CMD ["/bin/bash"]',
+              Author: '',
+              Comment: '',
+              EmptyLayer: true
+            }
+          }
+        ]
+      },
+      {
+        Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf45etertdfg973e29',
+        LastUpdated: '2020-12-08T00:22:52.526672082Z',
+        Size: '75183423',
+        ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+        Platform: {
+          Os: 'windows',
+          Arch: 'amd64'
+        },
+        History: [
+          {
+            Layer: {
+              Size: '75181999',
+              Digest: 'sha256:7a0437f04f83f084b7ed68ad9c4a4947e12fc4e1b006b38129bac89114ec3621',
+              Score: null
+            },
+            HistoryDescription: {
+              Created: '2020-12-08T00:22:52.526672082Z',
+              CreatedBy:
+                '/bin/sh -c #(nop) ADD file:bd7a2aed6ede423b719ceb2f723e4ecdfa662b28639c8429731c878e86fb138b in / ',
+              Author: '',
+              Comment: '',
+              EmptyLayer: false
+            }
+          },
+          {
+            Layer: null,
+            HistoryDescription: {
+              Created: '2020-12-08T00:22:52.895811646Z',
+              CreatedBy:
+                '/bin/sh -c #(nop)  LABEL org.label-schema.schema-version=1.0 org.label-schema.name=CentOS Base Image org.label-schema.vendor=CentOS org.label-schema.license=GPLv2 org.label-schema.build-date=20201204',
+              Author: '',
+              Comment: '',
+              EmptyLayer: true
+            }
+          },
+          {
+            Layer: null,
+            HistoryDescription: {
+              Created: '2020-12-08T00:22:53.076477777Z',
+              CreatedBy: '/bin/sh -c #(nop)  CMD ["/bin/bash"]',
+              Author: '',
+              Comment: '',
+              EmptyLayer: true
+            }
+          }
+        ]
+      },
+      {
+        Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e25',
+        LastUpdated: '2020-12-08T00:22:52.526672082Z',
+        Size: '75183423',
+        ConfigDigest: 'sha256:8dd57e171a61368ffcfde38045ddb6ed74a32950c271c1da93eaddfb66a77e78',
+        Platform: {
+          Os: 'linux',
+          Arch: 'arm'
         },
         History: [
           {
@@ -285,7 +381,8 @@ jest.mock('react-router-dom', () => ({
   useParams: () => {
     return { name: 'test', tag: '1.0.1' };
   },
-  useNavigate: () => mockUseNavigate
+  useNavigate: () => mockUseNavigate,
+  useLocation: jest.fn()
 }));
 
 jest.mock('../../host', () => ({
@@ -326,6 +423,24 @@ describe('Tags details', () => {
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<TagDetailsThemeWrapper />);
     await waitFor(() => expect(error).toBeCalledTimes(1));
+  });
+
+  it('should show the data of the different manifests when switching between them', async () => {
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImage } });
+    render(<TagDetailsThemeWrapper />);
+    const manifestSelect = await screen.findByText(/linux\/amd64/i);
+    await userEvent.click(manifestSelect);
+    await userEvent.click(await screen.findByText(/windows\/amd64/i));
+    expect(await screen.findByText(/windows\/amd64/i)).toBeInTheDocument();
+  });
+
+  it('should preselect a manifest if data is received', async () => {
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImage } });
+    useLocation.mockImplementation(() => ({
+      state: { digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e25' }
+    }));
+    render(<TagDetailsThemeWrapper />);
+    expect(await screen.findByText(/linux\/arm/i)).toBeInTheDocument();
   });
 
   it('should redirect to homepage if it receives invalid data', async () => {

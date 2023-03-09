@@ -32,28 +32,28 @@ export const tagsSortByCriteria = {
     value: 'UPDATETIME_DESC',
     label: 'Newest',
     func: (a, b) => {
-      return DateTime.fromISO(b.LastUpdated).diff(DateTime.fromISO(a.LastUpdated));
+      return DateTime.fromISO(b.lastUpdated).diff(DateTime.fromISO(a.lastUpdated));
     }
   },
   updateTime: {
     value: 'UPDATETIME',
     label: 'Oldest',
     func: (a, b) => {
-      return DateTime.fromISO(a.LastUpdated).diff(DateTime.fromISO(b.LastUpdated));
+      return DateTime.fromISO(a.lastUpdated).diff(DateTime.fromISO(b.lastUpdated));
     }
   },
   alphabetic: {
     value: 'ALPHABETIC',
     label: 'A - Z',
     func: (a, b) => {
-      return a.Tag?.localeCompare(b.Tag);
+      return a.tag?.localeCompare(b.tag);
     }
   },
   alphabeticDesc: {
     value: 'ALPHABETIC_DESC',
     label: 'Z - A',
     func: (a, b) => {
-      return b.Tag?.localeCompare(a.Tag);
+      return b.tag?.localeCompare(a.tag);
     }
   }
 };

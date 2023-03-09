@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { api, endpoints } from 'api';
 import { host } from 'host';
 import { mapToImage, mapToRepo } from 'utilities/objectModels';
-import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
 import { debounce, isEmpty } from 'lodash';
 import { useCombobox } from 'downshift';
 import { HEADER_SEARCH_PAGE_SIZE } from 'utilities/paginationConstants';
@@ -104,6 +104,7 @@ function SearchSuggestion() {
   const [isLoading, setIsLoading] = useState(false);
   const [isFailedSearch, setIsFailedSearch] = useState(false);
   const navigate = useNavigate();
+  const location = useLocation();
   const abortController = useMemo(() => new AbortController(), []);
 
   const classes = useStyles();
@@ -180,7 +181,9 @@ function SearchSuggestion() {
   };
 
   const searchCall = (value) => {
-    setQueryParams((prevState) => createSearchParams({ ...prevState, search: searchQuery }));
+    if (location.pathname?.includes('explore')) {
+      setQueryParams((prevState) => createSearchParams({ ...prevState, search: searchQuery }));
+    }
     if (value !== '') {
       // if search term inclused the ':' character, search for images, if not, search repos
       if (value?.includes(':')) {

@@ -1,4 +1,4 @@
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import React, { useEffect, useMemo, useState, useRef } from 'react';
 
 // utility
@@ -19,7 +19,8 @@ import {
   MenuItem,
   Tab,
   Typography,
-  InputBase
+  InputBase,
+  InputLabel
 } from '@mui/material';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
 import makeStyles from '@mui/styles/makeStyles';
@@ -220,6 +221,10 @@ function TagDetails() {
   const mounted = useRef(false);
   const navigate = useNavigate();
 
+  // check for optional preselected digest
+  const { state } = useLocation() || {};
+  const { digest } = state || '';
+
   // get url param from <Route here (i.e. image name)
   const { reponame, tag } = useParams();
 
@@ -240,7 +245,16 @@ function TagDetails() {
           let imageInfo = response.data.data.Image;
           let imageData = mapToImage(imageInfo);
           setImageDetailData(imageData);
-          setSelectedManifest(head(imageData.manifests));
+          if (!isEmpty(digest)) {
+            const preselectedManifest = imageData.manifests?.find((el) => el.digest === digest);
+            if (preselectedManifest) {
+              setSelectedManifest(preselectedManifest);
+            } else {
+              setSelectedManifest(head(imageData.manifests));
+            }
+          } else {
+            setSelectedManifest(head(imageData.manifests));
+          }
           setPullString(dockerPull(imageData.name));
           setSelectedPullTab(dockerPull(imageData.name));
         } else if (!isEmpty(response.data.errors)) {
@@ -286,6 +300,11 @@ function TagDetails() {
     return 'Pull Image';
   };
 
+  const handleOSArchChange = (e) => {
+    const { value } = e.target;
+    setSelectedManifest(value);
+  };
+
   return (
     <>
       {isLoading ? (
@@ -328,6 +347,26 @@ function TagDetails() {
                       />
                       <SignatureIconCheck isSigned={imageDetailData.isSigned} />
                       {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
+                    </Stack>
+
+                    <Stack>
+                      <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
+                        <InputLabel>OS/Arch</InputLabel>
+                        {!isEmpty(selectedManifest) && (
+                          <Select
+                            label="OS/Arch"
+                            value={selectedManifest}
+                            onChange={handleOSArchChange}
+                            MenuProps={{ disableScrollLock: true }}
+                          >
+                            {imageDetailData.manifests.map((el) => (
+                              <MenuItem key={el.digest} value={el}>
+                                {`${el.platform?.Os}/${el.platform?.Arch}`}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        )}
+                      </FormControl>
                     </Stack>
                   </Stack>
                   <Typography gutterBottom className={classes.digest}>

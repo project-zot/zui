@@ -20,7 +20,7 @@ const mapToRepo = (responseRepo) => {
 const mapToRepoFromRepoInfo = (responseRepoInfo) => {
   return {
     name: responseRepoInfo.Summary?.Name,
-    images: responseRepoInfo.Images,
+    images: responseRepoInfo.Images?.map((image) => mapToImage(image)) || [],
     lastUpdated: responseRepoInfo.Summary?.LastUpdated,
     size: responseRepoInfo.Summary?.Size,
     platforms: responseRepoInfo.Summary?.Platforms,

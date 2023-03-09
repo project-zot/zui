@@ -16,7 +16,7 @@ import repocube4 from '../../assets/repocube-4.png';
 
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
-import { isEmpty } from 'lodash';
+import { isEmpty, uniq } from 'lodash';
 
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
@@ -119,22 +119,12 @@ function RepoCard(props) {
   };
 
   const platformChips = () => {
-    const platformsOsArch = platforms || [];
-    return platformsOsArch.map((platform, index) => (
-      <Stack key={`stack${platform?.Os}${platform?.Arch}`} alignItems="center" direction="row" spacing={2}>
+    const filteredPlatforms = platforms?.flatMap((platform) => [platform.Os, platform.Arch]);
+    return uniq(filteredPlatforms).map((platform, index) => (
+      <Stack key={`stack${platform}`} alignItems="center" direction="row" spacing={2}>
         <Chip
-          key={`${name}${platform?.Os}${index}`}
-          label={platform?.Os}
-          onClick={handlePlatformChipClick}
-          sx={{
-            backgroundColor: '#E0E5EB',
-            color: '#52637A',
-            fontSize: '0.8125rem'
-          }}
-        />
-        <Chip
-          key={`${name}${platform?.Arch}${index}`}
-          label={platform?.Arch}
+          key={`${name}${platform}${index}`}
+          label={platform}
           onClick={handlePlatformChipClick}
           sx={{
             backgroundColor: '#E0E5EB',
