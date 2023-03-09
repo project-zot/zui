@@ -1,5 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
-import { isEmpty, head } from 'lodash';
+import { isEmpty } from 'lodash';
 
 // utility
 import { api, endpoints } from '../../../api';
@@ -148,10 +148,8 @@ function IsDependentOn(props) {
             repoName={dependence.repoName}
             tag={dependence.tag}
             vendor={dependence.vendor}
-            platform={head(dependence.manifests)?.platform}
             isSigned={dependence.isSigned}
-            size={head(dependence.manifests)?.size}
-            digest={head(dependence.manifests)?.digest}
+            manifests={dependence.manifests}
             key={index}
             lastUpdated={dependence.lastUpdated}
           />

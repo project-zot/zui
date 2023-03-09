@@ -1,8 +1,6 @@
 // react global
 import React, { useState } from 'react';
 
-import { head } from 'lodash';
-
 // components
 import Typography from '@mui/material/Typography';
 import { Card, CardContent, Divider, Stack, InputBase, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
@@ -77,7 +75,7 @@ export default function Tags(props) {
   const [sortFilter, setSortFilter] = useState(tagsSortByCriteria.updateTimeDesc.value);
   const renderTags = (tags) => {
     const selectedSort = Object.values(tagsSortByCriteria).find((sc) => sc.value === sortFilter);
-    const filteredTags = tags.filter((t) => t.Tag?.includes(tagsFilter));
+    const filteredTags = tags.filter((t) => t.tag?.includes(tagsFilter));
     if (selectedSort) {
       filteredTags.sort(selectedSort.func);
     }
@@ -86,13 +84,11 @@ export default function Tags(props) {
       filteredTags.map((tag) => {
         return (
           <TagCard
-            key={tag.Tag}
-            tag={tag.Tag}
-            lastUpdated={tag.LastUpdated}
-            digest={head(tag.Manifests)?.Digest}
-            vendor={tag.Vendor}
-            size={tag.Size}
-            platform={head(tag.Manifests)?.Platform}
+            key={tag.tag}
+            tag={tag.tag}
+            lastUpdated={tag.lastUpdated}
+            vendor={tag.vendor}
+            manifests={tag.manifests}
           />
         );
       })

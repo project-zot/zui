@@ -60,7 +60,7 @@ const useStyles = makeStyles(() => ({
 }));
 
 export default function TagCard(props) {
-  const { repoName, tag, lastUpdated, vendor, digest, size, platform } = props;
+  const { repoName, tag, lastUpdated, vendor, manifests } = props;
 
   const [open, setOpen] = useState(false);
   const classes = useStyles();
@@ -70,11 +70,11 @@ export default function TagCard(props) {
     : `Timestamp N/A`;
   const navigate = useNavigate();
 
-  const goToTags = () => {
+  const goToTags = (digest = null) => {
     if (repoName) {
-      navigate(`/image/${encodeURIComponent(repoName)}/tag/${tag}`);
+      navigate(`/image/${encodeURIComponent(repoName)}/tag/${tag}`, { state: { digest } });
     } else {
-      navigate(`tag/${tag}`);
+      navigate(`tag/${tag}`, { state: { digest } });
     }
   };
 
@@ -135,23 +135,38 @@ export default function TagCard(props) {
                 <Typography variant="body1"> Size </Typography>
               </Grid>
             </Grid>
-            <Grid container item xs={12} direction={'row'}>
-              <Grid item xs={6} md={4}>
-                <Tooltip title={digest || ''} placement="top">
-                  <Typography variant="body1">{digest?.substr(0, 12)}</Typography>
-                </Tooltip>
+
+            {manifests.map((el) => (
+              <Grid container item xs={12} key={el.digest} direction={'row'}>
+                <Grid item xs={6} md={4}>
+                  <Tooltip title={el.digest || ''} placement="top">
+                    <Typography
+                      variant="body1"
+                      sx={{ color: '#1479FF', textDecorationLine: 'underline', cursor: 'pointer' }}
+                      onClick={() => goToTags(el.digest)}
+                    >
+                      {el.digest?.substr(0, 12)}
+                    </Typography>
+                  </Tooltip>
+                </Grid>
+                <Grid item xs={6} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+                  <Typography variant="body1">
+                    {el.platform?.Os}/{el.platform?.Arch}
+                  </Typography>
+                </Grid>
+                <Grid
+                  item
+                  xs={0}
+                  md={4}
+                  className="hide-on-mobile"
+                  sx={{ display: 'flex', justifyContent: 'flex-end' }}
+                >
+                  <Typography sx={{ textAlign: 'right' }} variant="body1">
+                    {transform.formatBytes(el.size)}
+                  </Typography>
+                </Grid>
               </Grid>
-              <Grid item xs={6} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                <Typography variant="body1">
-                  {platform?.Os}/{platform?.Arch}
-                </Typography>
-              </Grid>
-              <Grid item xs={0} md={4} className="hide-on-mobile" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Typography sx={{ textAlign: 'right' }} variant="body1">
-                  {transform.formatBytes(size)}
-                </Typography>
-              </Grid>
-            </Grid>
+            ))}
           </Box>
         </Collapse>
       </CardContent>
