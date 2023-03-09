@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { api, endpoints } from 'api';
 import { host } from 'host';
 import { mapToImage, mapToRepo } from 'utilities/objectModels';
-import { createSearchParams, useLocation, useNavigate, useSearchParams } from 'react-router-dom';
+import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
 import { debounce, isEmpty } from 'lodash';
 import { useCombobox } from 'downshift';
 import { HEADER_SEARCH_PAGE_SIZE } from 'utilities/paginationConstants';
@@ -95,16 +95,14 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function SearchSuggestion() {
-  const [queryParams, setQueryParams] = useSearchParams();
-  const search = queryParams.get('search');
-
-  const [searchQuery, setSearchQuery] = useState(search || '');
+function SearchSuggestion({ setSearchCurrentValue = () => {} }) {
+  const [searchQuery, setSearchQuery] = useState('');
   const [suggestionData, setSuggestionData] = useState([]);
+  const [queryParams] = useSearchParams();
+  const search = queryParams.get('search');
   const [isLoading, setIsLoading] = useState(false);
   const [isFailedSearch, setIsFailedSearch] = useState(false);
   const navigate = useNavigate();
-  const location = useLocation();
   const abortController = useMemo(() => new AbortController(), []);
 
   const classes = useStyles();
@@ -175,15 +173,15 @@ function SearchSuggestion() {
   const handleSeachChange = (event) => {
     const value = event?.inputValue;
     setSearchQuery(value);
+    // used to lift up the state for pages that need to know the current value of the search input (currently only Explore) not used in other cases
+    // one way binding, other components shouldn't set the value of the search input, but using this prop can read it
+    setSearchCurrentValue(value);
     setIsFailedSearch(false);
     setIsLoading(true);
     setSuggestionData([]);
   };
 
   const searchCall = (value) => {
-    if (location.pathname?.includes('explore')) {
-      setQueryParams((prevState) => createSearchParams({ ...prevState, search: searchQuery }));
-    }
     if (value !== '') {
       // if search term inclused the ':' character, search for images, if not, search repos
       if (value?.includes(':')) {
@@ -224,7 +222,7 @@ function SearchSuggestion() {
     items: suggestionData,
     onInputValueChange: handleSeachChange,
     onSelectedItemChange: handleSuggestionSelected,
-    initialInputValue: search ?? '',
+    initialInputValue: !isEmpty(searchQuery) ? searchQuery : search,
     itemToString: (item) => item.name ?? item
   });
 
@@ -281,7 +279,7 @@ function SearchSuggestion() {
         className={isOpen && !isLoading && !isFailedSearch ? classes.resultsWrapper : classes.resultsWrapperHidden}
       >
         {isOpen && suggestionData?.length > 0 && renderSuggestions()}
-        {isOpen && isEmpty(searchQuery) && (
+        {isOpen && isEmpty(searchQuery) && isEmpty(suggestionData) && (
           <>
             <ListItem
               className={classes.searchItem}

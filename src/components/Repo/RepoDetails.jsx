@@ -134,7 +134,7 @@ const useStyles = makeStyles((theme) => ({
   },
   platformChipsContainer: {
     alignItems: 'center',
-    padding: '0.5rem 0 0 4rem',
+    padding: '0.5rem 0 0 1rem',
     [theme.breakpoints.down('md')]: {
       padding: '0.5rem 0 0 0'
     }
@@ -201,18 +201,16 @@ function RepoDetails() {
     const filteredPlatforms = platforms?.flatMap((platform) => [platform.Os, platform.Arch]);
 
     return uniq(filteredPlatforms).map((platform, index) => (
-      <Stack key={`stack${platform}`} alignItems="center" direction="row" spacing={2}>
-        <Chip
-          key={`${name}${platform}${index}`}
-          label={platform}
-          onClick={handlePlatformChipClick}
-          sx={{
-            backgroundColor: '#E0E5EB',
-            color: '#52637A',
-            fontSize: '0.8125rem'
-          }}
-        />
-      </Stack>
+      <Chip
+        key={`${name}${platform}${index}`}
+        label={platform}
+        onClick={handlePlatformChipClick}
+        sx={{
+          backgroundColor: '#E0E5EB',
+          color: '#52637A',
+          fontSize: '0.625rem'
+        }}
+      />
     ));
   };
 
@@ -283,7 +281,7 @@ function RepoDetails() {
                   <Typography gutterBottom className={classes.repoTitle}>
                     {repoDetailData?.title || 'Title not available'}
                   </Typography>
-                  <Stack direction="row" spacing={2} className={classes.platformChipsContainer}>
+                  <Stack direction="row" spacing={1} className={classes.platformChipsContainer}>
                     {platformChips()}
                   </Stack>
                 </Grid>

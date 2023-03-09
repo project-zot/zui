@@ -103,7 +103,7 @@ function setNavShow() {
   return show;
 }
 
-function Header() {
+function Header({ setSearchCurrentValue = () => {} }) {
   const show = setNavShow();
   const classes = useStyles();
   const path = useLocation().pathname;
@@ -122,7 +122,7 @@ function Header() {
               </Link>
             </Grid>
             <Grid item xs={8}>
-              {path !== '/' && <SearchSuggestion />}
+              {path !== '/' && <SearchSuggestion setSearchCurrentValue={setSearchCurrentValue} />}
             </Grid>
             <Grid item md={2} xs={0}>
               <div>{''}</div>
