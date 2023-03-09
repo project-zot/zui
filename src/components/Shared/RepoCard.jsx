@@ -121,18 +121,16 @@ function RepoCard(props) {
   const platformChips = () => {
     const filteredPlatforms = platforms?.flatMap((platform) => [platform.Os, platform.Arch]);
     return uniq(filteredPlatforms).map((platform, index) => (
-      <Stack key={`stack${platform}`} alignItems="center" direction="row" spacing={2}>
-        <Chip
-          key={`${name}${platform}${index}`}
-          label={platform}
-          onClick={handlePlatformChipClick}
-          sx={{
-            backgroundColor: '#E0E5EB',
-            color: '#52637A',
-            fontSize: '0.8125rem'
-          }}
-        />
-      </Stack>
+      <Chip
+        key={`${name}${platform}${index}`}
+        label={platform}
+        onClick={handlePlatformChipClick}
+        sx={{
+          backgroundColor: '#E0E5EB',
+          color: '#52637A',
+          fontSize: '0.625rem'
+        }}
+      />
     ));
   };
 
@@ -188,7 +186,7 @@ function RepoCard(props) {
                   {description || 'Description not available'}
                 </Typography>
               </Tooltip>
-              <Stack alignItems="center" direction="row" spacing={2} pt={1}>
+              <Stack alignItems="center" direction="row" spacing={1} pt={1}>
                 {platformChips()}
               </Stack>
               <Stack alignItems="center" direction="row" spacing={1} pt={2}>

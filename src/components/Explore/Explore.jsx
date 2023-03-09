@@ -17,7 +17,7 @@ import { host } from '../../host';
 import { mapToRepo } from 'utilities/objectModels.js';
 import { useSearchParams } from 'react-router-dom';
 import FilterCard from '../Shared/FilterCard.jsx';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 import filterConstants from 'utilities/filterConstants.js';
 import { sortByCriteria } from 'utilities/sortCriteria.js';
 import { EXPLORE_PAGE_SIZE } from 'utilities/paginationConstants.js';
@@ -63,7 +63,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-function Explore() {
+function Explore({ searchInputValue }) {
   const [isLoading, setIsLoading] = useState(true);
   const [exploreData, setExploreData] = useState([]);
   const [sortFilter, setSortFilter] = useState(sortByCriteria.relevance.value);
@@ -119,7 +119,7 @@ function Explore() {
     api
       .get(
         `${host()}${endpoints.globalSearch({
-          searchQuery: search,
+          searchQuery: !isNil(searchInputValue) ? searchInputValue : search,
           pageNumber,
           pageSize: EXPLORE_PAGE_SIZE,
           sortBy: sortFilter,

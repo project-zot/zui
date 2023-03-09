@@ -5,6 +5,7 @@ import Header from '../components/Header/Header.jsx';
 import makeStyles from '@mui/styles/makeStyles';
 import { Container, Grid, Stack } from '@mui/material';
 import Explore from 'components/Explore/Explore.jsx';
+import { useState } from 'react';
 
 const useStyles = makeStyles(() => ({
   container: {
@@ -27,14 +28,15 @@ const useStyles = makeStyles(() => ({
 
 function ExplorePage() {
   const classes = useStyles();
+  const [searchCurrentValue, setSearchCurrentValue] = useState();
 
   return (
     <Stack className={classes.pageWrapper} direction="column" data-testid="explore-container">
-      <Header />
+      <Header setSearchCurrentValue={setSearchCurrentValue} />
       <Container className={classes.container}>
         <Grid container className={classes.gridWrapper}>
           <Grid item className={classes.tile}>
-            <Explore />
+            <Explore searchInputValue={searchCurrentValue} />
           </Grid>
         </Grid>
       </Container>
