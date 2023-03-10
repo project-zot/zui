@@ -13,8 +13,9 @@ jest.mock('react-router-dom', () => ({
 }));
 
 const mockImageList = {
-  RepoListWithNewestImage: {
-    Results: [
+  GlobalSearch: {
+    Page: { TotalCount: 6, ItemCount: 3 },
+    Repos: [
       {
         Name: 'alpine',
         Size: '2806985',
@@ -65,28 +66,36 @@ const mockImageList = {
             Count: 10
           }
         }
-      },
+      }
+    ]
+  }
+};
+
+const mockImageListRecent = {
+  GlobalSearch: {
+    Page: { TotalCount: 6, ItemCount: 2 },
+    Repos: [
       {
-        Name: 'centos',
-        Size: '369311301',
-        LastUpdated: '2022-08-23T00:20:40.144281895Z',
+        Name: 'alpine',
+        Size: '2806985',
+        LastUpdated: '2022-08-09T17:19:53.274069586Z',
         NewestImage: {
           Tag: 'latest',
-          Description: '',
-          IsSigned: true,
+          Description: 'w',
+          IsSigned: false,
           Licenses: '',
           Vendor: '',
           Labels: '',
           Vulnerabilities: {
-            MaxSeverity: 'NONE',
-            Count: 10
+            MaxSeverity: 'LOW',
+            Count: 7
           }
         }
       },
       {
-        Name: 'debian',
-        Size: '369311301',
-        LastUpdated: '2022-08-23T00:20:40.144281895Z',
+        Name: 'mongo',
+        Size: '231383863',
+        LastUpdated: '2022-08-02T01:30:49.193203152Z',
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -95,25 +104,8 @@ const mockImageList = {
           Vendor: '',
           Labels: '',
           Vulnerabilities: {
-            MaxSeverity: 'MEDIUM',
-            Count: 10
-          }
-        }
-      },
-      {
-        Name: 'mysql',
-        Size: '369311301',
-        LastUpdated: '2022-08-23T00:20:40.144281895Z',
-        NewestImage: {
-          Tag: 'latest',
-          Description: '',
-          IsSigned: true,
-          Licenses: '',
-          Vendor: '',
-          Labels: '',
-          Vulnerabilities: {
-            MaxSeverity: 'UNKNOWN',
-            Count: 10
+            MaxSeverity: 'HIGH',
+            Count: 2
           }
         }
       }
@@ -132,7 +124,8 @@ afterEach(() => {
 
 describe('Home component', () => {
   it('fetches image data and renders popular, bookmarks and recently updated', async () => {
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListRecent } });
     render(<Home />);
     await waitFor(() => expect(screen.getAllByText(/alpine/i)).toHaveLength(2));
     await waitFor(() => expect(screen.getAllByText(/mongo/i)).toHaveLength(2));
@@ -140,14 +133,16 @@ describe('Home component', () => {
   });
 
   it('renders signature icons', async () => {
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListRecent } });
     render(<Home />);
     expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(2);
     expect(await screen.findAllByTestId('verified-icon')).toHaveLength(3);
   });
 
   it('renders vulnerability icons', async () => {
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListRecent } });
     render(<Home />);
     expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(2);
     expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(2);
@@ -158,11 +153,12 @@ describe('Home component', () => {
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<Home />);
-    await waitFor(() => expect(error).toBeCalledTimes(1));
+    await waitFor(() => expect(error).toBeCalledTimes(2));
   });
 
   it('should redirect to explore page when clicking view all popular', async () => {
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListRecent } });
     render(<Home />);
     const viewAllButtons = await screen.findAllByText(/view all/i);
     expect(viewAllButtons).toHaveLength(2);
