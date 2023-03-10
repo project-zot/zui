@@ -349,7 +349,7 @@ function TagDetails() {
                       {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
                     </Stack>
 
-                    <Stack>
+                    <Stack sx={{ width: { xs: '100%', md: 'auto' } }}>
                       <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
                         <InputLabel>OS/Arch</InputLabel>
                         {!isEmpty(selectedManifest) && (

@@ -99,7 +99,7 @@ function SearchSuggestion({ setSearchCurrentValue = () => {} }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [suggestionData, setSuggestionData] = useState([]);
   const [queryParams] = useSearchParams();
-  const search = queryParams.get('search');
+  const search = queryParams.get('search') || '';
   const [isLoading, setIsLoading] = useState(false);
   const [isFailedSearch, setIsFailedSearch] = useState(false);
   const navigate = useNavigate();

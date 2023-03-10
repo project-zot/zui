@@ -8,6 +8,7 @@ import { mapToRepo } from 'utilities/objectModels';
 import Loading from '../Shared/Loading';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import { sortByCriteria } from 'utilities/sortCriteria';
+import { HOME_POPULAR_PAGE_SIZE, HOME_RECENT_PAGE_SIZE } from 'utilities/paginationConstants';
 
 const useStyles = makeStyles(() => ({
   gridWrapper: {
@@ -60,29 +61,70 @@ const useStyles = makeStyles(() => ({
 
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
-  const [homeData, setHomeData] = useState([]);
+  const [popularData, setPopularData] = useState([]);
+  const [recentData, setRecentData] = useState([]);
   const navigate = useNavigate();
   const abortController = useMemo(() => new AbortController(), []);
   const classes = useStyles();
 
-  useEffect(() => {
-    window.scrollTo(0, 0);
+  const getPopularData = () => {
     setIsLoading(true);
     api
-      .get(`${host()}${endpoints.repoList()}`, abortController.signal)
+      .get(
+        `${host()}${endpoints.globalSearch({
+          searchQuery: '',
+          pageNumber: 1,
+          pageSize: HOME_POPULAR_PAGE_SIZE,
+          sortBy: sortByCriteria.downloads?.value
+        })}`,
+        abortController.signal
+      )
       .then((response) => {
         if (response.data && response.data.data) {
-          let repoList = response.data.data.RepoListWithNewestImage.Results;
+          let repoList = response.data.data.GlobalSearch.Repos;
           let repoData = repoList.map((responseRepo) => {
             return mapToRepo(responseRepo);
           });
-          setHomeData(repoData);
+          setPopularData(repoData);
           setIsLoading(false);
         }
       })
       .catch((e) => {
         console.error(e);
       });
+  };
+
+  const getRecentData = () => {
+    setIsLoading(true);
+    api
+      .get(
+        `${host()}${endpoints.globalSearch({
+          searchQuery: '',
+          pageNumber: 1,
+          pageSize: HOME_RECENT_PAGE_SIZE,
+          sortBy: sortByCriteria.updateTime?.value
+        })}`,
+        abortController.signal
+      )
+      .then((response) => {
+        if (response.data && response.data.data) {
+          let repoList = response.data.data.GlobalSearch.Repos;
+          let repoData = repoList.map((responseRepo) => {
+            return mapToRepo(responseRepo);
+          });
+          setRecentData(repoData);
+          setIsLoading(false);
+        }
+      })
+      .catch((e) => {
+        console.error(e);
+      });
+  };
+
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    getPopularData();
+    getRecentData();
     return () => {
       abortController.abort();
     };
@@ -94,8 +136,8 @@ function Home() {
 
   const renderMostPopular = () => {
     return (
-      homeData &&
-      homeData.slice(0, 3).map((item, index) => {
+      popularData &&
+      popularData.map((item, index) => {
         return (
           <RepoCard
             name={item.name}
@@ -120,8 +162,8 @@ function Home() {
 
   const renderRecentlyUpdated = () => {
     return (
-      homeData &&
-      homeData.slice(0, 2).map((item, index) => {
+      recentData &&
+      recentData.map((item, index) => {
         return (
           <RepoCard
             name={item.name}
