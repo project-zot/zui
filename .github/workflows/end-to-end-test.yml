@@ -1,0 +1,110 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  release:
+    types:
+      - published
+name: end-to-end-test
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-test:
+    name: Test zui/zot integration
+    env:
+      CI: ""
+      REGISTRY_HOST: "localhost"
+      REGISTRY_PORT: "8080"
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout zui repository
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
+
+    - name: Set up Node.js 16.x
+      uses: actions/setup-node@v3
+      with:
+        node-version: 16.x
+        cache: 'npm'
+
+    - name: Build zui
+      run:  |
+        cd $GITHUB_WORKSPACE
+        make install
+        make build
+
+    - name: Install container image tooling
+      run: |
+        cd $GITHUB_WORKSPACE
+        sudo apt-get update
+        sudo apt-get install libgpgme-dev libassuan-dev libbtrfs-dev libdevmapper-dev pkg-config rpm snapd jq
+        git clone https://github.com/containers/skopeo -b v1.9.0 $GITHUB_WORKSPACE/src/github.com/containers/skopeo
+        cd $GITHUB_WORKSPACE/src/github.com/containers/skopeo && make bin/skopeo
+        chmod +x bin/skopeo
+        sudo mv bin/skopeo /usr/local/bin/skopeo
+        which skopeo
+        skopeo -v
+        curl -L https://github.com/regclient/regclient/releases/download/v0.4.7/regctl-linux-amd64 -o regctl
+        chmod +x regctl
+        sudo mv regctl /usr/local/bin/regctl
+        which regctl
+        regctl version
+        curl -L https://github.com/sigstore/cosign/releases/download/v1.13.0/cosign-linux-amd64 -o cosign
+        chmod +x cosign
+        sudo mv cosign /usr/local/bin/cosign
+        which cosign
+        cosign version
+        cd $GITHUB_WORKSPACE
+
+    - name: Install go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.19.x
+
+    - name: Checkout zot repo
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
+        repository: project-zot/zot
+        ref: main
+        path: zot
+
+    - name: Build zot
+      run: |
+        cd $GITHUB_WORKSPACE/zot
+        make binary
+        ls -l bin/
+
+    - name: Bringup zot server
+      run: |
+        cd $GITHUB_WORKSPACE/zot
+        mkdir /tmp/zot
+        ./bin/zot-linux-amd64 serve examples/config-ui.json &
+        while true; do x=0; curl -f http://$REGISTRY_HOST:$REGISTRY_PORT/v2/ || x=1; if [ $x -eq 0 ]; then break; fi; sleep 1; done
+
+    - name: Load image test data from cache into a local folder
+      id: restore-cache
+      uses: actions/cache@v3
+      with:
+        path: tests/data/images
+        key: image-config-${{ hashFiles('**/tests/data/config.yaml') }}
+        restore-keys: |
+          image-config-
+
+    - name: Load image test data into zot server
+      run: |
+        cd $GITHUB_WORKSPACE
+        regctl registry set --tls disabled $REGISTRY_HOST:$REGISTRY_PORT
+        make test-data REGISTRY_HOST=$REGISTRY_HOST REGISTRY_PORT=$REGISTRY_PORT
+
+    - name: Run integration tests
+      run: |
+        cd $GITHUB_WORKSPACE
+        make integration-tests REGISTRY_HOST=$REGISTRY_HOST REGISTRY_PORT=$REGISTRY_PORT
