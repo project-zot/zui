@@ -60,8 +60,19 @@ def pull_modify_push_image(logger, registry, image_name, tag, cosign_password,
         metafile = '{}_{}_metadata.json'.format(image_name, tag)
         metafile = os.path.join(meta_dir_name, metafile)
 
-        cmd = [image_update_script_path, "-r", registry, "-i", image_name, "-t", tag, "-c", cosign_password,
-               "-f", metafile, "-m", multiarch, "-u", username, "-p", password, "--data-dir", data_dir]
+        cmd = [image_update_script_path, "-r", registry, "-i", image_name, "-t", tag, "-f", metafile]
+
+        if data_dir:
+            cmd.extend(["--data-dir", data_dir])
+
+        if username:
+            cmd.extend(["-u", username, "-p", password])
+
+        if cosign_password:
+            cmd.extend(["-c", cosign_password])
+
+        if multiarch:
+            cmd.extend(["-m", multiarch])
 
         if debug:
             cmd.append("-d")

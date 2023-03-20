@@ -11,27 +11,91 @@ username=""
 debug=0
 data_dir=$(pwd)
 
-options=$(getopt -o dr:i:t:u:p:c:m:f: -l debug,registry:,image:,tag:,username:,password:,cosign-password:,multiarch:,file:,data-dir: -- "$@")
-if [ $? -ne 0 ]; then
-   usage $0
-   exit 0
-fi
-
-eval set -- "$options"
-while :; do
-    case "$1" in
-        -r|--registry)  registry=$2; shift 2;;
-        -i|--image)   image=$2; shift 2;;
-        -t|--tag)   tag=$2; shift 2;;
-        -u|--username) username=$2; shift 2;;
-        -p|--password) username=$2; shift 2;;
-        -c|--cosign-password) cosign_password=$2; shift 2;;
-        -m|--multiarch) multiarch=$2; shift 2;;
-        -f|--file) metafile=$2; shift 2;;
-        --data-dir) data_dir=$2; shift 2;;
-        -d|--debug) debug=1; shift 1;;
-        --)         shift 1; break;;
-        *)          usage $0; exit 1;;
+while (( "$#" )); do
+    case $1 in
+        -r|--registry)
+            if [ -z "$2" ]; then
+                echo "Option registry requires an argument"
+                exit 1
+            fi
+            registry=$2;
+            shift 2
+            ;;
+        -i|--image)
+            if [ -z "$2" ]; then
+                echo "Option image requires an argument"
+                exit 1
+            fi
+            image=$2
+            shift 2
+            ;;
+        -t|--tag)
+            if [ -z "$2" ]; then
+                echo "Option tag requires an argument"
+                exit 1
+            fi
+            tag=$2
+            shift 2
+            ;;
+        -u|--username)
+            if [ -z "$2" ]; then
+                echo "Option username requires an argument"
+                exit 1
+            fi
+            username=$2
+            shift 2
+            ;;
+        -p|--password)
+            if [ -z "$2" ]; then
+                echo "Option password requires an argument"
+                exit 1
+            fi
+            password=$2
+            shift 2
+            ;;
+        -c|--cosign-password)
+            if [ -z "$2" ]; then
+                echo "Option cosign-password requires an argument"
+                exit 1
+            fi
+            cosign_password=$2
+            shift 2
+            ;;
+        -m|--multiarch)
+            if [ -z "$2" ]; then
+                echo "Option multiarch requires an argument"
+                exit 1
+            fi
+            multiarch=$2
+            shift 2
+            ;;
+        -f|--file)
+            if [ -z "$2" ]; then
+                echo "Option metafile requires an argument"
+                exit 1
+            fi
+            metafile=$2
+            shift 2
+            ;;
+        --data-dir)
+            if [ -z "$2" ]; then
+                echo "Option data-dir requires an argument"
+                exit 1
+            fi
+            data_dir=$2
+            shift 2
+            ;;
+        -d|--debug)
+            debug=1
+            shift 1
+            ;;
+        --)
+            shift 1
+            break
+            ;;
+        *)
+            break
+            ;;
     esac
 done
 
@@ -90,8 +154,8 @@ license="$(cat ${docker_docs_dir}/${image}/license.md)"
 vendor="$(cat ${docker_docs_dir}/${image}/maintainer.md)"
 logo=$(base64 -w 0 ${docker_docs_dir}/${image}/logo.png)
 echo ${repo}
-sed -i "s|%%GITHUB-REPO%%|${repo}|g" ${docker_docs_dir}/${image}/maintainer.md
-sed -i "s|%%IMAGE%%|${image}|g" ${docker_docs_dir}/${image}/content.md
+sed -i.bak "s|%%GITHUB-REPO%%|${repo}|g" ${docker_docs_dir}/${image}/maintainer.md; rm ${docker_docs_dir}/${image}/maintainer.md.bak
+sed -i.bak "s|%%IMAGE%%|${image}|g" ${docker_docs_dir}/${image}/content.md; rm ${docker_docs_dir}/${image}/content.md.bak
 doc=$(cat ${docker_docs_dir}/${image}/content.md)
 
 local_image_ref_skopeo=oci:${images_dir}:${image}-${tag}
