@@ -580,7 +580,7 @@ function TagDetails() {
                             <VulnerabilitiesDetails name={reponame} tag={tag} />
                           </TabPanel>
                           <TabPanel value="ReferredBy" className={classes.tabPanel}>
-                            <ReferredBy repoName={reponame} digest={selectedManifest?.digest} />
+                            <ReferredBy referrers={imageDetailData.referrers} />
                           </TabPanel>
                         </Grid>
                       </Grid>

@@ -1,11 +1,9 @@
-import React, { useEffect, useState, useMemo } from 'react';
+import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { isEmpty } from 'lodash';
 import { Divider, Typography, Stack } from '@mui/material';
 import ReferrerCard from '../../Shared/ReferrerCard';
 import Loading from '../../Shared/Loading';
-import { api, endpoints } from 'api';
-import { host } from '../../../host';
 import { mapReferrer } from 'utilities/objectModels';
 
 const useStyles = makeStyles(() => ({
@@ -17,36 +15,24 @@ const useStyles = makeStyles(() => ({
 }));
 
 function ReferredBy(props) {
-  const { repoName, digest } = props;
-  const [referrers, setReferrers] = useState([]);
+  const { referrers } = props;
+  const [referrersData, setReferrersData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const classes = useStyles();
-  const abortController = useMemo(() => new AbortController(), []);
 
   useEffect(() => {
-    api
-      .get(`${host()}${endpoints.referrers({ repo: repoName, digest })}`, abortController.signal)
-      .then((response) => {
-        if (response.data && response.data.data) {
-          let referrersData = response.data.data.Referrers?.map((referrer) => mapReferrer(referrer));
-          if (!isEmpty(referrersData)) {
-            setReferrers(referrersData);
-          }
-        }
-        setIsLoading(false);
-      })
-      .catch((e) => {
-        console.error(e);
-        setIsLoading(false);
-      });
-    return () => {
-      abortController.abort();
-    };
+    if (!isEmpty(referrers)) {
+      const mappedReferrersData = referrers.map((referrer) => mapReferrer(referrer));
+      setReferrersData(mappedReferrersData);
+    } else {
+      setReferrersData([]);
+    }
+    setIsLoading(false);
   }, []);
 
   const renderReferrers = () => {
-    return !isEmpty(referrers) ? (
-      referrers.map((referrer, index) => {
+    return !isEmpty(referrersData) ? (
+      referrersData.map((referrer, index) => {
         return (
           <ReferrerCard
             key={index}
@@ -61,16 +47,6 @@ function ReferredBy(props) {
     ) : (
       <div>{!isLoading && <Typography className={classes.none}> Nothing found </Typography>}</div>
     );
-  };
-
-  const renderListBottom = () => {
-    if (isLoading) {
-      return <Loading />;
-    }
-    if (!isLoading) {
-      return <div />;
-    }
-    return;
   };
 
   return (
@@ -95,8 +71,7 @@ function ReferredBy(props) {
       />
       <Stack direction="column" spacing={2}>
         <Stack direction="column" spacing={2}>
-          {renderReferrers()}
-          {renderListBottom()}
+          {isLoading ? <Loading /> : renderReferrers()}
         </Stack>
       </Stack>
     </div>
