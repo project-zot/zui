@@ -269,7 +269,7 @@ function Explore({ searchInputValue }) {
     if (!isLoading && !isEndOfList) {
       return <div ref={listBottom} />;
     }
-    return '';
+    return;
   };
 
   return (

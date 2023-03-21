@@ -5,16 +5,17 @@ import { api, endpoints } from '../../../api';
 
 // components
 import Collapse from '@mui/material/Collapse';
-import { Box, Card, CardContent, Divider, Stack, Typography } from '@mui/material';
+import { Box, Card, CardContent, Divider, Stack, Typography, InputBase } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../../../host';
-import { isEmpty } from 'lodash';
+import { debounce, isEmpty } from 'lodash';
 import { Link } from 'react-router-dom';
 import Loading from '../../Shared/Loading';
 import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
 import { VulnerabilityChipCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { mapCVEInfo } from 'utilities/objectModels';
 import { CVE_FIXEDIN_PAGE_SIZE, EXPLORE_PAGE_SIZE } from 'utilities/paginationConstants';
+import SearchIcon from '@mui/icons-material/Search';
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -81,6 +82,25 @@ const useStyles = makeStyles(() => ({
     fontWeight: '600',
     cursor: 'pointer',
     textAlign: 'center'
+  },
+  search: {
+    position: 'relative',
+    minWidth: '100%',
+    flexDirection: 'row',
+    marginBottom: '1.7rem',
+    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
+    border: '0.125rem solid #E7E7E7',
+    borderRadius: '1rem',
+    zIndex: 1155
+  },
+  searchIcon: {
+    color: '#52637A',
+    paddingRight: '3%'
+  },
+  input: {
+    color: '#464141',
+    marginLeft: 1,
+    width: '90%'
   }
 }));
 
@@ -236,27 +256,27 @@ function VulnerabilitiesDetails(props) {
   const { name, tag } = props;
 
   // pagination props
+  const [cveFilter, setCveFilter] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const [isEndOfList, setIsEndOfList] = useState(false);
   const listBottom = useRef(null);
 
   const getPaginatedCVEs = () => {
-    setIsLoading(true);
     api
       .get(
-        `${host()}${endpoints.vulnerabilitiesForRepo(`${name}:${tag}`, { pageNumber, pageSize: EXPLORE_PAGE_SIZE })}`,
+        `${host()}${endpoints.vulnerabilitiesForRepo(
+          `${name}:${tag}`,
+          { pageNumber, pageSize: EXPLORE_PAGE_SIZE },
+          cveFilter
+        )}`,
         abortController.signal
       )
       .then((response) => {
         if (response.data && response.data.data) {
           let cveInfo = response.data.data.CVEListForImage?.CVEList;
           let cveListData = mapCVEInfo(cveInfo);
-          const newCVEList = [...cveData, ...cveListData];
-          setCveData(newCVEList);
-          setIsEndOfList(
-            response.data.data.CVEListForImage.Page?.ItemCount < EXPLORE_PAGE_SIZE ||
-              newCVEList.length >= response.data.data.CVEListForImage?.Page?.TotalCount
-          );
+          setCveData((previousState) => (pageNumber === 1 ? cveListData : [...previousState, ...cveListData]));
+          setIsEndOfList(response.data.data.CVEListForImage.Page?.ItemCount < EXPLORE_PAGE_SIZE);
         } else if (response.data.errors) {
           setIsEndOfList(true);
         }
@@ -270,11 +290,25 @@ function VulnerabilitiesDetails(props) {
       });
   };
 
+  const resetPagination = () => {
+    setIsLoading(true);
+    setIsEndOfList(false);
+    if (pageNumber !== 1) {
+      setPageNumber(1);
+    } else {
+      getPaginatedCVEs();
+    }
+  };
+
+  const handleCveFilterChange = (e) => {
+    const { value } = e.target;
+    setCveFilter(value);
+  };
+
+  const debouncedChangeHandler = useMemo(() => debounce(handleCveFilterChange, 300));
+
   useEffect(() => {
     getPaginatedCVEs();
-    return () => {
-      abortController.abort();
-    };
   }, [pageNumber]);
 
   // setup intersection obeserver for infinite scroll
@@ -301,6 +335,18 @@ function VulnerabilitiesDetails(props) {
       intersectionObserver.disconnect();
     };
   }, [isLoading, isEndOfList]);
+
+  useEffect(() => {
+    if (isLoading) return;
+    resetPagination();
+  }, [cveFilter]);
+
+  useEffect(() => {
+    return () => {
+      abortController.abort();
+      debouncedChangeHandler.cancel();
+    };
+  }, []);
 
   const renderCVEs = () => {
     return !isEmpty(cveData) ? (
@@ -347,6 +393,17 @@ function VulnerabilitiesDetails(props) {
           width: '100%'
         }}
       />
+      <Stack className={classes.search} direction="row" alignItems="center" justifyContent="space-between" spacing={2}>
+        <InputBase
+          style={{ paddingLeft: 10, height: 46, color: 'rgba(0, 0, 0, 0.6)' }}
+          placeholder={'Search for Vulnerabilities...'}
+          className={classes.input}
+          onChange={debouncedChangeHandler}
+        />
+        <div className={classes.searchIcon}>
+          <SearchIcon />
+        </div>
+      </Stack>
       <Stack direction="column" spacing={2}>
         <Stack direction="column" spacing={2}>
           {renderCVEs()}

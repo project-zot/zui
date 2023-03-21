@@ -1,4 +1,5 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import VulnerabilitiesDetails from 'components/Tag/Tabs/VulnerabilitiesDetails';
 import React from 'react';
@@ -432,6 +433,14 @@ const mockCVEList = {
   }
 };
 
+const mockCVEListFiltered = {
+  CVEListForImage: {
+    Tag: '',
+    Page: { ItemCount: 20, TotalCount: 20 },
+    CVEList: mockCVEList.CVEListForImage.CVEList.filter((e) => e.Id.includes('2022'))
+  }
+};
+
 const mockCVEFixed = {
   pageOne: {
     ImageListWithCVEFixed: {
@@ -486,6 +495,16 @@ describe('Vulnerabilties page', () => {
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
     await waitFor(() => expect(screen.getAllByText(/fixed in/i)).toHaveLength(20));
+  });
+
+  it('sends filtered query if user types in the search bar', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
+    render(<StateVulnerabilitiesWrapper />);
+    const cveSearchInput = screen.getByPlaceholderText(/search for/i);
+    jest.spyOn(api, 'get').mockRejectedValueOnce({ status: 200, data: { data: mockCVEListFiltered } });
+    await userEvent.type(cveSearchInput, '2022');
+    expect((await screen.queryAllByText(/2023/i).length) === 0);
+    expect((await screen.findAllByText(/2022/i)).length === 6);
   });
 
   it('renders no vulnerabilities if there are not any', async () => {
