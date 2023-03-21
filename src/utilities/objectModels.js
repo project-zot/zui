@@ -44,6 +44,7 @@ const mapToImage = (responseImage) => {
     repoName: responseImage.RepoName,
     tag: responseImage.Tag,
     manifests: responseImage.Manifests?.map((manifest) => mapToManifest(manifest)) || [],
+    referrers: responseImage.Referrers,
     size: responseImage.Size,
     downloadCount: responseImage.DownloadCount,
     lastUpdated: responseImage.LastUpdated,
