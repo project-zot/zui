@@ -1,5 +1,5 @@
 // react global
-import React from 'react';
+import React, { useRef } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 
 // utility
@@ -104,6 +104,7 @@ const useStyles = makeStyles(() => ({
 function RepoCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
+  const placeholderImage = useRef(randomImage());
   const { name, vendor, platforms, description, downloads, isSigned, lastUpdated, logo, version, vulnerabilityData } =
     props;
 
@@ -166,7 +167,7 @@ function RepoCard(props) {
                     img: classes.avatar
                   }}
                   component="img"
-                  image={!isEmpty(logo) ? `data:image/png;base64, ${logo}` : randomImage()}
+                  image={!isEmpty(logo) ? `data:image/png;base64, ${logo}` : placeholderImage.current}
                   alt="icon"
                 />
                 <Tooltip title={name} placement="top">
