@@ -217,6 +217,7 @@ function TagDetails() {
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('Layers');
   const [selectedPullTab, setSelectedPullTab] = useState('');
+  const placeholderImage = useRef(randomImage());
   const abortController = useMemo(() => new AbortController(), []);
   const mounted = useRef(false);
   const navigate = useNavigate();
@@ -331,7 +332,7 @@ function TagDetails() {
                         image={
                           !isEmpty(imageDetailData?.logo)
                             ? `data:image/  png;base64, ${imageDetailData?.logo}`
-                            : randomImage()
+                            : placeholderImage.current
                         }
                         alt="icon"
                       />

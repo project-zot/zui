@@ -1,5 +1,5 @@
 // react global
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 // utility
 import { api, endpoints } from '../../api';
@@ -154,7 +154,7 @@ const randomImage = () => {
 function RepoDetails() {
   const [repoDetailData, setRepoDetailData] = useState({});
   const [tags, setTags] = useState([]);
-
+  const placeholderImage = useRef(randomImage());
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('Overview');
   // get url param from <Route here (i.e. image name)
@@ -261,7 +261,7 @@ function RepoDetails() {
                       image={
                           !isEmpty(repoDetailData?.logo)
                             ? `data:image/png;base64, ${repoDetailData?.logo}`
-                            : randomImage()
+                            : placeholderImage.current
                         }
                         alt="icon"
                       />
