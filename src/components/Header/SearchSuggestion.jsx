@@ -14,31 +14,30 @@ import { HEADER_SEARCH_PAGE_SIZE } from 'utilities/paginationConstants';
 const useStyles = makeStyles(() => ({
   searchContainer: {
     display: 'inline-block',
-    backgroundColor: '#FFFFFF',
-    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
-    borderRadius: '2.5rem',
-    minWidth: '60%',
-    marginLeft: 16,
+    backgroundColor: '#2B3A4E',
+    boxShadow: '0 0.313rem 0.625rem rgba(131, 131, 131, 0.08)',
+    borderRadius: '0.625rem',
+    minWidth: '100%',
     position: 'relative',
     zIndex: 1150
   },
+  searchContainerFocused: {
+    backgroundColor: '#FFFFFF'
+  },
   search: {
     position: 'relative',
-    minWidth: '100%',
     flexDirection: 'row',
     boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
-    border: '0.125rem solid #E7E7E7',
-    borderRadius: '2.5rem',
+    border: '0.063rem solid #8A96A8',
+    borderRadius: '0.625rem',
     zIndex: 1155
   },
+  searchFocused: {
+    border: '0.125rem solid #E0E5EB',
+    backgroundColor: '#FFFFF'
+  },
   searchFailed: {
-    position: 'relative',
-    minWidth: '100%',
-    flexDirection: 'row',
-    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
-    border: '0.125rem solid #ff0303',
-    borderRadius: '2.5rem',
-    zIndex: 1155
+    border: '0.125rem solid #ff0303'
   },
   resultsWrapper: {
     margin: '0',
@@ -47,15 +46,18 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#FFFFFF',
+    backgroundColor: '#2B3A4E',
     boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
-    borderBottomLeftRadius: '2.5rem',
-    borderBottomRightRadius: '2.5rem',
+    borderBottomLeftRadius: '0.625rem',
+    borderBottomRightRadius: '0.625rem',
     // border: '0.125rem solid #E7E7E7',
     borderTop: 0,
     width: '100%',
     overflowY: 'auto',
     zIndex: 1
+  },
+  resultsWrapperFocused: {
+    backgroundColor: '#FFFFFF'
   },
   resultsWrapperHidden: {
     display: 'none'
@@ -66,9 +68,19 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer'
   },
   input: {
-    color: '#464141',
     marginLeft: 1,
-    width: '90%'
+    width: '90%',
+    paddingLeft: 10,
+    height: '40px',
+    fontSize: '1rem',
+    backgroundColor: '#2B3A4E',
+    borderRadius: '0.625rem',
+    color: '#8A96A8'
+  },
+  inputFocused: {
+    backgroundColor: '#FFFFFF',
+    borderRadius: '0.625rem',
+    color: 'rgba(0, 0, 0, 0.6);'
   },
   searchItem: {
     alignItems: 'center',
@@ -102,6 +114,7 @@ function SearchSuggestion({ setSearchCurrentValue = () => {} }) {
   const search = queryParams.get('search') || '';
   const [isLoading, setIsLoading] = useState(false);
   const [isFailedSearch, setIsFailedSearch] = useState(false);
+  const [isComponentFocused, setIsComponentFocused] = useState(false);
   const navigate = useNavigate();
   const abortController = useMemo(() => new AbortController(), []);
 
@@ -217,14 +230,17 @@ function SearchSuggestion({ setSearchCurrentValue = () => {} }) {
     getComboboxProps,
     isOpen,
     openMenu
-    // closeMenu
   } = useCombobox({
     items: suggestionData,
     onInputValueChange: handleSeachChange,
     onSelectedItemChange: handleSuggestionSelected,
     initialInputValue: !isEmpty(searchQuery) ? searchQuery : search,
-    itemToString: (item) => item.name ?? item
+    itemToString: (item) => item?.name || item
   });
+
+  useEffect(() => {
+    setIsComponentFocused(isOpen);
+  }, [isOpen]);
 
   const renderSuggestions = () => {
     return suggestionData.map((suggestion, index) => (
@@ -253,9 +269,11 @@ function SearchSuggestion({ setSearchCurrentValue = () => {} }) {
   };
 
   return (
-    <div className={classes.searchContainer}>
+    <div className={`${classes.searchContainer} ${isComponentFocused && classes.searchContainerFocused}`}>
       <Stack
-        className={isFailedSearch && !isLoading ? classes.searchFailed : classes.search}
+        className={`${classes.search} ${isComponentFocused && classes.searchFocused} ${
+          isFailedSearch && !isLoading && classes.searchFailed
+        }`}
         direction="row"
         alignItems="center"
         justifyContent="space-between"
@@ -263,9 +281,8 @@ function SearchSuggestion({ setSearchCurrentValue = () => {} }) {
         {...getComboboxProps()}
       >
         <InputBase
-          style={{ paddingLeft: 10, height: 46, color: 'rgba(0, 0, 0, 0.6)' }}
           placeholder={'Search for content...'}
-          className={classes.input}
+          className={`${classes.input} ${isComponentFocused && classes.inputFocused}`}
           onKeyUp={handleSearch}
           onFocus={() => openMenu()}
           {...getInputProps()}
@@ -276,7 +293,11 @@ function SearchSuggestion({ setSearchCurrentValue = () => {} }) {
       </Stack>
       <List
         {...getMenuProps()}
-        className={isOpen && !isLoading && !isFailedSearch ? classes.resultsWrapper : classes.resultsWrapperHidden}
+        className={
+          isOpen && !isLoading && !isFailedSearch
+            ? `${classes.resultsWrapper} ${isComponentFocused && classes.resultsWrapperFocused}`
+            : classes.resultsWrapperHidden
+        }
       >
         {isOpen && suggestionData?.length > 0 && renderSuggestions()}
         {isOpen && isEmpty(searchQuery) && isEmpty(suggestionData) && (

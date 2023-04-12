@@ -4,6 +4,7 @@ import Home from 'components/Home/Home';
 import React from 'react';
 import { createSearchParams } from 'react-router-dom';
 import { sortByCriteria } from 'utilities/sortCriteria';
+import MockThemeProvier from '__mocks__/MockThemeProvider';
 
 // useNavigate mock
 const mockedUsedNavigate = jest.fn();
@@ -11,6 +12,14 @@ jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
   useNavigate: () => mockedUsedNavigate
 }));
+
+const HomeWrapper = () => {
+  return (
+    <MockThemeProvier>
+      <Home />
+    </MockThemeProvier>
+  );
+};
 
 const mockImageList = {
   GlobalSearch: {
@@ -126,7 +135,7 @@ describe('Home component', () => {
   it('fetches image data and renders popular, bookmarks and recently updated', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListRecent } });
-    render(<Home />);
+    render(<HomeWrapper />);
     await waitFor(() => expect(screen.getAllByText(/alpine/i)).toHaveLength(2));
     await waitFor(() => expect(screen.getAllByText(/mongo/i)).toHaveLength(2));
     await waitFor(() => expect(screen.getAllByText(/node/i)).toHaveLength(1));
@@ -135,7 +144,7 @@ describe('Home component', () => {
   it('renders signature icons', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListRecent } });
-    render(<Home />);
+    render(<HomeWrapper />);
     expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(2);
     expect(await screen.findAllByTestId('verified-icon')).toHaveLength(3);
   });
@@ -143,7 +152,7 @@ describe('Home component', () => {
   it('renders vulnerability icons', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListRecent } });
-    render(<Home />);
+    render(<HomeWrapper />);
     expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(2);
     expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(2);
     expect(await screen.findAllByTestId('critical-vulnerability-icon')).toHaveLength(1);
@@ -152,14 +161,14 @@ describe('Home component', () => {
   it("should log an error when data can't be fetched", async () => {
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-    render(<Home />);
+    render(<HomeWrapper />);
     await waitFor(() => expect(error).toBeCalledTimes(2));
   });
 
   it('should redirect to explore page when clicking view all popular', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListRecent } });
-    render(<Home />);
+    render(<HomeWrapper />);
     const viewAllButtons = await screen.findAllByText(/view all/i);
     expect(viewAllButtons).toHaveLength(2);
     fireEvent.click(viewAllButtons[0]);
