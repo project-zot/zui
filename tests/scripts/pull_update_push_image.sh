@@ -224,6 +224,25 @@ else
     echo '{"trivy":[]}' > ${trivy_out_file}
 fi
 
+layers_file=manifests-${image}-${tag}.json
+rm -f ${layers_file}
+
+if [ -z "${multiarch}" ]; then
+    regctl manifest --format raw-body get ${local_image_ref_regtl} | jq '{ manifests: { default: { layers: [ .layers[].digest ] } } }' > ${layers_file}
+else
+    manifests=$(regctl manifest --format raw-body get ${local_image_ref_regtl} | jq '[ .manifests[] | { "digest":.digest, "platform":(.platform | [ .os, .architecture, .variant ] | map(select(.!=null)) | join("/") )} ] ')
+
+    echo $manifests | jq -c '.[]' | while read i; do
+        digest=$(echo $i | jq -r '.digest')
+        platform=$(echo $i | jq -r '.platform')
+        regctl manifest --format raw-body get ocidir://${images_dir}@${digest} | jq --arg platform "${platform}" '{ manifests: { ($platform): { layers: [ .layers[].digest ] } } }' >> layers-${image}-${tag}-${digest//:/_}.json
+    done
+
+    jq -n '{ manifests: [ inputs.manifests ] | add }' layers-${image}-${tag}*.json > ${layers_file}
+    rm -f layers-${image}-${tag}*.json
+fi
+
+
 # Sign new updated image
 COSIGN_PASSWORD=${cosign_password} cosign sign ${remote_dest_image_ref} --key ${cosign_key_path} --allow-insecure-registry
 if [ $? -ne 0 ]; then
@@ -242,5 +261,5 @@ jq -n \
     --arg org.opencontainers.image.documentation "${description}" \
     '$ARGS.named' > ${details_file}
 
-jq -c -s add ${details_file} ${trivy_out_file} > ${metafile}
-rm ${details_file} ${trivy_out_file}
+jq -c -s add ${details_file} ${trivy_out_file} ${layers_file} > ${metafile}
+rm ${details_file} ${trivy_out_file} ${layers_file}
