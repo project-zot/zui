@@ -3,16 +3,17 @@ import React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
 // components
-import { AppBar, Toolbar, Stack, Grid } from '@mui/material';
+import { AppBar, Toolbar, Grid } from '@mui/material';
 
 // styling
 import makeStyles from '@mui/styles/makeStyles';
-import logo from '../../assets/zotLogo.svg';
-import logoxs from '../../assets/zotLogoSmall.png';
+import logo from '../../assets/zotLogoWhite.svg';
+import logoxs from '../../assets/zotLogoWhiteSmall.svg';
+import githubLogo from '../../assets/Git.png';
 import { useState, useEffect } from 'react';
 import SearchSuggestion from './SearchSuggestion';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   barOpen: {
     position: 'sticky',
     minHeight: '10%'
@@ -28,7 +29,7 @@ const useStyles = makeStyles(() => ({
     alignItems: 'center',
     justifyContent: 'center',
     padding: 0,
-    backgroundColor: '#fff',
+    backgroundColor: '#0F2139',
     height: '100%',
     width: '100%',
     borderBottom: '0.0625rem solid #BDBDBD',
@@ -58,20 +59,41 @@ const useStyles = makeStyles(() => ({
   logoWrapper: {},
   logo: {
     maxWidth: '130px',
-    maxHeight: '50px'
+    maxHeight: '30px'
   },
-  userAvatar: {
-    height: 46,
-    width: 46
+  headerLinkContainer: {
+    [theme.breakpoints.down('md')]: {
+      display: 'none'
+    }
   },
   link: {
-    color: '#000'
+    color: '#F6F7F9',
+    fontSize: '1rem',
+    fontWeight: 600
   },
   grid: {
     display: 'flex',
     flexDirection: 'row',
     justifyContent: 'center',
+    alignItems: 'center',
+    height: '2.875rem',
+    [theme.breakpoints.down('md')]: {
+      justifyContent: 'space-between'
+    }
+  },
+  gridItem: {
+    display: 'flex',
+    justifyContent: 'center',
     alignItems: 'center'
+  },
+  signInBtn: {
+    border: '1px solid #F6F7F9',
+    borderRadius: '0.625rem',
+    backgroundColor: 'transparent',
+    color: '#F6F7F9',
+    fontSize: '1rem',
+    textTransform: 'none',
+    fontWeight: 600
   }
 }));
 
@@ -109,26 +131,45 @@ function Header({ setSearchCurrentValue = () => {} }) {
   const path = useLocation().pathname;
 
   return (
-    <AppBar position={show ? 'fixed' : 'absolute'} sx={{ height: '10vh' }}>
+    <AppBar position={show ? 'fixed' : 'absolute'} sx={{ height: '5rem' }}>
       <Toolbar className={classes.header}>
-        <Stack direction="row" alignItems="center" justifyContent="space-between" className={classes.headerContainer}>
-          <Grid container className={classes.grid}>
-            <Grid item xs={2} sx={{ display: 'flex', justifyContent: 'start' }}>
-              <Link to="/home" className={classes.grid}>
+        <Grid container className={classes.grid}>
+          <Grid item container xs={3} md={4} spacing="1.5rem" className={classes.gridItem}>
+            <Grid item>
+              <Link to="/home">
                 <picture>
                   <source media="(min-width:600px)" srcSet={logo} />
                   <img alt="zot" src={logoxs} className={classes.logo} />
                 </picture>
               </Link>
             </Grid>
-            <Grid item xs={8}>
-              {path !== '/' && <SearchSuggestion setSearchCurrentValue={setSearchCurrentValue} />}
+            <Grid item className={classes.headerLinkContainer}>
+              <a className={classes.link} href="https://zotregistry.io" target="_blank" rel="noreferrer">
+                Product
+              </a>
             </Grid>
-            <Grid item md={2} xs={0}>
-              <div>{''}</div>
+            <Grid item className={classes.headerLinkContainer}>
+              <a
+                className={classes.link}
+                href="https://zotregistry.io/v1.4.3/general/concepts/"
+                target="_blank"
+                rel="noreferrer"
+              >
+                Docs
+              </a>
             </Grid>
           </Grid>
-        </Stack>
+          <Grid item xs={6} md={4} className={classes.gridItem}>
+            {path !== '/' && <SearchSuggestion setSearchCurrentValue={setSearchCurrentValue} />}
+          </Grid>
+          <Grid item container xs={2} md={3} spacing="1.5rem" className={`${classes.gridItem}`}>
+            <Grid item className={classes.headerLinkContainer}>
+              <a className={classes.link} href="https://github.com/project-zot/zot" target="_blank" rel="noreferrer">
+                <img alt="github repository" src={githubLogo} className={classes.logo} />
+              </a>
+            </Grid>
+          </Grid>
+        </Grid>
       </Toolbar>
     </AppBar>
   );

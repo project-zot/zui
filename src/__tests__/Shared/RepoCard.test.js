@@ -3,6 +3,7 @@ import React from 'react';
 import userEvent from '@testing-library/user-event';
 import RepoCard from 'components/Shared/RepoCard';
 import { createSearchParams } from 'react-router-dom';
+import MockThemeProvier from '__mocks__/MockThemeProvider';
 
 // usenavigate mock
 const mockedUsedNavigate = jest.fn();
@@ -24,6 +25,23 @@ const mockImage = {
   platforms: [{ Os: 'linux', Arch: 'amd64' }]
 };
 
+const RepoCardWrapper = (props) => {
+  const { image } = props;
+  return (
+    <MockThemeProvier>
+      <RepoCard
+        name={image.name}
+        version={image.latestVersion}
+        description={image.description}
+        vendor={image.vendor}
+        key={1}
+        lastUpdated={image.lastUpdated}
+        platforms={image.platforms}
+      />
+    </MockThemeProvier>
+  );
+};
+
 afterEach(() => {
   // restore the spy created with spyOn
   jest.restoreAllMocks();
@@ -31,16 +49,7 @@ afterEach(() => {
 
 describe('Repo card component', () => {
   it('navigates to repo page when clicked', async () => {
-    render(
-      <RepoCard
-        name={mockImage.name}
-        version={mockImage.latestVersion}
-        description={mockImage.description}
-        vendor={mockImage.vendor}
-        key={1}
-        lastUpdated={mockImage.lastUpdated}
-      />
-    );
+    render(<RepoCardWrapper image={mockImage} />);
     const cardTitle = await screen.findByText('alpine');
     expect(cardTitle).toBeInTheDocument();
     userEvent.click(cardTitle);
@@ -48,15 +57,7 @@ describe('Repo card component', () => {
   });
 
   it('renders placeholders for missing data', async () => {
-    render(
-      <RepoCard
-        name={mockImage.name}
-        version={mockImage.latestVersion}
-        description={mockImage.description}
-        vendor={mockImage.vendor}
-        key={1}
-      />
-    );
+    render(<RepoCardWrapper image={{ ...mockImage, lastUpdated: '' }} />);
     const cardTitle = await screen.findByText('alpine');
     expect(cardTitle).toBeInTheDocument();
     userEvent.click(cardTitle);
@@ -65,17 +66,7 @@ describe('Repo card component', () => {
   });
 
   it('navigates to explore page when platform chip is clicked', async () => {
-    render(
-      <RepoCard
-        name={mockImage.name}
-        version={mockImage.latestVersion}
-        description={mockImage.description}
-        vendor={mockImage.vendor}
-        key={1}
-        lastUpdated={mockImage.lastUpdated}
-        platforms={mockImage.platforms}
-      />
-    );
+    render(<RepoCardWrapper image={mockImage} />);
     const osChip = await screen.findByText(/linux/i);
     fireEvent.click(osChip);
     expect(mockedUsedNavigate).toHaveBeenCalledWith({

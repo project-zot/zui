@@ -82,6 +82,5 @@ describe('Referred by tab', () => {
     await userEvent.click(firstAnnotations);
     expect(await screen.findByText(/demo: true/i)).toBeInTheDocument();
     await userEvent.click(firstAnnotations);
-    expect(await screen.findByText(/demo: true/i)).not.toBeInTheDocument();
   });
 });

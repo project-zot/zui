@@ -40,8 +40,13 @@ const useStyles = makeStyles(() => ({
   },
   sectionTitle: {
     fontWeight: '700',
-    color: '#000000DE',
-    width: '100%'
+    color: '#0F2139',
+    width: '100%',
+    fontSize: '2rem',
+    textAlign: 'center',
+    lineHeight: '2.375rem',
+    letterSpacing: '-0.01rem',
+    marginLeft: '0.5rem'
   },
   subtitle: {
     color: '#00000099',
@@ -53,9 +58,12 @@ const useStyles = makeStyles(() => ({
     width: '65%'
   },
   viewAll: {
-    color: '#00000099',
+    color: '#52637A',
+    fontWeight: '600',
+    fontSize: '1rem',
+    lineHeight: '1.5rem',
     cursor: 'pointer',
-    textAlign: 'left'
+    marginRight: '0.5rem'
   }
 }));
 
@@ -191,7 +199,7 @@ function Home() {
       {isLoading ? (
         <Loading />
       ) : (
-        <Stack spacing={4} alignItems="center" className={classes.gridWrapper}>
+        <Stack alignItems="center" className={classes.gridWrapper}>
           <Stack
             justifyContent="space-between"
             alignItems={{ xs: 'flex-start', md: 'flex-end' }}
@@ -203,8 +211,10 @@ function Home() {
                 Most popular images
               </Typography>
             </div>
-            <div className={classes.viewAll} onClick={() => handleClickViewAll(sortByCriteria.downloads.value)}>
-              <Typography variant="body2">View all</Typography>
+            <div onClick={() => handleClickViewAll(sortByCriteria.downloads.value)}>
+              <Typography variant="body2" className={classes.viewAll}>
+                View all
+              </Typography>
             </div>
           </Stack>
           {renderMostPopular()}

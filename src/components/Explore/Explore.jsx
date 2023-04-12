@@ -60,6 +60,11 @@ const useStyles = makeStyles((theme) => ({
     [theme.breakpoints.up('md')]: {
       display: 'none'
     }
+  },
+  filterCardsContainer: {
+    [theme.breakpoints.down('md')]: {
+      display: 'none'
+    }
   }
 }));
 
@@ -311,7 +316,7 @@ function Explore({ searchInputValue }) {
           </Grid>
         </Grid>
         <Grid container item xs={12} spacing={5} pt={1}>
-          <Grid item xs={3} md={3} className="hide-on-mobile">
+          <Grid item xs={3} md={3} className={classes.filterCardsContainer}>
             <Sticky>{renderFilterCards()}</Sticky>
           </Grid>
           <Grid item xs={12} md={9}>

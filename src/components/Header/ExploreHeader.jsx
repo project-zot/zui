@@ -19,7 +19,7 @@ const useStyles = makeStyles((theme) => {
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
-      justifyContent: 'space-between',
+      justifyContent: 'flex-start',
       padding: '2rem',
       [theme.breakpoints.down('md')]: {
         padding: '1rem'
@@ -27,7 +27,8 @@ const useStyles = makeStyles((theme) => {
     },
     explore: {
       color: '#52637A',
-      fontSize: '1rem',
+      fontSize: '0.813rem',
+      fontWeight: '600',
       letterSpacing: '0.009375rem',
       [theme.breakpoints.down('md')]: {
         fontSize: '0.8rem'
@@ -49,7 +50,7 @@ function ExploreHeader() {
   return (
     <div className={classes.exploreHeader}>
       <ArrowBackIcon
-        sx={{ color: '#14191F', fontSize: { xs: '1.5rem', md: '2rem' }, cursor: 'pointer' }}
+        sx={{ color: '#52637A', marginRight: '1.75rem', fontSize: { xs: '1.5rem', md: '2rem' }, cursor: 'pointer' }}
         onClick={() => navigate(-1)}
       />
       <Breadcrumbs separator="/" aria-label="breadcrumb">

@@ -525,7 +525,7 @@ describe('Vulnerabilties page', () => {
     await waitFor(() =>
       expect(screen.getAllByText(/CPAN 2.28 allows Signature Verification Bypass./i)).toHaveLength(1)
     );
-    fireEvent.click(openText[0]);
+    await fireEvent.click(openText[0]);
     await waitFor(() =>
       expect(screen.queryByText(/CPAN 2.28 allows Signature Verification Bypass./i)).not.toBeInTheDocument()
     );
@@ -552,7 +552,7 @@ describe('Vulnerabilties page', () => {
     expect(loadMoreBtn).toBeInTheDocument();
     await fireEvent.click(loadMoreBtn);
     await waitFor(() => expect(loadMoreBtn).not.toBeInTheDocument());
-    await expect(await screen.findByText('latest')).toBeInTheDocument();
+    expect(await screen.findByText('latest')).toBeInTheDocument();
   });
 
   it('should handle fixed CVE query errors', async () => {

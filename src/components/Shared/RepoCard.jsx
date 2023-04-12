@@ -5,7 +5,18 @@ import { useNavigate, createSearchParams } from 'react-router-dom';
 // utility
 import { DateTime } from 'luxon';
 // components
-import { Card, CardActionArea, CardMedia, CardContent, Typography, Stack, Chip, Grid, Tooltip } from '@mui/material';
+import {
+  Card,
+  CardActionArea,
+  CardMedia,
+  CardContent,
+  Typography,
+  Stack,
+  Chip,
+  Grid,
+  Tooltip,
+  useMediaQuery
+} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 
 // placeholder images
@@ -17,6 +28,7 @@ import repocube4 from '../../assets/repocube-4.png';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import { isEmpty, uniq } from 'lodash';
+import { useTheme } from '@emotion/react';
 
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
@@ -30,22 +42,22 @@ const randomImage = () => {
 
 const useStyles = makeStyles(() => ({
   card: {
-    marginBottom: 2,
+    marginTop: '1rem',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
     borderColor: '#FFFFFF',
-    borderRadius: '1.5rem',
+    borderRadius: '0.75rem',
+    boxShadow: '0rem 0.313rem 0.625rem rgba(131, 131, 131, 0.08)',
     flex: 'none',
     alignSelf: 'stretch',
     flexGrow: 0,
-    order: 0,
     width: '100%',
     maxWidth: '72rem',
     '&:hover': {
       boxShadow: '0rem 1.1875rem 1.4375rem rgba(131, 131, 131, 0.19)',
-      borderRadius: '1.5rem'
+      borderRadius: '0.75rem'
     }
   },
   avatar: {
@@ -56,7 +68,7 @@ const useStyles = makeStyles(() => ({
   cardBtn: {
     height: '100%',
     width: '100%',
-    borderRadius: '1.5rem',
+    borderRadius: '0.75rem',
     borderColor: '#FFFFFF',
     '&:hover $focusHighlight': {
       opacity: 0
@@ -71,12 +83,27 @@ const useStyles = makeStyles(() => ({
     color: '#606060',
     maxHeight: '9.25rem',
     backgroundColor: '#FFFFFF',
+    padding: '1.188rem 1rem',
     '&:hover': {
       backgroundColor: '#FFFFFF'
     }
   },
   contentRight: {
     height: '100%'
+  },
+  contentRightLabel: {
+    fontSize: '0.75rem',
+    lineHeight: '1.125rem',
+    color: '#52637A',
+    textAlign: 'end'
+  },
+  contentRightValue: {
+    fontSize: '0.75rem',
+    lineHeight: '1.125rem',
+    fontWeight: '600',
+    color: '#14191F',
+    textAlign: 'end',
+    marginLeft: '0.5rem'
   },
   signedBadge: {
     color: '#9ccc65',
@@ -86,18 +113,42 @@ const useStyles = makeStyles(() => ({
   },
   vendor: {
     color: '#14191F',
-    fontSize: '1rem',
+    fontSize: '0.75rem',
     maxWidth: '50%',
-    textOverflow: 'ellipsis'
+    textOverflow: 'ellipsis',
+    lineHeight: '1.125rem'
+  },
+  description: {
+    color: '#52637A',
+    fontSize: '1rem',
+    lineHeight: '1.5rem',
+    textOverflow: 'ellipsis',
+    marginBottom: 0,
+    paddingTop: '1rem'
   },
   versionLast: {
     color: '#52637A',
-    fontSize: '1rem',
+    fontSize: '0.75rem',
+    lineHeight: '1.125rem',
     textOverflow: 'ellipsis'
   },
   cardTitle: {
     textOverflow: 'ellipsis',
-    maxWidth: '70%'
+    maxWidth: '70%',
+    fontWeight: '600',
+    color: '#0F2139',
+    lineHeight: '2rem'
+  },
+  platformChips: {
+    backgroundColor: '#E0E5EB',
+    color: '#52637A',
+    fontSize: '0.813rem',
+    lineHeight: '0.813rem',
+    borderRadius: '0.375rem',
+    padding: '0.313rem 0.625rem'
+  },
+  chipLabel: {
+    padding: '0'
   }
 }));
 
@@ -105,6 +156,11 @@ function RepoCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
   const placeholderImage = useRef(randomImage());
+  // dynamically check device size with mui media query hook
+  const theme = useTheme();
+  const isXsSize = useMediaQuery(theme.breakpoints.down('md'));
+  const MAX_PLATFORM_CHIPS = isXsSize ? 3 : 6;
+
   const { name, vendor, platforms, description, downloads, isSigned, lastUpdated, logo, version, vulnerabilityData } =
     props;
 
@@ -120,16 +176,18 @@ function RepoCard(props) {
   };
 
   const platformChips = () => {
-    const filteredPlatforms = platforms?.flatMap((platform) => [platform.Os, platform.Arch]);
-    return uniq(filteredPlatforms).map((platform, index) => (
+    const filteredPlatforms = uniq(platforms?.flatMap((platform) => [platform.Os, platform.Arch]));
+    const hiddenChips = filteredPlatforms.length - MAX_PLATFORM_CHIPS;
+    const displayedPlatforms = filteredPlatforms.slice(0, MAX_PLATFORM_CHIPS + 1);
+    if (hiddenChips > 0) displayedPlatforms.push(`+${hiddenChips} more`);
+    return displayedPlatforms.map((platform, index) => (
       <Chip
         key={`${name}${platform}${index}`}
         label={platform}
         onClick={handlePlatformChipClick}
-        sx={{
-          backgroundColor: '#E0E5EB',
-          color: '#52637A',
-          fontSize: '0.625rem'
+        className={classes.platformChips}
+        classes={{
+          label: classes.chipLabel
         }}
       />
     ));
@@ -183,14 +241,14 @@ function RepoCard(props) {
                 </div>
               </Stack>
               <Tooltip title={description || 'Description not available'} placement="top">
-                <Typography className={classes.versionLast} pt={1} sx={{ fontSize: 12 }} gutterBottom noWrap>
+                <Typography className={classes.description} pt={1} sx={{ fontSize: 12 }} gutterBottom noWrap>
                   {description || 'Description not available'}
                 </Typography>
               </Tooltip>
               <Stack alignItems="center" direction="row" spacing={1} pt={1}>
                 {platformChips()}
               </Stack>
-              <Stack alignItems="center" direction="row" spacing={1} pt={2}>
+              <Stack alignItems="center" direction="row" spacing={1} pt={'0.5rem'}>
                 <Tooltip title={getVendor()} placement="top" className="hide-on-mobile">
                   <Typography className={classes.vendor} variant="body2" noWrap>
                     {<Markdown options={{ forceInline: true }}>{getVendor()}</Markdown>}
@@ -208,19 +266,25 @@ function RepoCard(props) {
                 </Tooltip>
               </Stack>
             </Grid>
-            <Grid item xs={2} md={2} className="hide-on-mobile">
-              <Stack
-                alignItems="flex-end"
-                justifyContent="space-between"
-                direction="column"
-                className={classes.contentRight}
-              >
-                <Stack direction="column" alignItems="flex-end">
-                  <Typography variant="body2">Downloads • {!isNaN(downloads) ? downloads : `not available`}</Typography>
-                  {/* <Typography variant="body2">Rating • {rating || '-'}</Typography> */}
-                </Stack>
-                {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
-              </Stack>
+            <Grid item xs={2} md={2} className={`hide-on-mobile ${classes.contentRight}`}>
+              <Grid container item justifyContent="flex-end" textAlign="end">
+                <Grid item xs={12}>
+                  <Typography variant="body2" component="span" className={classes.contentRightLabel}>
+                    Downloads •
+                  </Typography>
+                  <Typography variant="body2" component="span" className={classes.contentRightValue}>
+                    {!isNaN(downloads) ? downloads : `not available`}
+                  </Typography>
+                </Grid>
+                {/* <Grid item xs={12}>
+                  <Typography variant="body2" component="span" className={classes.contentRightLabel}>
+                    Rating •
+                  </Typography>
+                  <Typography variant="body2" component="span" className={classes.contentRightValue}>
+                    #1
+                  </Typography>
+                </Grid> */}
+              </Grid>
             </Grid>
           </Grid>
         </CardContent>
