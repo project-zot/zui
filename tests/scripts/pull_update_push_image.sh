@@ -125,6 +125,11 @@ function verify_prerequisites {
         return 1
     fi
 
+    if [ ! command -v trivy ] &>/dev/null; then
+        echo "you need to install trivy as a prerequisite" >&3
+        return 1
+    fi
+
     if [ ! command -v jq ] &>/dev/null; then
         echo "you need to install jq as a prerequisite" >&3
         return 1
@@ -160,6 +165,7 @@ doc=$(cat ${docker_docs_dir}/${image}/content.md)
 
 local_image_ref_skopeo=oci:${images_dir}:${image}-${tag}
 local_image_ref_regtl=ocidir://${images_dir}:${image}-${tag}
+local_image_ref_trivy=${images_dir}:${image}-${tag}
 remote_src_image_ref=docker://${image}:${tag}
 remote_dest_image_ref=${registry}/${image}:${tag}
 
@@ -209,13 +215,24 @@ if [ $? -ne 0 ]; then
     exit 1
 fi
 
+trivy_out_file=trivy-${image}-${tag}.json
+if [ ! -z "${multiarch}" ]; then
+    trivy image --scanners vuln --format json --input ${local_image_ref_trivy} -o ${trivy_out_file}
+    jq -n --argfile trivy_file ${trivy_out_file}  '.trivy=$trivy_file.Results' > ${trivy_out_file}.tmp
+    mv ${trivy_out_file}.tmp ${trivy_out_file}
+else
+    echo '{"trivy":[]}' > ${trivy_out_file}
+fi
+
 # Sign new updated image
 COSIGN_PASSWORD=${cosign_password} cosign sign ${remote_dest_image_ref} --key ${cosign_key_path} --allow-insecure-registry
 if [ $? -ne 0 ]; then
     exit 1
 fi
 
-details=$(jq -n \
+details_file=details-${image}-${tag}.json
+
+jq -n \
     --arg org.opencontainers.image.title "${image}" \
     --arg org.opencontainers.image.description " $description" \
     --arg org.opencontainers.image.url "${repo}" \
@@ -223,7 +240,7 @@ details=$(jq -n \
     --arg org.opencontainers.image.licenses "${license}" \
     --arg org.opencontainers.image.vendor "${vendor}" \
     --arg org.opencontainers.image.documentation "${description}" \
-    '$ARGS.named'
-)
+    '$ARGS.named' > ${details_file}
 
-jq -n --arg image "${image}" --arg tag "${tag}"  --argjson details "${details}" '.[$image][$tag]=$details' > ${metafile}
+jq -c -s add ${details_file} ${trivy_out_file} > ${metafile}
+rm ${details_file} ${trivy_out_file}

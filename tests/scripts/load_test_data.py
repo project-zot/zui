@@ -85,9 +85,40 @@ def pull_modify_push_image(logger, registry, image_name, tag, cosign_password,
 
         with open(metafile) as f:
             image_metadata = json.load(f)
-            image_metadata[image_name][tag]["multiarch"] = multiarch
+            logger.debug("raw image metadata")
+            logger.debug(image_metadata)
+            image_metadata["multiarch"] = multiarch
+            image_metadata["cves"] = getCVEInfo(image_metadata.pop("trivy"))
 
+    logger.debug("processed image metadata")
+    logger.debug(image_metadata)
     return image_metadata
+
+def getCVEInfo(trivy_results):
+    cve_dict = {}
+
+    for result in trivy_results:
+        for vulnerability in result.get("Vulnerabilities", []):
+            cve_id = vulnerability["VulnerabilityID"]
+
+            package =  {
+                "PackageName": vulnerability.get("PkgName"),
+                "InstalledVersion": vulnerability.get("InstalledVersion"),
+                "FixedVersion": vulnerability.get("FixedVersion", "Not Specified")
+            }
+
+            if cve_dict.get(cve_id):
+                cve_dict[cve_id]["PackageList"].append(package)
+            else:
+                cve_dict[cve_id] = {
+                    "ID": cve_id,
+                    "Title": vulnerability.get("Title"),
+                    "Description": vulnerability.get("Description"),
+                    "Severity": vulnerability.get("Severity"),
+                    "PackageList": [package]
+                }
+
+    return cve_dict
 
 def main():
     args = parse_args()
@@ -137,7 +168,7 @@ def main():
             image_metadata = pull_modify_push_image(logger, registry, image_name, tag, cosign_password, multiarch, username, password, debug, data_dir)
 
             metadata.setdefault(image_name, {})
-            metadata[image_name][tag] = image_metadata[image_name][tag]
+            metadata[image_name][tag] = image_metadata
 
     with open(metadata_file, "w") as f:
         json.dump(metadata, f, indent=2)
