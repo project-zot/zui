@@ -42,7 +42,7 @@ const randomImage = () => {
 
 const useStyles = makeStyles(() => ({
   card: {
-    marginTop: '1rem',
+    marginBottom: '1rem',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',

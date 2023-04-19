@@ -3,16 +3,38 @@ import { makeStyles } from '@mui/styles';
 import { isBoolean, isArray } from 'lodash';
 import React from 'react';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     display: 'flex',
     minWidth: '15%',
     alignItems: 'flex-start',
     background: '#FFFFFF',
-    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
+    boxShadow: '0rem 0.313rem 0.625rem rgba(131, 131, 131, 0.08)',
     borderColor: '#FFFFFF',
-    borderRadius: '1.5rem',
+    borderRadius: '0.75rem',
     color: '#14191F'
+  },
+  cardContent: {
+    '&:last-child': {
+      padding: '1rem'
+    }
+  },
+  cardTitle: {
+    fontWeight: '600',
+    fontSize: '1.25rem',
+    lineHeight: '1.75rem',
+    letterSpacing: '-0.01rem',
+    marginBottom: '1rem'
+  },
+  formControl: {
+    marginLeft: '0',
+    marginRight: '0'
+  },
+  cardContentText: {
+    fontSize: '1rem',
+    color: theme.palette.secondary.dark,
+    lineHeight: '1.5rem',
+    paddingLeft: '0.5rem'
   }
 }));
 
@@ -52,8 +74,9 @@ function FilterCard(props) {
       return (
         <Tooltip key={index} title={filter.tooltip ?? filter.label} placement="top" arrow>
           <FormControlLabel
-            componentsProps={{ typography: { variant: 'body2' } }}
-            control={<Checkbox />}
+            className={classes.formControl}
+            componentsProps={{ typography: { variant: 'body2', className: classes.cardContentText } }}
+            control={<Checkbox sx={{ padding: '0.188rem', color: '#52637A' }} />}
             label={filter.label}
             id={title}
             checked={getCheckboxStatus(filter.label)}
@@ -67,8 +90,8 @@ function FilterCard(props) {
 
   return (
     <Card variant="outlined" className={classes.card}>
-      <CardContent>
-        <Typography variant="h6">{title || 'Filter Title'}</Typography>
+      <CardContent className={classes.cardContent}>
+        <Typography className={classes.cardTitle}>{title || 'Filter Title'}</Typography>
         <Stack direction="column">{getFilterRows()}</Stack>
       </CardContent>
     </Card>
