@@ -10,7 +10,7 @@ import { useNavigate, createSearchParams } from 'react-router-dom';
 import { sortByCriteria } from 'utilities/sortCriteria';
 import { HOME_POPULAR_PAGE_SIZE, HOME_RECENT_PAGE_SIZE } from 'utilities/paginationConstants';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   gridWrapper: {
     marginTop: 10,
     marginBottom: '5rem'
@@ -37,6 +37,18 @@ const useStyles = makeStyles(() => ({
     fontSize: '2.5rem',
     textAlign: 'center',
     letterSpacing: '-0.02rem'
+  },
+  sectionHeaderContainer: {
+    justifyContent: 'space-between',
+    alignItems: 'flex-start',
+    flexDirection: 'column',
+    width: '100%',
+    paddingTop: '1rem',
+    marginBottom: '1rem',
+    [theme.breakpoints.up('md')]: {
+      alignItems: 'flex-end',
+      flexDirection: 'row'
+    }
   },
   sectionTitle: {
     fontWeight: '700',
@@ -200,12 +212,7 @@ function Home() {
         <Loading />
       ) : (
         <Stack alignItems="center" className={classes.gridWrapper}>
-          <Stack
-            justifyContent="space-between"
-            alignItems={{ xs: 'flex-start', md: 'flex-end' }}
-            direction={{ xs: 'column', md: 'row' }}
-            sx={{ width: '100%', paddingTop: '3rem' }}
-          >
+          <Stack className={classes.sectionHeaderContainer} sx={{ paddingTop: '3rem' }}>
             <div>
               <Typography variant="h4" align="left" className={classes.sectionTitle}>
                 Most popular images
@@ -219,12 +226,7 @@ function Home() {
           </Stack>
           {renderMostPopular()}
           {/* currently most popular will be by downloads until stars are implemented */}
-          <Stack
-            justifyContent="space-between"
-            alignItems={{ xs: 'flex-start', md: 'flex-end' }}
-            direction={{ xs: 'column', md: 'row' }}
-            sx={{ width: '100%', paddingTop: '1rem' }}
-          >
+          <Stack className={classes.sectionHeaderContainer}>
             <div>
               <Typography variant="h4" align="left" className={classes.sectionTitle}>
                 Recently updated images

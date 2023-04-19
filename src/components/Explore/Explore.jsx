@@ -41,17 +41,17 @@ const useStyles = makeStyles((theme) => ({
   },
   resultsRow: {
     justifyContent: 'space-between',
-    alignItems: 'center',
-    color: '#00000099'
+    alignItems: 'center'
   },
   results: {
-    marginLeft: '1rem'
+    marginLeft: '1rem',
+    color: theme.palette.secondary.dark
   },
   sortForm: {
     backgroundColor: '#ffffff',
     borderColor: '#E0E0E0',
     borderRadius: '0.375em',
-    width: '25%',
+    width: '23%',
     textAlign: 'left'
   },
   filterButton: {
