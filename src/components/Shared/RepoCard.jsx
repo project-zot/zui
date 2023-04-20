@@ -40,7 +40,7 @@ const randomImage = () => {
   return imageArray[randomIntFromInterval(0, 3)];
 };
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     marginBottom: '1rem',
     display: 'flex',
@@ -112,7 +112,7 @@ const useStyles = makeStyles(() => ({
     marginLeft: 10
   },
   vendor: {
-    color: '#14191F',
+    color: theme.palette.primary,
     fontSize: '0.75rem',
     maxWidth: '50%',
     textOverflow: 'ellipsis',
@@ -127,7 +127,7 @@ const useStyles = makeStyles(() => ({
     paddingTop: '1rem'
   },
   versionLast: {
-    color: '#52637A',
+    color: theme.palette.secondary.dark,
     fontSize: '0.75rem',
     lineHeight: '1.125rem',
     textOverflow: 'ellipsis'

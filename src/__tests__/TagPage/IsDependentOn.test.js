@@ -3,6 +3,7 @@ import { api } from 'api';
 import IsDependentOn from 'components/Tag/Tabs/IsDependentOn';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import MockThemeProvier from '__mocks__/MockThemeProvider';
 
 const mockDependentsList = {
   data: {
@@ -52,11 +53,13 @@ const mockDependentsList = {
 
 const RouterDependsWrapper = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="*" element={<IsDependentOn name="alpine:latest" />} />
-      </Routes>
-    </BrowserRouter>
+    <MockThemeProvier>
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<IsDependentOn name="alpine:latest" />} />
+        </Routes>
+      </BrowserRouter>
+    </MockThemeProvier>
   );
 };
 

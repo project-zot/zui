@@ -5,26 +5,33 @@ import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import React from 'react';
 import transform from '../../utilities/transform';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   card: {
     marginBottom: 2,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'start',
     background: '#FFFFFF',
-    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
-    borderRadius: '1.5rem',
+    border: '0',
+    borderRadius: '0.5rem',
     flex: 'none',
     alignSelf: 'stretch',
     flexGrow: 0,
     order: 0,
     width: '100%'
   },
+  cardContent: {
+    '&:last-child': {
+      padding: '0.5rem 1rem'
+    }
+  },
   metadataHeader: {
-    color: 'rgba(0, 0, 0, 0.6)'
+    color: theme.palette.secondary.dark,
+    fontSize: '0.75rem',
+    lineHeight: '1.125rem'
   },
   metadataBody: {
-    color: 'rgba(0, 0, 0, 0.87)',
+    color: theme.palette.primary,
     fontFamily: 'Roboto',
     fontStyle: 'normal',
     fontWeight: 400,
@@ -36,7 +43,7 @@ const useStyles = makeStyles(() => ({
 
 function RepoDetailsMetadata(props) {
   const classes = useStyles();
-  const { repoURL, totalDownloads, lastUpdated, size, license } = props;
+  const { repoURL, totalDownloads, lastUpdated, size, license, description } = props;
 
   const lastDate = lastUpdated
     ? DateTime.fromISO(lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
@@ -45,7 +52,7 @@ function RepoDetailsMetadata(props) {
     <Grid container spacing={1}>
       <Grid container item xs={12}>
         <Card variant="outlined" className={classes.card}>
-          <CardContent>
+          <CardContent className={classes.cardContent}>
             <Typography variant="body2" align="left" className={classes.metadataHeader}>
               Repository
             </Typography>
@@ -57,7 +64,7 @@ function RepoDetailsMetadata(props) {
       </Grid>
       <Grid container item xs={12}>
         <Card variant="outlined" className={classes.card}>
-          <CardContent>
+          <CardContent className={classes.cardContent}>
             <Typography variant="body2" align="left" className={classes.metadataHeader}>
               Total downloads
             </Typography>
@@ -70,7 +77,7 @@ function RepoDetailsMetadata(props) {
       <Grid container item xs={12} spacing={2}>
         <Grid item xs={6}>
           <Card variant="outlined" className={classes.card}>
-            <CardContent>
+            <CardContent className={classes.cardContent}>
               <Typography variant="body2" align="left" className={classes.metadataHeader}>
                 Last publish
               </Typography>
@@ -84,7 +91,7 @@ function RepoDetailsMetadata(props) {
         </Grid>
         <Grid item xs={6}>
           <Card variant="outlined" className={classes.card}>
-            <CardContent>
+            <CardContent className={classes.cardContent}>
               <Typography variant="body2" align="left" className={classes.metadataHeader}>
                 Total size
               </Typography>
@@ -98,7 +105,7 @@ function RepoDetailsMetadata(props) {
       <Grid container item xs={12} spacing={2}>
         <Grid item xs={12}>
           <Card variant="outlined" className={classes.card}>
-            <CardContent>
+            <CardContent className={classes.cardContent}>
               <Typography variant="body2" align="left" className={classes.metadataHeader}>
                 License
               </Typography>
@@ -107,6 +114,20 @@ function RepoDetailsMetadata(props) {
                   {license ? <Markdown>{license}</Markdown> : `License info not available`}
                 </Typography>
               </Tooltip>
+            </CardContent>
+          </Card>
+        </Grid>
+      </Grid>
+      <Grid container item xs={12} spacing={2}>
+        <Grid item xs={12}>
+          <Card variant="outlined" className={classes.card}>
+            <CardContent className={classes.cardContent}>
+              <Typography variant="body2" align="left" className={classes.metadataHeader}>
+                Description
+              </Typography>
+              <Typography variant="body1" align="left" className={classes.metadataBody}>
+                {description ? <Markdown>{description}</Markdown> : `Description not available`}
+              </Typography>
             </CardContent>
           </Card>
         </Grid>

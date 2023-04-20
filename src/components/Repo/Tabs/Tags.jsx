@@ -3,34 +3,20 @@ import React, { useState } from 'react';
 
 // components
 import Typography from '@mui/material/Typography';
-import { Card, CardContent, Divider, Stack, InputBase, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
+import { Card, CardContent, Stack, InputBase, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from '@mui/styles';
 import TagCard from '../../Shared/TagCard';
 import { tagsSortByCriteria } from 'utilities/sortCriteria';
 
 const useStyles = makeStyles(() => ({
-  tagCard: {
+  tagContainer: {
     marginBottom: 2,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     background: '#FFFFFF',
     boxShadow: 'none!important',
-    borderRadius: '1.875rem',
-    flex: 'none',
-    alignSelf: 'stretch',
-    flexGrow: 0,
-    order: 0,
-    width: '100%'
-  },
-  card: {
-    marginBottom: '2rem',
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    background: '#FFFFFF',
-    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
     borderRadius: '1.875rem',
     flex: 'none',
     alignSelf: 'stretch',
@@ -49,13 +35,15 @@ const useStyles = makeStyles(() => ({
   },
   search: {
     position: 'relative',
-    minWidth: '100%',
+    maxWidth: '100%',
     flexDirection: 'row',
-    marginBottom: '1.7rem',
-    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
-    border: '0.125rem solid #E7E7E7',
-    borderRadius: '1rem',
-    zIndex: 1155
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    marginTop: '1rem',
+    marginBottom: '1rem',
+    boxShadow: 'none',
+    border: '0.063rem solid #E7E7E7',
+    borderRadius: '0.625rem'
   },
   searchIcon: {
     color: '#52637A',
@@ -63,8 +51,12 @@ const useStyles = makeStyles(() => ({
   },
   input: {
     color: '#464141',
-    marginLeft: 1,
-    width: '90%'
+    fontSize: '1rem',
+    paddingLeft: '1rem',
+    width: '90%',
+    '&::placeholder': {
+      opacity: '1'
+    }
   }
 }));
 
@@ -73,6 +65,7 @@ export default function Tags(props) {
   const { tags } = props;
   const [tagsFilter, setTagsFilter] = useState('');
   const [sortFilter, setSortFilter] = useState(tagsSortByCriteria.updateTimeDesc.value);
+
   const renderTags = (tags) => {
     const selectedSort = Object.values(tagsSortByCriteria).find((sc) => sc.value === sortFilter);
     const filteredTags = tags.filter((t) => t.tag?.includes(tagsFilter));
@@ -106,7 +99,7 @@ export default function Tags(props) {
   };
 
   return (
-    <Card className={classes.tagCard} data-testid="tags-container">
+    <Card className={classes.tagContainer} data-testid="tags-container">
       <CardContent className={classes.content}>
         <Stack direction="row" justifyContent="space-between">
           <Typography
@@ -136,26 +129,12 @@ export default function Tags(props) {
             </FormControl>
           </div>
         </Stack>
-        <Divider
-          variant="fullWidth"
-          sx={{
-            margin: '5% 0% 5% 0%',
-            background: 'rgba(0, 0, 0, 0.38)',
-            height: '0.00625rem',
-            width: '100%'
-          }}
-        />
-        <Stack
-          className={classes.search}
-          direction="row"
-          alignItems="center"
-          justifyContent="space-between"
-          spacing={2}
-        >
+        <Stack className={classes.search}>
           <InputBase
-            style={{ paddingLeft: 10, height: 46, color: 'rgba(0, 0, 0, 0.6)' }}
-            placeholder={'Search for Tags...'}
-            className={classes.input}
+            style={{ paddingLeft: 10, height: 40, color: 'rgba(0, 0, 0, 0.6)' }}
+            placeholder={'Search tags...'}
+            // className={classes.input}
+            classes={{ input: classes.input }}
             value={tagsFilter}
             onChange={handleTagsFilterChange}
           />

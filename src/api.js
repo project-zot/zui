@@ -76,7 +76,7 @@ const endpoints = {
       (pageNumber - 1) * pageSize
     }}){Results {Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description  Licenses Title Source IsSigned Documentation Vendor Labels} DownloadCount}}}`,
   detailedRepoInfo: (name) =>
-    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Manifests {Digest Platform {Os Arch} Size} Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor } Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName IsSigned Vulnerabilities {MaxSeverity Count} Manifests {Digest} Tag Title Documentation DownloadCount Source Description Licenses}}}}`,
+    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Manifests {Digest Platform {Os Arch} Size} Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor } Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName IsSigned Vulnerabilities {MaxSeverity Count} Manifests {Digest} Tag Vendor Title Documentation DownloadCount Source Description Licenses}}}}`,
   detailedImageInfo: (name, tag) =>
     `/v2/_zot/ext/search?query={Image(image: "${name}:${tag}"){RepoName IsSigned Vulnerabilities {MaxSeverity Count}  Referrers {MediaType ArtifactType Size Digest Annotations{Key Value}} Tag Manifests {History {Layer {Size Digest} HistoryDescription {CreatedBy EmptyLayer}} Digest ConfigDigest LastUpdated Size Platform {Os Arch}} Vendor Licenses }}`,
   vulnerabilitiesForRepo: (name, { pageNumber = 1, pageSize = 15 }, searchTerm = '') => {

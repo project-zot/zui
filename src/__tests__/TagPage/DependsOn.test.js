@@ -3,6 +3,7 @@ import { api } from 'api';
 import DependsOn from 'components/Tag/Tabs/DependsOn';
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import MockThemeProvier from '__mocks__/MockThemeProvider';
 
 const mockDependenciesList = {
   data: {
@@ -52,11 +53,13 @@ const mockDependenciesList = {
 
 const RouterDependsWrapper = () => {
   return (
-    <BrowserRouter>
-      <Routes>
-        <Route path="*" element={<DependsOn name="alpine:latest" />} />
-      </Routes>
-    </BrowserRouter>
+    <MockThemeProvier>
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<DependsOn name="alpine:latest" />} />
+        </Routes>
+      </BrowserRouter>
+    </MockThemeProvier>
   );
 };
 
