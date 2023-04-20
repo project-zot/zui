@@ -1,35 +1,22 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { useNavigate } from 'react-router-dom';
-import { Box, Card, CardContent, Collapse, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import { Box, Card, CardContent, Collapse, Grid, Stack, Tooltip, Typography, Divider } from '@mui/material';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import transform from 'utilities/transform';
 import { DateTime } from 'luxon';
 import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
 
-const useStyles = makeStyles(() => ({
-  tagCard: {
-    marginBottom: 2,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    background: '#FFFFFF',
-    boxShadow: 'none!important',
-    borderRadius: '1.875rem',
-    flex: 'none',
-    alignSelf: 'stretch',
-    flexGrow: 0,
-    order: 0,
-    width: '100%'
-  },
+const useStyles = makeStyles((theme) => ({
   card: {
-    marginBottom: '2rem',
+    marginBottom: '1rem',
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'center',
     background: '#FFFFFF',
-    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
-    borderRadius: '1.875rem',
+    boxShadow: 'none',
+    border: '1px solid #E0E5EB',
+    borderRadius: '0.75rem',
     flex: 'none',
     alignSelf: 'stretch',
     flexGrow: 0,
@@ -56,6 +43,30 @@ const useStyles = makeStyles(() => ({
     fontWeight: '600',
     cursor: 'pointer',
     textAlign: 'center'
+  },
+  tagHeading: {
+    color: '#828282',
+    fontSize: '1rem',
+    marginBottom: '0.5rem'
+  },
+  tagName: {
+    color: '#1479FF',
+    fontSize: '1rem',
+    marginBottom: '0.5rem',
+    textDecorationLine: 'underline',
+    cursor: 'pointer'
+  },
+  cardDivider: {
+    marginTop: '1rem',
+    marginBottom: '1rem',
+    border: '1px solid #E0E5EB'
+  },
+  manifsetsTable: {
+    marginTop: '1rem'
+  },
+  tableHeaderText: {
+    color: theme.palette.secondary.dark,
+    fontSize: '1rem'
   }
 }));
 
@@ -81,22 +92,17 @@ export default function TagCard(props) {
   return (
     <Card className={classes.card} raised>
       <CardContent className={classes.content}>
-        <Typography variant="body1" align="left" sx={{ color: '#828282', fontSize: '1rem', paddingBottom: '0.5rem' }}>
+        <Typography variant="body1" align="left" className={classes.tagHeading}>
           Tag
         </Typography>
-        <Typography
-          variant="body1"
-          align="left"
-          sx={{ color: '#1479FF', fontSize: '1rem', textDecorationLine: 'underline', cursor: 'pointer' }}
-          onClick={() => goToTags()}
-        >
+        <Typography variant="body1" align="left" className={classes.tagName} onClick={() => goToTags()}>
           {repoName && `${repoName}:`}
           {tag}
         </Typography>
 
         <Stack sx={{ display: 'inline' }} direction="row" spacing={0.5}>
           <Typography variant="caption" sx={{ fontWeight: '400', fontSize: '0.8125rem' }}>
-            Pushed
+            Created
           </Typography>
           <Tooltip title={lastUpdated?.slice(0, 16) || ' '} placement="top">
             <Typography variant="caption" sx={{ fontWeight: '600', fontSize: '0.8125rem' }}>
@@ -104,6 +110,7 @@ export default function TagCard(props) {
             </Typography>
           </Tooltip>
         </Stack>
+        <Divider variant="fullWidth" className={classes.cardDivider} />
         <Stack direction="row" onClick={() => setOpen(!open)}>
           {!open ? (
             <KeyboardArrowRight className={classes.dropdownText} />
@@ -123,22 +130,30 @@ export default function TagCard(props) {
           </Typography>
         </Stack>
         <Collapse in={open} timeout="auto" unmountOnExit>
-          <Box>
+          <Box className={classes.manifsetsTable}>
             <Grid container item xs={12} direction={'row'}>
-              <Grid item xs={6} md={4}>
-                <Typography variant="body1">DIGEST</Typography>
+              <Grid item xs={6} md={6}>
+                <Typography variant="body1" className={classes.tableHeaderText}>
+                  DIGEST
+                </Typography>
               </Grid>
-              <Grid item xs={6} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
+              <Grid item xs={6} md={3} className={classes.tableHeaderText}>
                 <Typography variant="body1">OS/Arch</Typography>
               </Grid>
-              <Grid item xs={0} md={4} className="hide-on-mobile" sx={{ display: 'flex', justifyContent: 'flex-end' }}>
-                <Typography variant="body1"> Size </Typography>
+              <Grid
+                item
+                xs={0}
+                md={3}
+                className={`${classes.tableHeaderText} hide-on-mobile`}
+                sx={{ display: 'flex', justifyContent: 'flex-end' }}
+              >
+                <Typography variant="body1"> COMPRESSED SIZE </Typography>
               </Grid>
             </Grid>
 
             {manifests.map((el) => (
               <Grid container item xs={12} key={el.digest} direction={'row'}>
-                <Grid item xs={6} md={4}>
+                <Grid item xs={6} md={6}>
                   <Tooltip title={el.digest || ''} placement="top">
                     <Typography
                       variant="body1"
@@ -149,19 +164,19 @@ export default function TagCard(props) {
                     </Typography>
                   </Tooltip>
                 </Grid>
-                <Grid item xs={6} md={4} sx={{ display: 'flex', justifyContent: 'center' }}>
-                  <Typography variant="body1">
+                <Grid item xs={6} md={3}>
+                  <Typography variant="body1" color="primary">
                     {el.platform?.Os}/{el.platform?.Arch}
                   </Typography>
                 </Grid>
                 <Grid
                   item
                   xs={0}
-                  md={4}
+                  md={3}
                   className="hide-on-mobile"
                   sx={{ display: 'flex', justifyContent: 'flex-end' }}
                 >
-                  <Typography sx={{ textAlign: 'right' }} variant="body1">
+                  <Typography sx={{ textAlign: 'right' }} variant="body1" color="primary">
                     {transform.formatBytes(el.size)}
                   </Typography>
                 </Grid>

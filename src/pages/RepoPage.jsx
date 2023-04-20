@@ -26,9 +26,7 @@ const useStyles = makeStyles(() => ({
     height: '100vh'
   },
   gridWrapper: {
-    paddingTop: 10,
-    paddingBottom: 10,
-    backgroundColor: '#fff',
+    backgroundColor: 'transparent',
     width: '100%',
     display: 'flex',
     flexFlow: 'column',

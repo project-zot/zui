@@ -1,13 +1,16 @@
 // react global
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 
+// external
+import { DateTime } from 'luxon';
+
 // utility
 import { api, endpoints } from '../../api';
 import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
 
 // components
 import Tags from './Tabs/Tags.jsx';
-import { Box, Card, CardContent, CardMedia, Chip, Grid, Stack, Tab, Typography } from '@mui/material';
+import { Card, CardContent, CardMedia, Chip, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../../host';
 
@@ -16,19 +19,17 @@ import repocube1 from '../../assets/repocube-1.png';
 import repocube2 from '../../assets/repocube-2.png';
 import repocube3 from '../../assets/repocube-3.png';
 import repocube4 from '../../assets/repocube-4.png';
-import { TabContext, TabList, TabPanel } from '@mui/lab';
 
 import RepoDetailsMetadata from './RepoDetailsMetadata';
 import Loading from '../Shared/Loading';
+import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import { isEmpty, uniq } from 'lodash';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { mapToRepoFromRepoInfo } from 'utilities/objectModels';
 
 const useStyles = makeStyles((theme) => ({
   pageWrapper: {
-    backgroundColor: '#FFFFFF',
-    display: 'flex',
-    flexFlow: 'column',
+    backgroundColor: 'transparent',
     height: '100%'
   },
   container: {
@@ -38,13 +39,14 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: '#FFFFFF'
   },
   repoName: {
-    fontWeight: '700',
+    fontWeight: '600',
+    fontSize: '1.5rem',
     color: '#0F2139',
     textAlign: 'left'
   },
   avatar: {
-    height: '3rem',
-    width: '3rem',
+    height: '1.438rem',
+    width: '1.438rem',
     objectFit: 'fill'
   },
   cardBtn: {
@@ -54,31 +56,16 @@ const useStyles = makeStyles((theme) => ({
   media: {
     borderRadius: '3.125em'
   },
-  tabs: {
-    marginTop: '3rem',
-    padding: '0.5rem',
+  tags: {
+    marginTop: '1.5rem',
     height: '100%',
     [theme.breakpoints.down('md')]: {
       padding: '0'
     }
   },
-  tabContent: {
-    height: '100%'
-  },
-  selectedTab: {
-    background: '#D83C0E',
-    borderRadius: '1.5rem'
-  },
-  tabPanel: {
-    height: '100%',
-    paddingLeft: '0rem!important',
-    [theme.breakpoints.down('md')]: {
-      padding: '1.5rem 0'
-    }
-  },
   metadata: {
-    marginTop: '8rem',
-    paddingLeft: '1.5rem',
+    marginTop: '1.5rem',
+    paddingLeft: '1.25rem',
     [theme.breakpoints.down('md')]: {
       marginTop: '1rem',
       paddingLeft: '0'
@@ -88,11 +75,10 @@ const useStyles = makeStyles((theme) => ({
     marginBottom: 2,
     display: 'flex',
     flexDirection: 'row',
-    alignItems: 'start',
+    alignItems: 'flex-start',
     background: '#FFFFFF',
     border: '0.0625rem solid #E0E5EB',
-    borderRadius: '2rem',
-    flex: 'none',
+    borderRadius: '0.75rem',
     alignSelf: 'stretch',
     flexGrow: 0,
     order: 0,
@@ -117,7 +103,6 @@ const useStyles = makeStyles((theme) => ({
     boxShadow: 'none!important'
   },
   header: {
-    paddingLeft: '2rem',
     [theme.breakpoints.down('md')]: {
       padding: '0'
     }
@@ -127,17 +112,41 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1rem',
     lineHeight: '1.5rem',
     color: 'rgba(0, 0, 0, 0.6)',
-    padding: '0.5rem 0 0 4rem',
+    padding: '1rem 0 0 0',
     [theme.breakpoints.down('md')]: {
       padding: '0.5rem 0 0 0'
     }
   },
   platformChipsContainer: {
     alignItems: 'center',
-    padding: '0.5rem 0 0 1rem',
+    padding: '0.15rem 0 0 0',
     [theme.breakpoints.down('md')]: {
       padding: '0.5rem 0 0 0'
     }
+  },
+  platformChips: {
+    backgroundColor: '#E0E5EB',
+    color: '#52637A',
+    fontSize: '0.813rem',
+    lineHeight: '0.813rem',
+    borderRadius: '0.375rem',
+    padding: '0.313rem 0.625rem'
+  },
+  chipLabel: {
+    padding: '0'
+  },
+  vendor: {
+    color: theme.palette.primary,
+    fontSize: '0.75rem',
+    maxWidth: '50%',
+    textOverflow: 'ellipsis',
+    lineHeight: '1.125rem'
+  },
+  versionLast: {
+    color: theme.palette.secondary.dark,
+    fontSize: '0.75rem',
+    lineHeight: '1.125rem',
+    textOverflow: 'ellipsis'
   }
 }));
 
@@ -156,7 +165,6 @@ function RepoDetails() {
   const [tags, setTags] = useState([]);
   const placeholderImage = useRef(randomImage());
   const [isLoading, setIsLoading] = useState(true);
-  const [selectedTab, setSelectedTab] = useState('Overview');
   // get url param from <Route here (i.e. image name)
   const { name } = useParams();
   const navigate = useNavigate();
@@ -205,38 +213,25 @@ function RepoDetails() {
         key={`${name}${platform}${index}`}
         label={platform}
         onClick={handlePlatformChipClick}
-        sx={{
-          backgroundColor: '#E0E5EB',
-          color: '#52637A',
-          fontSize: '0.625rem'
+        className={classes.platformChips}
+        classes={{
+          label: classes.chipLabel
         }}
       />
     ));
   };
 
-  const handleTabChange = (event, newValue) => {
-    setSelectedTab(newValue);
+  const getVendor = () => {
+    return `${repoDetailData.newestTag?.Vendor || 'Vendor not available'} •`;
   };
-
-  const renderOverview = () => {
-    return (
-      <Card className={classes.card} data-testid="overview-container">
-        <CardContent>
-          <Typography
-            variant="body1"
-            sx={{
-              color: 'rgba(0, 0, 0, 0.6)',
-              fontSize: '1rem',
-              lineHeight: '150%',
-              marginTop: '1.3rem',
-              alignSelf: 'stretch'
-            }}
-          >
-            {repoDetailData.description || 'Description not available'}
-          </Typography>
-        </CardContent>
-      </Card>
-    );
+  const getVersion = () => {
+    return `published ${repoDetailData.newestTag?.Tag} •`;
+  };
+  const getLast = () => {
+    const lastDate = repoDetailData.lastUpdated
+      ? DateTime.fromISO(repoDetailData.lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
+      : `Timestamp N/A`;
+    return lastDate;
   };
 
   return (
@@ -244,87 +239,87 @@ function RepoDetails() {
       {isLoading ? (
         <Loading />
       ) : (
-        <div className={classes.pageWrapper}>
-          <Card className={classes.cardRoot}>
-            <CardContent>
-              <Grid container className={classes.header}>
-                <Grid item xs={12} md={8}>
-                  <Stack alignItems="center" direction={{ xs: 'column', md: 'row' }} spacing={2}>
-                    <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
-                      <CardMedia
-                        classes={{
-                          root: classes.media,
-                          img: classes.avatar
-                        }}
-                        component="img"
-                        // eslint-disable-next-line prettier/prettier
+        <Grid container className={classes.pageWrapper}>
+          <Grid item xs={12} md={12}>
+            <Card className={classes.cardRoot}>
+              <CardContent>
+                <Grid container className={classes.header}>
+                  <Grid item xs={12} md={8}>
+                    <Stack alignItems="center" direction={{ xs: 'column', md: 'row' }} spacing={2}>
+                      <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
+                        <CardMedia
+                          classes={{
+                            root: classes.media,
+                            img: classes.avatar
+                          }}
+                          component="img"
+                          // eslint-disable-next-line prettier/prettier
                       image={
-                          !isEmpty(repoDetailData?.logo)
-                            ? `data:image/png;base64, ${repoDetailData?.logo}`
-                            : placeholderImage.current
-                        }
-                        alt="icon"
-                      />
-                      <Typography variant="h4" className={classes.repoName}>
-                        {name}
-                      </Typography>
+                            !isEmpty(repoDetailData?.logo)
+                              ? `data:image/png;base64, ${repoDetailData?.logo}`
+                              : placeholderImage.current
+                          }
+                          alt="icon"
+                        />
+                        <Typography variant="h4" className={classes.repoName}>
+                          {name}
+                        </Typography>
+                      </Stack>
+                      <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
+                        <VulnerabilityIconCheck
+                          vulnerabilitySeverity={repoDetailData.vulnerabiltySeverity}
+                          count={repoDetailData?.vulnerabilityCount}
+                        />
+                        <SignatureIconCheck isSigned={repoDetailData.isSigned} />
+                      </Stack>
                     </Stack>
-                    <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
-                      <VulnerabilityIconCheck
-                        vulnerabilitySeverity={repoDetailData.vulnerabiltySeverity}
-                        count={repoDetailData?.vulnerabilityCount}
-                      />
-                      <SignatureIconCheck isSigned={repoDetailData.isSigned} />
-                      {/* <BookmarkIcon sx={{color:"#52637A"}}/> */}
+                    <Typography gutterBottom className={classes.repoTitle}>
+                      {repoDetailData?.title || 'Title not available'}
+                    </Typography>
+                    <Stack direction="row" spacing={1} className={classes.platformChipsContainer}>
+                      {platformChips()}
                     </Stack>
-                  </Stack>
-                  <Typography gutterBottom className={classes.repoTitle}>
-                    {repoDetailData?.title || 'Title not available'}
-                  </Typography>
-                  <Stack direction="row" spacing={1} className={classes.platformChipsContainer}>
-                    {platformChips()}
-                  </Stack>
+                    <Stack alignItems="center" direction="row" spacing={1} pt={'0.5rem'}>
+                      <Tooltip title={getVendor()} placement="top" className="hide-on-mobile">
+                        <Typography className={classes.vendor} variant="body2" noWrap>
+                          {<Markdown options={{ forceInline: true }}>{getVendor()}</Markdown>}
+                        </Typography>
+                      </Tooltip>
+                      <Tooltip title={getVersion()} placement="top" className="hide-on-mobile">
+                        <Typography className={classes.versionLast} variant="body2" noWrap>
+                          {getVersion()}
+                        </Typography>
+                      </Tooltip>
+                      <Tooltip title={repoDetailData.lastUpdated?.slice(0, 16) || ' '} placement="top">
+                        <Typography className={classes.versionLast} variant="body2" noWrap>
+                          {getLast()}
+                        </Typography>
+                      </Tooltip>
+                    </Stack>
+                  </Grid>
                 </Grid>
-              </Grid>
-              <Grid container>
-                <Grid item xs={12} md={8} className={classes.tabs}>
-                  <TabContext value={selectedTab}>
-                    <Box>
-                      <TabList
-                        onChange={handleTabChange}
-                        TabIndicatorProps={{ className: classes.selectedTab }}
-                        sx={{ '& button.Mui-selected': { color: '#14191F', fontWeight: '600' } }}
-                      >
-                        <Tab value="Overview" label="Overview" className={classes.tabContent} />
-                        <Tab value="Tags" label="Tags" className={classes.tabContent} />
-                      </TabList>
-                      <Grid container>
-                        <Grid item xs={12}>
-                          <TabPanel value="Overview" className={classes.tabPanel}>
-                            {renderOverview()}
-                          </TabPanel>
-                          <TabPanel value="Tags" className={classes.tabPanel}>
-                            <Tags tags={tags} />
-                          </TabPanel>
-                        </Grid>
-                      </Grid>
-                    </Box>
-                  </TabContext>
-                </Grid>
-                <Grid item xs={12} md={4} className={classes.metadata}>
-                  <RepoDetailsMetadata
-                    totalDownloads={repoDetailData?.downloads}
-                    repoURL={repoDetailData?.source}
-                    lastUpdated={repoDetailData?.lastUpdated}
-                    size={repoDetailData?.size}
-                    latestTag={repoDetailData?.newestTag}
-                    license={repoDetailData?.license}
-                  />
-                </Grid>
-              </Grid>
-            </CardContent>
-          </Card>
-        </div>
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={8} className={classes.tags}>
+            <Card className={classes.cardRoot}>
+              <CardContent>
+                <Tags tags={tags} />
+              </CardContent>
+            </Card>
+          </Grid>
+          <Grid item xs={12} md={4} className={classes.metadata}>
+            <RepoDetailsMetadata
+              totalDownloads={repoDetailData?.downloads}
+              repoURL={repoDetailData?.source}
+              lastUpdated={repoDetailData?.lastUpdated}
+              size={repoDetailData?.size}
+              latestTag={repoDetailData?.newestTag}
+              license={repoDetailData?.license}
+              description={repoDetailData?.description}
+            />
+          </Grid>
+        </Grid>
       )}
     </>
   );

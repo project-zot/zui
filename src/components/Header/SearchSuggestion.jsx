@@ -283,6 +283,7 @@ function SearchSuggestion({ setSearchCurrentValue = () => {} }) {
         <InputBase
           placeholder={'Search for content...'}
           className={`${classes.input} ${isComponentFocused && classes.inputFocused}`}
+          sx={{ input: { '&::placeholder': { opacity: 1 } } }}
           onKeyUp={handleSearch}
           onFocus={() => openMenu()}
           {...getInputProps()}

@@ -13,26 +13,31 @@ import React from 'react';
 const useStyles = makeStyles((theme) => {
   return {
     exploreHeader: {
-      backgroundColor: '#FFFFFF',
+      backgroundColor: 'transparent',
       minHeight: 50,
-      paddingLeft: '3rem',
+      padding: '2.75rem 0 1.25rem 0',
       display: 'flex',
       flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'flex-start',
-      padding: '2rem',
       [theme.breakpoints.down('md')]: {
         padding: '1rem'
       }
     },
     explore: {
-      color: '#52637A',
+      color: theme.palette.secondary.dark,
       fontSize: '0.813rem',
       fontWeight: '600',
       letterSpacing: '0.009375rem',
       [theme.breakpoints.down('md')]: {
         fontSize: '0.8rem'
       }
+    },
+    arrowIcon: {
+      color: theme.palette.secondary.dark,
+      marginRight: '1.75rem',
+      fontSize: { xs: '1.5rem', md: '2rem' },
+      cursor: 'pointer'
     }
   };
 });
@@ -49,10 +54,7 @@ function ExploreHeader() {
 
   return (
     <div className={classes.exploreHeader}>
-      <ArrowBackIcon
-        sx={{ color: '#52637A', marginRight: '1.75rem', fontSize: { xs: '1.5rem', md: '2rem' }, cursor: 'pointer' }}
-        onClick={() => navigate(-1)}
-      />
+      <ArrowBackIcon className={classes.arrowIcon} onClick={() => navigate(-1)} />
       <Breadcrumbs separator="/" aria-label="breadcrumb">
         <Link to="/">
           <Typography variant="body1" className={classes.explore}>

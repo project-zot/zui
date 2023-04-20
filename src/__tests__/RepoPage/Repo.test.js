@@ -248,7 +248,7 @@ describe('Repo details component', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsWithMissingData } });
     render(<RepoDetailsThemeWrapper />);
     expect(await screen.findByText('test')).toBeInTheDocument();
-    expect(await screen.findByText(/timestamp n\/a/i)).toBeInTheDocument();
+    expect((await screen.findAllByText(/timestamp n\/a/i)).length).toBeGreaterThan(0);
   });
 
   it('renders vulnerability icons', async () => {
@@ -286,15 +286,6 @@ describe('Repo details component', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: null, errors: ['testerror'] } });
     render(<RepoDetailsThemeWrapper />);
     await waitFor(() => expect(mockUseNavigate).toBeCalledWith('/home'));
-  });
-
-  it('should switch between tabs', async () => {
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
-    render(<RepoDetailsThemeWrapper />);
-    expect(await screen.findByTestId('overview-container')).toBeInTheDocument();
-    fireEvent.click(await screen.findByText(/tags/i));
-    expect(await screen.findByTestId('tags-container')).toBeInTheDocument();
-    expect(screen.queryByTestId('overview-container')).not.toBeInTheDocument();
   });
 
   it('should render platform chips and they should redirect to explore page', async () => {

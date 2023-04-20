@@ -2,6 +2,15 @@ import { fireEvent, waitFor, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Tags from 'components/Repo/Tabs/Tags';
 import React from 'react';
+import MockThemeProvier from '__mocks__/MockThemeProvider';
+
+const TagsThemeWrapper = () => {
+  return (
+    <MockThemeProvier>
+      <Tags tags={mockedTagsData} />
+    </MockThemeProvier>
+  );
+};
 
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -59,7 +68,7 @@ const mockedTagsData = [
 
 describe('Tags component', () => {
   it('should open and close details dropdown for tags', async () => {
-    render(<Tags tags={mockedTagsData} />);
+    render(<TagsThemeWrapper />);
     const openBtn = screen.getAllByText(/digest/i);
     fireEvent.click(openBtn[0]);
     expect(screen.getByText(/OS\/ARCH/i)).toBeInTheDocument();
@@ -68,7 +77,7 @@ describe('Tags component', () => {
   });
 
   it('should navigate to tag page details when tag is clicked', async () => {
-    render(<Tags tags={mockedTagsData} />);
+    render(<TagsThemeWrapper />);
     const tagLink = await screen.findByText('latest');
     fireEvent.click(tagLink);
     await waitFor(() => {
@@ -77,7 +86,7 @@ describe('Tags component', () => {
   });
 
   it('should navigate to specific manifest when clicking the digest', async () => {
-    render(<Tags tags={mockedTagsData} />);
+    render(<TagsThemeWrapper />);
     const openBtn = screen.getAllByText(/digest/i);
     await fireEvent.click(openBtn[0]);
     const tagLink = await screen.findByText(/sha256:adca4/i);
@@ -90,8 +99,8 @@ describe('Tags component', () => {
   });
 
   it('should filter tag list based on user input', async () => {
-    render(<Tags tags={mockedTagsData} />);
-    const tagFilterInput = await screen.findByPlaceholderText(/Search for Tags/i);
+    render(<TagsThemeWrapper />);
+    const tagFilterInput = await screen.findByPlaceholderText(/Search Tags/i);
     expect(await screen.findByText(/latest/i)).toBeInTheDocument();
     expect(await screen.findByText(/bullseye/i)).toBeInTheDocument();
     userEvent.type(tagFilterInput, 'bull');
@@ -100,7 +109,7 @@ describe('Tags component', () => {
   });
 
   it('should sort tags based on the picked sort criteria', async () => {
-    render(<Tags tags={mockedTagsData} />);
+    render(<TagsThemeWrapper />);
     const selectFilter = await screen.findByText('Newest');
     expect(selectFilter).toBeInTheDocument();
     userEvent.click(selectFilter);

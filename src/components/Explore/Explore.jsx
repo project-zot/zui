@@ -34,11 +34,6 @@ const useStyles = makeStyles((theme) => ({
     justifyContent: 'center',
     alignItems: 'center'
   },
-  exploreText: {
-    color: '#C0C0C0',
-    display: 'flex',
-    alignItems: 'left'
-  },
   resultsRow: {
     justifyContent: 'space-between',
     alignItems: 'center'
