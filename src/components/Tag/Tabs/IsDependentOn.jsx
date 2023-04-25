@@ -5,7 +5,7 @@ import { isEmpty } from 'lodash';
 import { api, endpoints } from '../../../api';
 
 // components
-import { Divider, Typography, Stack } from '@mui/material';
+import { Typography, Stack } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../../../host';
 import Loading from '../../Shared/Loading';
@@ -142,7 +142,7 @@ function IsDependentOn(props) {
 
   const renderDependents = () => {
     return !isEmpty(images) ? (
-      images.map((dependence, index) => {
+      images?.map((dependence, index) => {
         return (
           <TagCard
             repoName={dependence.repoName}
@@ -171,11 +171,21 @@ function IsDependentOn(props) {
   };
 
   return (
-    <div>
-      <Divider
-        variant="fullWidth"
-        sx={{ margin: '5% 0% 5% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}
-      />
+    <div data-testid="dependents-container">
+      <Typography
+        variant="h4"
+        gutterBottom
+        component="div"
+        align="left"
+        style={{
+          marginBottom: '1.7rem',
+          color: 'rgba(0, 0, 0, 0.87)',
+          fontSize: '1.5rem',
+          fontWeight: '600'
+        }}
+      >
+        Used by
+      </Typography>
       <Stack direction="column" spacing={2}>
         <Stack direction="column" spacing={2}>
           {renderDependents()}

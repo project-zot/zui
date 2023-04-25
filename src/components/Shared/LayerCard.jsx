@@ -12,26 +12,25 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     alignItems: 'center',
     backgroundColor: '#FFFFFF',
-    borderColor: '#FFFFFF',
-    borderRadius: '1.5rem',
+    border: '1px solid #E0E5EB',
+    borderRadius: '0.75rem',
     alignSelf: 'stretch',
     flexGrow: 0,
     order: 0,
-    width: '100%',
-    '&:hover': {
-      boxShadow: '0rem 1.1875rem 1.4375rem rgba(131, 131, 131, 0.19)',
-      borderRadius: '1.5rem'
-    }
+    width: '100%'
   },
   content: {
     textAlign: 'left',
     color: '#52637A',
     width: '100%',
     boxSizing: 'border-box',
-    padding: '1.25rem 1.5rem',
+    padding: '1rem',
     backgroundColor: '#FFFFFF',
     '&:hover': {
       backgroundColor: '#FFFFFF'
+    },
+    '&:last-child': {
+      paddingBottom: '1rem'
     }
   },
   layer: {
@@ -62,6 +61,13 @@ const useStyles = makeStyles(() => ({
     cursor: 'pointer',
     textAlign: 'center'
   },
+  dropdownButton: {
+    color: '#1479FF',
+    paddingTop: '1rem',
+    fontSize: '0.8125rem',
+    fontWeight: '600',
+    cursor: 'pointer'
+  },
   dropdownContentText: {
     color: '#52637A',
     textAlign: 'center'
@@ -75,6 +81,9 @@ const useStyles = makeStyles(() => ({
     backgroundColor: '#F7F7F7',
     borderRadius: '0.9rem',
     overflowWrap: 'break-word'
+  },
+  layerCardDivider: {
+    margin: '1rem 0'
   }
 }));
 
@@ -103,7 +112,7 @@ function LayerCard(props) {
             </Typography>
           </Grid>
           <Grid item xs={12}>
-            <Divider />
+            <Divider className={classes.layerCardDivider} />
           </Grid>
           <Grid item xs={12}>
             <Stack direction="row" onClick={() => setOpen((prevOpenState) => !prevOpenState)}>
@@ -112,17 +121,7 @@ function LayerCard(props) {
               ) : (
                 <KeyboardArrowDown className={classes.dropdownText} />
               )}
-              <Typography
-                sx={{
-                  color: '#1479FF',
-                  paddingTop: '1rem',
-                  fontSize: '0.8125rem',
-                  fontWeight: '600',
-                  cursor: 'pointer'
-                }}
-              >
-                Details
-              </Typography>
+              <Typography className={classes.dropdownButton}>DETAILS</Typography>
             </Stack>
             <Collapse in={open} timeout="auto" unmountOnExit sx={{ marginTop: '1rem' }}>
               <Stack direction="column" spacing="1.2rem">

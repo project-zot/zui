@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 // components
-import { Divider, Stack, Typography } from '@mui/material';
+import { Stack, Typography } from '@mui/material';
 import LayerCard from '../../Shared/LayerCard.jsx';
 import makeStyles from '@mui/styles/makeStyles';
 import Loading from '../../Shared/Loading';
@@ -96,13 +96,11 @@ function HistoryLayers(props) {
           marginBottom: '1.7rem',
           color: 'rgba(0, 0, 0, 0.87)',
           fontSize: '1.5rem',
-          fontWeight: '600',
-          paddingTop: '0.5rem'
+          fontWeight: '600'
         }}
       >
         Layers
       </Typography>
-      <Divider variant="fullWidth" sx={{ background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }} />
       {isLoading ? (
         <Loading />
       ) : (

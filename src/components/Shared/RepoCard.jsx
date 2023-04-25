@@ -27,7 +27,7 @@ import repocube4 from '../../assets/repocube-4.png';
 
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
-import { isEmpty, uniq } from 'lodash';
+import { uniq } from 'lodash';
 import { useTheme } from '@emotion/react';
 
 // temporary utility to get image
@@ -112,7 +112,7 @@ const useStyles = makeStyles((theme) => ({
     marginLeft: 10
   },
   vendor: {
-    color: theme.palette.primary,
+    color: theme.palette.primary.main,
     fontSize: '0.75rem',
     maxWidth: '50%',
     textOverflow: 'ellipsis',
@@ -161,8 +161,7 @@ function RepoCard(props) {
   const isXsSize = useMediaQuery(theme.breakpoints.down('md'));
   const MAX_PLATFORM_CHIPS = isXsSize ? 3 : 6;
 
-  const { name, vendor, platforms, description, downloads, isSigned, lastUpdated, logo, version, vulnerabilityData } =
-    props;
+  const { name, vendor, platforms, description, downloads, isSigned, lastUpdated, version, vulnerabilityData } = props;
 
   const goToDetails = () => {
     navigate(`/image/${encodeURIComponent(name)}`);
@@ -225,7 +224,7 @@ function RepoCard(props) {
                     img: classes.avatar
                   }}
                   component="img"
-                  image={!isEmpty(logo) ? `data:image/png;base64, ${logo}` : placeholderImage.current}
+                  image={placeholderImage.current}
                   alt="icon"
                 />
                 <Tooltip title={name} placement="top">

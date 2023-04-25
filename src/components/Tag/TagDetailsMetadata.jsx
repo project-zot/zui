@@ -1,50 +1,73 @@
+import React from 'react';
+
 import { Card, CardContent, Grid, Typography, Tooltip } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { DateTime } from 'luxon';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
-import React from 'react';
 import transform from '../../utilities/transform';
+import PullCommandButton from 'components/Shared/PullCommandButton';
 
-const useStyles = makeStyles(() => ({
+const useStyles = makeStyles((theme) => ({
   card: {
-    marginBottom: 2,
     display: 'flex',
     flexDirection: 'row',
     alignItems: 'start',
     background: '#FFFFFF',
-    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
-    borderRadius: '1.5rem',
+    borderRadius: '0.5rem',
+    borderColor: '#FFFFFF',
     flex: 'none',
     alignSelf: 'stretch',
     flexGrow: 0,
     order: 0,
     width: '100%'
   },
+  cardContent: {
+    padding: '0.5rem 1rem',
+    '&:last-child': {
+      paddingBottom: '0.5rem'
+    }
+  },
   metadataHeader: {
-    color: 'rgba(0, 0, 0, 0.6)'
+    color: theme.palette.secondary.dark
   },
   metadataBody: {
-    color: 'rgba(0, 0, 0, 0.87)',
+    color: theme.palette.primary.main,
     fontFamily: 'Roboto',
     fontStyle: 'normal',
     fontWeight: 400,
     fontSize: '1rem',
     lineHeight: '150%',
     align: 'left'
+  },
+  pullImageContent: {
+    padding: '0',
+    width: '100%',
+    '&:last-child': {
+      paddingBottom: '0'
+    }
   }
 }));
 
 function TagDetailsMetadata(props) {
   const classes = useStyles();
-  const { platform, lastUpdated, size, license } = props;
+  const { platform, lastUpdated, size, license, imageName } = props;
+
   const lastDate = lastUpdated
     ? DateTime.fromISO(lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
     : `Timestamp N/A`;
+
   return (
-    <Grid container spacing={1} data-testid="tagDetailsMetadata-container">
-      <Grid container item xs={12}>
+    <Grid container spacing={'1rem'} data-testid="tagDetailsMetadata-container">
+      <Grid item xs={12} className={`hide-on-mobile`}>
         <Card variant="outlined" className={classes.card}>
-          <CardContent>
+          <CardContent className={`${classes.cardContent} ${classes.pullImageContent}`}>
+            <PullCommandButton imageName={imageName || ''} />
+          </CardContent>
+        </Card>
+      </Grid>
+      <Grid item xs={12}>
+        <Card variant="outlined" className={classes.card}>
+          <CardContent className={classes.cardContent}>
             <Typography variant="body2" align="left" className={classes.metadataHeader}>
               OS/Arch
             </Typography>
@@ -54,9 +77,9 @@ function TagDetailsMetadata(props) {
           </CardContent>
         </Card>
       </Grid>
-      <Grid container item xs={12}>
+      <Grid item xs={12}>
         <Card variant="outlined" className={classes.card}>
-          <CardContent>
+          <CardContent className={classes.cardContent}>
             <Typography variant="body2" align="left" className={classes.metadataHeader}>
               Total Size
             </Typography>
@@ -69,7 +92,7 @@ function TagDetailsMetadata(props) {
       <Grid container item xs={12} spacing={2}>
         <Grid item xs={12}>
           <Card variant="outlined" className={classes.card}>
-            <CardContent>
+            <CardContent className={classes.cardContent}>
               <Typography variant="body2" align="left" className={classes.metadataHeader}>
                 Last Published
               </Typography>
@@ -85,7 +108,7 @@ function TagDetailsMetadata(props) {
       <Grid container item xs={12} spacing={2}>
         <Grid item xs={12}>
           <Card variant="outlined" className={classes.card}>
-            <CardContent>
+            <CardContent className={classes.cardContent}>
               <Typography variant="body2" align="left" className={classes.metadataHeader}>
                 License
               </Typography>
