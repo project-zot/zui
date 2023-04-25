@@ -31,7 +31,7 @@ const useStyles = makeStyles((theme) => ({
     lineHeight: '1.125rem'
   },
   metadataBody: {
-    color: theme.palette.primary,
+    color: theme.palette.primary.main,
     fontFamily: 'Roboto',
     fontStyle: 'normal',
     fontWeight: 400,

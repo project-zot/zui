@@ -369,7 +369,7 @@ function VulnerabilitiesDetails(props) {
   };
 
   return (
-    <>
+    <div data-testid="vulnerability-container">
       <Typography
         variant="h4"
         gutterBottom
@@ -410,7 +410,7 @@ function VulnerabilitiesDetails(props) {
           {renderListBottom()}
         </Stack>
       </Stack>
-    </>
+    </div>
   );
 }
 

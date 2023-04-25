@@ -32,16 +32,10 @@ const useStyles = makeStyles((theme) => ({
     backgroundColor: 'transparent',
     height: '100%'
   },
-  container: {
-    paddingTop: 5,
-    paddingBottom: 5,
-    marginTop: 100,
-    backgroundColor: '#FFFFFF'
-  },
   repoName: {
     fontWeight: '600',
     fontSize: '1.5rem',
-    color: '#0F2139',
+    color: theme.palette.secondary.main,
     textAlign: 'left'
   },
   avatar: {
@@ -80,8 +74,6 @@ const useStyles = makeStyles((theme) => ({
     border: '0.0625rem solid #E0E5EB',
     borderRadius: '0.75rem',
     alignSelf: 'stretch',
-    flexGrow: 0,
-    order: 0,
     width: '100%',
     boxShadow: 'none!important'
   },
@@ -136,7 +128,7 @@ const useStyles = makeStyles((theme) => ({
     padding: '0'
   },
   vendor: {
-    color: theme.palette.primary,
+    color: theme.palette.primary.main,
     fontSize: '0.75rem',
     maxWidth: '50%',
     textOverflow: 'ellipsis',
@@ -253,12 +245,7 @@ function RepoDetails() {
                             img: classes.avatar
                           }}
                           component="img"
-                          // eslint-disable-next-line prettier/prettier
-                      image={
-                            !isEmpty(repoDetailData?.logo)
-                              ? `data:image/png;base64, ${repoDetailData?.logo}`
-                              : placeholderImage.current
-                          }
+                          image={placeholderImage.current}
                           alt="icon"
                         />
                         <Typography variant="h4" className={classes.repoName}>

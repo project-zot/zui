@@ -324,7 +324,7 @@ function Explore({ searchInputValue }) {
                 </div>
               </Grid>
             ) : (
-              <Stack direction="column" spacing={{ xs: 4, md: 2 }}>
+              <Stack direction="column">
                 {renderRepoCards()}
                 {renderListBottom()}
               </Stack>
