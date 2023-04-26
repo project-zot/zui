@@ -32,6 +32,13 @@ const useStyles = makeStyles((theme) => ({
   clickCursor: {
     cursor: 'pointer'
   },
+  dropdownToggle: {
+    color: '#1479FF',
+    paddingTop: '1rem',
+    fontSize: '0.8125rem',
+    fontWeight: '600',
+    cursor: 'pointer'
+  },
   dropdown: {
     flexDirection: 'row',
     alignItems: 'center'
@@ -117,17 +124,7 @@ export default function TagCard(props) {
           ) : (
             <KeyboardArrowDown className={classes.dropdownText} />
           )}
-          <Typography
-            sx={{
-              color: '#1479FF',
-              paddingTop: '1rem',
-              fontSize: '0.8125rem',
-              fontWeight: '600',
-              cursor: 'pointer'
-            }}
-          >
-            DIGEST
-          </Typography>
+          <Typography className={classes.dropdownToggle}>{!open ? `Show more` : `Show less`}</Typography>
         </Stack>
         <Collapse in={open} timeout="auto" unmountOnExit>
           <Box className={classes.manifsetsTable}>

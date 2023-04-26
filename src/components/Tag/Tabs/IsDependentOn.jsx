@@ -14,52 +14,11 @@ import { mapToImage } from 'utilities/objectModels';
 import { EXPLORE_PAGE_SIZE } from 'utilities/paginationConstants';
 
 const useStyles = makeStyles(() => ({
-  card: {
-    background: '#FFFFFF',
-    boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
-    borderRadius: '1.875rem',
-    flex: 'none',
-    alignSelf: 'stretch',
-    flexGrow: 0,
-    order: 0,
-    width: '100%',
-    marginTop: '2rem',
-    marginBottom: '2rem',
-    display: 'flex',
-    flexDirection: 'column',
-    alignItems: 'flex-start'
-  },
-  content: {
-    textAlign: 'left',
-    color: '#606060',
-    padding: '2% 3% 2% 3%',
-    width: '100%'
-  },
   title: {
-    color: '#828282',
-    fontSize: '1rem',
-    paddingRight: '0.5rem',
-    paddingBottom: '0.5rem',
-    paddingTop: '0.5rem'
-  },
-  values: {
-    color: '#000000',
-    fontSize: '1rem',
-    fontWeight: '600',
-    paddingBottom: '0.5rem',
-    paddingTop: '0.5rem'
-  },
-  link: {
-    color: '#52637A',
-    fontSize: '1rem',
-    letterSpacing: '0.009375rem',
-    paddingRight: '1rem',
-    textDecorationLine: 'underline'
-  },
-  monitor: {
-    width: '27.25rem',
-    height: '24.625rem',
-    paddingTop: '2rem'
+    marginBottom: '1.7rem',
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontSize: '1.5rem',
+    fontWeight: '600'
   },
   none: {
     color: '#52637A',
@@ -172,18 +131,7 @@ function IsDependentOn(props) {
 
   return (
     <div data-testid="dependents-container">
-      <Typography
-        variant="h4"
-        gutterBottom
-        component="div"
-        align="left"
-        style={{
-          marginBottom: '1.7rem',
-          color: 'rgba(0, 0, 0, 0.87)',
-          fontSize: '1.5rem',
-          fontWeight: '600'
-        }}
-      >
+      <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
         Used by
       </Typography>
       <Stack direction="column" spacing={2}>

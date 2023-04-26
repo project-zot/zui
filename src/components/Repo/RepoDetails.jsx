@@ -77,6 +77,9 @@ const useStyles = makeStyles((theme) => ({
     width: '100%',
     boxShadow: 'none!important'
   },
+  tagsContent: {
+    padding: '1.5rem'
+  },
   platformText: {
     backgroundColor: '#EDE7F6',
     color: '#220052',
@@ -290,7 +293,7 @@ function RepoDetails() {
           </Grid>
           <Grid item xs={12} md={8} className={classes.tags}>
             <Card className={classes.cardRoot}>
-              <CardContent>
+              <CardContent className={classes.tagsContent}>
                 <Tags tags={tags} />
               </CardContent>
             </Card>

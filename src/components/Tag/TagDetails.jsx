@@ -109,6 +109,9 @@ const useStyles = makeStyles((theme) => ({
   cardContent: {
     paddingBottom: '1rem'
   },
+  tabCardContent: {
+    padding: '1.5rem'
+  },
   cardRoot: {
     boxShadow: 'none!important',
     borderRadius: '0.75rem'
@@ -314,7 +317,7 @@ function TagDetails() {
           </Grid>
           <Grid item xs={12} md={8}>
             <Card className={classes.cardRoot}>
-              <CardContent className={classes.cardContent}>{renderTabContent()}</CardContent>
+              <CardContent className={classes.tabCardContent}>{renderTabContent()}</CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} md={4} className={classes.metadata}>
