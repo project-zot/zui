@@ -1,12 +1,18 @@
 import React, { useEffect, useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { isEmpty } from 'lodash';
-import { Divider, Typography, Stack } from '@mui/material';
+import { Typography, Stack } from '@mui/material';
 import ReferrerCard from '../../Shared/ReferrerCard';
 import Loading from '../../Shared/Loading';
 import { mapReferrer } from 'utilities/objectModels';
 
 const useStyles = makeStyles(() => ({
+  title: {
+    color: 'rgba(0, 0, 0, 0.87)',
+    fontSize: '1.5rem',
+    fontWeight: '600',
+    paddingTop: '0.5rem'
+  },
   none: {
     color: '#52637A',
     fontSize: '1.4rem',
@@ -51,24 +57,9 @@ function ReferredBy(props) {
 
   return (
     <div data-testid="referred-by-container">
-      <Typography
-        variant="h4"
-        gutterBottom
-        component="div"
-        align="left"
-        style={{
-          color: 'rgba(0, 0, 0, 0.87)',
-          fontSize: '1.5rem',
-          fontWeight: '600',
-          paddingTop: '0.5rem'
-        }}
-      >
+      <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
         Referred By
       </Typography>
-      <Divider
-        variant="fullWidth"
-        sx={{ margin: '5% 0% 5% 0%', background: 'rgba(0, 0, 0, 0.38)', height: '0.00625rem', width: '100%' }}
-      />
       <Stack direction="column" spacing={2}>
         <Stack direction="column" spacing={2}>
           {isLoading ? <Loading /> : renderReferrers()}

@@ -69,7 +69,7 @@ const mockedTagsData = [
 describe('Tags component', () => {
   it('should open and close details dropdown for tags', async () => {
     render(<TagsThemeWrapper />);
-    const openBtn = screen.getAllByText(/digest/i);
+    const openBtn = screen.getAllByText(/show/i);
     fireEvent.click(openBtn[0]);
     expect(screen.getByText(/OS\/ARCH/i)).toBeInTheDocument();
     fireEvent.click(openBtn[0]);
@@ -87,7 +87,7 @@ describe('Tags component', () => {
 
   it('should navigate to specific manifest when clicking the digest', async () => {
     render(<TagsThemeWrapper />);
-    const openBtn = screen.getAllByText(/digest/i);
+    const openBtn = screen.getAllByText(/show/i);
     await fireEvent.click(openBtn[0]);
     const tagLink = await screen.findByText(/sha256:adca4/i);
     fireEvent.click(tagLink);

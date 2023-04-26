@@ -3,33 +3,13 @@ import React, { useState } from 'react';
 
 // components
 import Typography from '@mui/material/Typography';
-import { Card, CardContent, Stack, InputBase, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
+import { Stack, InputBase, FormControl, Select, InputLabel, MenuItem } from '@mui/material';
 import SearchIcon from '@mui/icons-material/Search';
 import { makeStyles } from '@mui/styles';
 import TagCard from '../../Shared/TagCard';
 import { tagsSortByCriteria } from 'utilities/sortCriteria';
 
 const useStyles = makeStyles(() => ({
-  tagContainer: {
-    marginBottom: 2,
-    display: 'flex',
-    flexDirection: 'row',
-    alignItems: 'center',
-    background: '#FFFFFF',
-    boxShadow: 'none!important',
-    borderRadius: '1.875rem',
-    flex: 'none',
-    alignSelf: 'stretch',
-    flexGrow: 0,
-    order: 0,
-    width: '100%'
-  },
-  content: {
-    textAlign: 'left',
-    color: '#606060',
-    padding: '2% 3% 2% 3%',
-    width: '100%'
-  },
   clickCursor: {
     cursor: 'pointer'
   },
@@ -39,8 +19,6 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
-    marginTop: '1rem',
-    marginBottom: '1rem',
     boxShadow: 'none',
     border: '0.063rem solid #E7E7E7',
     borderRadius: '0.625rem'
@@ -49,11 +27,14 @@ const useStyles = makeStyles(() => ({
     color: '#52637A',
     paddingRight: '3%'
   },
+  searchInputBase: {
+    width: '90%',
+    paddingLeft: '1.5rem',
+    height: 40
+  },
   input: {
     color: '#464141',
     fontSize: '1rem',
-    paddingLeft: '1rem',
-    width: '90%',
     '&::placeholder': {
       opacity: '1'
     }
@@ -99,51 +80,45 @@ export default function Tags(props) {
   };
 
   return (
-    <Card className={classes.tagContainer} data-testid="tags-container">
-      <CardContent className={classes.content}>
-        <Stack direction="row" justifyContent="space-between">
-          <Typography
-            variant="h4"
-            gutterBottom
-            component="div"
-            align="left"
-            style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.5rem', fontWeight: '600' }}
+    <Stack direction="column" spacing="1rem">
+      <Stack direction="row" justifyContent="space-between">
+        <Typography
+          variant="h4"
+          gutterBottom
+          component="div"
+          align="left"
+          style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.5rem', fontWeight: '600' }}
+        >
+          Tags History
+        </Typography>
+        <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
+          <InputLabel>Sort</InputLabel>
+          <Select
+            label="Sort"
+            value={sortFilter}
+            onChange={handleTagsSortChange}
+            MenuProps={{ disableScrollLock: true }}
           >
-            Tags History
-          </Typography>
-          <div>
-            <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
-              <InputLabel>Sort</InputLabel>
-              <Select
-                label="Sort"
-                value={sortFilter}
-                onChange={handleTagsSortChange}
-                MenuProps={{ disableScrollLock: true }}
-              >
-                {Object.values(tagsSortByCriteria).map((el) => (
-                  <MenuItem key={el.value} value={el.value}>
-                    {el.label}
-                  </MenuItem>
-                ))}
-              </Select>
-            </FormControl>
-          </div>
-        </Stack>
-        <Stack className={classes.search}>
-          <InputBase
-            style={{ paddingLeft: 10, height: 40, color: 'rgba(0, 0, 0, 0.6)' }}
-            placeholder={'Search tags...'}
-            // className={classes.input}
-            classes={{ input: classes.input }}
-            value={tagsFilter}
-            onChange={handleTagsFilterChange}
-          />
-          <div className={classes.searchIcon}>
-            <SearchIcon />
-          </div>
-        </Stack>
-        {renderTags(tags)}
-      </CardContent>
-    </Card>
+            {Object.values(tagsSortByCriteria).map((el) => (
+              <MenuItem key={el.value} value={el.value}>
+                {el.label}
+              </MenuItem>
+            ))}
+          </Select>
+        </FormControl>
+      </Stack>
+      <Stack className={classes.search}>
+        <InputBase
+          placeholder={'Search tags...'}
+          classes={{ root: classes.searchInputBase, input: classes.input }}
+          value={tagsFilter}
+          onChange={handleTagsFilterChange}
+        />
+        <div className={classes.searchIcon}>
+          <SearchIcon />
+        </div>
+      </Stack>
+      {renderTags(tags)}
+    </Stack>
   );
 }

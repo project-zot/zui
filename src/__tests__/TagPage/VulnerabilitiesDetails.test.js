@@ -1,5 +1,6 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
+import MockThemeProvier from '__mocks__/MockThemeProvider';
 import { api } from 'api';
 import VulnerabilitiesDetails from 'components/Tag/Tabs/VulnerabilitiesDetails';
 import React from 'react';
@@ -7,9 +8,11 @@ import { MemoryRouter } from 'react-router-dom';
 
 const StateVulnerabilitiesWrapper = () => {
   return (
-    <MemoryRouter>
-      <VulnerabilitiesDetails name="mongo" />
-    </MemoryRouter>
+    <MockThemeProvier>
+      <MemoryRouter>
+        <VulnerabilitiesDetails name="mongo" />
+      </MemoryRouter>
+    </MockThemeProvier>
   );
 };
 
@@ -500,7 +503,7 @@ describe('Vulnerabilties page', () => {
   it('sends filtered query if user types in the search bar', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
-    const cveSearchInput = screen.getByPlaceholderText(/search for/i);
+    const cveSearchInput = screen.getByPlaceholderText(/search/i);
     jest.spyOn(api, 'get').mockRejectedValueOnce({ status: 200, data: { data: mockCVEListFiltered } });
     await userEvent.type(cveSearchInput, '2022');
     expect((await screen.queryAllByText(/2023/i).length) === 0);
