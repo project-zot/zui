@@ -249,7 +249,7 @@ fi
 
 
 # Sign new updated image
-COSIGN_PASSWORD=${cosign_password} cosign sign ${remote_dest_image_ref} --key ${cosign_key_path} --allow-insecure-registry
+COSIGN_PASSWORD=${cosign_password} cosign sign ${remote_dest_image_ref} --key ${cosign_key_path} --allow-insecure-registry --yes
 if [ $? -ne 0 ]; then
     exit 1
 fi
