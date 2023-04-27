@@ -7,7 +7,7 @@ cosign_password=""
 metafile=""
 multiarch=""
 username=""
-username=""
+password=""
 debug=0
 data_dir=$(pwd)
 
@@ -110,28 +110,33 @@ cosign_key_path=${data_dir}/cosign.key
 function verify_prerequisites {
     mkdir -p ${data_dir}
 
-    if [ ! command -v regctl ] &>/dev/null; then
-        echo "you need to install regctl as a prerequisite" >&3
+    command -v regctl
+    if [ $? -ne 0 ]; then
+        echo "you need to install regctl as a prerequisite"
+        exit 1
+    fi
+
+    command -v skopeo
+    if [ $? -ne 0 ]; then
+        echo "you need to install skopeo as a prerequisite"
+        exit 1
+    fi
+
+    command -v cosign
+    if [ $? -ne 0 ]; then
+        echo "you need to install cosign as a prerequisite"
         return 1
     fi
 
-    if [ ! command -v skopeo ] &>/dev/null; then
-        echo "you need to install skopeo as a prerequisite" >&3
+    command -v trivy
+    if [ $? -ne 0 ]; then
+        echo "you need to install trivy as a prerequisite"
         return 1
     fi
 
-    if [ ! command -v cosign ] &>/dev/null; then
-        echo "you need to install cosign as a prerequisite" >&3
-        return 1
-    fi
-
-    if [ ! command -v trivy ] &>/dev/null; then
-        echo "you need to install trivy as a prerequisite" >&3
-        return 1
-    fi
-
-    if [ ! command -v jq ] &>/dev/null; then
-        echo "you need to install jq as a prerequisite" >&3
+    command -v jq
+    if [ $? -ne 0 ]; then
+        echo "you need to install jq as a prerequisite"
         return 1
     fi
 
@@ -197,7 +202,7 @@ regctl image mod --replace --annotation org.opencontainers.image.documentation="
 
 credentials_args=""
 if [ ! -z "${username}" ]; then
-    credentials_args="--dest-creds ${username}:${username}"
+    credentials_args="--dest-creds ${username}:${password}"
 fi
 
 # Upload image to target registry
