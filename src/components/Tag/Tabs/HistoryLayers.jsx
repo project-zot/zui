@@ -33,7 +33,7 @@ function HistoryLayers(props) {
     return () => {
       abortController.abort();
     };
-  }, [name]);
+  }, [name, history]);
 
   return (
     <>
