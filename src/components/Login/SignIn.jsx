@@ -3,7 +3,8 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { host } from '../../host';
 // utility
-import { api } from '../../api';
+import { api, endpoints } from '../../api';
+import { isEmpty } from 'lodash';
 
 // components
 import Button from '@mui/material/Button';
@@ -117,15 +118,15 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
       navigate('/home');
     } else {
       api
-        .get(`${host()}/v2/`, abortController.signal)
+        .get(`${host()}${endpoints.authConfig}`, abortController.signal)
         .then((response) => {
-          if (response.status === 200) {
+          if (response.data?.http && isEmpty(response.data?.http?.auth)) {
             localStorage.setItem('token', '-');
             setIsLoggedIn(true);
-            setIsLoading(false);
-            wrapperSetLoading(false);
             navigate('/home');
           }
+          setIsLoading(false);
+          wrapperSetLoading(false);
         })
         .catch(() => {
           setIsLoading(false);

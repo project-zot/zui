@@ -24,7 +24,7 @@ describe('Signin component automatic navigation', () => {
 
   it('navigates to homepage when auth is disabled', async () => {
     // mock request to check auth
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: {} });
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { http: {} } });
     render(<SignIn isAuthEnabled={true} setIsAuthEnabled={() => {}} isLoggedIn={false} setIsLoggedIn={() => {}} />);
     await waitFor(() => {
       expect(mockedUsedNavigate).toHaveBeenCalledWith('/home');
