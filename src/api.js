@@ -9,12 +9,15 @@ axios.interceptors.response.use(
   (error) => {
     if (error.response.status === 401) {
       localStorage.clear();
+      window.location.replace('/login');
       return Promise.reject(error);
     }
   }
 );
 
 const api = {
+  getAxiosInstance: () => axios,
+
   getRequestCfg: () => {
     const genericHeaders = {
       Accept: 'application/json',
@@ -71,6 +74,7 @@ const api = {
 };
 
 const endpoints = {
+  authConfig: `/v2/_zot/ext/mgmt`,
   repoList: ({ pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={RepoListWithNewestImage(requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
