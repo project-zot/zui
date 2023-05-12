@@ -8,7 +8,8 @@ import { mapToRepo } from 'utilities/objectModels';
 import Loading from '../Shared/Loading';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 import { sortByCriteria } from 'utilities/sortCriteria';
-import { HOME_POPULAR_PAGE_SIZE, HOME_RECENT_PAGE_SIZE } from 'utilities/paginationConstants';
+import { HOME_POPULAR_PAGE_SIZE, HOME_RECENT_PAGE_SIZE, HOME_BOOKMARKS_PAGE_SIZE } from 'utilities/paginationConstants';
+import { isEmpty } from 'lodash';
 
 const useStyles = makeStyles((theme) => ({
   gridWrapper: {
@@ -82,13 +83,18 @@ const useStyles = makeStyles((theme) => ({
 function Home() {
   const [isLoading, setIsLoading] = useState(true);
   const [popularData, setPopularData] = useState([]);
+  const [isLoadingPopular, setIsLoadingPopular] = useState(true);
   const [recentData, setRecentData] = useState([]);
+  const [isLoadingRecent, setIsLoadingRecent] = useState(true);
+  const [bookmarkData, setBookmarkData] = useState([]);
+  const [isLoadingBookmarks, setIsLoadingBookmarks] = useState(true);
+
   const navigate = useNavigate();
   const abortController = useMemo(() => new AbortController(), []);
   const classes = useStyles();
 
   const getPopularData = () => {
-    setIsLoading(true);
+    setIsLoadingPopular(true);
     api
       .get(
         `${host()}${endpoints.globalSearch({
@@ -107,15 +113,18 @@ function Home() {
           });
           setPopularData(repoData);
           setIsLoading(false);
+          setIsLoadingPopular(false);
         }
       })
       .catch((e) => {
         console.error(e);
+        setIsLoading(false);
+        setIsLoadingPopular(false);
       });
   };
 
   const getRecentData = () => {
-    setIsLoading(true);
+    setIsLoadingRecent(true);
     api
       .get(
         `${host()}${endpoints.globalSearch({
@@ -134,30 +143,66 @@ function Home() {
           });
           setRecentData(repoData);
           setIsLoading(false);
+          setIsLoadingRecent(false);
         }
       })
       .catch((e) => {
+        setIsLoading(false);
+        setIsLoadingRecent(false);
+        console.error(e);
+      });
+  };
+
+  const getBookmarks = () => {
+    setIsLoadingBookmarks(true);
+    api
+      .get(
+        `${host()}${endpoints.globalSearch({
+          searchQuery: '',
+          pageNumber: 1,
+          pageSize: HOME_BOOKMARKS_PAGE_SIZE,
+          sortBy: sortByCriteria.relevance?.value,
+          filter: { IsBookmarked: true }
+        })}`,
+        abortController.signal
+      )
+      .then((response) => {
+        if (response.data && response.data.data) {
+          let repoList = response.data.data.GlobalSearch.Repos;
+          let repoData = repoList.map((responseRepo) => {
+            return mapToRepo(responseRepo);
+          });
+          setBookmarkData(repoData);
+          setIsLoading(false);
+          setIsLoadingBookmarks(false);
+        }
+      })
+      .catch((e) => {
+        setIsLoading(false);
+        setIsLoadingBookmarks(false);
         console.error(e);
       });
   };
 
   useEffect(() => {
     window.scrollTo(0, 0);
+    setIsLoading(true);
     getPopularData();
     getRecentData();
+    getBookmarks();
     return () => {
       abortController.abort();
     };
   }, []);
 
-  const handleClickViewAll = (target) => {
-    navigate({ pathname: `/explore`, search: createSearchParams({ sortby: target }).toString() });
+  const handleClickViewAll = (type, value) => {
+    navigate({ pathname: `/explore`, search: createSearchParams({ [type]: value }).toString() });
   };
 
-  const renderMostPopular = () => {
+  const renderCards = (cardArray) => {
     return (
-      popularData &&
-      popularData.map((item, index) => {
+      cardArray &&
+      cardArray.map((item, index) => {
         return (
           <RepoCard
             name={item.name}
@@ -165,32 +210,7 @@ function Home() {
             description={item.description}
             downloads={item.downloads}
             isSigned={item.isSigned}
-            vendor={item.vendor}
-            platforms={item.platforms}
-            key={index}
-            vulnerabilityData={{
-              vulnerabilitySeverity: item.vulnerabiltySeverity,
-              count: item.vulnerabilityCount
-            }}
-            lastUpdated={item.lastUpdated}
-            logo={item.logo}
-          />
-        );
-      })
-    );
-  };
-
-  const renderRecentlyUpdated = () => {
-    return (
-      recentData &&
-      recentData.map((item, index) => {
-        return (
-          <RepoCard
-            name={item.name}
-            version={item.latestVersion}
-            description={item.description}
-            downloads={item.downloads}
-            isSigned={item.isSigned}
+            isBookmarked={item.isBookmarked}
             vendor={item.vendor}
             platforms={item.platforms}
             key={index}
@@ -218,13 +238,13 @@ function Home() {
                 Most popular images
               </Typography>
             </div>
-            <div onClick={() => handleClickViewAll(sortByCriteria.downloads.value)}>
+            <div onClick={() => handleClickViewAll('sortby', sortByCriteria.downloads.value)}>
               <Typography variant="body2" className={classes.viewAll}>
                 View all
               </Typography>
             </div>
           </Stack>
-          {renderMostPopular()}
+          {isLoadingPopular ? <Loading /> : renderCards(popularData)}
           {/* currently most popular will be by downloads until stars are implemented */}
           <Stack className={classes.sectionHeaderContainer}>
             <div>
@@ -236,13 +256,34 @@ function Home() {
               <Typography
                 variant="body2"
                 className={classes.viewAll}
-                onClick={() => handleClickViewAll(sortByCriteria.updateTime.value)}
+                onClick={() => handleClickViewAll('sortby', sortByCriteria.updateTime.value)}
               >
                 View all
               </Typography>
             </div>
           </Stack>
-          {renderRecentlyUpdated()}
+          {isLoadingRecent ? <Loading /> : renderCards(recentData)}
+          {!isEmpty(bookmarkData) && (
+            <>
+              <Stack className={classes.sectionHeaderContainer}>
+                <div>
+                  <Typography variant="h4" align="left" className={classes.sectionTitle}>
+                    Bookmarks
+                  </Typography>
+                </div>
+                <div>
+                  <Typography
+                    variant="body2"
+                    className={classes.viewAll}
+                    onClick={() => handleClickViewAll('filter', 'IsBookmarked')}
+                  >
+                    View all
+                  </Typography>
+                </div>
+              </Stack>
+              {isLoadingBookmarks ? <Loading /> : renderCards(bookmarkData)}
+            </>
+          )}
         </Stack>
       )}
     </>

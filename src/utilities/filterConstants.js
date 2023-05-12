@@ -14,6 +14,11 @@ const imageFilters = [
     label: 'Signed Images',
     value: 'HasToBeSigned',
     type: 'boolean'
+  },
+  {
+    label: 'Bookmarks',
+    value: 'IsBookmarked',
+    type: 'boolean'
   }
 ];
 

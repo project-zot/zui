@@ -24,7 +24,7 @@ const api = {
       'Content-Type': 'application/json'
     };
     const token = localStorage.getItem('token');
-    if (token) {
+    if (token && token !== '-') {
       const authHeaders = {
         Accept: 'application/json',
         'Content-Type': 'application/json',
@@ -78,9 +78,9 @@ const endpoints = {
   repoList: ({ pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={RepoListWithNewestImage(requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
-    }}){Results {Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description  Licenses Title Source IsSigned Documentation Vendor Labels} DownloadCount}}}`,
+    }}){Results {Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description  Licenses Title Source IsSigned Documentation Vendor Labels} IsStarred IsBookmarked DownloadCount}}}`,
   detailedRepoInfo: (name) =>
-    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Manifests {Digest Platform {Os Arch} Size} Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor } Summary {Name LastUpdated Size Platforms {Os Arch} Vendors NewestImage {RepoName IsSigned Vulnerabilities {MaxSeverity Count} Manifests {Digest} Tag Vendor Title Documentation DownloadCount Source Description Licenses}}}}`,
+    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Manifests {Digest Platform {Os Arch} Size} Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor } Summary {Name LastUpdated Size Platforms {Os Arch} Vendors IsStarred IsBookmarked NewestImage {RepoName IsSigned Vulnerabilities {MaxSeverity Count} Manifests {Digest} Tag Vendor Title Documentation DownloadCount Source Description Licenses}}}}`,
   detailedImageInfo: (name, tag) =>
     `/v2/_zot/ext/search?query={Image(image: "${name}:${tag}"){RepoName IsSigned Vulnerabilities {MaxSeverity Count}  Referrers {MediaType ArtifactType Size Digest Annotations{Key Value}} Tag Manifests {History {Layer {Size Digest} HistoryDescription {CreatedBy EmptyLayer}} Digest ConfigDigest LastUpdated Size Platform {Os Arch}} Vendor Licenses }}`,
   vulnerabilitiesForRepo: (name, { pageNumber = 1, pageSize = 15 }, searchTerm = '') => {
@@ -119,9 +119,10 @@ const endpoints = {
     if (filter.Os) filterParam += ` Os:${!isEmpty(filter.Os) ? `${JSON.stringify(filter.Os)}` : '""'}`;
     if (filter.Arch) filterParam += ` Arch:${!isEmpty(filter.Arch) ? `${JSON.stringify(filter.Arch)}` : '""'}`;
     if (filter.HasToBeSigned) filterParam += ` HasToBeSigned: ${filter.HasToBeSigned}`;
+    if (filter.IsBookmarked) filterParam += ` IsBookmarked: ${filter.IsBookmarked}`;
     filterParam += '}';
     if (Object.keys(filter).length === 0) filterParam = '';
-    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam} ${filterParam}) {Page {TotalCount ItemCount} Repos {Name LastUpdated Size Platforms { Os Arch } NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description IsSigned Licenses Vendor Labels } DownloadCount}}}`;
+    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam} ${filterParam}) {Page {TotalCount ItemCount} Repos {Name LastUpdated Size Platforms { Os Arch } IsStarred IsBookmarked NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description IsSigned Licenses Vendor Labels } DownloadCount}}}`;
   },
   imageSuggestions: ({ searchQuery = '""', pageNumber = 1, pageSize = 15 }) => {
     const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
@@ -129,7 +130,8 @@ const endpoints = {
     return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam}) {Images {RepoName Tag}}}`;
   },
   referrers: ({ repo, digest, type = '' }) =>
-    `/v2/_zot/ext/search?query={Referrers(repo: "${repo}" digest: "${digest}" type: "${type}"){MediaType ArtifactType Size Digest Annotations{Key Value}}}`
+    `/v2/_zot/ext/search?query={Referrers(repo: "${repo}" digest: "${digest}" type: "${type}"){MediaType ArtifactType Size Digest Annotations{Key Value}}}`,
+  bookmarkToggle: (repo) => `/v2/_zot/ext/userprefs?repo=${repo}&action=toggleBookmark`
 };
 
 export { api, endpoints };

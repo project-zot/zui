@@ -3,16 +3,18 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 
 // external
 import { DateTime } from 'luxon';
+import { isEmpty, uniq } from 'lodash';
 
 // utility
 import { api, endpoints } from '../../api';
+import { host } from '../../host';
 import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
 
 // components
-import Tags from './Tabs/Tags.jsx';
-import { Card, CardContent, CardMedia, Chip, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import { Card, CardContent, CardMedia, Chip, Grid, Stack, Tooltip, Typography, IconButton } from '@mui/material';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import makeStyles from '@mui/styles/makeStyles';
-import { host } from '../../host';
 
 // placeholder images
 import repocube1 from '../../assets/repocube-1.png';
@@ -20,12 +22,13 @@ import repocube2 from '../../assets/repocube-2.png';
 import repocube3 from '../../assets/repocube-3.png';
 import repocube4 from '../../assets/repocube-4.png';
 
+import Tags from './Tabs/Tags.jsx';
 import RepoDetailsMetadata from './RepoDetailsMetadata';
 import Loading from '../Shared/Loading';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
-import { isEmpty, uniq } from 'lodash';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { mapToRepoFromRepoInfo } from 'utilities/objectModels';
+import { isAuthenticated } from 'utilities/authUtilities';
 
 const useStyles = makeStyles((theme) => ({
   pageWrapper: {
@@ -216,6 +219,17 @@ function RepoDetails() {
     ));
   };
 
+  const handleBookmarkClick = () => {
+    api.put(`${host()}${endpoints.bookmarkToggle(name)}`, abortController.signal).then((response) => {
+      if (response.status === 200) {
+        setRepoDetailData((prevState) => ({
+          ...prevState,
+          isBookmarked: !prevState.isBookmarked
+        }));
+      }
+    });
+  };
+
   const getVendor = () => {
     return `${repoDetailData.newestTag?.Vendor || 'Vendor not available'} •`;
   };
@@ -256,12 +270,18 @@ function RepoDetails() {
                         </Typography>
                       </Stack>
                       <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
-                        <VulnerabilityIconCheck
-                          vulnerabilitySeverity={repoDetailData.vulnerabiltySeverity}
-                          count={repoDetailData?.vulnerabilityCount}
-                        />
+                        <VulnerabilityIconCheck vulnerabilitySeverity={repoDetailData?.vulnerabilitySeverity} />
                         <SignatureIconCheck isSigned={repoDetailData.isSigned} />
                       </Stack>
+                      {isAuthenticated() && (
+                        <IconButton component="span" onClick={handleBookmarkClick} data-testid="bookmark-button">
+                          {repoDetailData?.isBookmarked ? (
+                            <BookmarkIcon data-testid="bookmarked" />
+                          ) : (
+                            <BookmarkBorderIcon data-testid="not-bookmarked" />
+                          )}
+                        </IconButton>
+                      )}
                     </Stack>
                     <Typography gutterBottom className={classes.repoTitle}>
                       {repoDetailData?.title || 'Title not available'}

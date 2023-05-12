@@ -368,7 +368,51 @@ const mockDependenciesList = {
   }
 };
 
-const mockDependentsList = mockDependenciesList;
+const mockDependentsList = {
+  data: {
+    DerivedImageList: {
+      Page: { ItemCount: 4, TotalCount: 4 },
+      Results: [
+        {
+          RepoName: 'project-stacker/c3/static-ubuntu-amd64',
+          Tag: 'tag1',
+          Manifests: [],
+          Vulnerabilities: {
+            MaxSeverity: 'HIGH',
+            Count: 5
+          }
+        },
+        {
+          RepoName: 'tag2',
+          Tag: 'tag2',
+          Manifests: [],
+          Vulnerabilities: {
+            MaxSeverity: 'CRITICAL',
+            Count: 2
+          }
+        },
+        {
+          RepoName: 'tag3',
+          Tag: 'tag3',
+          Manifests: [],
+          Vulnerabilities: {
+            MaxSeverity: 'LOW',
+            Count: 7
+          }
+        },
+        {
+          RepoName: 'tag4',
+          Tag: 'tag4',
+          Manifests: [],
+          Vulnerabilities: {
+            MaxSeverity: 'HIGH',
+            Count: 5
+          }
+        }
+      ]
+    }
+  }
+};
 
 const mockCVEList = {
   CVEListForImage: {
