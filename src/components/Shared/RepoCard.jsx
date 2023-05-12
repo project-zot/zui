@@ -1,9 +1,16 @@
 // react global
-import React, { useRef } from 'react';
+import React, { useRef, useMemo, useState } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
 
 // utility
 import { DateTime } from 'luxon';
+import { uniq } from 'lodash';
+
+// api module
+import { api, endpoints } from '../../api';
+import { host } from '../../host';
+import { isAuthenticated } from '../../utilities/authUtilities';
+
 // components
 import {
   Card,
@@ -15,9 +22,13 @@ import {
   Chip,
   Grid,
   Tooltip,
+  IconButton,
   useMediaQuery
 } from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
+import BookmarkIcon from '@mui/icons-material/Bookmark';
+import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import { useTheme } from '@emotion/react';
 
 // placeholder images
 import repocube1 from '../../assets/repocube-1.png';
@@ -27,8 +38,6 @@ import repocube4 from '../../assets/repocube-4.png';
 
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
-import { uniq } from 'lodash';
-import { useTheme } from '@emotion/react';
 
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
@@ -89,7 +98,8 @@ const useStyles = makeStyles((theme) => ({
     }
   },
   contentRight: {
-    height: '100%'
+    justifyContent: 'flex-end',
+    textAlign: 'end'
   },
   contentRightLabel: {
     fontSize: '0.75rem',
@@ -104,6 +114,10 @@ const useStyles = makeStyles((theme) => ({
     color: '#14191F',
     textAlign: 'end',
     marginLeft: '0.5rem'
+  },
+  contentRightActions: {
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end'
   },
   signedBadge: {
     color: '#9ccc65',
@@ -161,7 +175,23 @@ function RepoCard(props) {
   const isXsSize = useMediaQuery(theme.breakpoints.down('md'));
   const MAX_PLATFORM_CHIPS = isXsSize ? 3 : 6;
 
-  const { name, vendor, platforms, description, downloads, isSigned, lastUpdated, version, vulnerabilityData } = props;
+  const abortController = useMemo(() => new AbortController(), []);
+
+  const {
+    name,
+    vendor,
+    platforms,
+    description,
+    downloads,
+    isSigned,
+    lastUpdated,
+    version,
+    vulnerabilityData,
+    isBookmarked
+  } = props;
+
+  // keep a local bookmark state to display in the ui dynamically on updates
+  const [currentBookmarkValue, setCurrentBookmarkValue] = useState(isBookmarked);
 
   const goToDetails = () => {
     navigate(`/image/${encodeURIComponent(name)}`);
@@ -172,6 +202,16 @@ function RepoCard(props) {
     event.stopPropagation();
     event.preventDefault();
     navigate({ pathname: `/explore`, search: createSearchParams({ filter: textContent }).toString() });
+  };
+
+  const handleBookmarkClick = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    api.put(`${host()}${endpoints.bookmarkToggle(name)}`, abortController.signal).then((response) => {
+      if (response.status === 200) {
+        setCurrentBookmarkValue((prevState) => !prevState);
+      }
+    });
   };
 
   const platformChips = () => {
@@ -205,8 +245,22 @@ function RepoCard(props) {
     return lastDate;
   };
 
+  const renderBookmark = () => {
+    return (
+      isAuthenticated() && (
+        <IconButton component="span" onClick={handleBookmarkClick} data-testid="bookmark-button">
+          {currentBookmarkValue ? (
+            <BookmarkIcon data-testid="bookmarked" />
+          ) : (
+            <BookmarkBorderIcon data-testid="not-bookmarked" />
+          )}
+        </IconButton>
+      )
+    );
+  };
+
   return (
-    <Card variant="outlined" className={classes.card}>
+    <Card variant="outlined" className={classes.card} data-testid="repo-card">
       <CardActionArea
         onClick={goToDetails}
         classes={{
@@ -265,17 +319,16 @@ function RepoCard(props) {
                 </Tooltip>
               </Stack>
             </Grid>
-            <Grid item xs={2} md={2} className={`hide-on-mobile ${classes.contentRight}`}>
-              <Grid container item justifyContent="flex-end" textAlign="end">
-                <Grid item xs={12}>
-                  <Typography variant="body2" component="span" className={classes.contentRightLabel}>
-                    Downloads •
-                  </Typography>
-                  <Typography variant="body2" component="span" className={classes.contentRightValue}>
-                    {!isNaN(downloads) ? downloads : `not available`}
-                  </Typography>
-                </Grid>
-                {/* <Grid item xs={12}>
+            <Grid item container xs={2} md={2} className={`hide-on-mobile ${classes.contentRight}`}>
+              <Grid item xs={12}>
+                <Typography variant="body2" component="span" className={classes.contentRightLabel}>
+                  Downloads •
+                </Typography>
+                <Typography variant="body2" component="span" className={classes.contentRightValue}>
+                  {!isNaN(downloads) ? downloads : `not available`}
+                </Typography>
+              </Grid>
+              {/* <Grid item xs={12}>
                   <Typography variant="body2" component="span" className={classes.contentRightLabel}>
                     Rating •
                   </Typography>
@@ -283,6 +336,8 @@ function RepoCard(props) {
                     #1
                   </Typography>
                 </Grid> */}
+              <Grid container item xs={12} className={classes.contentRightActions}>
+                <Grid item>{renderBookmark()}</Grid>
               </Grid>
             </Grid>
           </Grid>

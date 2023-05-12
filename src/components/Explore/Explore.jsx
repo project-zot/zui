@@ -70,7 +70,7 @@ function Explore({ searchInputValue }) {
   const [queryParams] = useSearchParams();
   const search = queryParams.get('search');
   // filtercard filters
-  const [imageFilters, setImageFilters] = useState(false);
+  const [imageFilters, setImageFilters] = useState({});
   const [osFilters, setOSFilters] = useState([]);
   const [archFilters, setArchFilters] = useState([]);
   // pagination props
@@ -88,8 +88,8 @@ function Explore({ searchInputValue }) {
     let filter = {};
     filter = !isEmpty(osFilters) ? { ...filter, Os: osFilters } : filter;
     filter = !isEmpty(archFilters) ? { ...filter, Arch: archFilters } : filter;
-    if (imageFilters) {
-      filter = { ...filter, HasToBeSigned: imageFilters };
+    if (!isEmpty(Object.keys(imageFilters))) {
+      filter = { ...filter, ...imageFilters };
     }
     return filter;
   };
@@ -101,6 +101,8 @@ function Explore({ searchInputValue }) {
         setOSFilters([...osFilters, preselectedFilter]);
       } else if (filterConstants.archFilters.map((f) => f.value).includes(preselectedFilter)) {
         setArchFilters([...archFilters, preselectedFilter]);
+      } else if (filterConstants.imageFilters.map((f) => f.value).includes(preselectedFilter)) {
+        setImageFilters({ ...imageFilters, [preselectedFilter]: true });
       }
       queryParams.delete('filter');
     }
@@ -219,6 +221,7 @@ function Explore({ searchInputValue }) {
             description={item.description}
             downloads={item.downloads}
             isSigned={item.isSigned}
+            isBookmarked={item.isBookmarked}
             vendor={item.vendor}
             platforms={item.platforms}
             key={index}

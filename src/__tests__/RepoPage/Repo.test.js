@@ -4,6 +4,7 @@ import React from 'react';
 import { api } from 'api';
 import { createSearchParams } from 'react-router-dom';
 import MockThemeProvier from '__mocks__/MockThemeProvider';
+import userEvent from '@testing-library/user-event';
 
 const RepoDetailsThemeWrapper = () => {
   return (
@@ -45,6 +46,7 @@ const mockRepoDetailsData = {
       LastUpdated: '2023-01-30T15:05:35.420124619Z',
       Size: '451554070',
       Vendors: ['[The Node.js Docker Team](https://github.com/nodejs/docker-node)\n'],
+      IsBookmarked: false,
       NewestImage: {
         RepoName: 'mongo',
         IsSigned: true,
@@ -297,5 +299,14 @@ describe('Repo details component', () => {
       pathname: '/explore',
       search: createSearchParams({ filter: 'linux' }).toString()
     });
+  });
+
+  it('should bookmark a repo if bookmark button is clicked', async () => {
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockRepoDetailsData } });
+    render(<RepoDetailsThemeWrapper />);
+    const bookmarkButton = await screen.findByTestId('bookmark-button');
+    jest.spyOn(api, 'put').mockResolvedValue({ status: 200, data: {} });
+    await userEvent.click(bookmarkButton);
+    expect(await screen.findByTestId('bookmarked')).toBeInTheDocument();
   });
 });

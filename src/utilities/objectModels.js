@@ -5,6 +5,8 @@ const mapToRepo = (responseRepo) => {
     tags: responseRepo.NewestImage?.Labels,
     description: responseRepo.NewestImage?.Description,
     isSigned: responseRepo.NewestImage?.IsSigned,
+    isBookmarked: responseRepo.IsBookmarked,
+    isStarred: responseRepo.IsStarred,
     platforms: responseRepo.Platforms,
     licenses: responseRepo.NewestImage?.Licenses,
     size: responseRepo.Size,
@@ -32,9 +34,11 @@ const mapToRepoFromRepoInfo = (responseRepoInfo) => {
     downloads: responseRepoInfo.Summary?.NewestImage?.DownloadCount,
     overview: responseRepoInfo.Summary?.NewestImage?.Documentation,
     license: responseRepoInfo.Summary?.NewestImage?.Licenses,
-    vulnerabiltySeverity: responseRepoInfo.Summary?.NewestImage?.Vulnerabilities?.MaxSeverity,
+    vulnerabilitySeverity: responseRepoInfo.Summary?.NewestImage?.Vulnerabilities?.MaxSeverity,
     vulnerabilityCount: responseRepoInfo.Summary?.NewestImage?.Vulnerabilities?.Count,
     isSigned: responseRepoInfo.Summary?.NewestImage?.IsSigned,
+    isBookmarked: responseRepoInfo.Summary?.IsBookmarked,
+    isStarred: responseRepoInfo.Summary?.IsStarred,
     logo: responseRepoInfo.Summary?.NewestImage?.Logo
   };
 };

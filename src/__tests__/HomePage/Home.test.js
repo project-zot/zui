@@ -122,6 +122,48 @@ const mockImageListRecent = {
   }
 };
 
+const mockImageListBookmarks = {
+  GlobalSearch: {
+    Page: { TotalCount: 3, ItemCount: 2 },
+    Repos: [
+      {
+        Name: 'alpine',
+        Size: '2806985',
+        LastUpdated: '2022-08-09T17:19:53.274069586Z',
+        NewestImage: {
+          Tag: 'latest',
+          Description: 'w',
+          IsSigned: false,
+          Licenses: '',
+          Vendor: '',
+          Labels: '',
+          Vulnerabilities: {
+            MaxSeverity: 'LOW',
+            Count: 7
+          }
+        }
+      },
+      {
+        Name: 'mongo',
+        Size: '231383863',
+        LastUpdated: '2022-08-02T01:30:49.193203152Z',
+        NewestImage: {
+          Tag: 'latest',
+          Description: '',
+          IsSigned: true,
+          Licenses: '',
+          Vendor: '',
+          Labels: '',
+          Vulnerabilities: {
+            MaxSeverity: 'HIGH',
+            Count: 2
+          }
+        }
+      }
+    ]
+  }
+};
+
 beforeEach(() => {
   window.scrollTo = jest.fn();
 });
@@ -134,27 +176,27 @@ afterEach(() => {
 describe('Home component', () => {
   it('fetches image data and renders popular, bookmarks and recently updated', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
-    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListRecent } });
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageListRecent } });
     render(<HomeWrapper />);
-    await waitFor(() => expect(screen.getAllByText(/alpine/i)).toHaveLength(2));
-    await waitFor(() => expect(screen.getAllByText(/mongo/i)).toHaveLength(2));
+    await waitFor(() => expect(screen.getAllByText(/alpine/i)).toHaveLength(3));
+    await waitFor(() => expect(screen.getAllByText(/mongo/i)).toHaveLength(3));
     await waitFor(() => expect(screen.getAllByText(/node/i)).toHaveLength(1));
   });
 
   it('renders signature icons', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
-    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListRecent } });
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageListRecent } });
     render(<HomeWrapper />);
-    expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(2);
-    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(3);
+    expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(3);
+    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(4);
   });
 
   it('renders vulnerability icons', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
-    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListRecent } });
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageListRecent } });
     render(<HomeWrapper />);
-    expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(2);
-    expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(2);
+    expect(await screen.findAllByTestId('low-vulnerability-icon')).toHaveLength(3);
+    expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(3);
     expect(await screen.findAllByTestId('critical-vulnerability-icon')).toHaveLength(1);
   });
 
@@ -162,15 +204,17 @@ describe('Home component', () => {
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<HomeWrapper />);
-    await waitFor(() => expect(error).toBeCalledTimes(2));
+    await waitFor(() => expect(error).toBeCalledTimes(3));
   });
 
   it('should redirect to explore page when clicking view all popular', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListRecent } });
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListBookmarks } });
     render(<HomeWrapper />);
     const viewAllButtons = await screen.findAllByText(/view all/i);
-    expect(viewAllButtons).toHaveLength(2);
+    expect(viewAllButtons).toHaveLength(3);
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: [] } });
     fireEvent.click(viewAllButtons[0]);
     expect(mockedUsedNavigate).toHaveBeenCalledWith({
       pathname: `/explore`,
@@ -180,6 +224,11 @@ describe('Home component', () => {
     expect(mockedUsedNavigate).toHaveBeenCalledWith({
       pathname: `/explore`,
       search: createSearchParams({ sortby: sortByCriteria.updateTime.value }).toString()
+    });
+    fireEvent.click(viewAllButtons[2]);
+    expect(mockedUsedNavigate).toHaveBeenCalledWith({
+      pathname: `/explore`,
+      search: createSearchParams({ filter: 'IsBookmarked' }).toString()
     });
   });
 });

@@ -33,6 +33,7 @@ const mockImageList = {
         Name: 'alpine',
         Size: '2806985',
         LastUpdated: '2022-08-09T17:19:53.274069586Z',
+        IsBookmarked: false,
         NewestImage: {
           Tag: 'latest',
           Description: 'w',
@@ -44,12 +45,19 @@ const mockImageList = {
             MaxSeverity: 'LOW',
             Count: 7
           }
-        }
+        },
+        Platforms: [
+          {
+            Os: 'linux',
+            Arch: 'amd64'
+          }
+        ]
       },
       {
         Name: 'mongo',
         Size: '231383863',
         LastUpdated: '2022-08-02T01:30:49.193203152Z',
+        IsBookmarked: false,
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -61,12 +69,19 @@ const mockImageList = {
             MaxSeverity: 'HIGH',
             Count: 2
           }
-        }
+        },
+        Platforms: [
+          {
+            Os: 'linux',
+            Arch: 'amd64'
+          }
+        ]
       },
       {
         Name: 'node',
         Size: '369311301',
         LastUpdated: '2022-08-23T00:20:40.144281895Z',
+        IsBookmarked: false,
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -78,12 +93,19 @@ const mockImageList = {
             MaxSeverity: 'CRITICAL',
             Count: 10
           }
-        }
+        },
+        Platforms: [
+          {
+            Os: 'linux',
+            Arch: 'amd64'
+          }
+        ]
       },
       {
         Name: 'centos',
         Size: '369311301',
         LastUpdated: '2022-08-23T00:20:40.144281895Z',
+        IsBookmarked: false,
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -95,12 +117,19 @@ const mockImageList = {
             MaxSeverity: 'NONE',
             Count: 10
           }
-        }
+        },
+        Platforms: [
+          {
+            Os: 'linux',
+            Arch: 'amd64'
+          }
+        ]
       },
       {
         Name: 'debian',
         Size: '369311301',
         LastUpdated: '2022-08-23T00:20:40.144281895Z',
+        IsBookmarked: false,
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -112,12 +141,23 @@ const mockImageList = {
             MaxSeverity: 'MEDIUM',
             Count: 10
           }
-        }
+        },
+        Platforms: [
+          {
+            Os: 'linux',
+            Arch: 'amd64'
+          },
+          {
+            Os: 'windows',
+            Arch: 'amd64'
+          }
+        ]
       },
       {
         Name: 'mysql',
         Size: '369311301',
         LastUpdated: '2022-08-23T00:20:40.144281895Z',
+        IsBookmarked: false,
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -129,12 +169,19 @@ const mockImageList = {
             MaxSeverity: 'UNKNOWN',
             Count: 10
           }
-        }
+        },
+        Platforms: [
+          {
+            Os: 'linux',
+            Arch: 'amd64'
+          }
+        ]
       },
       {
         Name: 'base',
         Size: '369311301',
         LastUpdated: '2022-08-23T00:20:40.144281895Z',
+        IsBookmarked: false,
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -146,10 +193,38 @@ const mockImageList = {
             MaxSeverity: '',
             Count: 10
           }
-        }
+        },
+        Platforms: [
+          {
+            Os: 'linux',
+            Arch: 'amd64'
+          }
+        ]
       }
     ]
   }
+};
+
+const filteredMockImageListWindows = () => {
+  const filteredRepos = mockImageList.GlobalSearch.Repos.filter((r) =>
+    r.Platforms.map((pf) => pf.Os).includes('windows')
+  );
+  return {
+    GlobalSearch: {
+      Page: { TotalCount: 1, ItemCount: 1 },
+      Repos: filteredRepos
+    }
+  };
+};
+
+const filteredMockImageListSigned = () => {
+  const filteredRepos = mockImageList.GlobalSearch.Repos.filter((r) => r.NewestImage.IsSigned);
+  return {
+    GlobalSearch: {
+      Page: { TotalCount: 6, ItemCount: 6 },
+      Repos: filteredRepos
+    }
+  };
 };
 
 beforeEach(() => {
@@ -234,5 +309,29 @@ describe('Explore component', () => {
     expect(sortyBySelect).toBeInTheDocument();
     const filterCheckboxes = await screen.findAllByRole('checkbox');
     expect(filterCheckboxes[0]).toBeChecked();
+  });
+
+  it('should filter the images based on filter cards', async () => {
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
+    render(<StateExploreWrapper />);
+    expect(await screen.findAllByTestId('repo-card')).toHaveLength(mockImageList.GlobalSearch.Repos.length);
+    const windowsCheckbox = (await screen.findAllByRole('checkbox'))[0];
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: filteredMockImageListWindows() } });
+    await userEvent.click(windowsCheckbox);
+    expect(windowsCheckbox).toBeChecked();
+    expect(await screen.findAllByTestId('repo-card')).toHaveLength(1);
+    const signedCheckboxLabel = await screen.findByText(/signed images/i);
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: filteredMockImageListSigned() } });
+    await userEvent.click(signedCheckboxLabel);
+    expect(await screen.findAllByTestId('repo-card')).toHaveLength(6);
+  });
+
+  it('should bookmark a repo if bookmark button is clicked', async () => {
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
+    render(<StateExploreWrapper />);
+    const bookmarkButton = (await screen.findAllByTestId('bookmark-button'))[0];
+    jest.spyOn(api, 'put').mockResolvedValueOnce({ status: 200, data: {} });
+    await userEvent.click(bookmarkButton);
+    expect(await screen.findAllByTestId('bookmarked')).toHaveLength(1);
   });
 });
