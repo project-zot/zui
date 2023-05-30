@@ -26,6 +26,7 @@
     "web-vitals": "^2.1.3"
   },
   "devDependencies": {
+    "@playwright/test": "^1.28.1",
     "eslint": "^8.23.1",
     "eslint-config-prettier": "^8.5.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -38,6 +39,10 @@
     "build": "react-scripts build",
     "test": "react-scripts test --detectOpenHandles",
     "test:coverage": "react-scripts test --detectOpenHandles --coverage",
+    "test:ui": "playwright test",
+    "test:ui-headed": "playwright test --headed --trace on",
+    "test:ui-debug": "playwright test --trace on",
+    "test:release": "npm run test && npm run test:ui",
     "lint": "eslint -c .eslintrc.json --ext .js,.jsx .",
     "lint:fix": "npm run lint -- --fix",
     "format": "prettier --write ./**/*.{js,jsx,ts,tsx,css,md,json} --config ./.prettierrc",
