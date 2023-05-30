@@ -111,7 +111,19 @@ jobs:
         regctl registry set --tls disabled $REGISTRY_HOST:$REGISTRY_PORT
         make test-data REGISTRY_HOST=$REGISTRY_HOST REGISTRY_PORT=$REGISTRY_PORT
 
+    - name: Install playwright dependencies
+      run: |
+        cd $GITHUB_WORKSPACE
+        make playwright-browsers
+
     - name: Run integration tests
       run: |
         cd $GITHUB_WORKSPACE
         make integration-tests REGISTRY_HOST=$REGISTRY_HOST REGISTRY_PORT=$REGISTRY_PORT
+
+    - name: Upload playwright report
+      uses: actions/upload-artifact@v3
+      with:
+        name: playwright-report
+        path: playwright-report/
+        retention-days: 30

@@ -185,7 +185,7 @@ if [ $? -eq 0 ]; then
     echo "Image ${local_image_ref_skopeo} found locally"
 else
     echo "Image ${local_image_ref_skopeo} will be copied"
-    skopeo --insecure-policy copy --format=oci ${multiarch_arg} ${remote_src_image_ref} ${local_image_ref_skopeo}
+    skopeo --insecure-policy --override-os="linux" --override-arch="amd64" copy --override-os="linux" --override-arch="amd64" --format=oci ${multiarch_arg} ${remote_src_image_ref} ${local_image_ref_skopeo}
     if [ $? -ne 0 ]; then
         exit 1
     fi
@@ -206,7 +206,7 @@ if [ ! -z "${username}" ]; then
 fi
 
 # Upload image to target registry
-skopeo copy --dest-tls-verify=false ${multiarch_arg} ${credentials_args} ${local_image_ref_skopeo} docker://${remote_dest_image_ref}
+skopeo --override-os="linux" --override-arch="amd64" copy  --dest-tls-verify=false ${multiarch_arg} ${credentials_args} ${local_image_ref_skopeo} docker://${remote_dest_image_ref}
 if [ $? -ne 0 ]; then
     exit 1
 fi

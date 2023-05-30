@@ -1,4 +1,14 @@
 images:
+  - name: ubuntu
+    tags:
+      - "18.04"
+      - "bionic-20230301"
+      - "bionic"
+      - "22.04"
+      - "jammy-20230301"
+      - "jammy"
+      - "latest"
+    multiarch: ""
   - name: alpine
     tags:
       - "3.17"
@@ -20,16 +30,6 @@ images:
       - "3.14"
       - "3.14.9"
     multiarch: "all"
-  - name: ubuntu
-    tags:
-      - "18.04"
-      - "bionic-20230301"
-      - "bionic"
-      - "22.04"
-      - "jammy-20230301"
-      - "jammy"
-      - "latest"
-    multiarch: ""
   - name: debian
     tags:
       - "bullseye-slim"
