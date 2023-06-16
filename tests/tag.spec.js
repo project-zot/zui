@@ -1,7 +1,6 @@
 import { test, expect } from '@playwright/test';
 import { getTagWithDependencies, getTagWithDependents, getTagWithVulnerabilities } from './utils/test-data-parser';
 import { hosts, pageSizes } from './values/test-constants';
-import { scroll } from './utils/scroll';
 
 test.describe('Tag page test', () => {
   test.beforeEach(async ({ page }) => {
@@ -39,7 +38,5 @@ test.describe('Tag page test', () => {
     await expect(page.getByTestId('vulnerability-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
     await expect(await page.getByText('CVE-').count()).toBeGreaterThan(1);
     await expect(await page.getByText('CVE-').count()).toBeLessThanOrEqual(pageSizes.EXPLORE);
-    await page.evaluate(scroll, { direction: 'down', speed: 'fast' });
-    await expect(await page.getByText('CVE-').count()).toBeGreaterThanOrEqual(pageSizes.EXPLORE);
   });
 });

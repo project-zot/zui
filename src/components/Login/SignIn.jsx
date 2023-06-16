@@ -4,7 +4,7 @@ import { useNavigate } from 'react-router-dom';
 import { host } from '../../host';
 // utility
 import { api, endpoints } from '../../api';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNil } from 'lodash';
 
 // components
 import Button from '@mui/material/Button';
@@ -142,17 +142,18 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
     event.preventDefault();
     setRequestProcessing(true);
     let cfg = {};
-    const token = btoa(username + ':' + password);
-    cfg = {
-      headers: {
-        Authorization: `Basic ${token}`
-      }
-    };
+    let token = !isNil(username) && !isNil(password) ? btoa(username + ':' + password) : '-';
+    if (token !== '-') {
+      cfg = {
+        headers: {
+          Authorization: `Basic ${token}`
+        }
+      };
+    }
     api
       .get(`${host()}/v2/`, abortController.signal, cfg)
       .then((response) => {
         if (response.status === 200) {
-          const token = btoa(username + ':' + password);
           localStorage.setItem('token', token);
           setRequestProcessing(false);
           setRequestError(false);
