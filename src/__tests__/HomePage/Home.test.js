@@ -4,7 +4,7 @@ import Home from 'components/Home/Home';
 import React from 'react';
 import { createSearchParams } from 'react-router-dom';
 import { sortByCriteria } from 'utilities/sortCriteria';
-import MockThemeProvier from '__mocks__/MockThemeProvider';
+import MockThemeProvider from '__mocks__/MockThemeProvider';
 
 // useNavigate mock
 const mockedUsedNavigate = jest.fn();
@@ -15,9 +15,9 @@ jest.mock('react-router-dom', () => ({
 
 const HomeWrapper = () => {
   return (
-    <MockThemeProvier>
+    <MockThemeProvider>
       <Home />
-    </MockThemeProvier>
+    </MockThemeProvider>
   );
 };
 

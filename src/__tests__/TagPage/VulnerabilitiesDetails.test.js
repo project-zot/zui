@@ -1,6 +1,6 @@
 import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import MockThemeProvier from '__mocks__/MockThemeProvider';
+import MockThemeProvider from '__mocks__/MockThemeProvider';
 import { api } from 'api';
 import VulnerabilitiesDetails from 'components/Tag/Tabs/VulnerabilitiesDetails';
 import React from 'react';
@@ -8,11 +8,11 @@ import { MemoryRouter } from 'react-router-dom';
 
 const StateVulnerabilitiesWrapper = () => {
   return (
-    <MockThemeProvier>
+    <MockThemeProvider>
       <MemoryRouter>
         <VulnerabilitiesDetails name="mongo" />
       </MemoryRouter>
-    </MockThemeProvier>
+    </MockThemeProvider>
   );
 };
 

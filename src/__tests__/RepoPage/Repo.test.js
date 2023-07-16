@@ -3,14 +3,14 @@ import RepoDetails from 'components/Repo/RepoDetails';
 import React from 'react';
 import { api } from 'api';
 import { createSearchParams } from 'react-router-dom';
-import MockThemeProvier from '__mocks__/MockThemeProvider';
+import MockThemeProvider from '__mocks__/MockThemeProvider';
 import userEvent from '@testing-library/user-event';
 
 const RepoDetailsThemeWrapper = () => {
   return (
-    <MockThemeProvier>
+    <MockThemeProvider>
       <RepoDetails />
-    </MockThemeProvier>
+    </MockThemeProvider>
   );
 };
 
@@ -233,6 +233,13 @@ const mockRepoDetailsHigh = {
     }
   }
 };
+
+beforeEach(() => {
+  Object.defineProperty(window.document, 'cookie', {
+    writable: true,
+    value: 'user=test'
+  });
+});
 
 afterEach(() => {
   // restore the spy created with spyOn

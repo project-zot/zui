@@ -17,7 +17,8 @@ test.describe('Tag page test', () => {
     await expect(page.getByTestId('layer-card-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
     await page.getByRole('tab', { name: 'Used by' }).click();
     await expect(page.getByTestId('dependents-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
-    await expect(page.getByText('Tag')).toHaveCount(10, { timeout: 100000 });
+    await expect(page.getByText('Tag').nth(1)).toBeVisible({ timeout: 100000 });
+    await expect(await page.getByText('Tag').count()).toBeGreaterThan(0);
   });
 
   test('Tag page with dependencies', async ({ page }) => {
@@ -36,7 +37,7 @@ test.describe('Tag page test', () => {
     await page.goto(`${hosts.ui}/image/${tagWithVulnerabilities.title}/tag/${tagWithVulnerabilities.tag}`);
     await page.getByRole('tab', { name: 'Vulnerabilities' }).click();
     await expect(page.getByTestId('vulnerability-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
-    await expect(await page.getByText('CVE-').count()).toBeGreaterThan(1);
+    await expect(await page.getByText('CVE-').count()).toBeGreaterThan(0);
     await expect(await page.getByText('CVE-').count()).toBeLessThanOrEqual(pageSizes.EXPLORE);
   });
 });

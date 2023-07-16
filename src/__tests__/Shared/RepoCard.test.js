@@ -3,7 +3,7 @@ import React from 'react';
 import userEvent from '@testing-library/user-event';
 import RepoCard from 'components/Shared/RepoCard';
 import { createSearchParams } from 'react-router-dom';
-import MockThemeProvier from '__mocks__/MockThemeProvider';
+import MockThemeProvider from '__mocks__/MockThemeProvider';
 
 // usenavigate mock
 const mockedUsedNavigate = jest.fn();
@@ -28,7 +28,7 @@ const mockImage = {
 const RepoCardWrapper = (props) => {
   const { image } = props;
   return (
-    <MockThemeProvier>
+    <MockThemeProvider>
       <RepoCard
         name={image.name}
         version={image.latestVersion}
@@ -38,7 +38,7 @@ const RepoCardWrapper = (props) => {
         lastUpdated={image.lastUpdated}
         platforms={image.platforms}
       />
-    </MockThemeProvier>
+    </MockThemeProvider>
   );
 };
 

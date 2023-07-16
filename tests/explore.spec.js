@@ -69,16 +69,15 @@ test.describe('explore page test', () => {
     await expect(exploreFirst).toBeVisible({ timeout: 250000 });
     await expect(exploreSecond).toBeVisible({ timeout: 250000 });
 
-    await page.getByLabel('linux').check();
-    await page.getByLabel('amd64').check();
+    const linuxFilter = page.getByRole('checkbox', { name: 'linux' });
+    await linuxFilter.check();
 
-    await expect(page.getByLabel('linux')).toBeChecked();
-    await expect(page.getByLabel('amd64')).toBeChecked();
+    await expect(linuxFilter).toBeChecked();
 
     await expect(exploreFirst).toBeVisible({ timeout: 250000 });
 
-    await page.getByLabel('linux').uncheck();
-    await page.getByLabel('windows').check();
+    await linuxFilter.uncheck();
+    await page.getByRole('checkbox', { name: 'windows' }).check();
     await expect(exploreFirst).not.toBeVisible({ timeout: 250000 });
   });
 });

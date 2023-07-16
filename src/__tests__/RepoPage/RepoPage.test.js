@@ -2,7 +2,7 @@ import { render, screen } from '@testing-library/react';
 import RepoPage from 'pages/RepoPage';
 import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
-import MockThemeProvier from '__mocks__/MockThemeProvider';
+import MockThemeProvider from '__mocks__/MockThemeProvider';
 
 jest.mock('react-router-dom', () => ({
   ...jest.requireActual('react-router-dom'),
@@ -27,18 +27,13 @@ afterEach(() => {
 
 it('renders the repository page component', () => {
   render(
-    <BrowserRouter>
-      <Routes>
-        <Route
-          path="*"
-          element={
-            <MockThemeProvier>
-              <RepoPage />
-            </MockThemeProvier>
-          }
-        />
-      </Routes>
-    </BrowserRouter>
+    <MockThemeProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route path="*" element={<RepoPage />} />
+        </Routes>
+      </BrowserRouter>
+    </MockThemeProvider>
   );
   expect(screen.getByTestId('repo-container')).toBeInTheDocument();
 });
