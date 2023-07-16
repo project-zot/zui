@@ -1,22 +1,19 @@
 import React, { useState } from 'react';
-import HomePage from './pages/HomePage.jsx';
-import LoginPage from './pages/LoginPage.jsx';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+
+import { isAuthenticated } from 'utilities/authUtilities';
+
+import HomePage from './pages/HomePage';
+import LoginPage from './pages/LoginPage';
+import { AuthWrapper } from 'utilities/AuthWrapper';
+import RepoPage from 'pages/RepoPage';
+import TagPage from 'pages/TagPage';
+import ExplorePage from 'pages/ExplorePage';
 
 import './App.css';
 
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
-import { AuthWrapper } from 'utilities/AuthWrapper.jsx';
-import RepoPage from 'pages/RepoPage.jsx';
-import TagPage from 'pages/TagPage';
-import ExplorePage from 'pages/ExplorePage.jsx';
-
 function App() {
-  const isToken = () => {
-    const localStorageToken = localStorage.getItem('token');
-    return localStorageToken ? true : false;
-  };
-
-  const [isLoggedIn, setIsLoggedIn] = useState(isToken());
+  const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
 
   return (
     <div className="App" data-testid="app-container">

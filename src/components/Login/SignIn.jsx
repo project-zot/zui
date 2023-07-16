@@ -1,33 +1,35 @@
 // react global
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { host } from '../../host';
+
 // utility
 import { api, endpoints } from '../../api';
-import { isEmpty, isNil } from 'lodash';
+import { host } from '../../host';
+import { isEmpty, isObject } from 'lodash';
 
 // components
+import { Card, CardContent, CssBaseline } from '@mui/material';
+
 import Button from '@mui/material/Button';
-import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
+import Divider from '@mui/material/Divider';
+import Stack from '@mui/material/Stack';
 import Typography from '@mui/material/Typography';
 import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
-import TermsOfService from './TermsOfService';
+import Loading from '../Shared/Loading';
+
+import { GoogleLoginButton, GithubLoginButton, DexLoginButton } from './ThirdPartyLoginComponents';
 
 // styling
 import { makeStyles } from '@mui/styles';
-import { Card, CardContent } from '@mui/material';
-import Loading from '../Shared/Loading';
 
 const useStyles = makeStyles(() => ({
   cardContainer: {
     display: 'flex',
     alignItems: 'center',
     justifyContent: 'center',
-    margin: '0 auto',
-    padding: '0.625rem',
     position: 'relative'
   },
   loginCard: {
@@ -35,45 +37,82 @@ const useStyles = makeStyles(() => ({
     flexDirection: 'column',
     alignItems: 'center',
     justifyContent: 'center',
-    marginTop: '20%',
     width: '60%',
     height: '60%',
     background: '#FFFFFF',
-    gap: '0.625em',
     boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
-    borderRadius: '1.5rem',
+    borderRadius: '0.75rem',
     minWidth: '30rem'
   },
   loginCardContent: {
-    alignItems: 'center',
-    justifyContent: 'center',
     display: 'flex',
     flexDirection: 'column',
     border: '0.1875rem black',
-    maxWidth: '73%',
-    height: '90%'
+    width: '100%',
+    padding: '3rem'
   },
   text: {
     color: '#14191F',
     width: '100%',
-    fontSize: '1.5rem'
+    fontSize: '1.5rem',
+    lineHeight: '2.25rem',
+    letterSpacing: '-0.01rem',
+    marginBottom: '0.25rem'
   },
   subtext: {
     color: '#52637A',
     width: '100%',
-    fontSize: '1rem'
+    fontSize: '1rem',
+    marginBottom: '2.375rem'
   },
   textField: {
-    borderRadius: '0.25rem'
+    borderRadius: '0.25rem',
+    marginTop: 0,
+    marginBottom: '1.5rem'
   },
-  button: {
+  textColor: {
+    color: '#8596AD'
+  },
+  labelColor: {
+    color: '#667C99',
+    '&:focused': {
+      color: '#667C99'
+    }
+  },
+  continueButton: {
     textTransform: 'none',
-    color: '##FFFFFF',
-    fontSize: '1.4375rem',
-    fontWeight: '500',
+    background: '#F15527',
+    color: '#FFFFFF',
+    fontSize: '1.438rem',
+    fontWeight: '600',
     height: '3.125rem',
     borderRadius: '0.25rem',
-    letterSpacing: '0.01rem'
+    letterSpacing: '0.01rem',
+    marginBottom: '1rem',
+    padding: 0,
+    boxShadow: 'none',
+    '&:hover': {
+      backgroundColor: '#F15527',
+      boxShadow: 'none'
+    }
+  },
+  continueAsGuestButton: {
+    textTransform: 'none',
+    background: '#FFFFFF',
+    color: '#52637A',
+    fontSize: '1.438rem',
+    fontWeight: '600',
+    height: '3.125rem',
+    borderRadius: '0.25rem',
+    border: '1px solid #52637A',
+    letterSpacing: '0.01rem',
+    marginBottom: '1rem',
+    padding: 0,
+    boxShadow: 'none',
+    '&:hover': {
+      backgroundColor: '#FFFFFF',
+      boxShadow: 'none'
+    }
   },
   gitLogo: {
     height: '24px',
@@ -95,6 +134,15 @@ const useStyles = makeStyles(() => ({
     fontWeight: '400',
     paddingLeft: '1rem',
     paddingRight: '1rem'
+  },
+  divider: {
+    color: '#C2CBD6',
+    marginBottom: '2rem',
+    width: '100%'
+  },
+  thirdPartyLoginContainer: {
+    width: '100%',
+    marginBottom: '2rem'
   }
 }));
 
@@ -106,6 +154,8 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
   const [requestProcessing, setRequestProcessing] = useState(false);
   const [requestError, setRequestError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
+  const [authMethods, setAuthMethods] = useState({});
+  const [isGuestLoginEnabled, setIsGuestLoginEnabled] = useState(false);
   const abortController = useMemo(() => new AbortController(), []);
   const navigate = useNavigate();
   const classes = useStyles();
@@ -121,14 +171,28 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
         .get(`${host()}${endpoints.authConfig}`, abortController.signal)
         .then((response) => {
           if (response.data?.http && isEmpty(response.data?.http?.auth)) {
-            localStorage.setItem('token', '-');
+            localStorage.setItem('authConfig', '{}');
             setIsLoggedIn(true);
             navigate('/home');
+          } else if (response.data?.http?.auth) {
+            setAuthMethods(response.data?.http?.auth);
+            localStorage.setItem('authConfig', JSON.stringify(response.data?.http?.auth));
+            setIsLoading(false);
+            wrapperSetLoading(false);
+            api
+              .get(`${host()}${endpoints.status}`)
+              .then((response) => {
+                if (response.status === 200) {
+                  setIsGuestLoginEnabled(true);
+                }
+              })
+              .catch(() => console.log('could not obtain guest login status'));
           }
           setIsLoading(false);
           wrapperSetLoading(false);
         })
-        .catch(() => {
+        .catch((e) => {
+          console.error(e);
           setIsLoading(false);
           wrapperSetLoading(false);
         });
@@ -138,23 +202,20 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
     };
   }, []);
 
-  const handleClick = (event) => {
-    event.preventDefault();
+  const handleBasicAuth = () => {
     setRequestProcessing(true);
     let cfg = {};
-    let token = !isNil(username) && !isNil(password) ? btoa(username + ':' + password) : '-';
-    if (token !== '-') {
-      cfg = {
-        headers: {
-          Authorization: `Basic ${token}`
-        }
-      };
-    }
+    const token = btoa(username + ':' + password);
+    cfg = {
+      headers: {
+        Authorization: `Basic ${token}`
+      },
+      withCredentials: host() !== window?.location?.origin
+    };
     api
       .get(`${host()}/v2/`, abortController.signal, cfg)
       .then((response) => {
         if (response.status === 200) {
-          localStorage.setItem('token', token);
           setRequestProcessing(false);
           setRequestError(false);
           setIsLoggedIn(true);
@@ -167,11 +228,34 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
       });
   };
 
+  const handleClick = (event) => {
+    event.preventDefault();
+    if (Object.keys(authMethods).includes('htpasswd')) {
+      handleBasicAuth();
+    }
+  };
+
+  const handleGuestClick = () => {
+    setRequestProcessing(false);
+    setRequestError(false);
+    setIsLoggedIn(true);
+    navigate('/home');
+  };
+
+  const handleClickExternalLogin = (event, provider) => {
+    event.preventDefault();
+    window.location.replace(
+      `${host()}${endpoints.openidAuth}?callback_ui=${encodeURIComponent(
+        window?.location?.origin
+      )}/home&provider=${provider}`
+    );
+  };
+
   const handleChange = (event, type) => {
     event.preventDefault();
     setRequestError(false);
 
-    const val = event.target.value;
+    const val = event.target?.value;
     const isEmpty = val === '';
 
     switch (type) {
@@ -196,8 +280,24 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
     }
   };
 
+  const renderThirdPartyLoginMethods = () => {
+    let isGoogle = isObject(authMethods.openid?.providers?.google);
+    // let isGitlab = isObject(authMethods.openid?.providers?.gitlab);
+    let isGithub = isObject(authMethods.openid?.providers?.github);
+    let isDex = isObject(authMethods.openid?.providers?.dex);
+
+    return (
+      <Stack direction="column" spacing="1rem" className={classes.thirdPartyLoginContainer}>
+        {isGithub && <GithubLoginButton handleClick={handleClickExternalLogin} />}
+        {isGoogle && <GoogleLoginButton handleClick={handleClickExternalLogin} />}
+        {/* {isGitlab && <GitlabLoginButton handleClick={handleClickExternalLogin} />} */}
+        {isDex && <DexLoginButton handleClick={handleClickExternalLogin} />}
+      </Stack>
+    );
+  };
+
   return (
-    <Box className={classes.cardContainer} data-testid="signin-container">
+    <div className={classes.cardContainer} data-testid="signin-container">
       {isLoading ? (
         <Loading />
       ) : (
@@ -205,68 +305,70 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
           <CardContent className={classes.loginCardContent}>
             <CssBaseline />
             <Typography align="left" className={classes.text} component="h1" variant="h4">
-              Sign in
+              Sign In
             </Typography>
             <Typography align="left" className={classes.subtext} variant="body1" gutterBottom>
               Welcome back! Please enter your details.
             </Typography>
-
-            <Box component="form" onSubmit={null} noValidate autoComplete="off" sx={{ mt: 1 }}>
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                id="username"
-                label="Username"
-                name="username"
-                className={classes.textField}
-                onInput={(e) => handleChange(e, 'username')}
-                error={usernameError != null}
-                helperText={usernameError}
-              />
-              <TextField
-                margin="normal"
-                required
-                fullWidth
-                name="password"
-                label="Enter password"
-                type="password"
-                id="password"
-                className={classes.textField}
-                onInput={(e) => handleChange(e, 'password')}
-                error={passwordError != null}
-                helperText={passwordError}
-              />
-              {requestProcessing && <CircularProgress style={{ marginTop: 20 }} color="secondary" />}
-              {requestError && (
-                <Alert style={{ marginTop: 20 }} severity="error">
-                  Authentication Failed. Please try again.
-                </Alert>
-              )}
-              <div>
-                <Button
+            {renderThirdPartyLoginMethods()}
+            {Object.keys(authMethods).length > 1 && <Divider className={classes.divider}>or</Divider>}
+            {Object.keys(authMethods).includes('htpasswd') && (
+              <Box component="form" onSubmit={null} noValidate autoComplete="off">
+                <TextField
+                  margin="normal"
+                  required
                   fullWidth
-                  variant="contained"
-                  className={classes.button}
-                  sx={{
-                    mt: 3,
-                    mb: 1,
-                    background: '#1479FF',
-                    '&:hover': {
-                      backgroundColor: '#1565C0'
-                    }
-                  }}
-                  onClick={handleClick}
-                >
-                  {' '}
-                  Continue
-                </Button>
-              </div>
-            </Box>
-            <TermsOfService sx={{ mt: 2, mb: 4 }} />
+                  id="username"
+                  label="Username"
+                  name="username"
+                  className={classes.textField}
+                  inputProps={{ className: classes.textColor }}
+                  InputLabelProps={{ className: classes.labelColor }}
+                  onInput={(e) => handleChange(e, 'username')}
+                  error={usernameError != null}
+                  helperText={usernameError}
+                />
+                <TextField
+                  margin="normal"
+                  required
+                  fullWidth
+                  name="password"
+                  label="Enter password"
+                  type="password"
+                  id="password"
+                  className={classes.textField}
+                  inputProps={{ className: classes.textColor }}
+                  InputLabelProps={{ className: classes.labelColor }}
+                  onInput={(e) => handleChange(e, 'password')}
+                  error={passwordError != null}
+                  helperText={passwordError}
+                />
+                {requestProcessing && <CircularProgress style={{ marginTop: 20 }} color="secondary" />}
+                {requestError && (
+                  <Alert style={{ marginTop: 20 }} severity="error">
+                    Authentication Failed. Please try again.
+                  </Alert>
+                )}
+                <div>
+                  <Button fullWidth variant="contained" className={classes.continueButton} onClick={handleClick}>
+                    Continue
+                  </Button>
+                </div>
+              </Box>
+            )}
+            {isGuestLoginEnabled && (
+              <Button
+                fullWidth
+                variant="contained"
+                className={classes.continueAsGuestButton}
+                onClick={handleGuestClick}
+              >
+                Continue as guest
+              </Button>
+            )}
           </CardContent>
         </Card>
       )}
-    </Box>
+    </div>
   );
 }

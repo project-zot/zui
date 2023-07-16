@@ -3,18 +3,18 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import TagDetails from 'components/Tag/TagDetails';
-import MockThemeProvier from '__mocks__/MockThemeProvider';
+import MockThemeProvider from '__mocks__/MockThemeProvider';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 
 const TagDetailsThemeWrapper = () => {
   return (
-    <MockThemeProvier>
+    <MockThemeProvider>
       <BrowserRouter>
         <Routes>
           <Route path="*" element={<TagDetails />} />
         </Routes>
       </BrowserRouter>
-    </MockThemeProvier>
+    </MockThemeProvider>
   );
 };
 

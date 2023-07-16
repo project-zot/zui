@@ -112,8 +112,8 @@ const getTagWithVulnerabilities = () => {
     .filter((e) => !isNil(e));
   let tagsArray = [];
   parsedRepoList.forEach((el) => (tagsArray = tagsArray.concat(el?.tags)));
-  const tagWithDependents = tagsArray.find((tag) => tag.cves);
-  return tagWithDependents;
+  const tagWithCves = tagsArray.find((tag) => Object.keys(tag.cves).length > 0);
+  return tagWithCves;
 };
 
 const getTagWithMultiarch = () => {

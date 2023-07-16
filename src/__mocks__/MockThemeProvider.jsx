@@ -3,8 +3,8 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 
 const theme = createTheme();
 
-function MockThemeProvier({ children }) {
+function MockThemeProvider({ children }) {
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
 }
 
-export default MockThemeProvier;
+export default MockThemeProvider;

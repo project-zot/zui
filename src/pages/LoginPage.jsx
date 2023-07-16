@@ -15,6 +15,11 @@ const useStyles = makeStyles(() => ({
     minHeight: '100vh',
     backgroundColor: '#F6F7F9'
   },
+  signinContainer: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   loadingHidden: {
     display: 'none'
   }
@@ -27,10 +32,16 @@ function LoginPage({ isLoggedIn, setIsLoggedIn }) {
   return (
     <Grid container spacing={0} className={classes.container} data-testid="login-container">
       {isLoading && <Loading />}
-      <Grid item xs={6} className={isLoading ? classes.loadingHidden : ''}>
+      <Grid item xs={1} md={6} className={`${isLoading ? classes.loadingHidden : ''} hide-on-small`}>
         <SigninPresentation />
       </Grid>
-      <Grid item xs={6} className={isLoading ? classes.loadingHidden : ''}>
+      <Grid
+        item
+        xs={12}
+        sm={12}
+        md={6}
+        className={`${classes.signinContainer} ${isLoading ? classes.loadingHidden : ''}`}
+      >
         <SignIn isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} wrapperSetLoading={setIsLoading} />
       </Grid>
     </Grid>

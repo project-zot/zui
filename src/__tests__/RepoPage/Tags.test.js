@@ -2,13 +2,13 @@ import { fireEvent, waitFor, render, screen } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import Tags from 'components/Repo/Tabs/Tags';
 import React from 'react';
-import MockThemeProvier from '__mocks__/MockThemeProvider';
+import MockThemeProvider from '__mocks__/MockThemeProvider';
 
 const TagsThemeWrapper = () => {
   return (
-    <MockThemeProvier>
+    <MockThemeProvider>
       <Tags tags={mockedTagsData} />
-    </MockThemeProvier>
+    </MockThemeProvider>
   );
 };
 

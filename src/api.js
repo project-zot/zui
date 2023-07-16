@@ -1,14 +1,25 @@
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { sortByCriteria } from 'utilities/sortCriteria';
+import { logoutUser } from 'utilities/authUtilities';
+import { host } from 'host';
+
+axios.interceptors.request.use((config) => {
+  if (config.url.includes(endpoints.authConfig)) {
+    config.withCredentials = false;
+  } else {
+    config.headers['X-ZOT-API-CLIENT'] = 'zot-ui';
+  }
+  return config;
+});
 
 axios.interceptors.response.use(
   (response) => {
     return response;
   },
   (error) => {
-    if (error.response.status === 401) {
-      localStorage.clear();
+    if (error?.response?.status === 401) {
+      logoutUser();
       window.location.replace('/login');
       return Promise.reject(error);
     }
@@ -19,24 +30,15 @@ const api = {
   getAxiosInstance: () => axios,
 
   getRequestCfg: () => {
+    const authConfig = JSON.parse(localStorage.getItem('authConfig'));
     const genericHeaders = {
       Accept: 'application/json',
       'Content-Type': 'application/json'
     };
-    const token = localStorage.getItem('token');
-    if (token && token !== '-') {
-      const authHeaders = {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        Authorization: `Basic ${token}`
-      };
-      return {
-        headers: authHeaders
-      };
-    }
-
+    // withCredentials option must be enabled on cross-origin
     return {
-      headers: genericHeaders
+      headers: genericHeaders,
+      withCredentials: host() !== window?.location?.origin && authConfig !== null
     };
   },
 
@@ -74,7 +76,10 @@ const api = {
 };
 
 const endpoints = {
+  status: `/v2/`,
   authConfig: `/v2/_zot/ext/mgmt`,
+  openidAuth: `/auth/login`,
+  logout: `/auth/logout`,
   repoList: ({ pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={RepoListWithNewestImage(requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize

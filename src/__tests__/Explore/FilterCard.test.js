@@ -2,19 +2,19 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import FilterCard from 'components/Shared/FilterCard';
 import React, { useState } from 'react';
 import filterConstants from 'utilities/filterConstants';
-import MockThemeProvier from '__mocks__/MockThemeProvider';
+import MockThemeProvider from '__mocks__/MockThemeProvider';
 
 const StateFilterCardWrapper = () => {
   const [filters, setFilters] = useState([]);
   return (
-    <MockThemeProvier>
+    <MockThemeProvider>
       <FilterCard
         title="Operating System"
         filters={filterConstants.osFilters}
         updateFilters={setFilters}
         filterValue={filters}
       />
-    </MockThemeProvier>
+    </MockThemeProvider>
   );
 };
 

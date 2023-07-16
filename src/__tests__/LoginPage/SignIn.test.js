@@ -4,6 +4,12 @@ import SignIn from 'components/Login/SignIn';
 import { api } from '../../api';
 import userEvent from '@testing-library/user-event';
 
+const mockMgmtResponse = {
+  distSpecVersion: '1.1.0-dev',
+  binaryType: '-apikey-lint-metrics-mgmt-scrub-search-sync-ui-userprefs',
+  http: { auth: { htpasswd: {} } }
+};
+
 // useNavigate mock
 const mockedUsedNavigate = jest.fn();
 jest.mock('react-router-dom', () => ({
@@ -35,7 +41,10 @@ describe('Signin component automatic navigation', () => {
 describe('Sign in form', () => {
   beforeEach(() => {
     // mock auth check request
-    jest.spyOn(api, 'get').mockRejectedValue({ status: 401, data: {} });
+    jest.spyOn(api, 'get').mockResolvedValue({
+      status: 401,
+      data: mockMgmtResponse
+    });
   });
 
   it('should change username and password values on user input', async () => {
@@ -77,7 +86,7 @@ describe('Sign in form', () => {
   it('should should display login error if login not successful', async () => {
     render(<SignIn isAuthEnabled={true} setIsAuthEnabled={() => {}} isLoggedIn={false} setIsLoggedIn={() => {}} />);
     const submitButton = await screen.findByText('Continue');
-    jest.spyOn(api, 'get').mockRejectedValue();
+    jest.spyOn(api, 'get').mockRejectedValue({ status: 401, data: {} });
     fireEvent.click(submitButton);
     const errorDisplay = await screen.findByText(/Authentication Failed/i);
     await waitFor(() => {

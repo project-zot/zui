@@ -26,8 +26,8 @@ export default function TermsOfService(props) {
   return (
     <Stack spacing={0}>
       <Typography variant="caption" className={classes.subtext} align="justify" {...props} pb={6}>
-        By creating an account, you agree to the Terms of Service. For more information about our privacy practices, see
-        the ZOT&apos;s Privacy Policy.
+        By using zot UI, you agree to the Terms of Service. For more information about our privacy practices, see
+        zot&apos;s Privacy Policy.
       </Typography>
       <Typography variant="caption" className={classes.text} align="center" {...props}>
         Privacy Policy | Terms of Service

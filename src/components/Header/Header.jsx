@@ -1,17 +1,18 @@
 // react global
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
 
-// components
-import { AppBar, Toolbar, Grid } from '@mui/material';
+import { isAuthenticated, isAuthenticationEnabled, logoutUser } from '../../utilities/authUtilities';
 
+// components
+import { AppBar, Toolbar, Grid, Button } from '@mui/material';
+import SearchSuggestion from './SearchSuggestion';
+import UserAccountMenu from './UserAccountMenu';
 // styling
 import makeStyles from '@mui/styles/makeStyles';
 import logo from '../../assets/zotLogoWhite.svg';
 import logoxs from '../../assets/zotLogoWhiteSmall.svg';
 import githubLogo from '../../assets/Git.png';
-import { useState, useEffect } from 'react';
-import SearchSuggestion from './SearchSuggestion';
 
 const useStyles = makeStyles((theme) => ({
   barOpen: {
@@ -130,6 +131,10 @@ function Header({ setSearchCurrentValue = () => {} }) {
   const classes = useStyles();
   const path = useLocation().pathname;
 
+  const handleSignInClick = () => {
+    logoutUser();
+  };
+
   return (
     <AppBar position={show ? 'fixed' : 'absolute'} sx={{ height: '5rem' }}>
       <Toolbar className={classes.header}>
@@ -168,6 +173,18 @@ function Header({ setSearchCurrentValue = () => {} }) {
                 <img alt="github repository" src={githubLogo} className={classes.logo} />
               </a>
             </Grid>
+            {isAuthenticated() && isAuthenticationEnabled() && (
+              <Grid item>
+                <UserAccountMenu />
+              </Grid>
+            )}
+            {!isAuthenticated() && isAuthenticationEnabled() && (
+              <Grid item>
+                <Button className={classes.signInBtn} onClick={handleSignInClick}>
+                  Sign in
+                </Button>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Toolbar>
