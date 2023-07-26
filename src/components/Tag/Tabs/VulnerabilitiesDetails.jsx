@@ -73,7 +73,7 @@ function VulnerabilitiesDetails(props) {
   const [cveData, setCveData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const abortController = useMemo(() => new AbortController(), []);
-  const { name, tag } = props;
+  const { name, tag, digest, platform } = props;
 
   // pagination props
   const [cveFilter, setCveFilter] = useState('');
@@ -81,11 +81,15 @@ function VulnerabilitiesDetails(props) {
   const [isEndOfList, setIsEndOfList] = useState(false);
   const listBottom = useRef(null);
 
+  const getCVERequestName = () => {
+    return digest !== '' ? `${name}@${digest}` : `${name}:${tag}`;
+  };
+
   const getPaginatedCVEs = () => {
     api
       .get(
         `${host()}${endpoints.vulnerabilitiesForRepo(
-          `${name}:${tag}`,
+          getCVERequestName(),
           { pageNumber, pageSize: EXPLORE_PAGE_SIZE },
           cveFilter
         )}`,
@@ -171,7 +175,7 @@ function VulnerabilitiesDetails(props) {
   const renderCVEs = () => {
     return !isEmpty(cveData) ? (
       cveData.map((cve, index) => {
-        return <VulnerabilitiyCard key={index} cve={cve} name={name} />;
+        return <VulnerabilitiyCard key={index} cve={cve} name={name} platform={platform} />;
       })
     ) : (
       <div>{!isLoading && <Typography className={classes.none}> No Vulnerabilities </Typography>}</div>

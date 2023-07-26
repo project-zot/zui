@@ -1,11 +1,11 @@
 import axios from 'axios';
 import { isEmpty } from 'lodash';
 import { sortByCriteria } from 'utilities/sortCriteria';
-import { logoutUser } from 'utilities/authUtilities';
+import { isAuthenticationEnabled, logoutUser } from 'utilities/authUtilities';
 import { host } from 'host';
 
 axios.interceptors.request.use((config) => {
-  if (config.url.includes(endpoints.authConfig)) {
+  if (config.url.includes(endpoints.authConfig) || !isAuthenticationEnabled()) {
     config.withCredentials = false;
   } else {
     config.headers['X-ZOT-API-CLIENT'] = 'zot-ui';
@@ -98,10 +98,18 @@ const endpoints = {
     }
     return `${query}){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity PackageList {Name InstalledVersion FixedVersion}}}}`;
   },
-  imageListWithCVEFixed: (cveId, repoName, { pageNumber = 1, pageSize = 3 }) =>
-    `/v2/_zot/ext/search?query={ImageListWithCVEFixed(id:"${cveId}", image:"${repoName}", requestedPage: {limit:${pageSize} offset:${
+  imageListWithCVEFixed: (cveId, repoName, { pageNumber = 1, pageSize = 3 }, filter = {}) => {
+    let filterParam = '';
+    if (filter.Os || filter.Arch) {
+      filterParam = `,filter:{`;
+      if (filter.Os) filterParam += ` Os:${!isEmpty(filter.Os) ? `${JSON.stringify(filter.Os)}` : '""'}`;
+      if (filter.Arch) filterParam += ` Arch:${!isEmpty(filter.Arch) ? `${JSON.stringify(filter.Arch)}` : '""'}`;
+      filterParam += '}';
+    }
+    return `/v2/_zot/ext/search?query={ImageListWithCVEFixed(id:"${cveId}", image:"${repoName}", requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
-    }}) {Page {TotalCount ItemCount} Results {Tag}}}`,
+    }}${filterParam}) {Page {TotalCount ItemCount} Results {Tag}}}`;
+  },
   dependsOnForImage: (name, { pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={BaseImageList(image: "${name}", requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize

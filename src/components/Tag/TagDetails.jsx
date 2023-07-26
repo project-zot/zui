@@ -59,7 +59,6 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1rem',
     lineHeight: '1.5rem',
     color: '#52637A',
-    padding: '1rem 0 0 0',
     maxWidth: '100%',
     [theme.breakpoints.down('md')]: {
       padding: '0.5rem 0 0 0',
@@ -209,7 +208,14 @@ function TagDetails() {
       case 'IsDependentOn':
         return <IsDependentOn name={imageDetailData.name} digest={selectedManifest.digest} />;
       case 'Vulnerabilities':
-        return <VulnerabilitiesDetails name={reponame} tag={tag} />;
+        return (
+          <VulnerabilitiesDetails
+            name={reponame}
+            tag={tag}
+            digest={selectedManifest?.digest}
+            platform={selectedManifest.platform}
+          />
+        );
       case 'ReferredBy':
         return <ReferredBy referrers={imageDetailData.referrers} />;
       default:
@@ -227,10 +233,10 @@ function TagDetails() {
             <Card className={classes.cardRoot}>
               <CardContent className={classes.cardContent}>
                 <Grid container>
-                  <Grid item xs={12} md={8} className={classes.header}>
+                  <Grid item xs={12} md={9} className={classes.header}>
                     <Stack
                       alignItems="center"
-                      sx={{ width: { xs: '100%', md: 'auto' } }}
+                      sx={{ width: { xs: '100%', md: 'auto' }, marginBottom: '1rem' }}
                       direction={{ xs: 'column', md: 'row' }}
                       spacing={1}
                     >
@@ -256,30 +262,29 @@ function TagDetails() {
                         />
                         <SignatureIconCheck isSigned={imageDetailData.isSigned} />
                       </Stack>
-
-                      <Stack sx={{ width: { xs: '100%', md: 'auto' } }}>
-                        <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
-                          <InputLabel>OS/Arch</InputLabel>
-                          {!isEmpty(selectedManifest) && (
-                            <Select
-                              label="OS/Arch"
-                              value={selectedManifest}
-                              onChange={handleOSArchChange}
-                              MenuProps={{ disableScrollLock: true }}
-                            >
-                              {imageDetailData.manifests.map((el) => (
-                                <MenuItem key={el.digest} value={el}>
-                                  {`${el.platform?.Os}/${el.platform?.Arch}`}
-                                </MenuItem>
-                              ))}
-                            </Select>
-                          )}
-                        </FormControl>
-                      </Stack>
                     </Stack>
-                    <Typography gutterBottom className={classes.digest}>
-                      Digest: {selectedManifest?.digest}
-                    </Typography>
+                    <Stack direction="row" alignItems="center" spacing="1rem">
+                      <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
+                        <InputLabel>OS/Arch</InputLabel>
+                        {!isEmpty(selectedManifest) && (
+                          <Select
+                            label="OS/Arch"
+                            value={selectedManifest}
+                            onChange={handleOSArchChange}
+                            MenuProps={{ disableScrollLock: true }}
+                          >
+                            {imageDetailData.manifests.map((el) => (
+                              <MenuItem key={el.digest} value={el}>
+                                {`${el.platform?.Os}/${el.platform?.Arch}`}
+                              </MenuItem>
+                            ))}
+                          </Select>
+                        )}
+                      </FormControl>
+                      <Typography gutterBottom className={classes.digest}>
+                        Digest: {selectedManifest?.digest}
+                      </Typography>
+                    </Stack>
                   </Grid>
                 </Grid>
               </CardContent>
