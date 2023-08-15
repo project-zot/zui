@@ -5,7 +5,7 @@ import { getRepoListOrderedAlpha } from './utils/test-data-parser';
 test.describe('navbar test', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
-      window.localStorage.setItem('token', '-');
+      window.localStorage.setItem('authConfig', '{}');
     });
   });
 
