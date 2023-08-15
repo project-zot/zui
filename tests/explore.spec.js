@@ -7,7 +7,7 @@ import { hosts, endpoints, sortCriteria } from './values/test-constants';
 test.describe('explore page test', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
-      window.localStorage.setItem('token', '-');
+      window.localStorage.setItem('authConfig', '{}');
     });
   });
 

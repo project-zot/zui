@@ -8,7 +8,7 @@ const testRepo = getMultiTagRepo();
 test.describe('Repository page test', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
-      window.localStorage.setItem('token', '-');
+      window.localStorage.setItem('authConfig', '{}');
     });
 
     await page.goto(`${hosts.ui}/image/${testRepo.repo}`);
