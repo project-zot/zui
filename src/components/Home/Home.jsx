@@ -10,6 +10,7 @@ import { useNavigate, createSearchParams } from 'react-router-dom';
 import { sortByCriteria } from 'utilities/sortCriteria';
 import { HOME_POPULAR_PAGE_SIZE, HOME_RECENT_PAGE_SIZE, HOME_BOOKMARKS_PAGE_SIZE } from 'utilities/paginationConstants';
 import { isEmpty } from 'lodash';
+import NoDataComponent from 'components/Shared/NoDataComponent';
 
 const useStyles = makeStyles((theme) => ({
   gridWrapper: {
@@ -199,7 +200,11 @@ function Home() {
     navigate({ pathname: `/explore`, search: createSearchParams({ [type]: value }).toString() });
   };
 
-  const renderCards = (cardArray) => {
+  const renderCards = (cardArray, isLoading) => {
+    if (cardArray && cardArray.length < 1 && !isLoading) {
+      return <NoDataComponent text="No images" />;
+    }
+
     return (
       cardArray &&
       cardArray.map((item, index) => {
@@ -244,7 +249,7 @@ function Home() {
               </Typography>
             </div>
           </Stack>
-          {isLoadingPopular ? <Loading /> : renderCards(popularData)}
+          {isLoadingPopular ? <Loading /> : renderCards(popularData, isLoadingPopular)}
           {/* currently most popular will be by downloads until stars are implemented */}
           <Stack className={classes.sectionHeaderContainer}>
             <div>
@@ -262,7 +267,7 @@ function Home() {
               </Typography>
             </div>
           </Stack>
-          {isLoadingRecent ? <Loading /> : renderCards(recentData)}
+          {isLoadingRecent ? <Loading /> : renderCards(recentData, isLoadingRecent)}
           {!isEmpty(bookmarkData) && (
             <>
               <Stack className={classes.sectionHeaderContainer}>
@@ -281,7 +286,7 @@ function Home() {
                   </Typography>
                 </div>
               </Stack>
-              {isLoadingBookmarks ? <Loading /> : renderCards(bookmarkData)}
+              {isLoadingBookmarks ? <Loading /> : renderCards(bookmarkData, isLoadingBookmarks)}
             </>
           )}
         </Stack>
