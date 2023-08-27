@@ -20,7 +20,7 @@ import Alert from '@mui/material/Alert';
 import CircularProgress from '@mui/material/CircularProgress';
 import Loading from '../Shared/Loading';
 
-import { GoogleLoginButton, GithubLoginButton, DexLoginButton } from './ThirdPartyLoginComponents';
+import { GoogleLoginButton, GithubLoginButton, OIDCLoginButton } from './ThirdPartyLoginComponents';
 
 // styling
 import { makeStyles } from '@mui/styles';
@@ -284,14 +284,15 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
     let isGoogle = isObject(authMethods.openid?.providers?.google);
     // let isGitlab = isObject(authMethods.openid?.providers?.gitlab);
     let isGithub = isObject(authMethods.openid?.providers?.github);
-    let isDex = isObject(authMethods.openid?.providers?.dex);
+    let isOIDC = isObject(authMethods.openid?.providers?.oidc);
+    let oidcName = authMethods.openid?.providers?.oidc?.name;
 
     return (
       <Stack direction="column" spacing="1rem" className={classes.thirdPartyLoginContainer}>
         {isGithub && <GithubLoginButton handleClick={handleClickExternalLogin} />}
         {isGoogle && <GoogleLoginButton handleClick={handleClickExternalLogin} />}
         {/* {isGitlab && <GitlabLoginButton handleClick={handleClickExternalLogin} />} */}
-        {isDex && <DexLoginButton handleClick={handleClickExternalLogin} />}
+        {isOIDC && <OIDCLoginButton handleClick={handleClickExternalLogin} oidcName={oidcName} />}
       </Stack>
     );
   };
@@ -308,7 +309,7 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
               Sign In
             </Typography>
             <Typography align="left" className={classes.subtext} variant="body1" gutterBottom>
-              Welcome back! Please enter your details.
+              Welcome back! Please login.
             </Typography>
             {renderThirdPartyLoginMethods()}
             {Object.keys(authMethods).length > 1 && <Divider className={classes.divider}>or</Divider>}
