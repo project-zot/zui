@@ -80,14 +80,15 @@ function GitlabLoginButton({ handleClick }) {
   );
 }
 
-function DexLoginButton({ handleClick }) {
+function OIDCLoginButton({ handleClick, oidcName }) {
   const classes = useStyles();
+  const loginWithName = oidcName || 'OIDC';
 
   return (
-    <Button fullWidth variant="contained" className={classes.button} onClick={(e) => handleClick(e, 'dex')}>
-      Sign in with Dex
+    <Button fullWidth variant="contained" className={classes.button} onClick={(e) => handleClick(e, 'oidc')}>
+      Sign in with {loginWithName}
     </Button>
   );
 }
 
-export { GithubLoginButton, GoogleLoginButton, GitlabLoginButton, DexLoginButton };
+export { GithubLoginButton, GoogleLoginButton, GitlabLoginButton, OIDCLoginButton };
