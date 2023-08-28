@@ -184,6 +184,7 @@ function RepoCard(props) {
     description,
     downloads,
     isSigned,
+    signatureInfo,
     lastUpdated,
     version,
     vulnerabilityData,
@@ -290,7 +291,7 @@ function RepoCard(props) {
                   <VulnerabilityIconCheck {...vulnerabilityData} className="hide-on-mobile" />
                 </div>
                 <div className="hide-on-mobile">
-                  <SignatureIconCheck isSigned={isSigned} className="hide-on-mobile" />
+                  <SignatureIconCheck isSigned={isSigned} signatureInfo={signatureInfo} className="hide-on-mobile" />
                 </div>
               </Stack>
               <Tooltip title={description || 'Description not available'} placement="top">

@@ -22,6 +22,29 @@ const mockImage = {
   vendor: '',
   size: '585',
   tags: '',
+  isSigned: true,
+  signatureInfo: [
+    {
+      Tool: 'cosign',
+      IsTrusted: false,
+      Author: ''
+    },
+    {
+      Tool: 'cosign',
+      IsTrusted: false,
+      Author: ''
+    },
+    {
+      Tool: 'cosign',
+      IsTrusted: false,
+      Author: ''
+    },
+    {
+      Tool: 'cosign',
+      IsTrusted: false,
+      Author: ''
+    }
+  ],
   platforms: [{ Os: 'linux', Arch: 'amd64' }]
 };
 
@@ -34,6 +57,8 @@ const RepoCardWrapper = (props) => {
         version={image.latestVersion}
         description={image.description}
         vendor={image.vendor}
+        isSigned={image.isSigned}
+        signatureInfo={image.signatureInfo}
         key={1}
         lastUpdated={image.lastUpdated}
         platforms={image.platforms}

@@ -260,7 +260,10 @@ function TagDetails() {
                           vulnerabilitySeverity={imageDetailData.vulnerabiltySeverity}
                           count={imageDetailData.vulnerabilityCount}
                         />
-                        <SignatureIconCheck isSigned={imageDetailData.isSigned} />
+                        <SignatureIconCheck
+                          isSigned={imageDetailData.isSigned}
+                          signatureInfo={imageDetailData.signatureInfo}
+                        />
                       </Stack>
                     </Stack>
                     <Stack direction="row" alignItems="center" spacing="1rem">

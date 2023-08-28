@@ -215,6 +215,7 @@ function Home() {
             description={item.description}
             downloads={item.downloads}
             isSigned={item.isSigned}
+            signatureInfo={item.signatureInfo}
             isBookmarked={item.isBookmarked}
             vendor={item.vendor}
             platforms={item.platforms}

@@ -5,6 +5,7 @@ const mapToRepo = (responseRepo) => {
     tags: responseRepo.NewestImage?.Labels,
     description: responseRepo.NewestImage?.Description,
     isSigned: responseRepo.NewestImage?.IsSigned,
+    signatureInfo: responseRepo.NewestImage?.SignatureInfo?.map((sigInfo) => mapSignatureInfo(sigInfo)),
     isBookmarked: responseRepo.IsBookmarked,
     isStarred: responseRepo.IsStarred,
     platforms: responseRepo.Platforms,
@@ -37,6 +38,7 @@ const mapToRepoFromRepoInfo = (responseRepoInfo) => {
     vulnerabilitySeverity: responseRepoInfo.Summary?.NewestImage?.Vulnerabilities?.MaxSeverity,
     vulnerabilityCount: responseRepoInfo.Summary?.NewestImage?.Vulnerabilities?.Count,
     isSigned: responseRepoInfo.Summary?.NewestImage?.IsSigned,
+    signatureInfo: responseRepoInfo.Summary?.NewestImage?.SignatureInfo?.map((sigInfo) => mapSignatureInfo(sigInfo)),
     isBookmarked: responseRepoInfo.Summary?.IsBookmarked,
     isStarred: responseRepoInfo.Summary?.IsStarred,
     logo: responseRepoInfo.Summary?.NewestImage?.Logo
@@ -54,6 +56,7 @@ const mapToImage = (responseImage) => {
     lastUpdated: responseImage.LastUpdated,
     description: responseImage.Description,
     isSigned: responseImage.IsSigned,
+    signatureInfo: responseImage.SignatureInfo?.map((sigInfo) => mapSignatureInfo(sigInfo)),
     license: responseImage.Licenses,
     labels: responseImage.Labels,
     title: responseImage.Title,
@@ -92,6 +95,20 @@ const mapCVEInfo = (cveInfo) => {
     };
   });
   return cveList;
+};
+
+const mapSignatureInfo = (signatureInfo) => {
+  return signatureInfo
+    ? {
+        tool: signatureInfo.Tool,
+        isTrusted: signatureInfo.IsTrusted,
+        author: signatureInfo.Author
+      }
+    : {
+        tool: 'Unknown',
+        isTrusted: 'Unknown',
+        author: 'Unknown'
+      };
 };
 
 const mapReferrer = (referrer) => ({
