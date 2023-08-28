@@ -101,7 +101,7 @@ const mapSignatureInfo = (signatureInfo) => {
   return signatureInfo
     ? {
         tool: signatureInfo.Tool,
-        isTrusted: signatureInfo.IsTrusted,
+        isTrusted: signatureInfo.IsTrusted?.toString(),
         author: signatureInfo.Author
       }
     : {
