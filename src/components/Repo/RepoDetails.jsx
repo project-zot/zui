@@ -271,7 +271,10 @@ function RepoDetails() {
                       </Stack>
                       <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
                         <VulnerabilityIconCheck vulnerabilitySeverity={repoDetailData?.vulnerabilitySeverity} />
-                        <SignatureIconCheck isSigned={repoDetailData.isSigned} />
+                        <SignatureIconCheck
+                          isSigned={repoDetailData.isSigned}
+                          signatureInfo={repoDetailData.signatureInfo}
+                        />
                       </Stack>
                       {isAuthenticated() && (
                         <IconButton component="span" onClick={handleBookmarkClick} data-testid="bookmark-button">

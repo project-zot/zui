@@ -84,11 +84,11 @@ const endpoints = {
   repoList: ({ pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={RepoListWithNewestImage(requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
-    }}){Results {Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description  Licenses Title Source IsSigned Documentation Vendor Labels} IsStarred IsBookmarked DownloadCount}}}`,
+    }}){Results {Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description  Licenses Title Source IsSigned SignatureInfo { Tool IsTrusted Author } Documentation Vendor Labels} IsStarred IsBookmarked DownloadCount}}}`,
   detailedRepoInfo: (name) =>
-    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Manifests {Digest Platform {Os Arch} Size} Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor } Summary {Name LastUpdated Size Platforms {Os Arch} Vendors IsStarred IsBookmarked NewestImage {RepoName IsSigned Vulnerabilities {MaxSeverity Count} Manifests {Digest} Tag Vendor Title Documentation DownloadCount Source Description Licenses}}}}`,
+    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Manifests {Digest Platform {Os Arch} Size} Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor } Summary {Name LastUpdated Size Platforms {Os Arch} Vendors IsStarred IsBookmarked NewestImage {RepoName IsSigned SignatureInfo { Tool IsTrusted Author } Vulnerabilities {MaxSeverity Count} Manifests {Digest} Tag Vendor Title Documentation DownloadCount Source Description Licenses}}}}`,
   detailedImageInfo: (name, tag) =>
-    `/v2/_zot/ext/search?query={Image(image: "${name}:${tag}"){RepoName IsSigned Vulnerabilities {MaxSeverity Count}  Referrers {MediaType ArtifactType Size Digest Annotations{Key Value}} Tag Manifests {History {Layer {Size Digest} HistoryDescription {CreatedBy EmptyLayer}} Digest ConfigDigest LastUpdated Size Platform {Os Arch}} Vendor Licenses }}`,
+    `/v2/_zot/ext/search?query={Image(image: "${name}:${tag}"){RepoName IsSigned SignatureInfo { Tool IsTrusted Author } Vulnerabilities {MaxSeverity Count}  Referrers {MediaType ArtifactType Size Digest Annotations{Key Value}} Tag Manifests {History {Layer {Size Digest} HistoryDescription {CreatedBy EmptyLayer}} Digest ConfigDigest LastUpdated Size Platform {Os Arch}} Vendor Licenses }}`,
   vulnerabilitiesForRepo: (name, { pageNumber = 1, pageSize = 15 }, searchTerm = '') => {
     let query = `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}", requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
@@ -113,11 +113,11 @@ const endpoints = {
   dependsOnForImage: (name, { pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={BaseImageList(image: "${name}", requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
-    }}){Page {TotalCount ItemCount} Results { RepoName Tag Description Manifests {Digest Platform {Os Arch} Size} Vendor DownloadCount LastUpdated IsSigned Vulnerabilities {MaxSeverity Count}}}}`,
+    }}){Page {TotalCount ItemCount} Results { RepoName Tag Description Manifests {Digest Platform {Os Arch} Size} Vendor DownloadCount LastUpdated IsSigned SignatureInfo { Tool IsTrusted Author } Vulnerabilities {MaxSeverity Count}}}}`,
   isDependentOnForImage: (name, { pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={DerivedImageList(image: "${name}", requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
-    }}){Page {TotalCount ItemCount} Results {RepoName Tag Description Manifests {Digest Platform {Os Arch} Size} Vendor DownloadCount LastUpdated IsSigned Vulnerabilities {MaxSeverity Count}}}}`,
+    }}){Page {TotalCount ItemCount} Results {RepoName Tag Description Manifests {Digest Platform {Os Arch} Size} Vendor DownloadCount LastUpdated IsSigned SignatureInfo { Tool IsTrusted Author } Vulnerabilities {MaxSeverity Count}}}}`,
   globalSearch: ({
     searchQuery = '""',
     pageNumber = 1,
@@ -136,7 +136,7 @@ const endpoints = {
     if (filter.IsBookmarked) filterParam += ` IsBookmarked: ${filter.IsBookmarked}`;
     filterParam += '}';
     if (Object.keys(filter).length === 0) filterParam = '';
-    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam} ${filterParam}) {Page {TotalCount ItemCount} Repos {Name LastUpdated Size Platforms { Os Arch } IsStarred IsBookmarked NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description IsSigned Licenses Vendor Labels } DownloadCount}}}`;
+    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam} ${filterParam}) {Page {TotalCount ItemCount} Repos {Name LastUpdated Size Platforms { Os Arch } IsStarred IsBookmarked NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description IsSigned SignatureInfo { Tool IsTrusted Author } Licenses Vendor Labels } DownloadCount}}}`;
   },
   imageSuggestions: ({ searchQuery = '""', pageNumber = 1, pageSize = 15 }) => {
     const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
