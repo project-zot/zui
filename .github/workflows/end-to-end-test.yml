@@ -23,6 +23,14 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: Cleanup disk space
+      run: |
+        # To free up ~15 GB of disk space
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /usr/local/share/boost
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /usr/share/dotnet
+
     - name: Checkout zui repository
       uses: actions/checkout@v3
       with:
@@ -116,10 +124,10 @@ jobs:
         cd $GITHUB_WORKSPACE
         make playwright-browsers
 
-
-    - name: Trigger catalog
+    - name: Trigger CVE scanning
       run: |
-        while true; do x=0; curl -f http://$REGISTRY_HOST:$REGISTRY_PORT/v2/_catalog || x=1; if [ $x -eq 0 ]; then break; fi; sleep 1; done
+        # trigger CVE scanning for all images before running the tests
+        curl -X POST -H "Content-Type: application/json" -m 600 --data '{ "query": "{ ImageListForCVE (id:\"CVE-2021-43616\") { Results { RepoName Tag } } }" }' http://$REGISTRY_HOST:$REGISTRY_PORT/v2/_zot/ext/search
 
     - name: Run integration tests
       run: |
