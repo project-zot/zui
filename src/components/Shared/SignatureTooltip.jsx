@@ -12,8 +12,8 @@ function SignatureTooltip({ isSigned, signatureInfo }) {
     <Stack direction="column">
       <Typography>{isSigned ? 'Verified Signature' : 'Unverified Signature'}</Typography>
       <Typography>Tool: {tool}</Typography>
-      <Typography>Trusted: {isTrusted ? 'Yes' : 'No'}</Typography>
-      <Typography>Author: {author}</Typography>
+      <Typography>Trusted: {!isEmpty(isTrusted) ? isTrusted : 'Unknown'}</Typography>
+      <Typography>Author: {!isEmpty(author) ? author : 'Unknown'}</Typography>
     </Stack>
   );
 }
