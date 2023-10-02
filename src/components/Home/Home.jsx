@@ -200,11 +200,16 @@ function Home() {
     navigate({ pathname: `/explore`, search: createSearchParams({ [type]: value }).toString() });
   };
 
-  const renderCards = (cardArray, isLoading) => {
-    if (cardArray && cardArray.length < 1 && !isLoading) {
-      return <NoDataComponent text="No images" />;
-    }
+  const isNoData = () =>
+    !isLoading &&
+    !isLoadingBookmarks &&
+    !isLoadingPopular &&
+    !isLoadingRecent &&
+    bookmarkData.length === 0 &&
+    popularData.length === 0 &&
+    recentData.length === 0;
 
+  const renderCards = (cardArray) => {
     return (
       cardArray &&
       cardArray.map((item, index) => {
@@ -232,68 +237,68 @@ function Home() {
     );
   };
 
-  return (
-    <>
-      {isLoading ? (
-        <Loading />
-      ) : (
-        <Stack alignItems="center" className={classes.gridWrapper}>
-          <Stack className={classes.sectionHeaderContainer} sx={{ paddingTop: '3rem' }}>
-            <div>
-              <Typography variant="h4" align="left" className={classes.sectionTitle}>
-                Most popular images
-              </Typography>
-            </div>
-            <div onClick={() => handleClickViewAll('sortby', sortByCriteria.downloads.value)}>
-              <Typography variant="body2" className={classes.viewAll}>
-                View all
-              </Typography>
-            </div>
-          </Stack>
-          {isLoadingPopular ? <Loading /> : renderCards(popularData, isLoadingPopular)}
-          {/* currently most popular will be by downloads until stars are implemented */}
-          <Stack className={classes.sectionHeaderContainer}>
-            <div>
-              <Typography variant="h4" align="left" className={classes.sectionTitle}>
-                Recently updated images
-              </Typography>
-            </div>
-            <div>
-              <Typography
-                variant="body2"
-                className={classes.viewAll}
-                onClick={() => handleClickViewAll('sortby', sortByCriteria.updateTime.value)}
-              >
-                View all
-              </Typography>
-            </div>
-          </Stack>
-          {isLoadingRecent ? <Loading /> : renderCards(recentData, isLoadingRecent)}
-          {!isEmpty(bookmarkData) && (
-            <>
-              <Stack className={classes.sectionHeaderContainer}>
-                <div>
-                  <Typography variant="h4" align="left" className={classes.sectionTitle}>
-                    Bookmarks
-                  </Typography>
-                </div>
-                <div>
-                  <Typography
-                    variant="body2"
-                    className={classes.viewAll}
-                    onClick={() => handleClickViewAll('filter', 'IsBookmarked')}
-                  >
-                    View all
-                  </Typography>
-                </div>
-              </Stack>
-              {isLoadingBookmarks ? <Loading /> : renderCards(bookmarkData, isLoadingBookmarks)}
-            </>
-          )}
+  const renderContent = () => {
+    return isNoData() === true ? (
+      <NoDataComponent text="No images" />
+    ) : (
+      <Stack alignItems="center" className={classes.gridWrapper}>
+        <Stack className={classes.sectionHeaderContainer} sx={{ paddingTop: '3rem' }}>
+          <div>
+            <Typography variant="h4" align="left" className={classes.sectionTitle}>
+              Most popular images
+            </Typography>
+          </div>
+          <div onClick={() => handleClickViewAll('sortby', sortByCriteria.downloads.value)}>
+            <Typography variant="body2" className={classes.viewAll}>
+              View all
+            </Typography>
+          </div>
         </Stack>
-      )}
-    </>
-  );
+        {isLoadingPopular ? <Loading /> : renderCards(popularData, isLoadingPopular)}
+        {/* currently most popular will be by downloads until stars are implemented */}
+        <Stack className={classes.sectionHeaderContainer}>
+          <div>
+            <Typography variant="h4" align="left" className={classes.sectionTitle}>
+              Recently updated images
+            </Typography>
+          </div>
+          <div>
+            <Typography
+              variant="body2"
+              className={classes.viewAll}
+              onClick={() => handleClickViewAll('sortby', sortByCriteria.updateTime.value)}
+            >
+              View all
+            </Typography>
+          </div>
+        </Stack>
+        {isLoadingRecent ? <Loading /> : renderCards(recentData, isLoadingRecent)}
+        {!isEmpty(bookmarkData) && (
+          <>
+            <Stack className={classes.sectionHeaderContainer}>
+              <div>
+                <Typography variant="h4" align="left" className={classes.sectionTitle}>
+                  Bookmarks
+                </Typography>
+              </div>
+              <div>
+                <Typography
+                  variant="body2"
+                  className={classes.viewAll}
+                  onClick={() => handleClickViewAll('filter', 'IsBookmarked')}
+                >
+                  View all
+                </Typography>
+              </div>
+            </Stack>
+            {isLoadingBookmarks ? <Loading /> : renderCards(bookmarkData, isLoadingBookmarks)}
+          </>
+        )}
+      </Stack>
+    );
+  };
+
+  return <>{isLoading ? <Loading /> : renderContent()}</>;
 }
 
 export default Home;
