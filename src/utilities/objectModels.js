@@ -132,12 +132,12 @@ const mapSignatureInfo = (signatureInfo) => {
   return signatureInfo
     ? {
         tool: signatureInfo.Tool,
-        isTrusted: signatureInfo.IsTrusted?.toString(),
+        isTrusted: signatureInfo.IsTrusted,
         author: signatureInfo.Author
       }
     : {
         tool: 'Unknown',
-        isTrusted: 'Unknown',
+        isTrusted: false,
         author: 'Unknown'
       };
 };

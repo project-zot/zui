@@ -11,6 +11,7 @@ import { host } from '../../host';
 import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
 import { mapToRepoFromRepoInfo } from 'utilities/objectModels';
 import { isAuthenticated } from 'utilities/authUtilities';
+import filterConstants from 'utilities/filterConstants';
 
 // components
 import { Card, CardContent, CardMedia, Chip, Grid, Stack, Tooltip, Typography, IconButton } from '@mui/material';
@@ -260,6 +261,28 @@ function RepoDetails() {
     return lastDate;
   };
 
+  const getSignatureChips = () => {
+    const cosign = repoDetailData.signatureInfo
+      ?.map((s) => s.tool)
+      .includes(filterConstants.signatureToolConstants.COSIGN)
+      ? repoDetailData.signatureInfo.filter((si) => si.tool == filterConstants.signatureToolConstants.COSIGN)
+      : null;
+    const notation = repoDetailData.signatureInfo
+      ?.map((s) => s.tool)
+      .includes(filterConstants.signatureToolConstants.NOTATION)
+      ? repoDetailData.signatureInfo.filter((si) => si.tool == filterConstants.signatureToolConstants.NOTATION)
+      : null;
+    const sigArray = [];
+    if (cosign) sigArray.push(cosign);
+    if (notation) sigArray.push(notation);
+    if (sigArray.length === 0) return <SignatureIconCheck />;
+    return sigArray.map((sig, index) => (
+      <div className="hide-on-mobile" key={`${name}sig${index}`}>
+        <SignatureIconCheck signatureInfo={sig} />
+      </div>
+    ));
+  };
+
   return (
     <>
       {isLoading ? (
@@ -288,10 +311,7 @@ function RepoDetails() {
                       </Stack>
                       <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
                         <VulnerabilityIconCheck vulnerabilitySeverity={repoDetailData?.vulnerabilitySeverity} />
-                        <SignatureIconCheck
-                          isSigned={repoDetailData.isSigned}
-                          signatureInfo={repoDetailData.signatureInfo}
-                        />
+                        {getSignatureChips()}
                       </Stack>
                       <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={1}>
                         {isAuthenticated() && (
@@ -304,13 +324,20 @@ function RepoDetails() {
                           </IconButton>
                         )}
                         {isAuthenticated() && (
-                          <IconButton component="span" onClick={handleBookmarkClick} data-testid="bookmark-button">
-                            {repoDetailData?.isBookmarked ? (
-                              <BookmarkIcon data-testid="bookmarked" />
-                            ) : (
-                              <BookmarkBorderIcon data-testid="not-bookmarked" />
-                            )}
-                          </IconButton>
+                          <Stack
+                            alignItems="center"
+                            sx={{ width: { xs: '100%', md: 'auto' } }}
+                            direction="row"
+                            spacing={2}
+                          >
+                            <IconButton component="span" onClick={handleBookmarkClick} data-testid="bookmark-button">
+                              {repoDetailData?.isBookmarked ? (
+                                <BookmarkIcon data-testid="bookmarked" />
+                              ) : (
+                                <BookmarkBorderIcon data-testid="not-bookmarked" />
+                              )}
+                            </IconButton>
+                          </Stack>
                         )}
                       </Stack>
                     </Stack>

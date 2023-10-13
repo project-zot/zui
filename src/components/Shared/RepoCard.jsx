@@ -32,14 +32,15 @@ import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useTheme } from '@emotion/react';
 
+import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
+import { Markdown } from 'utilities/MarkdowntojsxWrapper';
+import filterConstants from 'utilities/filterConstants';
+
 // placeholder images
 import repocube1 from '../../assets/repocube-1.png';
 import repocube2 from '../../assets/repocube-2.png';
 import repocube3 from '../../assets/repocube-3.png';
 import repocube4 from '../../assets/repocube-4.png';
-
-import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
-import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
@@ -186,7 +187,6 @@ function RepoCard(props) {
     description,
     downloads,
     stars,
-    isSigned,
     signatureInfo,
     lastUpdated,
     version,
@@ -296,6 +296,24 @@ function RepoCard(props) {
     );
   };
 
+  const getSignatureChips = () => {
+    const cosign = signatureInfo?.map((s) => s.tool).includes(filterConstants.signatureToolConstants.COSIGN)
+      ? signatureInfo.filter((si) => si.tool == filterConstants.signatureToolConstants.COSIGN)
+      : null;
+    const notation = signatureInfo?.map((s) => s.tool).includes(filterConstants.signatureToolConstants.NOTATION)
+      ? signatureInfo.filter((si) => si.tool == filterConstants.signatureToolConstants.NOTATION)
+      : null;
+    const sigArray = [];
+    if (cosign) sigArray.push(cosign);
+    if (notation) sigArray.push(notation);
+    if (sigArray.length === 0) return <SignatureIconCheck />;
+    return sigArray.map((sig, index) => (
+      <div className="hide-on-mobile" key={`${name}sig${index}`}>
+        <SignatureIconCheck signatureInfo={sig} />
+      </div>
+    ));
+  };
+
   return (
     <Card variant="outlined" className={classes.card} data-testid="repo-card">
       <CardActionArea
@@ -323,12 +341,10 @@ function RepoCard(props) {
                     {name}
                   </Typography>
                 </Tooltip>
-                <div className="hide-on-mobile">
+                <div className="hide-on-mobile" style={{ display: 'inline-flex' }}>
                   <VulnerabilityIconCheck {...vulnerabilityData} className="hide-on-mobile" />
                 </div>
-                <div className="hide-on-mobile">
-                  <SignatureIconCheck isSigned={isSigned} signatureInfo={signatureInfo} className="hide-on-mobile" />
-                </div>
+                {getSignatureChips()}
               </Stack>
               <Tooltip title={description || 'Description not available'} placement="top">
                 <Typography className={classes.description} pt={1} sx={{ fontSize: 12 }} gutterBottom noWrap>

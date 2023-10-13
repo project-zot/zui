@@ -149,7 +149,7 @@ const getRepoListOrderedAlpha = () => {
 // };
 
 const getRepoCardNameForLocator = (repo) => {
-  return `${repo?.repo} ${repo?.tags[0]?.description?.slice(0, 10)}`;
+  return new RegExp(`${repo?.repo} \\d${repo?.tags[0]?.description?.slice(0, 10)}`);
 };
 
 export {
