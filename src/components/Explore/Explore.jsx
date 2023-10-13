@@ -220,7 +220,6 @@ function Explore({ searchInputValue }) {
             version={item.latestVersion}
             description={item.description}
             downloads={item.downloads}
-            isSigned={item.isSigned}
             signatureInfo={item.signatureInfo}
             isBookmarked={item.isBookmarked}
             vendor={item.vendor}

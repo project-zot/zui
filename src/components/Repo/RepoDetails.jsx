@@ -243,6 +243,14 @@ function RepoDetails() {
     return lastDate;
   };
 
+  const getSignatureChips = () => {
+    if (repoDetailData.signatureInfo?.length > 0)
+      return repoDetailData.signatureInfo?.map((si, index) => (
+        <SignatureIconCheck key={`${si?.tool}${index}`} signatureInfo={[si]} />
+      ));
+    return <SignatureIconCheck />;
+  };
+
   return (
     <>
       {isLoading ? (
@@ -271,19 +279,23 @@ function RepoDetails() {
                       </Stack>
                       <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
                         <VulnerabilityIconCheck vulnerabilitySeverity={repoDetailData?.vulnerabilitySeverity} />
-                        <SignatureIconCheck
-                          isSigned={repoDetailData.isSigned}
-                          signatureInfo={repoDetailData.signatureInfo}
-                        />
+                        {getSignatureChips()}
                       </Stack>
                       {isAuthenticated() && (
-                        <IconButton component="span" onClick={handleBookmarkClick} data-testid="bookmark-button">
-                          {repoDetailData?.isBookmarked ? (
-                            <BookmarkIcon data-testid="bookmarked" />
-                          ) : (
-                            <BookmarkBorderIcon data-testid="not-bookmarked" />
-                          )}
-                        </IconButton>
+                        <Stack
+                          alignItems="center"
+                          sx={{ width: { xs: '100%', md: 'auto' } }}
+                          direction="row"
+                          spacing={2}
+                        >
+                          <IconButton component="span" onClick={handleBookmarkClick} data-testid="bookmark-button">
+                            {repoDetailData?.isBookmarked ? (
+                              <BookmarkIcon data-testid="bookmarked" />
+                            ) : (
+                              <BookmarkBorderIcon data-testid="not-bookmarked" />
+                            )}
+                          </IconButton>
+                        </Stack>
                       )}
                     </Stack>
                     <Typography gutterBottom className={classes.repoTitle}>

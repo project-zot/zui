@@ -107,7 +107,7 @@ function IsDependentOn(props) {
             repoName={dependence.repoName}
             tag={dependence.tag}
             vendor={dependence.vendor}
-            isSigned={dependence.isSigned}
+            signatureInfo={dependence.signatureInfo}
             manifests={dependence.manifests}
             key={index}
             lastUpdated={dependence.lastUpdated}

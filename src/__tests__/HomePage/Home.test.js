@@ -32,7 +32,7 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: 'w',
-          IsSigned: false,
+          SignatureInfo: [],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -49,7 +49,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -66,7 +77,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -91,7 +113,7 @@ const mockImageListRecent = {
         NewestImage: {
           Tag: 'latest',
           Description: 'w',
-          IsSigned: false,
+          SignatureInfo: [],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -108,7 +130,18 @@ const mockImageListRecent = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -188,7 +221,7 @@ describe('Home component', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageListRecent } });
     render(<HomeWrapper />);
     expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(3);
-    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(4);
+    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(8);
   });
 
   it('renders vulnerability icons', async () => {

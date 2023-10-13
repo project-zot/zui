@@ -37,7 +37,7 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: 'w',
-          IsSigned: false,
+          SignatureInfo: [],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -61,7 +61,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: false,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: false,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -85,7 +96,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -109,7 +131,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -133,7 +166,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -161,7 +205,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -185,7 +240,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -218,7 +284,7 @@ const filteredMockImageListWindows = () => {
 };
 
 const filteredMockImageListSigned = () => {
-  const filteredRepos = mockImageList.GlobalSearch.Repos.filter((r) => r.NewestImage.IsSigned);
+  const filteredRepos = mockImageList.GlobalSearch.Repos.filter((r) => r.NewestImage.SignatureInfo?.length > 0);
   return {
     GlobalSearch: {
       Page: { TotalCount: 6, ItemCount: 6 },
@@ -266,7 +332,8 @@ describe('Explore component', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
     expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(1);
-    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(6);
+    expect(await screen.findAllByTestId('untrusted-icon')).toHaveLength(2);
+    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(10);
   });
 
   it('renders vulnerability icons', async () => {

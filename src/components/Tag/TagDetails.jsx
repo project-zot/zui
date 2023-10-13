@@ -223,6 +223,14 @@ function TagDetails() {
     }
   };
 
+  const getSignatureChips = () => {
+    if (imageDetailData.signatureInfo?.length > 0)
+      return imageDetailData.signatureInfo?.map((si, index) => (
+        <SignatureIconCheck key={`${si?.tool}${index}`} signatureInfo={[si]} />
+      ));
+    return <SignatureIconCheck />;
+  };
+
   return (
     <>
       {isLoading ? (
@@ -260,10 +268,7 @@ function TagDetails() {
                           vulnerabilitySeverity={imageDetailData.vulnerabiltySeverity}
                           count={imageDetailData.vulnerabilityCount}
                         />
-                        <SignatureIconCheck
-                          isSigned={imageDetailData.isSigned}
-                          signatureInfo={imageDetailData.signatureInfo}
-                        />
+                        {getSignatureChips()}
                       </Stack>
                     </Stack>
                     <Stack direction="row" alignItems="center" spacing="1rem">
