@@ -79,8 +79,8 @@ const api = {
 const endpoints = {
   status: `/v2/`,
   authConfig: `/v2/_zot/ext/mgmt`,
-  openidAuth: `/auth/login`,
-  logout: `/auth/logout`,
+  openidAuth: `/zot/auth/login`,
+  logout: `/zot/auth/logout`,
   repoList: ({ pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={RepoListWithNewestImage(requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
