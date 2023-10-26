@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { useNavigate } from 'react-router-dom';
-import { Box, Card, CardContent, Collapse, Grid, Stack, Tooltip, Typography, Divider } from '@mui/material';
+import { Box, Card, CardContent, Collapse, Grid, Stack, Tooltip, Typography, Divider, Button } from '@mui/material';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import transform from 'utilities/transform';
 import { DateTime } from 'luxon';
@@ -78,8 +78,11 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TagCard(props) {
+  // console.log(props); // Add this line for debugging
   const { repoName, tag, lastUpdated, vendor, manifests } = props;
-
+  console.log(props); // Add this line for debugging
+  console.log('REPONAME: ', repoName);
+  const capturedRepoName = repoName; // Capture the repoName
   const [open, setOpen] = useState(false);
   const classes = useStyles();
 
@@ -99,14 +102,53 @@ export default function TagCard(props) {
   return (
     <Card className={classes.card} raised>
       <CardContent className={classes.content}>
-        <Typography variant="body1" align="left" className={classes.tagHeading}>
-          Tag
-        </Typography>
+        <div style={{ display: 'flex', alignItems: 'center' }}>
+          <Typography variant="body1" align="left" className={classes.tagHeading}>
+            Tag
+          </Typography>
+          <Button
+            variant="contained"
+            color="primary"
+            style={{ marginLeft: 'auto' }}
+            onClick={() => {
+              const confirmed = window.confirm('Are you sure you want to perform this action?');
+              if (confirmed) {
+                console.log('Button clicked and confirmed!');
+                console.log(capturedRepoName && tag); // Use the captured value
+                // const repoName = 'alpine';
+                const apiUrl = `http://localhost:8080/v2/alpine/manifests/${tag}`;
+                fetch(apiUrl, {
+                  method: 'DELETE'
+                })
+                  .then((response) => {
+                    if (response.status === 204) {
+                      // Tag deleted successfully
+                      console.log('Tag deleted successfully');
+                      // You may want to refresh the UI or perform other actions as needed
+                    } else {
+                      console.log('Failed to delete the tag');
+                      // Handle the failure case here
+                    }
+                  })
+                  .catch((error) => {
+                    console.error('An error occurred:', error);
+                    // Handle any network or request error
+                  });
+              } else {
+                // User canceled the action
+                console.log('Button click canceled.');
+              }
+              console.log('Button clicked!');
+              //should hold repo name and tag [line 119 and 120]
+            }}
+          >
+            Delete Tag
+          </Button>
+        </div>
         <Typography variant="body1" align="left" className={classes.tagName} onClick={() => goToTags()}>
           {repoName && `${repoName}:`}
           {tag}
         </Typography>
-
         <Stack sx={{ display: 'inline' }} direction="row" spacing={0.5}>
           <Typography variant="caption" sx={{ fontWeight: '400', fontSize: '0.8125rem' }}>
             Created
