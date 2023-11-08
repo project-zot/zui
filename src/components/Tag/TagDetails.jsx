@@ -148,7 +148,6 @@ function TagDetails() {
 
   // get url param from <Route here (i.e. image name)
   const { reponame, tag } = useParams();
-
   const classes = useStyles();
 
   useEffect(() => {

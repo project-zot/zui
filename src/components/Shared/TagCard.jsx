@@ -78,11 +78,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TagCard(props) {
-  // console.log(props); // Add this line for debugging
   const { repoName, tag, lastUpdated, vendor, manifests } = props;
-  console.log(props); // Add this line for debugging
-  console.log('REPONAME: ', repoName);
-  const capturedRepoName = repoName; // Capture the repoName
   const [open, setOpen] = useState(false);
   const classes = useStyles();
 
@@ -114,9 +110,8 @@ export default function TagCard(props) {
               const confirmed = window.confirm('Are you sure you want to perform this action?');
               if (confirmed) {
                 console.log('Button clicked and confirmed!');
-                console.log(capturedRepoName && tag); // Use the captured value
-                // const repoName = 'alpine';
-                const apiUrl = `http://localhost:8080/v2/alpine/manifests/${tag}`;
+                console.log(props);
+                const apiUrl = `http://localhost:8080/v2/${repoName}/manifests/${tag}`;
                 fetch(apiUrl, {
                   method: 'DELETE'
                 })
