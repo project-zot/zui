@@ -1,11 +1,11 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { useNavigate } from 'react-router-dom';
-import { Box, Card, CardContent, Collapse, Grid, Stack, Tooltip, Typography, Divider, Button } from '@mui/material';
+import { Box, Card, CardContent, Collapse, Grid, Stack, Tooltip, Typography, Divider, IconButton } from '@mui/material';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import transform from 'utilities/transform';
 import { DateTime } from 'luxon';
-import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
+import { KeyboardArrowDown, KeyboardArrowRight, Delete as DeleteIcon } from '@mui/icons-material';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -103,8 +103,7 @@ export default function TagCard(props) {
           <Typography variant="body1" align="left" className={classes.tagHeading}>
             Tag
           </Typography>
-          <Button
-            variant="contained"
+          <IconButton
             color="primary"
             style={{ marginLeft: 'auto' }}
             onClick={() => {
@@ -140,8 +139,8 @@ export default function TagCard(props) {
               //should hold repo name and tag [line 119 and 120]
             }}
           >
-            Delete Tag
-          </Button>
+            <DeleteIcon />
+          </IconButton>
         </div>
         <Typography variant="body1" align="left" className={classes.tagName} onClick={() => goToTags()}>
           {repoName && `${repoName}:`}
