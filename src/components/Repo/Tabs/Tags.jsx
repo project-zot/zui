@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
 
 export default function Tags(props) {
   const classes = useStyles();
-  const { tags } = props;
+  const { tags, repoName } = props;
   const [tagsFilter, setTagsFilter] = useState('');
   const [sortFilter, setSortFilter] = useState(tagsSortByCriteria.updateTimeDesc.value);
 
@@ -59,6 +59,7 @@ export default function Tags(props) {
         return (
           <TagCard
             key={tag.tag}
+            repoName={repoName} //adding this
             tag={tag.tag}
             lastUpdated={tag.lastUpdated}
             vendor={tag.vendor}
@@ -78,11 +79,6 @@ export default function Tags(props) {
     const { value } = e.target;
     setSortFilter(value);
   };
-
-  // const handleButtonClick = () => {
-  //   // Handle button click action here
-  //   console.log('Button clicked!');
-  // };
 
   return (
     <Stack direction="column" spacing="1rem">

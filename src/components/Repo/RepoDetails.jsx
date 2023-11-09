@@ -317,7 +317,7 @@ function RepoDetails() {
           <Grid item xs={12} md={8} className={classes.tags}>
             <Card className={classes.cardRoot}>
               <CardContent className={classes.tagsContent}>
-                <Tags tags={tags} />
+                <Tags tags={tags} repoName={repoDetailData?.name} />
               </CardContent>
             </Card>
           </Grid>

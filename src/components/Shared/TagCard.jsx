@@ -79,6 +79,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function TagCard(props) {
   const { repoName, tag, lastUpdated, vendor, manifests } = props;
+  console.log(props);
   const [open, setOpen] = useState(false);
   const classes = useStyles();
 
@@ -111,12 +112,13 @@ export default function TagCard(props) {
               if (confirmed) {
                 console.log('Button clicked and confirmed!');
                 console.log(props);
-                const apiUrl = `http://localhost:8080/v2/${repoName}/manifests/${tag}`;
+                console.log('REPONAME: ', repoName);
+                const apiUrl = `http://localhost:3000/v2/${repoName}/manifests/${tag}`;
                 fetch(apiUrl, {
                   method: 'DELETE'
                 })
                   .then((response) => {
-                    if (response.status === 204) {
+                    if (response.status === 202) {
                       // Tag deleted successfully
                       console.log('Tag deleted successfully');
                       // You may want to refresh the UI or perform other actions as needed
@@ -129,6 +131,7 @@ export default function TagCard(props) {
                     console.error('An error occurred:', error);
                     // Handle any network or request error
                   });
+                window.location.reload();
               } else {
                 // User canceled the action
                 console.log('Button click canceled.');
