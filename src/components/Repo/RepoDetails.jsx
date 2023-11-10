@@ -1,6 +1,6 @@
 // react global
 import React, { useEffect, useMemo, useRef, useState } from 'react';
-
+import { Delete as DeleteIcon } from '@mui/icons-material';
 // external
 import { DateTime } from 'luxon';
 import { isEmpty, uniq } from 'lodash';
@@ -242,7 +242,29 @@ function RepoDetails() {
       : `Timestamp N/A`;
     return lastDate;
   };
-
+  const handleDeleteRepo = () => {
+    const confirmed = window.confirm('Are you sure you want to delete this repo?');
+    if (confirmed) {
+      const apiUrl = `http://localhost:3000/v2/${name}/manifests/`;
+      fetch(apiUrl, {
+        method: 'DELETE'
+      })
+        .then((response) => {
+          if (response.status === 202) {
+            // Repo deleted successfully
+            console.log('Repo deleted successfully');
+            // You may want to navigate to another page or perform other actions as needed
+          } else {
+            console.log('Failed to delete the repo');
+            // Handle the failure case here
+          }
+        })
+        .catch((error) => {
+          console.error('An error occurred:', error);
+          // Handle any network or request error
+        });
+    }
+  };
   return (
     <>
       {isLoading ? (
@@ -283,6 +305,11 @@ function RepoDetails() {
                           ) : (
                             <BookmarkBorderIcon data-testid="not-bookmarked" />
                           )}
+                        </IconButton>
+                      )}
+                      {isAuthenticated() && (
+                        <IconButton component="span" onClick={handleDeleteRepo} data-testid="delete-repo-button">
+                          <DeleteIcon data-testid="delete-icon" />
                         </IconButton>
                       )}
                     </Stack>
