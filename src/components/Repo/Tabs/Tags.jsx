@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
 
 export default function Tags(props) {
   const classes = useStyles();
-  const { tags } = props;
+  const { tags, repo } = props;
   const [tagsFilter, setTagsFilter] = useState('');
   const [sortFilter, setSortFilter] = useState(tagsSortByCriteria.updateTimeDesc.value);
 
@@ -59,6 +59,7 @@ export default function Tags(props) {
         return (
           <TagCard
             key={tag.tag}
+            repo={repo}
             tag={tag.tag}
             lastUpdated={tag.lastUpdated}
             vendor={tag.vendor}

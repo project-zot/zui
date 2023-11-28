@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import { makeStyles } from '@mui/styles';
 import { useNavigate } from 'react-router-dom';
-import { Box, Card, CardContent, Collapse, Grid, Stack, Tooltip, Typography, Divider } from '@mui/material';
+import { Box, Card, CardContent, Collapse, IconButton, Item, Grid, Stack, Tooltip, Typography, Divider } from '@mui/material';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import transform from 'utilities/transform';
 import { DateTime } from 'luxon';
 import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
+import DeleteIcon from '@mui/icons-material';
+import DeleteTagConfirmDialog from 'components/Repo/RepoDetails';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -99,9 +101,20 @@ export default function TagCard(props) {
   return (
     <Card className={classes.card} raised>
       <CardContent className={classes.content}>
-        <Typography variant="body1" align="left" className={classes.tagHeading}>
-          Tag
-        </Typography>
+        <Stack direction="row" spacing={2} justifyContent="space-between">
+          <Item>
+            <Typography variant="body1" align="left" className={classes.tagHeading}>
+              Tag
+            </Typography>
+          </Item>
+          <Item>
+            <DeleteTagConfirmDialog>
+              <IconButton title="{repoName}:{tag}">
+                <DeleteIcon/>
+              </IconButton>
+            </DeleteTagConfirmDialog>
+          </Item>
+        </Stack>
         <Typography variant="body1" align="left" className={classes.tagName} onClick={() => goToTags()}>
           {repoName && `${repoName}:`}
           {tag}

@@ -11,10 +11,11 @@ import { host } from '../../host';
 import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
 
 // components
-import { Card, CardContent, CardMedia, Chip, Grid, Stack, Tooltip, Typography, IconButton } from '@mui/material';
+import { Button, Card, CardContent, CardMedia, Chip, Dialog, DialogTitle, DialogContent, DialogActions, Grid, Stack, Tooltip, Typography, IconButton } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import makeStyles from '@mui/styles/makeStyles';
+import DeleteIcon from '@mui/icons-material';
 
 // placeholder images
 import repocube1 from '../../assets/repocube-1.png';
@@ -338,3 +339,34 @@ function RepoDetails() {
   );
 }
 export default RepoDetails;
+
+function DeleteTagConfirmDialog(props) {
+  const { title, children, open, setOpen, onConfirm } = props;
+
+  const handleClose = () => {
+    onClose(selectedValue);
+  };
+
+  const handleListItemClick = (value) => {
+    onClose(value);
+  };
+
+  return (
+    <Dialog onClose={handleClose} open={open}>
+    <DialogTitle>
+      Delete {repo}:{tag}?
+    </DialogTitle>
+    <DialogContent>
+      {children}
+    </DialogContent>
+    <DialogActions>
+      <Button variant="contained" onClick={() => setOpen(false)} color="secondary">
+        No
+      </Button>
+      <Button variant="contained" onClick={() => { setOpen(false); onConfirm(); }} color="default">
+        Yes
+      </Button>
+    </DialogActions>
+    </Dialog>
+  );
+}
