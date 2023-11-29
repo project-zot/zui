@@ -94,7 +94,7 @@ jobs:
     - name: Build zot
       run: |
         cd $GITHUB_WORKSPACE/zot
-        make binary
+        make binary ZUI_BUILD_PATH=$GITHUB_WORKSPACE/build
         ls -l bin/
 
     - name: Bringup zot server

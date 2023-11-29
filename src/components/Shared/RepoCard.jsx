@@ -28,6 +28,8 @@ import {
 import makeStyles from '@mui/styles/makeStyles';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import { useTheme } from '@emotion/react';
 
 // placeholder images
@@ -183,16 +185,23 @@ function RepoCard(props) {
     platforms,
     description,
     downloads,
+    stars,
     isSigned,
     signatureInfo,
     lastUpdated,
     version,
     vulnerabilityData,
-    isBookmarked
+    isBookmarked,
+    isStarred
   } = props;
 
   // keep a local bookmark state to display in the ui dynamically on updates
   const [currentBookmarkValue, setCurrentBookmarkValue] = useState(isBookmarked);
+
+  // keep a local star state to display in the ui dynamically on updates
+  const [currentStarValue, setCurrentStarValue] = useState(isStarred);
+
+  const [currentStarCount, setCurrentStarCount] = useState(stars);
 
   const goToDetails = () => {
     navigate(`/image/${encodeURIComponent(name)}`);
@@ -211,6 +220,23 @@ function RepoCard(props) {
     api.put(`${host()}${endpoints.bookmarkToggle(name)}`, abortController.signal).then((response) => {
       if (response.status === 200) {
         setCurrentBookmarkValue((prevState) => !prevState);
+      }
+    });
+  };
+
+  const handleStarClick = (event) => {
+    event.stopPropagation();
+    event.preventDefault();
+    api.put(`${host()}${endpoints.starToggle(name)}`, abortController.signal).then((response) => {
+      if (response.status === 200) {
+        setCurrentStarValue((prevState) => !prevState);
+        currentStarValue
+          ? setCurrentStarCount((prevState) => {
+              return !isNaN(prevState) ? prevState - 1 : prevState;
+            })
+          : setCurrentStarCount((prevState) => {
+              return !isNaN(prevState) ? prevState + 1 : prevState;
+            });
       }
     });
   };
@@ -255,6 +281,16 @@ function RepoCard(props) {
           ) : (
             <BookmarkBorderIcon data-testid="not-bookmarked" />
           )}
+        </IconButton>
+      )
+    );
+  };
+
+  const renderStar = () => {
+    return (
+      isAuthenticated() && (
+        <IconButton component="span" onClick={handleStarClick} data-testid="star-button">
+          {currentStarValue ? <StarIcon data-testid="starred" /> : <StarBorderIcon data-testid="not-starred" />}
         </IconButton>
       )
     );
@@ -337,6 +373,15 @@ function RepoCard(props) {
                     #1
                   </Typography>
                 </Grid> */}
+              <Grid item xs={12}>
+                {renderStar()}
+                <Typography variant="body2" component="span" className={classes.contentRightLabel}>
+                  Stars •
+                </Typography>
+                <Typography variant="body2" component="span" className={classes.contentRightValue}>
+                  {!isNaN(currentStarCount) ? currentStarCount : `not available`}
+                </Typography>
+              </Grid>
               <Grid container item xs={12} className={classes.contentRightActions}>
                 <Grid item>{renderBookmark()}</Grid>
               </Grid>

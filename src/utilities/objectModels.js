@@ -15,6 +15,7 @@ const mapToRepo = (responseRepo) => {
     logo: responseRepo.NewestImage?.Logo,
     lastUpdated: responseRepo.LastUpdated,
     downloads: responseRepo.DownloadCount,
+    stars: responseRepo.StarCount,
     vulnerabiltySeverity: responseRepo.NewestImage?.Vulnerabilities?.MaxSeverity,
     vulnerabilityCount: responseRepo.NewestImage?.Vulnerabilities?.Count
   };
@@ -33,6 +34,7 @@ const mapToRepoFromRepoInfo = (responseRepoInfo) => {
     title: responseRepoInfo.Summary?.NewestImage?.Title,
     source: responseRepoInfo.Summary?.NewestImage?.Source,
     downloads: responseRepoInfo.Summary?.NewestImage?.DownloadCount,
+    stars: responseRepoInfo.Summary?.NewestImage?.StarCount,
     overview: responseRepoInfo.Summary?.NewestImage?.Documentation,
     license: responseRepoInfo.Summary?.NewestImage?.Licenses,
     vulnerabilitySeverity: responseRepoInfo.Summary?.NewestImage?.Vulnerabilities?.MaxSeverity,
@@ -53,6 +55,7 @@ const mapToImage = (responseImage) => {
     referrers: responseImage.Referrers,
     size: responseImage.Size,
     downloadCount: responseImage.DownloadCount,
+    starCount: responseImage.StarCount,
     lastUpdated: responseImage.LastUpdated,
     description: responseImage.Description,
     isSigned: responseImage.IsSigned,
@@ -79,6 +82,7 @@ const mapToManifest = (responseManifest) => {
     size: responseManifest.Size,
     platform: responseManifest.Platform,
     downloadCount: responseManifest.DownloadCount,
+    starCount: responseManifest.StarCount,
     layers: responseManifest.Layers,
     history: responseManifest.History,
     vulnerabilities: responseManifest.Vulnerabilities

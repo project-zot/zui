@@ -220,9 +220,11 @@ function Explore({ searchInputValue }) {
             version={item.latestVersion}
             description={item.description}
             downloads={item.downloads}
+            stars={item.stars}
             isSigned={item.isSigned}
             signatureInfo={item.signatureInfo}
             isBookmarked={item.isBookmarked}
+            isStarred={item.isStarred}
             vendor={item.vendor}
             platforms={item.platforms}
             key={index}
