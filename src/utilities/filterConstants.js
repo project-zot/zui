@@ -19,6 +19,11 @@ const imageFilters = [
     label: 'Bookmarks',
     value: 'IsBookmarked',
     type: 'boolean'
+  },
+  {
+    label: 'Starred Repositories',
+    value: 'IsStarred',
+    type: 'boolean'
   }
 ];
 

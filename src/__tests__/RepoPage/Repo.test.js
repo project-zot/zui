@@ -47,6 +47,7 @@ const mockRepoDetailsData = {
       Size: '451554070',
       Vendors: ['[The Node.js Docker Team](https://github.com/nodejs/docker-node)\n'],
       IsBookmarked: false,
+      IsStarred: false,
       NewestImage: {
         RepoName: 'mongo',
         IsSigned: true,
@@ -315,5 +316,14 @@ describe('Repo details component', () => {
     jest.spyOn(api, 'put').mockResolvedValue({ status: 200, data: {} });
     await userEvent.click(bookmarkButton);
     expect(await screen.findByTestId('bookmarked')).toBeInTheDocument();
+  });
+
+  it('should star a repo if star button is clicked', async () => {
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockRepoDetailsData } });
+    render(<RepoDetailsThemeWrapper />);
+    const starButton = await screen.findByTestId('star-button');
+    jest.spyOn(api, 'put').mockResolvedValue({ status: 200, data: {} });
+    await userEvent.click(starButton);
+    expect(await screen.findByTestId('starred')).toBeInTheDocument();
   });
 });

@@ -34,6 +34,7 @@ const mockImageList = {
         Size: '2806985',
         LastUpdated: '2022-08-09T17:19:53.274069586Z',
         IsBookmarked: false,
+        IsStarred: false,
         NewestImage: {
           Tag: 'latest',
           Description: 'w',
@@ -58,6 +59,7 @@ const mockImageList = {
         Size: '231383863',
         LastUpdated: '2022-08-02T01:30:49.193203152Z',
         IsBookmarked: false,
+        IsStarred: false,
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -82,6 +84,7 @@ const mockImageList = {
         Size: '369311301',
         LastUpdated: '2022-08-23T00:20:40.144281895Z',
         IsBookmarked: false,
+        IsStarred: false,
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -106,6 +109,7 @@ const mockImageList = {
         Size: '369311301',
         LastUpdated: '2022-08-23T00:20:40.144281895Z',
         IsBookmarked: false,
+        IsStarred: false,
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -130,6 +134,7 @@ const mockImageList = {
         Size: '369311301',
         LastUpdated: '2022-08-23T00:20:40.144281895Z',
         IsBookmarked: false,
+        IsStarred: false,
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -158,6 +163,7 @@ const mockImageList = {
         Size: '369311301',
         LastUpdated: '2022-08-23T00:20:40.144281895Z',
         IsBookmarked: false,
+        IsStarred: false,
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -182,6 +188,7 @@ const mockImageList = {
         Size: '369311301',
         LastUpdated: '2022-08-23T00:20:40.144281895Z',
         IsBookmarked: false,
+        IsStarred: false,
         NewestImage: {
           Tag: 'latest',
           Description: '',
@@ -337,5 +344,14 @@ describe('Explore component', () => {
     jest.spyOn(api, 'put').mockResolvedValueOnce({ status: 200, data: {} });
     await userEvent.click(bookmarkButton);
     expect(await screen.findAllByTestId('bookmarked')).toHaveLength(1);
+  });
+
+  it('should star a repo if star button is clicked', async () => {
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
+    render(<StateExploreWrapper />);
+    const starButton = (await screen.findAllByTestId('star-button'))[0];
+    jest.spyOn(api, 'put').mockResolvedValueOnce({ status: 200, data: {} });
+    await userEvent.click(starButton);
+    expect(await screen.findAllByTestId('starred')).toHaveLength(1);
   });
 });

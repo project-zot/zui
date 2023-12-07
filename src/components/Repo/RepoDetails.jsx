@@ -14,6 +14,8 @@ import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
 import { Card, CardContent, CardMedia, Chip, Grid, Stack, Tooltip, Typography, IconButton } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
+import StarIcon from '@mui/icons-material/Star';
+import StarBorderIcon from '@mui/icons-material/StarBorder';
 import makeStyles from '@mui/styles/makeStyles';
 
 // placeholder images
@@ -230,6 +232,17 @@ function RepoDetails() {
     });
   };
 
+  const handleStarClick = () => {
+    api.put(`${host()}${endpoints.starToggle(name)}`, abortController.signal).then((response) => {
+      if (response.status === 200) {
+        setRepoDetailData((prevState) => ({
+          ...prevState,
+          isStarred: !prevState.isStarred
+        }));
+      }
+    });
+  };
+
   const getVendor = () => {
     return `${repoDetailData.newestTag?.Vendor || 'Vendor not available'} •`;
   };
@@ -276,15 +289,26 @@ function RepoDetails() {
                           signatureInfo={repoDetailData.signatureInfo}
                         />
                       </Stack>
-                      {isAuthenticated() && (
-                        <IconButton component="span" onClick={handleBookmarkClick} data-testid="bookmark-button">
-                          {repoDetailData?.isBookmarked ? (
-                            <BookmarkIcon data-testid="bookmarked" />
-                          ) : (
-                            <BookmarkBorderIcon data-testid="not-bookmarked" />
-                          )}
-                        </IconButton>
-                      )}
+                      <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={1}>
+                        {isAuthenticated() && (
+                          <IconButton component="span" onClick={handleStarClick} data-testid="star-button">
+                            {repoDetailData?.isStarred ? (
+                              <StarIcon data-testid="starred" />
+                            ) : (
+                              <StarBorderIcon data-testid="not-starred" />
+                            )}
+                          </IconButton>
+                        )}
+                        {isAuthenticated() && (
+                          <IconButton component="span" onClick={handleBookmarkClick} data-testid="bookmark-button">
+                            {repoDetailData?.isBookmarked ? (
+                              <BookmarkIcon data-testid="bookmarked" />
+                            ) : (
+                              <BookmarkBorderIcon data-testid="not-bookmarked" />
+                            )}
+                          </IconButton>
+                        )}
+                      </Stack>
                     </Stack>
                     <Typography gutterBottom className={classes.repoTitle}>
                       {repoDetailData?.title || 'Title not available'}
