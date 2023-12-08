@@ -43,7 +43,7 @@ const useStyles = makeStyles(() => ({
 
 export default function Tags(props) {
   const classes = useStyles();
-  const { tags } = props;
+  const { tags, repoName, onTagDelete } = props;
   const [tagsFilter, setTagsFilter] = useState('');
   const [sortFilter, setSortFilter] = useState(tagsSortByCriteria.updateTimeDesc.value);
 
@@ -63,6 +63,9 @@ export default function Tags(props) {
             lastUpdated={tag.lastUpdated}
             vendor={tag.vendor}
             manifests={tag.manifests}
+            repo={repoName}
+            onTagDelete={onTagDelete}
+            isDeletable={tag.isDeletable}
           />
         );
       })

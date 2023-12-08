@@ -6,6 +6,7 @@ import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import transform from 'utilities/transform';
 import { DateTime } from 'luxon';
 import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
+import DeleteTag from 'components/Shared/DeleteTag';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -78,9 +79,9 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TagCard(props) {
-  const { repoName, tag, lastUpdated, vendor, manifests } = props;
-
+  const { repoName, tag, lastUpdated, vendor, manifests, repo, onTagDelete, isDeletable } = props;
   const [open, setOpen] = useState(false);
+
   const classes = useStyles();
 
   const lastDate = lastUpdated
@@ -99,9 +100,12 @@ export default function TagCard(props) {
   return (
     <Card className={classes.card} raised>
       <CardContent className={classes.content}>
-        <Typography variant="body1" align="left" className={classes.tagHeading}>
-          Tag
-        </Typography>
+        <Stack direction="row" spacing={2} justifyContent="space-between">
+          <Typography variant="body1" align="left" className={classes.tagHeading}>
+            Tag
+          </Typography>
+          {isDeletable && <DeleteTag repo={repo} tag={tag} onTagDelete={onTagDelete} />}
+        </Stack>
         <Typography variant="body1" align="left" className={classes.tagName} onClick={() => goToTags()}>
           {repoName && `${repoName}:`}
           {tag}

@@ -197,6 +197,10 @@ function RepoDetails() {
     };
   }, [name]);
 
+  const handleDeleteTag = (removed) => {
+    setTags((prevState) => prevState.filter((tag) => tag.tag !== removed));
+  };
+
   const handlePlatformChipClick = (event) => {
     const { textContent } = event.target;
     event.stopPropagation();
@@ -223,7 +227,7 @@ function RepoDetails() {
 
   const handleBookmarkClick = () => {
     api.put(`${host()}${endpoints.bookmarkToggle(name)}`, abortController.signal).then((response) => {
-      if (response.status === 200) {
+      if (response && response.status === 200) {
         setRepoDetailData((prevState) => ({
           ...prevState,
           isBookmarked: !prevState.isBookmarked
@@ -341,7 +345,7 @@ function RepoDetails() {
           <Grid item xs={12} md={8} className={classes.tags}>
             <Card className={classes.cardRoot}>
               <CardContent className={classes.tagsContent}>
-                <Tags tags={tags} />
+                <Tags tags={tags} repoName={name} onTagDelete={handleDeleteTag} />
               </CardContent>
             </Card>
           </Grid>

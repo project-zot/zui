@@ -81,12 +81,13 @@ const endpoints = {
   authConfig: `/v2/_zot/ext/mgmt`,
   openidAuth: `/zot/auth/login`,
   logout: `/zot/auth/logout`,
+  deleteImage: (name, tag) => `/v2/${name}/manifests/${tag}`,
   repoList: ({ pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={RepoListWithNewestImage(requestedPage: {limit:${pageSize} offset:${
       (pageNumber - 1) * pageSize
     }}){Results {Name LastUpdated Size Platforms {Os Arch}  NewestImage { Tag Vulnerabilities {MaxSeverity Count} Description  Licenses Title Source IsSigned SignatureInfo { Tool IsTrusted Author } Documentation Vendor Labels} IsStarred IsBookmarked StarCount DownloadCount}}}`,
   detailedRepoInfo: (name) =>
-    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Manifests {Digest Platform {Os Arch} Size} Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor } Summary {Name LastUpdated Size Platforms {Os Arch} Vendors IsStarred IsBookmarked NewestImage {RepoName IsSigned SignatureInfo { Tool IsTrusted Author } Vulnerabilities {MaxSeverity Count} Manifests {Digest} Tag Vendor Title Documentation DownloadCount Source Description Licenses}}}}`,
+    `/v2/_zot/ext/search?query={ExpandedRepoInfo(repo:"${name}"){Images {Manifests {Digest Platform {Os Arch} Size} Vulnerabilities {MaxSeverity Count} Tag LastUpdated Vendor IsDeletable } Summary {Name LastUpdated Size Platforms {Os Arch} Vendors IsStarred IsBookmarked NewestImage {RepoName IsSigned SignatureInfo { Tool IsTrusted Author } Vulnerabilities {MaxSeverity Count} Manifests {Digest} Tag Vendor Title Documentation DownloadCount Source Description Licenses}}}}`,
   detailedImageInfo: (name, tag) =>
     `/v2/_zot/ext/search?query={Image(image: "${name}:${tag}"){RepoName IsSigned SignatureInfo { Tool IsTrusted Author } Vulnerabilities {MaxSeverity Count}  Referrers {MediaType ArtifactType Size Digest Annotations{Key Value}} Tag Manifests {History {Layer {Size Digest} HistoryDescription {CreatedBy EmptyLayer}} Digest ConfigDigest LastUpdated Size Platform {Os Arch}} Vendor Licenses }}`,
   vulnerabilitiesForRepo: (name, { pageNumber = 1, pageSize = 15 }, searchTerm = '') => {

@@ -22,6 +22,7 @@ const mockedTagsData = [
   {
     tag: 'latest',
     vendor: 'test1',
+    isDeletable: true,
     manifests: [
       {
         lastUpdated: '2022-07-19T18:06:18.818788283Z',
@@ -37,6 +38,7 @@ const mockedTagsData = [
   {
     tag: 'bullseye',
     vendor: 'test1',
+    isDeletable: true,
     manifests: [
       {
         digest: 'sha256:adca4815c494becc1bf053af0c4640b2d81ab1a779e6d649e1b8b92a75f1d559',
@@ -52,6 +54,7 @@ const mockedTagsData = [
   {
     tag: '1.5.2',
     vendor: 'test1',
+    isDeletable: true,
     manifests: [
       {
         lastUpdated: '2022-07-19T18:06:18.818788283Z',
@@ -74,6 +77,18 @@ describe('Tags component', () => {
     expect(screen.getByText(/OS\/ARCH/i)).toBeInTheDocument();
     fireEvent.click(openBtn[0]);
     await waitFor(() => expect(screen.queryByText(/OS\/ARCH/i)).not.toBeInTheDocument());
+  });
+
+  it('should see delete tag button and its dialog', async () => {
+    render(<TagsThemeWrapper />);
+    const deleteBtn = await screen.findAllByTestId('DeleteIcon');
+    fireEvent.click(deleteBtn[0]);
+    expect(await screen.findByTestId('delete-dialog')).toBeInTheDocument();
+    const confirmBtn = await screen.findByTestId('confirm-delete');
+    expect(confirmBtn).toBeInTheDocument();
+    fireEvent.click(confirmBtn);
+    expect(await screen.findByTestId('confirm-delete')).toBeInTheDocument();
+    expect(await screen.findByTestId('cancel-delete')).toBeInTheDocument();
   });
 
   it('should navigate to tag page details when tag is clicked', async () => {

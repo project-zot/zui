@@ -69,6 +69,7 @@ const mapToImage = (responseImage) => {
     authors: responseImage.Authors,
     vulnerabiltySeverity: responseImage.Vulnerabilities?.MaxSeverity,
     vulnerabilityCount: responseImage.Vulnerabilities?.Count,
+    isDeletable: responseImage.IsDeletable,
     // frontend only prop to increase interop with Repo objects and code reusability
     name: `${responseImage.RepoName}:${responseImage.Tag}`
   };
