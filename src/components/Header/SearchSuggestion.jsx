@@ -295,12 +295,26 @@ function SearchSuggestion({ setSearchCurrentValue = () => {} }) {
       <List
         {...getMenuProps()}
         className={
-          isOpen && !isLoading && !isFailedSearch
+          isOpen && !isFailedSearch
             ? `${classes.resultsWrapper} ${isComponentFocused && classes.resultsWrapperFocused}`
             : classes.resultsWrapperHidden
         }
       >
         {isOpen && suggestionData?.length > 0 && renderSuggestions()}
+        {isOpen && isLoading && !isEmpty(searchQuery) && isEmpty(suggestionData) && (
+          <>
+            <ListItem
+              className={classes.searchItem}
+              style={{ color: '#52637A', fontSize: '1rem', textOverflow: 'ellipsis' }}
+              {...getItemProps({ item: '', index: 0 })}
+              spacing={2}
+            >
+              <Stack direction="row" spacing={2}>
+                <Typography>Loading...</Typography>
+              </Stack>
+            </ListItem>
+          </>
+        )}
         {isOpen && isEmpty(searchQuery) && isEmpty(suggestionData) && (
           <>
             <ListItem
