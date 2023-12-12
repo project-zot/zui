@@ -4,14 +4,28 @@ import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { api, endpoints } from '../../../api';
 
 // components
-import { Stack, Typography, InputBase } from '@mui/material';
+import {
+  IconButton,
+  Stack,
+  Typography,
+  InputBase,
+  Menu,
+  MenuItem,
+  Divider,
+  Snackbar,
+  CircularProgress
+} from '@mui/material';
 import makeStyles from '@mui/styles/makeStyles';
 import { host } from '../../../host';
 import { debounce, isEmpty } from 'lodash';
 import Loading from '../../Shared/Loading';
-import { mapCVEInfo } from 'utilities/objectModels';
+import { mapCVEInfo, mapAllCVEInfo } from 'utilities/objectModels';
 import { EXPLORE_PAGE_SIZE } from 'utilities/paginationConstants';
 import SearchIcon from '@mui/icons-material/Search';
+import DownloadIcon from '@mui/icons-material/Download';
+
+import * as XLSX from 'xlsx';
+import exportFromJSON from 'export-from-json';
 
 import VulnerabilitiyCard from '../../Shared/VulnerabilityCard';
 
@@ -40,6 +54,13 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1.4rem',
     fontWeight: '600'
   },
+  vulnerabilities: {
+    position: 'relative',
+    maxWidth: '100%',
+    flexDirection: 'row',
+    alignItems: 'center',
+    justifyContent: 'space-between'
+  },
   search: {
     position: 'relative',
     maxWidth: '100%',
@@ -65,13 +86,25 @@ const useStyles = makeStyles((theme) => ({
     '&::placeholder': {
       opacity: '1'
     }
+  },
+  export: {
+    alignContent: 'right'
+  },
+  popper: {
+    width: '100%',
+    overflow: 'hidden',
+    padding: '0.3rem',
+    display: 'flex',
+    justifyContent: 'center'
   }
 }));
 
 function VulnerabilitiesDetails(props) {
   const classes = useStyles();
   const [cveData, setCveData] = useState([]);
+  const [allCveData, setAllCveData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isLoadingAllCve, setIsLoadingAllCve] = useState(true);
   const abortController = useMemo(() => new AbortController(), []);
   const { name, tag, digest, platform } = props;
 
@@ -80,6 +113,9 @@ function VulnerabilitiesDetails(props) {
   const [pageNumber, setPageNumber] = useState(1);
   const [isEndOfList, setIsEndOfList] = useState(false);
   const listBottom = useRef(null);
+
+  const [anchorExport, setAnchorExport] = useState(null);
+  const openExport = Boolean(anchorExport);
 
   const getCVERequestName = () => {
     return digest !== '' ? `${name}@${digest}` : `${name}:${tag}`;
@@ -114,6 +150,24 @@ function VulnerabilitiesDetails(props) {
       });
   };
 
+  const getAllCVEs = () => {
+    api
+      .get(`${host()}${endpoints.allVulnerabilitiesForRepo(getCVERequestName())}`, abortController.signal)
+      .then((response) => {
+        if (response.data && response.data.data) {
+          const cveInfo = response.data.data.CVEListForImage?.CVEList;
+          const cveListData = mapAllCVEInfo(cveInfo);
+          setAllCveData(cveListData);
+        }
+        setIsLoadingAllCve(false);
+      })
+      .catch((e) => {
+        console.error(e);
+        setAllCveData([]);
+        setIsLoadingAllCve(false);
+      });
+  };
+
   const resetPagination = () => {
     setIsLoading(true);
     setIsEndOfList(false);
@@ -124,9 +178,37 @@ function VulnerabilitiesDetails(props) {
     }
   };
 
+  const handleOnExportExcel = () => {
+    const wb = XLSX.utils.book_new(),
+      ws = XLSX.utils.json_to_sheet(allCveData);
+
+    XLSX.utils.book_append_sheet(wb, ws, name + '_' + tag);
+
+    XLSX.writeFile(wb, `${name}:${tag}-vulnerabilities.xlsx`);
+
+    handleCloseExport();
+  };
+
+  const handleOnExportCSV = () => {
+    const fileName = `${name}:${tag}-vulnerabilities`;
+    const exportType = exportFromJSON.types.csv;
+
+    exportFromJSON({ data: allCveData, fileName, exportType });
+
+    handleCloseExport();
+  };
+
   const handleCveFilterChange = (e) => {
     const { value } = e.target;
     setCveFilter(value);
+  };
+
+  const handleClickExport = (event) => {
+    setAnchorExport(event.currentTarget);
+  };
+
+  const handleCloseExport = () => {
+    setAnchorExport(null);
   };
 
   const debouncedChangeHandler = useMemo(() => debounce(handleCveFilterChange, 300));
@@ -172,6 +254,12 @@ function VulnerabilitiesDetails(props) {
     };
   }, []);
 
+  useEffect(() => {
+    if (openExport && isEmpty(allCveData)) {
+      getAllCVEs();
+    }
+  }, [openExport]);
+
   const renderCVEs = () => {
     return !isEmpty(cveData) ? (
       cveData.map((cve, index) => {
@@ -194,9 +282,53 @@ function VulnerabilitiesDetails(props) {
 
   return (
     <Stack direction="column" spacing="1rem" data-testid="vulnerability-container">
-      <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
-        Vulnerabilities
-      </Typography>
+      <Stack className={classes.vulnerabilities}>
+        <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
+          Vulnerabilities
+        </Typography>
+        <IconButton disableRipple onClick={handleClickExport} className={classes.export}>
+          <DownloadIcon />
+        </IconButton>
+        <Snackbar
+          open={openExport && isLoadingAllCve}
+          message="Getting your data ready for export"
+          action={<CircularProgress size="2rem" sx={{ color: '#FFFFFF' }} />}
+        />
+        <Menu
+          anchorEl={anchorExport}
+          open={openExport}
+          onClose={handleCloseExport}
+          data-testid="export-dropdown"
+          anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center'
+          }}
+          transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center'
+          }}
+        >
+          <MenuItem
+            onClick={handleOnExportCSV}
+            disableRipple
+            disabled={isLoadingAllCve}
+            className={classes.popper}
+            data-testid="export-csv-menuItem"
+          >
+            csv
+          </MenuItem>
+          <Divider sx={{ my: 0.5 }} />
+          <MenuItem
+            onClick={handleOnExportExcel}
+            disableRipple
+            disabled={isLoadingAllCve}
+            className={classes.popper}
+            data-testid="export-excel-menuItem"
+          >
+            MS Excel
+          </MenuItem>
+        </Menu>
+      </Stack>
       <Stack className={classes.search}>
         <InputBase
           placeholder={'Search'}
