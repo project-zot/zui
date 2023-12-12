@@ -6,6 +6,8 @@ import VulnerabilitiesDetails from 'components/Tag/Tabs/VulnerabilitiesDetails';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
+jest.mock('xlsx');
+
 const StateVulnerabilitiesWrapper = () => {
   return (
     <MockThemeProvider>
@@ -556,6 +558,32 @@ describe('Vulnerabilties page', () => {
     await fireEvent.click(loadMoreBtn);
     await waitFor(() => expect(loadMoreBtn).not.toBeInTheDocument());
     expect(await screen.findByText('latest')).toBeInTheDocument();
+  });
+
+  it('should allow export of vulnerabilities list', async () => {
+    const xlsxMock = jest.createMockFromModule('xlsx');
+    xlsxMock.writeFile = jest.fn();
+
+    jest
+      .spyOn(api, 'get')
+      .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
+      .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
+    render(<StateVulnerabilitiesWrapper />);
+    await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
+    const downloadBtn = await screen.findAllByTestId('DownloadIcon');
+    fireEvent.click(downloadBtn[0]);
+    expect(await screen.findByTestId('export-csv-menuItem')).toBeInTheDocument();
+    expect(await screen.findByTestId('export-excel-menuItem')).toBeInTheDocument();
+    const exportAsCSVBtn = screen.getByText(/csv/i);
+    expect(exportAsCSVBtn).toBeInTheDocument();
+    global.URL.createObjectURL = jest.fn();
+    await fireEvent.click(exportAsCSVBtn);
+    expect(await screen.findByTestId('export-csv-menuItem')).not.toBeInTheDocument();
+    fireEvent.click(downloadBtn[0]);
+    const exportAsExcelBtn = screen.getByText(/MS Excel/i);
+    expect(exportAsExcelBtn).toBeInTheDocument();
+    await fireEvent.click(exportAsExcelBtn);
+    expect(await screen.findByTestId('export-excel-menuItem')).not.toBeInTheDocument();
   });
 
   it('should handle fixed CVE query errors', async () => {

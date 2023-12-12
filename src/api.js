@@ -99,6 +99,8 @@ const endpoints = {
     }
     return `${query}){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity PackageList {Name InstalledVersion FixedVersion}}}}`;
   },
+  allVulnerabilitiesForRepo: (name) =>
+    `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}"){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity Reference PackageList {Name InstalledVersion FixedVersion}}}}`,
   imageListWithCVEFixed: (cveId, repoName, { pageNumber = 1, pageSize = 3 }, filter = {}) => {
     let filterParam = '';
     if (filter.Os || filter.Arch) {

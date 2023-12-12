@@ -102,6 +102,24 @@ const mapCVEInfo = (cveInfo) => {
   return cveList;
 };
 
+const mapAllCVEInfo = (cveInfo) => {
+  const cveList = cveInfo.flatMap((cve) => {
+    return cve.PackageList.map((packageInfo) => {
+      return {
+        id: cve.Id,
+        severity: cve.Severity,
+        title: cve.Title,
+        description: cve.Description,
+        reference: cve.Reference,
+        packageName: packageInfo.Name,
+        packageInstalledVersion: packageInfo.InstalledVersion,
+        packageFixedVersion: packageInfo.FixedVersion
+      };
+    });
+  });
+  return cveList;
+};
+
 const mapSignatureInfo = (signatureInfo) => {
   return signatureInfo
     ? {
@@ -124,4 +142,4 @@ const mapReferrer = (referrer) => ({
   annotations: referrer.Annotations?.map((annotation) => ({ key: annotation.Key, value: annotation.Value }))
 });
 
-export { mapToRepo, mapToImage, mapToRepoFromRepoInfo, mapCVEInfo, mapReferrer, mapToManifest };
+export { mapToRepo, mapToImage, mapToRepoFromRepoInfo, mapCVEInfo, mapAllCVEInfo, mapReferrer, mapToManifest };
