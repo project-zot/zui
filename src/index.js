@@ -5,6 +5,8 @@ import App from './App';
 import reportWebVitals from './reportWebVitals';
 
 import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
+import { LocalizationProvider } from '@mui/x-date-pickers';
+import { AdapterLuxon } from '@mui/x-date-pickers/AdapterLuxon';
 
 const theme = createTheme(
   adaptV4Theme({
@@ -36,7 +38,9 @@ ReactDOM.render(
   <React.StrictMode>
     <StyledEngineProvider injectFirst>
       <ThemeProvider theme={theme}>
-        <App />
+        <LocalizationProvider dateAdapter={AdapterLuxon}>
+          <App />
+        </LocalizationProvider>
       </ThemeProvider>
     </StyledEngineProvider>
   </React.StrictMode>,

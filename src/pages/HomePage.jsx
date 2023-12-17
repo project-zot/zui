@@ -14,7 +14,6 @@ const useStyles = makeStyles(() => ({
     minWidth: '60%'
   },
   gridWrapper: {
-    // backgroundColor: "#fff",
     border: '0.0625em #f2f2f2 dashed'
   },
   pageWrapper: {
