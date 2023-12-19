@@ -1,5 +1,5 @@
 const hostConfig = {
-  auto: true,
+  auto: false,
   default: 'http://localhost:5000'
 };
 

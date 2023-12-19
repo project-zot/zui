@@ -28,9 +28,16 @@ import * as XLSX from 'xlsx';
 import exportFromJSON from 'export-from-json';
 
 import VulnerabilitiyCard from '../../Shared/VulnerabilityCard';
+import VulnerabilityCountCard from '../../Shared/VulnerabilityCountCard';
 
 const useStyles = makeStyles((theme) => ({
   title: {
+    color: theme.palette.primary.main,
+    fontSize: '1.5rem',
+    fontWeight: '600',
+    marginBottom: '0'
+  },
+  cveCountSummary: {
     color: theme.palette.primary.main,
     fontSize: '1.5rem',
     fontWeight: '600',
@@ -103,6 +110,7 @@ function VulnerabilitiesDetails(props) {
   const classes = useStyles();
   const [cveData, setCveData] = useState([]);
   const [allCveData, setAllCveData] = useState([]);
+  const [cveSummary, setCVESummary] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingAllCve, setIsLoadingAllCve] = useState(true);
   const abortController = useMemo(() => new AbortController(), []);
@@ -134,9 +142,23 @@ function VulnerabilitiesDetails(props) {
       .then((response) => {
         if (response.data && response.data.data) {
           let cveInfo = response.data.data.CVEListForImage?.CVEList;
+          let summary = response.data.data.CVEListForImage?.Summary;
           let cveListData = mapCVEInfo(cveInfo);
           setCveData((previousState) => (pageNumber === 1 ? cveListData : [...previousState, ...cveListData]));
           setIsEndOfList(response.data.data.CVEListForImage.Page?.ItemCount < EXPLORE_PAGE_SIZE);
+          setCVESummary((previousState) => {
+            if (isEmpty(summary)) {
+              return previousState;
+            }
+            return {
+              Count: summary.Count,
+              UnknownCount: summary.UnknownCount,
+              LowCount: summary.LowCount,
+              MediumCount: summary.MediumCount,
+              HighCount: summary.HighCount,
+              CriticalCount: summary.CriticalCount
+            };
+          });
         } else if (response.data.errors) {
           setIsEndOfList(true);
         }
@@ -146,6 +168,7 @@ function VulnerabilitiesDetails(props) {
         console.error(e);
         setIsLoading(false);
         setCveData([]);
+        setCVESummary(() => {});
         setIsEndOfList(true);
       });
   };
@@ -270,6 +293,24 @@ function VulnerabilitiesDetails(props) {
     );
   };
 
+  const renderCVESummary = () => {
+    if (cveSummary === undefined) {
+      return;
+    }
+    return !isEmpty(cveSummary) ? (
+      <VulnerabilityCountCard
+        total={cveSummary.Count}
+        critical={cveSummary.CriticalCount}
+        high={cveSummary.HighCount}
+        medium={cveSummary.MediumCount}
+        low={cveSummary.LowCount}
+        unknown={cveSummary.UnknownCount}
+      />
+    ) : (
+      <div>{!isLoading && <Typography className={classes.none}> No Vulnerabilities </Typography>}</div>
+    );
+  };
+
   const renderListBottom = () => {
     if (isLoading) {
       return <Loading />;
@@ -283,51 +324,54 @@ function VulnerabilitiesDetails(props) {
   return (
     <Stack direction="column" spacing="1rem" data-testid="vulnerability-container">
       <Stack className={classes.vulnerabilities}>
-        <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
-          Vulnerabilities
-        </Typography>
-        <IconButton disableRipple onClick={handleClickExport} className={classes.export}>
-          <DownloadIcon />
-        </IconButton>
-        <Snackbar
-          open={openExport && isLoadingAllCve}
-          message="Getting your data ready for export"
-          action={<CircularProgress size="2rem" sx={{ color: '#FFFFFF' }} />}
-        />
-        <Menu
-          anchorEl={anchorExport}
-          open={openExport}
-          onClose={handleCloseExport}
-          data-testid="export-dropdown"
-          anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center'
-          }}
-          transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center'
-          }}
-        >
-          <MenuItem
-            onClick={handleOnExportCSV}
-            disableRipple
-            disabled={isLoadingAllCve}
-            className={classes.popper}
-            data-testid="export-csv-menuItem"
+        <Stack direction="row" justifyContent="space-between">
+          <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
+            Vulnerabilities
+          </Typography>
+          <IconButton disableRipple onClick={handleClickExport} className={classes.export}>
+            <DownloadIcon />
+          </IconButton>
+          <Snackbar
+            open={openExport && isLoadingAllCve}
+            message="Getting your data ready for export"
+            action={<CircularProgress size="2rem" sx={{ color: '#FFFFFF' }} />}
+          />
+          <Menu
+            anchorEl={anchorExport}
+            open={openExport}
+            onClose={handleCloseExport}
+            data-testid="export-dropdown"
+            anchorOrigin={{
+              vertical: 'bottom',
+              horizontal: 'center'
+            }}
+            transformOrigin={{
+              vertical: 'top',
+              horizontal: 'center'
+            }}
           >
-            csv
-          </MenuItem>
-          <Divider sx={{ my: 0.5 }} />
-          <MenuItem
-            onClick={handleOnExportExcel}
-            disableRipple
-            disabled={isLoadingAllCve}
-            className={classes.popper}
-            data-testid="export-excel-menuItem"
-          >
-            MS Excel
-          </MenuItem>
-        </Menu>
+            <MenuItem
+              onClick={handleOnExportCSV}
+              disableRipple
+              disabled={isLoadingAllCve}
+              className={classes.popper}
+              data-testid="export-csv-menuItem"
+            >
+              csv
+            </MenuItem>
+            <Divider sx={{ my: 0.5 }} />
+            <MenuItem
+              onClick={handleOnExportExcel}
+              disableRipple
+              disabled={isLoadingAllCve}
+              className={classes.popper}
+              data-testid="export-excel-menuItem"
+            >
+              MS Excel
+            </MenuItem>
+          </Menu>
+        </Stack>
+        {renderCVESummary()}
       </Stack>
       <Stack className={classes.search}>
         <InputBase
