@@ -22,6 +22,14 @@ const mockCVEList = {
   CVEListForImage: {
     Tag: '',
     Page: { ItemCount: 20, TotalCount: 20 },
+    Summary: {
+      Count: 5,
+      UnknownCount: 1,
+      LowCount: 1,
+      MediumCount: 1,
+      HighCount: 1,
+      CriticalCount: 1,
+    },
     CVEList: [
       {
         Id: 'CVE-2020-16156',
@@ -499,6 +507,7 @@ describe('Vulnerabilties page', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('Total 5')).toHaveLength(1));
     await waitFor(() => expect(screen.getAllByText(/fixed in/i)).toHaveLength(20));
   });
 
@@ -515,7 +524,7 @@ describe('Vulnerabilties page', () => {
   it('renders no vulnerabilities if there are not any', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({
       status: 200,
-      data: { data: { CVEListForImage: { Tag: '', Page: {}, CVEList: [] } } }
+      data: { data: { CVEListForImage: { Tag: '', Page: {}, CVEList: [], Summary: {} } } }
     });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('No Vulnerabilities')).toHaveLength(1));
