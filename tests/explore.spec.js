@@ -76,8 +76,14 @@ test.describe('explore page test', () => {
 
     await expect(exploreFirst).toBeVisible({ timeout: 250000 });
 
+    const windowsFilter = page.getByRole('checkbox', { name: 'windows' });
     await linuxFilter.uncheck();
-    await page.getByRole('checkbox', { name: 'windows' }).check();
+    await windowsFilter.check();
+    await expect(exploreFirst).not.toBeVisible({ timeout: 250000 });
+
+    const freebsdFilter = page.getByRole('checkbox', { name: 'freebsd' });
+    await windowsFilter.uncheck();
+    await freebsdFilter.check();
     await expect(exploreFirst).not.toBeVisible({ timeout: 250000 });
   });
 });
