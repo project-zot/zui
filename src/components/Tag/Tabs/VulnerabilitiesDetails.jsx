@@ -30,6 +30,9 @@ import exportFromJSON from 'export-from-json';
 import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
 import ViewAgendaIcon from '@mui/icons-material/ViewAgenda';
 
+import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
+import Collapse from '@mui/material/Collapse';
+
 import VulnerabilitiyCard from '../../Shared/VulnerabilityCard';
 import VulnerabilityCountCard from '../../Shared/VulnerabilityCountCard';
 
@@ -122,6 +125,21 @@ const useStyles = makeStyles((theme) => ({
     padding: '0.3rem',
     display: 'flex',
     justifyContent: 'left'
+  },
+  dropdownArrowBox: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
+  dropdownText: {
+    color: '#1479FF',
+    fontSize: '1.5rem',
+    fontWeight: '600',
+    cursor: 'pointer',
+    textAlign: 'center'
+  },
+  test: {
+    width: '95%'
   }
 }));
 
@@ -135,8 +153,11 @@ function VulnerabilitiesDetails(props) {
   const abortController = useMemo(() => new AbortController(), []);
   const { name, tag, digest, platform } = props;
 
+  const [openExcludeSearch, setOpenExcludeSearch] = useState(false);
+
   // pagination props
   const [cveFilter, setCveFilter] = useState('');
+  const [cveExcludeFilter, setCveExcludeFilter] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const [isEndOfList, setIsEndOfList] = useState(false);
   const listBottom = useRef(null);
@@ -156,7 +177,8 @@ function VulnerabilitiesDetails(props) {
         `${host()}${endpoints.vulnerabilitiesForRepo(
           getCVERequestName(),
           { pageNumber, pageSize: EXPLORE_PAGE_SIZE },
-          cveFilter
+          cveFilter,
+          cveExcludeFilter
         )}`,
         abortController.signal
       )
@@ -255,7 +277,17 @@ function VulnerabilitiesDetails(props) {
     setAnchorExport(null);
   };
 
+  const handleExpandCVESearch = () => {
+    setOpenExcludeSearch((openExcludeSearch) => !openExcludeSearch);
+  };
+
+  const handleCveExcludeFilterChange = (e) => {
+    const { value } = e.target;
+    setCveExcludeFilter(value);
+  };
+
   const debouncedChangeHandler = useMemo(() => debounce(handleCveFilterChange, 300));
+  const debouncedExcludeFilterChangeHandler = useMemo(() => debounce(handleCveExcludeFilterChange, 300));
 
   useEffect(() => {
     getPaginatedCVEs();
@@ -289,12 +321,13 @@ function VulnerabilitiesDetails(props) {
   useEffect(() => {
     if (isLoading) return;
     resetPagination();
-  }, [cveFilter]);
+  }, [cveFilter, cveExcludeFilter]);
 
   useEffect(() => {
     return () => {
       abortController.abort();
       debouncedChangeHandler.cancel();
+      debouncedExcludeFilterChangeHandler.cancel();
     };
   }, []);
 
@@ -417,15 +450,36 @@ function VulnerabilitiesDetails(props) {
         </Menu>
       </Stack>
       {renderCVESummary()}
-      <Stack className={classes.search}>
-        <InputBase
-          placeholder={'Search'}
-          classes={{ root: classes.searchInputBase, input: classes.input }}
-          onChange={debouncedChangeHandler}
-        />
-        <div className={classes.searchIcon}>
-          <SearchIcon />
+      <Stack direction="row">
+        <div className={classes.dropdownArrowBox} onClick={handleExpandCVESearch}>
+          {!openExcludeSearch ? (
+            <KeyboardArrowRight className={classes.dropdownText} />
+          ) : (
+            <KeyboardArrowDown className={classes.dropdownText} />
+          )}
         </div>
+        <Stack className={classes.test} direction="column" spacing="0.25em">
+          <Stack className={classes.search}>
+            <InputBase
+              placeholder={'Search'}
+              classes={{ root: classes.searchInputBase, input: classes.input }}
+              onChange={debouncedChangeHandler}
+            />
+            <div className={classes.searchIcon}>
+              <SearchIcon />
+            </div>
+          </Stack>
+
+          <Collapse in={openExcludeSearch} timeout="auto" unmountOnExit>
+            <Stack className={classes.search}>
+              <InputBase
+                placeholder={'Exclude'}
+                classes={{ root: classes.searchInputBase, input: classes.input }}
+                onChange={debouncedExcludeFilterChangeHandler}
+              />
+            </Stack>
+          </Collapse>
+        </Stack>
       </Stack>
       {renderCVEs()}
       {renderListBottom()}
