@@ -6,6 +6,10 @@ const osFilters = [
   {
     label: 'linux',
     value: 'linux'
+  },
+  {
+    label: 'freebsd',
+    value: 'freebsd'
   }
 ];
 

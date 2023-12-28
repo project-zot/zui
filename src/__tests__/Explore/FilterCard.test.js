@@ -21,7 +21,7 @@ const StateFilterCardWrapper = () => {
 describe('Filters components', () => {
   it('renders the filters cards', async () => {
     render(<StateFilterCardWrapper />);
-    expect(screen.getAllByRole('checkbox')).toHaveLength(2);
+    expect(screen.getAllByRole('checkbox')).toHaveLength(3);
 
     const checkbox = screen.getAllByRole('checkbox');
     expect(checkbox[0]).not.toBeChecked();
