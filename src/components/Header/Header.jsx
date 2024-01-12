@@ -149,14 +149,14 @@ function Header({ setSearchCurrentValue = () => {} }) {
               </Link>
             </Grid>
             <Grid item className={classes.headerLinkContainer}>
-              <a className={classes.link} href="https://zotregistry.io" target="_blank" rel="noreferrer">
+              <a className={classes.link} href="https://zotregistry.dev" target="_blank" rel="noreferrer">
                 Product
               </a>
             </Grid>
             <Grid item className={classes.headerLinkContainer}>
               <a
                 className={classes.link}
-                href="https://zotregistry.io/v1.4.3/general/concepts/"
+                href="https://zotregistry.dev/v2.0.0/general/concepts/"
                 target="_blank"
                 rel="noreferrer"
               >
