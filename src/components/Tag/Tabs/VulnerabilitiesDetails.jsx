@@ -24,7 +24,6 @@ import { EXPLORE_PAGE_SIZE } from 'utilities/paginationConstants';
 import SearchIcon from '@mui/icons-material/Search';
 import DownloadIcon from '@mui/icons-material/Download';
 
-import * as XLSX from 'xlsx';
 import exportFromJSON from 'export-from-json';
 
 import VulnerabilitiyCard from '../../Shared/VulnerabilityCard';
@@ -179,12 +178,10 @@ function VulnerabilitiesDetails(props) {
   };
 
   const handleOnExportExcel = () => {
-    const wb = XLSX.utils.book_new(),
-      ws = XLSX.utils.json_to_sheet(allCveData);
+    const fileName = `${name}:${tag}-vulnerabilities`;
+    const exportType = exportFromJSON.types.xls;
 
-    XLSX.utils.book_append_sheet(wb, ws, name + '_' + tag);
-
-    XLSX.writeFile(wb, `${name}:${tag}-vulnerabilities.xlsx`);
+    exportFromJSON({ data: allCveData, fileName, exportType });
 
     handleCloseExport();
   };
@@ -325,7 +322,7 @@ function VulnerabilitiesDetails(props) {
             className={classes.popper}
             data-testid="export-excel-menuItem"
           >
-            MS Excel
+            xls
           </MenuItem>
         </Menu>
       </Stack>

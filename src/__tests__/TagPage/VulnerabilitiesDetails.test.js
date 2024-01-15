@@ -6,8 +6,6 @@ import VulnerabilitiesDetails from 'components/Tag/Tabs/VulnerabilitiesDetails';
 import React from 'react';
 import { MemoryRouter } from 'react-router-dom';
 
-jest.mock('xlsx');
-
 const StateVulnerabilitiesWrapper = () => {
   return (
     <MockThemeProvider>
@@ -561,9 +559,6 @@ describe('Vulnerabilties page', () => {
   });
 
   it('should allow export of vulnerabilities list', async () => {
-    const xlsxMock = jest.createMockFromModule('xlsx');
-    xlsxMock.writeFile = jest.fn();
-
     jest
       .spyOn(api, 'get')
       .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
@@ -580,7 +575,7 @@ describe('Vulnerabilties page', () => {
     await fireEvent.click(exportAsCSVBtn);
     expect(await screen.findByTestId('export-csv-menuItem')).not.toBeInTheDocument();
     fireEvent.click(downloadBtn[0]);
-    const exportAsExcelBtn = screen.getByText(/MS Excel/i);
+    const exportAsExcelBtn = screen.getByText(/xls/i);
     expect(exportAsExcelBtn).toBeInTheDocument();
     await fireEvent.click(exportAsExcelBtn);
     expect(await screen.findByTestId('export-excel-menuItem')).not.toBeInTheDocument();
