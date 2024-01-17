@@ -9,6 +9,7 @@ import {
   Stack,
   Typography,
   InputBase,
+  ToggleButton,
   Menu,
   MenuItem,
   Divider,
@@ -26,6 +27,8 @@ import DownloadIcon from '@mui/icons-material/Download';
 
 import * as XLSX from 'xlsx';
 import exportFromJSON from 'export-from-json';
+import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
+import ViewAgendaIcon from '@mui/icons-material/ViewAgenda';
 
 import VulnerabilitiyCard from '../../Shared/VulnerabilityCard';
 
@@ -71,6 +74,17 @@ const useStyles = makeStyles((theme) => ({
     border: '0.063rem solid #E7E7E7',
     borderRadius: '0.625rem'
   },
+  view: {
+    alignContent: 'right',
+    variant: 'outlined'
+  },
+  viewModes: {
+    position: 'relative',
+    maxWidth: '100%',
+    flexDirection: 'row',
+    alignItems: 'right',
+    justifyContent: 'right'
+  },
   searchIcon: {
     color: '#52637A',
     paddingRight: '3%'
@@ -86,9 +100,6 @@ const useStyles = makeStyles((theme) => ({
     '&::placeholder': {
       opacity: '1'
     }
-  },
-  export: {
-    alignContent: 'right'
   },
   popper: {
     width: '100%',
@@ -116,6 +127,8 @@ function VulnerabilitiesDetails(props) {
 
   const [anchorExport, setAnchorExport] = useState(null);
   const openExport = Boolean(anchorExport);
+
+  const [selectedViewMore, setSelectedViewMore] = useState(true);
 
   const getCVERequestName = () => {
     return digest !== '' ? `${name}@${digest}` : `${name}:${tag}`;
@@ -263,7 +276,7 @@ function VulnerabilitiesDetails(props) {
   const renderCVEs = () => {
     return !isEmpty(cveData) ? (
       cveData.map((cve, index) => {
-        return <VulnerabilitiyCard key={index} cve={cve} name={name} platform={platform} />;
+        return <VulnerabilitiyCard key={index} cve={cve} name={name} platform={platform} expand={selectedViewMore} />;
       })
     ) : (
       <div>{!isLoading && <Typography className={classes.none}> No Vulnerabilities </Typography>}</div>
@@ -286,14 +299,36 @@ function VulnerabilitiesDetails(props) {
         <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
           Vulnerabilities
         </Typography>
-        <IconButton disableRipple onClick={handleClickExport} className={classes.export}>
-          <DownloadIcon />
-        </IconButton>
-        <Snackbar
-          open={openExport && isLoadingAllCve}
-          message="Getting your data ready for export"
-          action={<CircularProgress size="2rem" sx={{ color: '#FFFFFF' }} />}
-        />
+        <Stack direction="row" spacing="1rem" className={classes.viewModes}>
+          <IconButton disableRipple onClick={handleClickExport}>
+            <DownloadIcon />
+          </IconButton>
+          <Snackbar
+            open={openExport && isLoadingAllCve}
+            message="Getting your data ready for export"
+            action={<CircularProgress size="2rem" sx={{ color: '#FFFFFF' }} />}
+          />
+          <ToggleButton
+            value="viewLess"
+            title="Collapse list view"
+            size="small"
+            className={classes.view}
+            selected={!selectedViewMore}
+            onChange={() => setSelectedViewMore(false)}
+          >
+            <ViewHeadlineIcon />
+          </ToggleButton>
+          <ToggleButton
+            value="viewMore"
+            title="Expand list view"
+            size="small"
+            className={classes.view}
+            selected={selectedViewMore}
+            onChange={() => setSelectedViewMore(true)}
+          >
+            <ViewAgendaIcon />
+          </ToggleButton>
+        </Stack>
         <Menu
           anchorEl={anchorExport}
           open={openExport}

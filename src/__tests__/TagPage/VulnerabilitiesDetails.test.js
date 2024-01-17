@@ -586,6 +586,22 @@ describe('Vulnerabilties page', () => {
     expect(await screen.findByTestId('export-excel-menuItem')).not.toBeInTheDocument();
   });
 
+  it('should expand/collapse the list of CVEs', async () => {
+    jest
+      .spyOn(api, 'get')
+      .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
+      .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
+    render(<StateVulnerabilitiesWrapper />);
+    await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('Fixed in')).toHaveLength(20));
+    const collapseListBtn = await screen.findAllByTestId('ViewHeadlineIcon');
+    fireEvent.click(collapseListBtn[0]);
+    expect(await screen.findByText('Fixed in')).not.toBeVisible();
+    const expandListBtn = await screen.findAllByTestId('ViewAgendaIcon');
+    fireEvent.click(expandListBtn[0]);
+    await waitFor(() => expect(screen.getAllByText('Fixed in')).toHaveLength(20));
+  });
+
   it('should handle fixed CVE query errors', async () => {
     jest
       .spyOn(api, 'get')
