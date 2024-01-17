@@ -315,7 +315,7 @@ function VulnerabilitiesDetails(props) {
             className={classes.popper}
             data-testid="export-csv-menuItem"
           >
-            csv
+            CSV
           </MenuItem>
           <Divider sx={{ my: 0.5 }} />
           <MenuItem
