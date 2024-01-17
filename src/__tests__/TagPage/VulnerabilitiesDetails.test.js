@@ -574,7 +574,7 @@ describe('Vulnerabilties page', () => {
     fireEvent.click(downloadBtn[0]);
     expect(await screen.findByTestId('export-csv-menuItem')).toBeInTheDocument();
     expect(await screen.findByTestId('export-excel-menuItem')).toBeInTheDocument();
-    const exportAsCSVBtn = screen.getByText(/csv/i);
+    const exportAsCSVBtn = screen.getByText(/CSV/i);
     expect(exportAsCSVBtn).toBeInTheDocument();
     global.URL.createObjectURL = jest.fn();
     await fireEvent.click(exportAsCSVBtn);
