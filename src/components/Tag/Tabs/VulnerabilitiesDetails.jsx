@@ -31,9 +31,20 @@ import ViewHeadlineIcon from '@mui/icons-material/ViewHeadline';
 import ViewAgendaIcon from '@mui/icons-material/ViewAgenda';
 
 import VulnerabilitiyCard from '../../Shared/VulnerabilityCard';
+import VulnerabilityCountCard from '../../Shared/VulnerabilityCountCard';
 
 const useStyles = makeStyles((theme) => ({
+  searchAndDisplayBar: {
+    display: 'flex',
+    justifyContent: 'space-between'
+  },
   title: {
+    color: theme.palette.primary.main,
+    fontSize: '1.5rem',
+    fontWeight: '600',
+    marginBottom: '0'
+  },
+  cveCountSummary: {
     color: theme.palette.primary.main,
     fontSize: '1.5rem',
     fontWeight: '600',
@@ -67,6 +78,7 @@ const useStyles = makeStyles((theme) => ({
   search: {
     position: 'relative',
     maxWidth: '100%',
+    flex: 0.95,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-between',
@@ -74,15 +86,18 @@ const useStyles = makeStyles((theme) => ({
     border: '0.063rem solid #E7E7E7',
     borderRadius: '0.625rem'
   },
+  expandableSearchInput: {
+    flexGrow: 0.95
+  },
   view: {
     alignContent: 'right',
     variant: 'outlined'
   },
   viewModes: {
     position: 'relative',
+    alignItems: 'baseline',
     maxWidth: '100%',
     flexDirection: 'row',
-    alignItems: 'right',
     justifyContent: 'right'
   },
   searchIcon: {
@@ -114,6 +129,7 @@ function VulnerabilitiesDetails(props) {
   const classes = useStyles();
   const [cveData, setCveData] = useState([]);
   const [allCveData, setAllCveData] = useState([]);
+  const [cveSummary, setCVESummary] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [isLoadingAllCve, setIsLoadingAllCve] = useState(true);
   const abortController = useMemo(() => new AbortController(), []);
@@ -147,9 +163,23 @@ function VulnerabilitiesDetails(props) {
       .then((response) => {
         if (response.data && response.data.data) {
           let cveInfo = response.data.data.CVEListForImage?.CVEList;
+          let summary = response.data.data.CVEListForImage?.Summary;
           let cveListData = mapCVEInfo(cveInfo);
           setCveData((previousState) => (pageNumber === 1 ? cveListData : [...previousState, ...cveListData]));
           setIsEndOfList(response.data.data.CVEListForImage.Page?.ItemCount < EXPLORE_PAGE_SIZE);
+          setCVESummary((previousState) => {
+            if (isEmpty(summary)) {
+              return previousState;
+            }
+            return {
+              Count: summary.Count,
+              UnknownCount: summary.UnknownCount,
+              LowCount: summary.LowCount,
+              MediumCount: summary.MediumCount,
+              HighCount: summary.HighCount,
+              CriticalCount: summary.CriticalCount
+            };
+          });
         } else if (response.data.errors) {
           setIsEndOfList(true);
         }
@@ -159,6 +189,7 @@ function VulnerabilitiesDetails(props) {
         console.error(e);
         setIsLoading(false);
         setCveData([]);
+        setCVESummary(() => {});
         setIsEndOfList(true);
       });
   };
@@ -283,6 +314,27 @@ function VulnerabilitiesDetails(props) {
     );
   };
 
+  const renderCVESummary = () => {
+    if (cveSummary === undefined) {
+      return;
+    }
+
+    console.log('Test');
+
+    return !isEmpty(cveSummary) ? (
+      <VulnerabilityCountCard
+        total={cveSummary.Count}
+        critical={cveSummary.CriticalCount}
+        high={cveSummary.HighCount}
+        medium={cveSummary.MediumCount}
+        low={cveSummary.LowCount}
+        unknown={cveSummary.UnknownCount}
+      />
+    ) : (
+      <></>
+    );
+  };
+
   const renderListBottom = () => {
     if (isLoading) {
       return <Loading />;
@@ -364,6 +416,7 @@ function VulnerabilitiesDetails(props) {
           </MenuItem>
         </Menu>
       </Stack>
+      {renderCVESummary()}
       <Stack className={classes.search}>
         <InputBase
           placeholder={'Search'}
