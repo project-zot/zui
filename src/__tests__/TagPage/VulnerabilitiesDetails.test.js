@@ -574,13 +574,13 @@ describe('Vulnerabilties page', () => {
     fireEvent.click(downloadBtn[0]);
     expect(await screen.findByTestId('export-csv-menuItem')).toBeInTheDocument();
     expect(await screen.findByTestId('export-excel-menuItem')).toBeInTheDocument();
-    const exportAsCSVBtn = screen.getByText(/CSV/i);
+    const exportAsCSVBtn = screen.getByText(/csv/i);
     expect(exportAsCSVBtn).toBeInTheDocument();
     global.URL.createObjectURL = jest.fn();
     await fireEvent.click(exportAsCSVBtn);
     expect(await screen.findByTestId('export-csv-menuItem')).not.toBeInTheDocument();
     fireEvent.click(downloadBtn[0]);
-    const exportAsExcelBtn = screen.getByText(/MS Excel/i);
+    const exportAsExcelBtn = screen.getByText(/xlsx/i);
     expect(exportAsExcelBtn).toBeInTheDocument();
     await fireEvent.click(exportAsExcelBtn);
     expect(await screen.findByTestId('export-excel-menuItem')).not.toBeInTheDocument();

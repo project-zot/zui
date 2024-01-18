@@ -106,7 +106,7 @@ const useStyles = makeStyles((theme) => ({
     overflow: 'hidden',
     padding: '0.3rem',
     display: 'flex',
-    justifyContent: 'center'
+    justifyContent: 'left'
   }
 }));
 
@@ -195,7 +195,7 @@ function VulnerabilitiesDetails(props) {
     const wb = XLSX.utils.book_new(),
       ws = XLSX.utils.json_to_sheet(allCveData);
 
-    XLSX.utils.book_append_sheet(wb, ws, name + '_' + tag);
+    XLSX.utils.book_append_sheet(wb, ws, name.replaceAll('/', '_') + '_' + tag);
 
     XLSX.writeFile(wb, `${name}:${tag}-vulnerabilities.xlsx`);
 
@@ -350,7 +350,7 @@ function VulnerabilitiesDetails(props) {
             className={classes.popper}
             data-testid="export-csv-menuItem"
           >
-            CSV
+            csv
           </MenuItem>
           <Divider sx={{ my: 0.5 }} />
           <MenuItem
@@ -360,7 +360,7 @@ function VulnerabilitiesDetails(props) {
             className={classes.popper}
             data-testid="export-excel-menuItem"
           >
-            MS Excel
+            xlsx
           </MenuItem>
         </Menu>
       </Stack>
