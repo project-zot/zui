@@ -7,7 +7,7 @@ import userEvent from '@testing-library/user-event';
 const mockMgmtResponse = {
   distSpecVersion: '1.1.0-dev',
   binaryType: '-apikey-lint-metrics-mgmt-scrub-search-sync-ui-userprefs',
-  http: { auth: { htpasswd: {} } }
+  http: { auth: { htpasswd: {}, openid: { providers: { github: {} } } } }
 };
 
 // useNavigate mock
@@ -55,6 +55,7 @@ describe('Sign in form', () => {
     fireEvent.change(passwordInput, { target: { value: 'test' } });
     expect(usernameInput).toHaveValue('test');
     expect(passwordInput).toHaveValue('test');
+    expect(screen.getByTestId('openid-divider')).toBeInTheDocument();
   });
 
   it('should display error if username and password values are empty after change', async () => {
