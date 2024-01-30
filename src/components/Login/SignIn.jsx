@@ -312,7 +312,13 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
               Welcome back! Please login.
             </Typography>
             {renderThirdPartyLoginMethods()}
-            {Object.keys(authMethods).length > 1 && <Divider className={classes.divider}>or</Divider>}
+            {Object.keys(authMethods).length > 1 &&
+              Object.keys(authMethods).includes('openid') &&
+              Object.keys(authMethods.openid.providers).length > 0 && (
+                <Divider className={classes.divider} data-testId="openid-divider">
+                  or
+                </Divider>
+              )}
             {Object.keys(authMethods).includes('htpasswd') && (
               <Box component="form" onSubmit={null} noValidate autoComplete="off">
                 <TextField
