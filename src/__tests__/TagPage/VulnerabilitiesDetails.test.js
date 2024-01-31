@@ -521,6 +521,20 @@ describe('Vulnerabilties page', () => {
     expect((await screen.findAllByText(/2022/i)).length === 6);
   });
 
+  it('should have a collapsable search bar', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
+    render(<StateVulnerabilitiesWrapper />);
+    const cveSearchInput = screen.getByPlaceholderText(/search/i);
+    const expandSearch = cveSearchInput.parentElement.parentElement.parentElement.parentElement.childNodes[0];
+    await fireEvent.click(expandSearch);
+    await waitFor(() => 
+      expect(screen.getAllByPlaceholderText("Exclude")).toHaveLength(1)
+    );
+    const excludeInput = screen.getByPlaceholderText("Exclude");
+    userEvent.type(excludeInput, '2022');
+    expect((await screen.findAllByText(/2022/i)).length === 0);
+  })
+
   it('renders no vulnerabilities if there are not any', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({
       status: 200,
