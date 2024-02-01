@@ -35,6 +35,7 @@ import Collapse from '@mui/material/Collapse';
 
 import VulnerabilitiyCard from '../../Shared/VulnerabilityCard';
 import VulnerabilityCountCard from '../../Shared/VulnerabilityCountCard';
+import CompareImages from './CompareImages';
 
 const useStyles = makeStyles((theme) => ({
   searchAndDisplayBar: {
@@ -98,7 +99,7 @@ const useStyles = makeStyles((theme) => ({
   },
   viewModes: {
     position: 'relative',
-    alignItems: 'baseline',
+    alignItems: 'center',
     maxWidth: '100%',
     flexDirection: 'row',
     justifyContent: 'right'
@@ -352,8 +353,6 @@ function VulnerabilitiesDetails(props) {
       return;
     }
 
-    console.log('Test');
-
     return !isEmpty(cveSummary) ? (
       <VulnerabilityCountCard
         total={cveSummary.Count}
@@ -385,6 +384,7 @@ function VulnerabilitiesDetails(props) {
           Vulnerabilities
         </Typography>
         <Stack direction="row" spacing="1rem" className={classes.viewModes}>
+          <CompareImages name={name} tag={tag} platform={platform} />
           <IconButton disableRipple onClick={handleClickExport}>
             <DownloadIcon />
           </IconButton>

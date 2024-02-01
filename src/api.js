@@ -104,6 +104,19 @@ const endpoints = {
   },
   allVulnerabilitiesForRepo: (name) =>
     `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}"){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity Reference PackageList {Name InstalledVersion FixedVersion}}}}`,
+  cveDiffForImages: (minuend = {}, subtrahend = {}, { pageNumber = 1, pageSize = 3 }) => {
+    let imageInput = (img) => {
+      let digest = img.digest ? `, digest: ${img.digest}` : '';
+      let platform = img.platform ? `, platform: {os: ${img.platform.os}, arch: ${img.platform.arch}}` : '';
+      return `{repo: "${img.repo}", tag: "${img.tag}"${digest}${platform}}`;
+    };
+    let query = `/v2/_zot/ext/search?query={CVEDiffListForImages(minuend: ${imageInput(
+      minuend
+    )}, subtrahend: ${imageInput(subtrahend)}, requestedPage: {limit:${pageSize} offset:${
+      (pageNumber - 1) * pageSize
+    }}) {Minuend Subtrahend CVEList{Id Title Description Severity Reference PackageList {Name InstalledVersion FixedVersion}} Summary {Count UnknownCount LowCount MediumCount HighCount CriticalCount} Page {TotalCount ItemCount}}}`;
+    return query;
+  },
   imageListWithCVEFixed: (cveId, repoName, { pageNumber = 1, pageSize = 3 }, filter = {}) => {
     let filterParam = '';
     if (filter.Os || filter.Arch) {
@@ -149,6 +162,11 @@ const endpoints = {
     const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
     const paginationParam = `requestedPage: {limit:${pageSize} offset:${(pageNumber - 1) * pageSize} sortBy:RELEVANCE}`;
     return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam}) {Images {RepoName Tag}}}`;
+  },
+  imageSuggestionsWithPlatforms: ({ searchQuery = '""', pageNumber = 1, pageSize = 15 }) => {
+    const searchParam = searchQuery !== '' ? `query:"${searchQuery}"` : `query:""`;
+    const paginationParam = `requestedPage: {limit:${pageSize} offset:${(pageNumber - 1) * pageSize} sortBy:RELEVANCE}`;
+    return `/v2/_zot/ext/search?query={GlobalSearch(${searchParam}, ${paginationParam}) {Images {RepoName Tag Manifests {Platform {Os Arch}}}}}`;
   },
   referrers: ({ repo, digest, type = '' }) =>
     `/v2/_zot/ext/search?query={Referrers(repo: "${repo}" digest: "${digest}" type: "${type}"){MediaType ArtifactType Size Digest Annotations{Key Value}}}`,
