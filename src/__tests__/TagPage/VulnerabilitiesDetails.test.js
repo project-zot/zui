@@ -483,6 +483,12 @@ const mockCVEFixed = {
         }
       ]
     }
+  },
+  pageNotFixed: {
+    ImageListWithCVEFixed: {
+      Page: { TotalCount: 0, ItemCount: 0 },
+      Results: []
+    }
   }
 };
 
@@ -504,15 +510,23 @@ afterEach(() => {
 
 describe('Vulnerabilties page', () => {
   it('renders the vulnerabilities if there are any', async () => {
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
+    let getCall = jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
+    for (let i=0; i<21; i++) {
+      getCall.mockResolvedValueOnce({ status: 200, data: { data: mockCVEFixed.pageNotFixed } });
+    }
+    getCall.mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
     await waitFor(() => expect(screen.getAllByText('Total 5')).toHaveLength(1));
-    await waitFor(() => expect(screen.getAllByText(/fixed in/i)).toHaveLength(20));
+    await waitFor(() => expect(screen.getAllByText(/Fixed in/)).toHaveLength(20));
   });
 
   it('sends filtered query if user types in the search bar', async () => {
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
+    let getCall = jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
+    for (let i=0; i<21; i++) {
+      getCall.mockResolvedValueOnce({ status: 200, data: { data: mockCVEFixed.pageNotFixed } });
+    }
+    getCall.mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
     const cveSearchInput = screen.getByPlaceholderText(/search/i);
     jest.spyOn(api, 'get').mockRejectedValueOnce({ status: 200, data: { data: mockCVEListFiltered } });
@@ -522,7 +536,11 @@ describe('Vulnerabilties page', () => {
   });
 
   it('should have a collapsable search bar', async () => {
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
+    let getCall = jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
+    for (let i=0; i<21; i++) {
+      getCall.mockResolvedValueOnce({ status: 200, data: { data: mockCVEFixed.pageNotFixed } });
+    }
+    getCall.mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
     const cveSearchInput = screen.getByPlaceholderText(/search/i);
     const expandSearch = cveSearchInput.parentElement.parentElement.parentElement.parentElement.childNodes[0];
@@ -544,18 +562,13 @@ describe('Vulnerabilties page', () => {
     await waitFor(() => expect(screen.getAllByText('No Vulnerabilities')).toHaveLength(1));
   });
 
-  it('should open and close description dropdown for vulnerabilities', async () => {
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
+  it('should show description for vulnerabilities', async () => {
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
+      .mockResolvedValue({ status: 200, data: { data: mockCVEFixed.pageNotFixed } });
     render(<StateVulnerabilitiesWrapper />);
-    await waitFor(() => expect(screen.getAllByText(/description/i)).toHaveLength(20));
-    const openText = screen.getAllByText(/description/i);
-    await fireEvent.click(openText[0]);
+    await waitFor(() => expect(screen.getAllByText(/Description/)).toHaveLength(20));
     await waitFor(() =>
       expect(screen.getAllByText(/CPAN 2.28 allows Signature Verification Bypass./i)).toHaveLength(1)
-    );
-    await fireEvent.click(openText[0]);
-    await waitFor(() =>
-      expect(screen.queryByText(/CPAN 2.28 allows Signature Verification Bypass./i)).not.toBeInTheDocument()
     );
   });
 
@@ -574,12 +587,12 @@ describe('Vulnerabilties page', () => {
       .mockResolvedValueOnce({ status: 200, data: { data: mockCVEFixed.pageTwo } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
-    await fireEvent.click(screen.getAllByText(/fixed in/i)[0]);
     await waitFor(() => expect(screen.getByText('1.0.16')).toBeInTheDocument());
-    const loadMoreBtn = screen.getByText(/load more/i);
-    expect(loadMoreBtn).toBeInTheDocument();
+    await waitFor(() => expect(screen.getAllByText(/load more/i).length).toBeGreaterThan(0));
+    const nrLoadButtons = screen.getAllByText(/load more/i).length
+    const loadMoreBtn = screen.getAllByText(/load more/i)[0];
     await fireEvent.click(loadMoreBtn);
-    await waitFor(() => expect(loadMoreBtn).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.getAllByText(/load more/i).length).toBe(nrLoadButtons-1));
     expect(await screen.findByText('latest')).toBeInTheDocument();
   });
 
@@ -587,10 +600,11 @@ describe('Vulnerabilties page', () => {
     const xlsxMock = jest.createMockFromModule('xlsx');
     xlsxMock.writeFile = jest.fn();
 
-    jest
-      .spyOn(api, 'get')
-      .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
-      .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
+    let getCall = jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
+    for (let i=0; i<21; i++) {
+      getCall.mockResolvedValueOnce({ status: 200, data: { data: mockCVEFixed.pageNotFixed } });
+    }
+    getCall.mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
     const downloadBtn = await screen.findAllByTestId('DownloadIcon');
@@ -610,10 +624,11 @@ describe('Vulnerabilties page', () => {
   });
 
   it('should expand/collapse the list of CVEs', async () => {
-    jest
-      .spyOn(api, 'get')
-      .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
-      .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
+    let getCall = jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
+    for (let i=0; i<21; i++) {
+      getCall.mockResolvedValueOnce({ status: 200, data: { data: mockCVEFixed.pageNotFixed } });
+    }
+    getCall.mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
     await waitFor(() => expect(screen.getAllByText('Fixed in')).toHaveLength(20));
@@ -629,12 +644,11 @@ describe('Vulnerabilties page', () => {
     jest
       .spyOn(api, 'get')
       .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
-      .mockRejectedValue({ status: 500, data: {} });
+      .mockRejectedValueOnce({ status: 500, data: {} });
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
-    await fireEvent.click(screen.getAllByText(/fixed in/i)[0]);
-    await waitFor(() => expect(screen.getByText(/not fixed/i)).toBeInTheDocument());
-    await waitFor(() => expect(error).toBeCalledTimes(1));
+    await waitFor(() => expect(screen.getAllByText(/not fixed/i).length).toBeGreaterThan(0));
+    await waitFor(() => expect(error).toBeCalled());
   });
 });

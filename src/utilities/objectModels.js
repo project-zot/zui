@@ -96,7 +96,13 @@ const mapCVEInfo = (cveInfo) => {
       id: cve.Id,
       severity: cve.Severity,
       title: cve.Title,
-      description: cve.Description
+      description: cve.Description,
+      reference: cve.Reference,
+      packageList: cve.PackageList?.map((pkg) => ({
+        packageName: pkg.Name,
+        packageInstalledVersion: pkg.InstalledVersion,
+        packageFixedVersion: pkg.FixedVersion
+      }))
     };
   });
   return cveList;

@@ -37,8 +37,8 @@ test.describe('Tag page test', () => {
     await page.goto(`${hosts.ui}/image/${tagWithVulnerabilities.title}/tag/${tagWithVulnerabilities.tag}`);
     await page.getByRole('tab', { name: 'Vulnerabilities' }).click();
     await expect(page.getByTestId('vulnerability-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
-    await expect(page.getByText('CVE-').nth(0)).toBeVisible({ timeout: 100000 });
-    await expect(await page.getByText('CVE-').count()).toBeGreaterThan(0);
-    await expect(await page.getByText('CVE-').count()).toBeLessThanOrEqual(pageSizes.EXPLORE);
+    await expect(page.getByText(/CVE-/).nth(0)).toBeVisible({ timeout: 100000 });
+    await expect(await page.getByText(/CVE-/).count()).toBeGreaterThan(0);
+    await expect(await page.getByText(/CVE-/).count()).toBeLessThanOrEqual(pageSizes.EXPLORE);
   });
 });

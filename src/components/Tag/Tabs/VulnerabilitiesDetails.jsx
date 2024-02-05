@@ -481,8 +481,10 @@ function VulnerabilitiesDetails(props) {
           </Collapse>
         </Stack>
       </Stack>
-      {renderCVEs()}
-      {renderListBottom()}
+      <Stack direction="column" spacing={selectedViewMore ? '1rem' : '0.5rem'}>
+        {renderCVEs()}
+        {renderListBottom()}
+      </Stack>
     </Stack>
   );
 }

@@ -100,7 +100,7 @@ const endpoints = {
     if (!isEmpty(excludedTerm)) {
       query += `, excludedCVE: "${excludedTerm}"`;
     }
-    return `${query}){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity PackageList {Name InstalledVersion FixedVersion}} Summary {Count UnknownCount LowCount MediumCount HighCount CriticalCount}}}`;
+    return `${query}){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity Reference PackageList {Name InstalledVersion FixedVersion}} Summary {Count UnknownCount LowCount MediumCount HighCount CriticalCount}}}`;
   },
   allVulnerabilitiesForRepo: (name) =>
     `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}"){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity Reference PackageList {Name InstalledVersion FixedVersion}}}}`,
