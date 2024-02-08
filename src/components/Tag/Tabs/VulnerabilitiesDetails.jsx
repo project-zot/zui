@@ -165,7 +165,7 @@ function VulnerabilitiesDetails(props) {
   const [anchorExport, setAnchorExport] = useState(null);
   const openExport = Boolean(anchorExport);
 
-  const [selectedViewMore, setSelectedViewMore] = useState(true);
+  const [selectedViewMore, setSelectedViewMore] = useState(false);
 
   const getCVERequestName = () => {
     return digest !== '' ? `${name}@${digest}` : `${name}:${tag}`;
