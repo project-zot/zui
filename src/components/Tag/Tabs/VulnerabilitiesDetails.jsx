@@ -158,6 +158,7 @@ function VulnerabilitiesDetails(props) {
   // pagination props
   const [cveFilter, setCveFilter] = useState('');
   const [cveExcludeFilter, setCveExcludeFilter] = useState('');
+  const [cveSeverityFilter, setCveSeverityFilter] = useState('');
   const [pageNumber, setPageNumber] = useState(1);
   const [isEndOfList, setIsEndOfList] = useState(false);
   const listBottom = useRef(null);
@@ -178,7 +179,8 @@ function VulnerabilitiesDetails(props) {
           getCVERequestName(),
           { pageNumber, pageSize: EXPLORE_PAGE_SIZE },
           cveFilter,
-          cveExcludeFilter
+          cveExcludeFilter,
+          cveSeverityFilter
         )}`,
         abortController.signal
       )
@@ -321,7 +323,7 @@ function VulnerabilitiesDetails(props) {
   useEffect(() => {
     if (isLoading) return;
     resetPagination();
-  }, [cveFilter, cveExcludeFilter]);
+  }, [cveFilter, cveExcludeFilter, cveSeverityFilter]);
 
   useEffect(() => {
     return () => {
@@ -352,8 +354,6 @@ function VulnerabilitiesDetails(props) {
       return;
     }
 
-    console.log('Test');
-
     return !isEmpty(cveSummary) ? (
       <VulnerabilityCountCard
         total={cveSummary.Count}
@@ -362,6 +362,7 @@ function VulnerabilitiesDetails(props) {
         medium={cveSummary.MediumCount}
         low={cveSummary.LowCount}
         unknown={cveSummary.UnknownCount}
+        filterBySeverity={setCveSeverityFilter}
       />
     ) : (
       <></>
