@@ -132,8 +132,19 @@ function SearchSuggestion({ setSearchCurrentValue = () => {} }) {
 
   const handleSearch = (event) => {
     const { key, type } = event;
+    const name = event.target.value;
     if (key === 'Enter' || type === 'click') {
-      navigate({ pathname: `/explore`, search: createSearchParams({ search: inputValue || '' }).toString() });
+      const splitName = name.split(':');
+      let inputInSuggestions = false;
+
+      if (splitName.length > 1) {
+        inputInSuggestions = suggestionData.some((sd) => sd.repoName === splitName[0] && sd.tag === splitName[1]);
+      }
+      if (inputInSuggestions) {
+        navigate(`/image/${encodeURIComponent(splitName[0])}/tag/${splitName[1]}`);
+      } else {
+        navigate({ pathname: `/explore`, search: createSearchParams({ search: inputValue || '' }).toString() });
+      }
     }
   };
 
