@@ -462,6 +462,24 @@ const mockCVEListFiltered = {
   }
 };
 
+const mockCVEListFilteredBySeverity = (severity) => {
+  return {
+    CVEListForImage: {
+      Tag: '',
+      Page: { ItemCount: 20, TotalCount: 20 },
+      Summary: {
+        Count: 5,
+        UnknownCount: 1,
+        LowCount: 1,
+        MediumCount: 1,
+        HighCount: 1,
+        CriticalCount: 1,
+      },
+      CVEList: mockCVEList.CVEListForImage.CVEList.filter((e) => e.Severity.includes(severity))
+    }
+  };
+};
+
 const mockCVEListFilteredExclude = {
   CVEListForImage: {
     Tag: '',
@@ -507,12 +525,6 @@ const mockCVEFixed = {
         }
       ]
     }
-  },
-  pageNotFixed: {
-    ImageListWithCVEFixed: {
-      Page: { TotalCount: 0, ItemCount: 0 },
-      Results: []
-    }
   }
 };
 
@@ -539,6 +551,44 @@ describe('Vulnerabilties page', () => {
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
     await waitFor(() => expect(screen.getAllByText('Total 5')).toHaveLength(1));
     await waitFor(() => expect(screen.getAllByText(/CVE/)).toHaveLength(20));
+  });
+
+  it('renders the vulnerabilities by severity', async () => {
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
+    render(<StateVulnerabilitiesWrapper />);
+    await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('Total 5')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(20));
+    expect(screen.getByLabelText('Medium')).toBeInTheDocument();
+    const mediumSeverity = await screen.getByLabelText('Medium');
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('MEDIUM') } });
+    fireEvent.click(mediumSeverity);
+    await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(6));
+    expect(screen.getByLabelText('High')).toBeInTheDocument();
+    const highSeverity = await screen.getByLabelText('High');
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('HIGH') } });
+    fireEvent.click(highSeverity);
+    await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(1));
+    expect(screen.getByLabelText('Critical')).toBeInTheDocument();
+    const criticalSeverity = await screen.getByLabelText('Critical');
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('CRITICAL') } });
+    fireEvent.click(criticalSeverity);
+    await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(1));
+    expect(screen.getByLabelText('Low')).toBeInTheDocument();
+    const lowSeverity = await screen.getByLabelText('Low');
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('LOW') } });
+    fireEvent.click(lowSeverity);
+    await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(10));
+    expect(screen.getByLabelText('Unknown')).toBeInTheDocument();
+    const unknownSeverity = await screen.getByLabelText('Unknown');
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('UNKNOWN') } });
+    fireEvent.click(unknownSeverity);
+    await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(1));
+    expect(screen.getByText('Total 5')).toBeInTheDocument();
+    const totalSeverity = await screen.getByText('Total 5');
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('') } });
+    fireEvent.click(totalSeverity);
+    await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(20));
   });
 
   it('sends filtered query if user types in the search bar', async () => {
