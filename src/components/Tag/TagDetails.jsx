@@ -3,7 +3,10 @@ import React, { useEffect, useMemo, useState, useRef } from 'react';
 
 // utility
 import { api, endpoints } from '../../api';
+import { host } from '../../host';
 import { mapToImage } from '../../utilities/objectModels';
+import { isEmpty, head } from 'lodash';
+
 // components
 import {
   Card,
@@ -19,23 +22,21 @@ import {
   Typography,
   InputLabel
 } from '@mui/material';
+import TagDetailsMetadata from './TagDetailsMetadata';
+import VulnerabilitiesDetails from './Tabs/VulnerabilitiesDetails';
+import HistoryLayers from './Tabs/HistoryLayers';
+import DependsOn from './Tabs/DependsOn';
+import IsDependentOn from './Tabs/IsDependentOn';
+import Loading from '../Shared/Loading';
+import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
+import ReferredBy from './Tabs/ReferredBy';
 import makeStyles from '@mui/styles/makeStyles';
-import { host } from '../../host';
 
 // placeholder images
 import repocube1 from '../../assets/repocube-1.png';
 import repocube2 from '../../assets/repocube-2.png';
 import repocube3 from '../../assets/repocube-3.png';
 import repocube4 from '../../assets/repocube-4.png';
-import TagDetailsMetadata from './TagDetailsMetadata';
-import VulnerabilitiesDetails from './Tabs/VulnerabilitiesDetails';
-import HistoryLayers from './Tabs/HistoryLayers';
-import DependsOn from './Tabs/DependsOn';
-import IsDependentOn from './Tabs/IsDependentOn';
-import { isEmpty, head } from 'lodash';
-import Loading from '../Shared/Loading';
-import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
-import ReferredBy from './Tabs/ReferredBy';
 
 const useStyles = makeStyles((theme) => ({
   pageWrapper: {

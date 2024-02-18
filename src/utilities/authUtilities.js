@@ -41,10 +41,15 @@ const isAuthenticationEnabled = () => {
   return Object.keys(authMethods).length > 0;
 };
 
+const isApiKeyEnabled = () => {
+  const authConfig = JSON.parse(localStorage.getItem('authConfig')) || {};
+  return authConfig?.apikey;
+};
+
 const getLoggedInUser = () => {
   const userCookie = getCookie('user');
   if (!userCookie) return null;
   return userCookie;
 };
 
-export { isAuthenticated, isAuthenticationEnabled, getLoggedInUser, logoutUser };
+export { isAuthenticated, isAuthenticationEnabled, isApiKeyEnabled, getLoggedInUser, logoutUser };

@@ -1,9 +1,11 @@
-import React from 'react';
-import makeStyles from '@mui/styles/makeStyles';
+import React, { useState } from 'react';
+
+import transform from 'utilities/transform';
+
 import { Card, CardContent, Typography, Grid, Divider, Stack, Collapse } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
-import transform from 'utilities/transform';
-import { useState } from 'react';
+
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles(() => ({
   card: {

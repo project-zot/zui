@@ -1,14 +1,15 @@
 import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 
-import { isAuthenticated } from 'utilities/authUtilities';
+import { isAuthenticated, isApiKeyEnabled } from 'utilities/authUtilities';
+import { AuthWrapper } from 'utilities/AuthWrapper';
 
 import HomePage from './pages/HomePage';
 import LoginPage from './pages/LoginPage';
-import { AuthWrapper } from 'utilities/AuthWrapper';
 import RepoPage from 'pages/RepoPage';
 import TagPage from 'pages/TagPage';
 import ExplorePage from 'pages/ExplorePage';
+import UserManagementPage from 'pages/UserManagementPage';
 
 import './App.css';
 
@@ -25,6 +26,7 @@ function App() {
             <Route path="/explore" element={<ExplorePage />} />
             <Route path="/image/:name" element={<RepoPage />} />
             <Route path="/image/:reponame/tag/:tag" element={<TagPage />} />
+            {isApiKeyEnabled() && <Route path="/user/apikey" element={<UserManagementPage />} />}
             <Route path="*" element={<Navigate to="/home" />} />
           </Route>
           <Route element={<AuthWrapper isLoggedIn={!isLoggedIn} redirect="/" />}>

@@ -67,10 +67,13 @@ const api = {
     return axios.put(urli, payload, config);
   },
 
-  delete(urli, abortSignal, cfg) {
+  delete(urli, params, abortSignal, cfg) {
     let config = isEmpty(cfg) ? this.getRequestCfg() : cfg;
     if (!isEmpty(abortSignal) && isEmpty(config.signal)) {
       config = { ...config, signal: abortSignal };
+    }
+    if (!isEmpty(params)) {
+      config = { ...config, params };
     }
     return axios.delete(urli, config);
   }
@@ -81,6 +84,7 @@ const endpoints = {
   authConfig: `/v2/_zot/ext/mgmt`,
   openidAuth: `/zot/auth/login`,
   logout: `/zot/auth/logout`,
+  apiKeys: '/zot/auth/apikey',
   deleteImage: (name, tag) => `/v2/${name}/manifests/${tag}`,
   repoList: ({ pageNumber = 1, pageSize = 15 } = {}) =>
     `/v2/_zot/ext/search?query={RepoListWithNewestImage(requestedPage: {limit:${pageSize} offset:${

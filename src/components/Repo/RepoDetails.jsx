@@ -9,6 +9,8 @@ import { isEmpty, uniq } from 'lodash';
 import { api, endpoints } from '../../api';
 import { host } from '../../host';
 import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
+import { mapToRepoFromRepoInfo } from 'utilities/objectModels';
+import { isAuthenticated } from 'utilities/authUtilities';
 
 // components
 import { Card, CardContent, CardMedia, Chip, Grid, Stack, Tooltip, Typography, IconButton } from '@mui/material';
@@ -16,7 +18,11 @@ import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import StarIcon from '@mui/icons-material/Star';
 import StarBorderIcon from '@mui/icons-material/StarBorder';
-import makeStyles from '@mui/styles/makeStyles';
+import Tags from './Tabs/Tags.jsx';
+import RepoDetailsMetadata from './RepoDetailsMetadata';
+import Loading from '../Shared/Loading';
+import { Markdown } from 'utilities/MarkdowntojsxWrapper';
+import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 
 // placeholder images
 import repocube1 from '../../assets/repocube-1.png';
@@ -24,13 +30,7 @@ import repocube2 from '../../assets/repocube-2.png';
 import repocube3 from '../../assets/repocube-3.png';
 import repocube4 from '../../assets/repocube-4.png';
 
-import Tags from './Tabs/Tags.jsx';
-import RepoDetailsMetadata from './RepoDetailsMetadata';
-import Loading from '../Shared/Loading';
-import { Markdown } from 'utilities/MarkdowntojsxWrapper';
-import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
-import { mapToRepoFromRepoInfo } from 'utilities/objectModels';
-import { isAuthenticated } from 'utilities/authUtilities';
+import makeStyles from '@mui/styles/makeStyles';
 
 const useStyles = makeStyles((theme) => ({
   pageWrapper: {
