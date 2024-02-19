@@ -1,12 +1,23 @@
-import { Avatar, InputBase, List, ListItem, Stack, Typography } from '@mui/material';
+import {
+  Avatar,
+  FormControl,
+  FormHelperText,
+  InputBase,
+  InputLabel,
+  List,
+  ListItem,
+  MenuItem,
+  Select,
+  Stack,
+  Typography
+} from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import PhotoIcon from '@mui/icons-material/Photo';
-import SearchIcon from '@mui/icons-material/Search';
 import React, { useEffect, useMemo, useState } from 'react';
 import { api, endpoints } from 'api';
 import { host } from 'host';
 import { mapToImage, mapToRepo } from 'utilities/objectModels';
-import { createSearchParams, useNavigate, useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router-dom';
 import { debounce, isEmpty } from 'lodash';
 import { useCombobox } from 'downshift';
 import { HEADER_SEARCH_PAGE_SIZE } from 'utilities/paginationConstants';
@@ -14,16 +25,7 @@ import { HEADER_SEARCH_PAGE_SIZE } from 'utilities/paginationConstants';
 const useStyles = makeStyles(() => ({
   searchContainer: {
     display: 'inline-block',
-    backgroundColor: '#2B3A4E',
-    boxShadow: '0 0.313rem 0.625rem rgba(131, 131, 131, 0.08)',
-    borderRadius: '0.625rem',
-    minWidth: '100%',
-    position: 'relative',
-    zIndex: 1150
-  },
-  searchContainerUnstretched: {
-    display: 'inline-block',
-    backgroundColor: '#2B3A4E',
+    backgroundColor: '#FFFFFF',
     boxShadow: '0 0.313rem 0.625rem rgba(131, 131, 131, 0.08)',
     borderRadius: '0.625rem',
     position: 'relative',
@@ -54,7 +56,7 @@ const useStyles = makeStyles(() => ({
     position: 'absolute',
     alignItems: 'center',
     justifyContent: 'center',
-    backgroundColor: '#2B3A4E',
+    backgroundColor: '#FFFFFF',
     boxShadow: '0rem 0.3125rem 0.625rem rgba(131, 131, 131, 0.08)',
     borderBottomLeftRadius: '0.625rem',
     borderBottomRightRadius: '0.625rem',
@@ -70,18 +72,13 @@ const useStyles = makeStyles(() => ({
   resultsWrapperHidden: {
     display: 'none'
   },
-  searchIcon: {
-    color: '#52637A',
-    paddingRight: '3%',
-    cursor: 'pointer'
-  },
   input: {
     marginLeft: 1,
     width: '90%',
     paddingLeft: 10,
     height: '40px',
     fontSize: '1rem',
-    backgroundColor: '#2B3A4E',
+    backgroundColor: '#FFFFFF',
     borderRadius: '0.625rem',
     color: '#8A96A8'
   },
@@ -115,34 +112,52 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-function SearchSuggestion({ setSearchCurrentValue = () => {}, stretch = true }) {
+function ImageSelector({ setSearchCurrentValue = () => {}, name, tag }) {
+  // digest, selectedPlatform
+  const [inputHelpText, setInputHelpText] = useState('Specify a repo:tag');
+  const [activePlatformSelection, setActivePlatformSelection] = useState(false);
+  const [platformOptions, setPlatformOptions] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [platform, setPlatform] = useState('');
   const [suggestionData, setSuggestionData] = useState([]);
   const [queryParams] = useSearchParams();
   const search = queryParams.get('search') || '';
   const [isLoading, setIsLoading] = useState(false);
   const [isFailedSearch, setIsFailedSearch] = useState(false);
   const [isComponentFocused, setIsComponentFocused] = useState(false);
-  const navigate = useNavigate();
   const abortController = useMemo(() => new AbortController(), []);
 
   const classes = useStyles();
 
   const handleSuggestionSelected = (event) => {
-    const name = event.selectedItem?.name;
-    if (name?.includes(':')) {
-      const splitName = name.split(':');
-      navigate(`/image/${encodeURIComponent(splitName[0])}/tag/${splitName[1]}`);
+    let name = event.selectedItem?.name;
+    if (!name?.includes(':')) {
+      name += ':';
+      setInputHelpText('Specify a :tag');
     } else {
-      navigate(`/image/${encodeURIComponent(name)}`);
+      setInputHelpText('Image Selected');
+      setActivePlatformSelection(true);
+      let platforms = getImagePlatforms(event.selectedItem);
+      setPlatformOptions(platforms);
     }
   };
 
-  const handleSearch = (event) => {
-    const { key, type } = event;
-    if (key === 'Enter' || type === 'click') {
-      navigate({ pathname: `/explore`, search: createSearchParams({ search: inputValue || '' }).toString() });
+  const handleSearchChange = (event) => {
+    const value = event?.inputValue;
+    setSearchQuery(value);
+    // used to lift up the state for pages that need to know the current value of the search input (currently only Explore) not used in other cases
+    // one way binding, other components shouldn't set the value of the search input, but using this prop can read it
+    setSearchCurrentValue(value);
+    setIsFailedSearch(false);
+    setIsLoading(true);
+    setSuggestionData([]);
+    if (value === '') {
+      setInputHelpText('Specify a repo:tag');
     }
+  };
+
+  const handleSearch = () => {
+    console.log(inputValue ? '' : inputValue);
   };
 
   const repoSearch = (value) => {
@@ -155,8 +170,12 @@ function SearchSuggestion({ setSearchCurrentValue = () => {}, stretch = true }) 
         if (suggestionResponse.data.data.GlobalSearch.Repos) {
           const suggestionParsedData = suggestionResponse.data.data.GlobalSearch.Repos.map((el) => mapToRepo(el));
           setSuggestionData(suggestionParsedData);
-          if (isEmpty(suggestionParsedData)) {
+          setInputHelpText('Specify a repo:tag');
+          if (suggestionParsedData.length === 1 && suggestionParsedData[0].repo === value) {
+            setInputHelpText('Specify a :tag');
+          } else if (isEmpty(suggestionParsedData)) {
             setIsFailedSearch(true);
+            setInputHelpText('Repo not found');
           }
         }
         setIsLoading(false);
@@ -168,18 +187,30 @@ function SearchSuggestion({ setSearchCurrentValue = () => {}, stretch = true }) 
       });
   };
 
+  const getImagePlatforms = (image) => {
+    return image.manifests.map((it) => ({ os: it.platform.Os, arch: it.platform.Arch }));
+  };
+
   const imageSearch = (value) => {
+    let tag = value.split(':')[1];
     api
       .get(
-        `${host()}${endpoints.imageSuggestions({ searchQuery: value, pageNumber: 1, pageSize: 9 })}`,
+        `${host()}${endpoints.imageSuggestionsWithPlatforms({ searchQuery: value, pageNumber: 1, pageSize: 9 })}`,
         abortController.signal
       )
       .then((suggestionResponse) => {
         if (suggestionResponse.data.data.GlobalSearch.Images) {
           const suggestionParsedData = suggestionResponse.data.data.GlobalSearch.Images.map((el) => mapToImage(el));
           setSuggestionData(suggestionParsedData);
-          if (isEmpty(suggestionParsedData)) {
+          setActivePlatformSelection(false);
+          setActivePlatformSelection(false);
+          if (suggestionParsedData.length === 1 && suggestionParsedData[0].tag === tag) {
+            setInputHelpText('Image Selected'); // if the current text matches a valid repo-tag
+          } else if (isEmpty(suggestionParsedData)) {
             setIsFailedSearch(true);
+            setInputHelpText('Tag not found');
+          } else {
+            setInputHelpText('Specify a :tag');
           }
         }
         setIsLoading(false);
@@ -189,17 +220,6 @@ function SearchSuggestion({ setSearchCurrentValue = () => {}, stretch = true }) 
         setIsLoading(false);
         setIsFailedSearch(true);
       });
-  };
-
-  const handleSeachChange = (event) => {
-    const value = event?.inputValue;
-    setSearchQuery(value);
-    // used to lift up the state for pages that need to know the current value of the search input (currently only Explore) not used in other cases
-    // one way binding, other components shouldn't set the value of the search input, but using this prop can read it
-    setSearchCurrentValue(value);
-    setIsFailedSearch(false);
-    setIsLoading(true);
-    setSuggestionData([]);
   };
 
   const searchCall = (value) => {
@@ -240,7 +260,7 @@ function SearchSuggestion({ setSearchCurrentValue = () => {}, stretch = true }) 
     openMenu
   } = useCombobox({
     items: suggestionData,
-    onInputValueChange: handleSeachChange,
+    onInputValueChange: handleSearchChange,
     onSelectedItemChange: handleSuggestionSelected,
     initialInputValue: !isEmpty(searchQuery) ? searchQuery : search,
     itemToString: (item) => item?.name || item
@@ -276,11 +296,24 @@ function SearchSuggestion({ setSearchCurrentValue = () => {}, stretch = true }) 
     ));
   };
 
+  const renderPlatformOptions = () => {
+    return platformOptions.map((it, index) => (
+      <MenuItem value={it} key={`${it.os}_${index}`}>
+        {`${it.os}/${it.arch}`}
+      </MenuItem>
+    ));
+  };
+
+  const renderHelpText = () => {
+    return <FormHelperText>{inputHelpText}</FormHelperText>;
+  };
+
   return (
-    <div
-      className={`${stretch ? classes.searchContainer : classes.searchContainerUnstretched}
+    <FormControl
+      className={`${classes.searchContainer}
       ${isComponentFocused && classes.searchContainerFocused}`}
     >
+      {renderHelpText()}
       <Stack
         className={`${classes.search} ${isComponentFocused && classes.searchFocused} ${
           isFailedSearch && !isLoading && classes.searchFailed
@@ -292,16 +325,29 @@ function SearchSuggestion({ setSearchCurrentValue = () => {}, stretch = true }) 
         {...getComboboxProps()}
       >
         <InputBase
-          placeholder={'Search for content...'}
+          placeholder={'Search for an image:tag'}
+          value={name !== '' ? name + ':' + tag : ''}
           className={`${classes.input} ${isComponentFocused && classes.inputFocused}`}
           sx={{ input: { '&::placeholder': { opacity: 1 } } }}
           onKeyUp={handleSearch}
           onFocus={() => openMenu()}
           {...getInputProps()}
         />
-        <div onClick={handleSearch} className={classes.searchIcon}>
-          <SearchIcon />
-        </div>
+        <FormControl fullWidth>
+          <InputLabel id="demo-simple-select-label">Platform</InputLabel>
+          <Select
+            disabled={activePlatformSelection ? false : true}
+            labelId="demo-simple-select-label"
+            id="demo-simple-select"
+            label="Age"
+            value={platform}
+            onChange={(event) => {
+              setPlatform(event.target.value);
+            }}
+          >
+            {renderPlatformOptions()}
+          </Select>
+        </FormControl>
       </Stack>
       <List
         {...getMenuProps()}
@@ -336,25 +382,14 @@ function SearchSuggestion({ setSearchCurrentValue = () => {}, stretch = true }) 
               onClick={() => {}}
             >
               <Stack direction="row" spacing={2}>
-                <Typography>Press Enter for advanced search</Typography>
-              </Stack>
-            </ListItem>
-            <ListItem
-              className={classes.searchItem}
-              style={{ color: '#52637A', fontSize: '1rem', textOverflow: 'ellipsis' }}
-              {...getItemProps({ item: '', index: 0 })}
-              spacing={2}
-              onClick={() => {}}
-            >
-              <Stack direction="row" spacing={2}>
                 <Typography>Use the &apos;:&apos; character to search for tags</Typography>
               </Stack>
             </ListItem>
           </>
         )}
       </List>
-    </div>
+    </FormControl>
   );
 }
 
-export default SearchSuggestion;
+export default ImageSelector;

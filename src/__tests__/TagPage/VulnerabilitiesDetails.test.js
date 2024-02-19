@@ -28,7 +28,7 @@ const mockCVEList = {
       LowCount: 1,
       MediumCount: 1,
       HighCount: 1,
-      CriticalCount: 1,
+      CriticalCount: 1
     },
     CVEList: [
       {
