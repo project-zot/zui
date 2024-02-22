@@ -100,6 +100,7 @@ const mapCVEInfo = (cveInfo) => {
       reference: cve.Reference,
       packageList: cve.PackageList?.map((pkg) => ({
         packageName: pkg.Name,
+        packagePath: pkg.PackagePath,
         packageInstalledVersion: pkg.InstalledVersion,
         packageFixedVersion: pkg.FixedVersion
       }))
@@ -118,6 +119,7 @@ const mapAllCVEInfo = (cveInfo) => {
         description: cve.Description,
         reference: cve.Reference,
         packageName: packageInfo.Name,
+        packagePath: packageInfo.PackagePath,
         packageInstalledVersion: packageInfo.InstalledVersion,
         packageFixedVersion: packageInfo.FixedVersion
       };

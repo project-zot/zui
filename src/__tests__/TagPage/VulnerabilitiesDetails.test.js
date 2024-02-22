@@ -1,4 +1,4 @@
-import { render, screen, waitFor, fireEvent } from '@testing-library/react';
+import { render, screen, waitFor, within, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import MockThemeProvider from '__mocks__/MockThemeProvider';
 import { api } from 'api';
@@ -17,6 +17,52 @@ const StateVulnerabilitiesWrapper = () => {
     </MockThemeProvider>
   );
 };
+
+const simpleMockCVEList = {
+ CVEListForImage: {
+    Tag: '',
+    Page: { ItemCount: 2, TotalCount: 2 },
+    Summary: {
+      Count: 2,
+      UnknownCount: 0,
+      LowCount: 0,
+      MediumCount: 1,
+      HighCount: 0,
+      CriticalCount: 1,
+    },
+    CVEList: [
+      {
+        Id: 'CVE-2020-16156',
+        Title: 'perl-CPAN: Bypass of verification of signatures in CHECKSUMS files',
+        Description: 'CPAN 2.28 allows Signature Verification Bypass.',
+        Severity: 'MEDIUM',
+        PackageList: [
+          {
+            Name: 'perl-base',
+            PackagePath: 'Not Specified',
+            InstalledVersion: '5.30.0-9ubuntu0.2',
+            FixedVersion: 'Not Specified'
+          }
+        ]
+      },
+      {
+        Id: 'CVE-2016-1000027',
+        Title: 'spring: HttpInvokerServiceExporter readRemoteInvocation method untrusted java deserialization',
+        Description: "Pivotal Spring Framework through 5.3.16 suffers from a potential remote code execution (RCE) issue if used for Java deserialization of untrusted data. Depending on how the library is implemented within a product, this issue may or not occur, and authentication may be required. NOTE: the vendor's position is that untrusted data is not an intended use case. The product's behavior will not be changed because some users rely on deserialization of trusted data.",
+        Severity: 'CRITICAL',
+        Reference: 'https://avd.aquasec.com/nvd/cve-2016-1000027',
+        PackageList: [
+            {
+                Name: 'org.springframework:spring-web',
+                PackagePath: 'usr/local/tomcat/webapps/spring4shell.war/WEB-INF/lib/spring-web-5.3.15.jar',
+                InstalledVersion: '5.3.15',
+                FixedVersion: '6.0.0'
+            }
+        ]
+      },
+    ]
+  }
+}
 
 const mockCVEList = {
   CVEListForImage: {
@@ -39,6 +85,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'perl-base',
+            PackagePath: 'Not Specified',
             InstalledVersion: '5.30.0-9ubuntu0.2',
             FixedVersion: 'Not Specified'
           }
@@ -54,26 +101,31 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'krb5-locales',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1.17-6ubuntu4.1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libgssapi-krb5-2',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1.17-6ubuntu4.1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libk5crypto3',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1.17-6ubuntu4.1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libkrb5-3',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1.17-6ubuntu4.1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libkrb5support0',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1.17-6ubuntu4.1',
             FixedVersion: 'Not Specified'
           }
@@ -88,6 +140,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libgnutls30',
+            PackagePath: 'Not Specified',
             InstalledVersion: '3.6.13-2ubuntu1.6',
             FixedVersion: '3.6.13-2ubuntu1.7'
           }
@@ -102,6 +155,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libpcre2-8-0',
+            PackagePath: 'Not Specified',
             InstalledVersion: '10.34-7',
             FixedVersion: 'Not Specified'
           }
@@ -116,6 +170,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libsqlite3-0',
+            PackagePath: 'Not Specified',
             InstalledVersion: '3.31.1-4ubuntu0.3',
             FixedVersion: '3.31.1-4ubuntu0.4'
           }
@@ -130,6 +185,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libpcre3',
+            PackagePath: 'Not Specified',
             InstalledVersion: '2:8.39-12ubuntu0.1',
             FixedVersion: 'Not Specified'
           }
@@ -144,6 +200,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libsqlite3-0',
+            PackagePath: 'Not Specified',
             InstalledVersion: '3.31.1-4ubuntu0.3',
             FixedVersion: '3.31.1-4ubuntu0.4'
           }
@@ -158,11 +215,13 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'login',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1:4.8.1-1ubuntu5.20.04.2',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'passwd',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1:4.8.1-1ubuntu5.20.04.2',
             FixedVersion: 'Not Specified'
           }
@@ -177,6 +236,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libgmp10',
+            PackagePath: 'Not Specified',
             InstalledVersion: '2:6.2.0+dfsg-4',
             FixedVersion: 'Not Specified'
           }
@@ -191,6 +251,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libgnutls30',
+            PackagePath: 'Not Specified',
             InstalledVersion: '3.6.13-2ubuntu1.6',
             FixedVersion: '3.6.13-2ubuntu1.7'
           }
@@ -205,26 +266,31 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libncurses6',
+            PackagePath: 'Not Specified',
             InstalledVersion: '6.2-0ubuntu2',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libncursesw6',
+            PackagePath: 'Not Specified',
             InstalledVersion: '6.2-0ubuntu2',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libtinfo6',
+            PackagePath: 'Not Specified',
             InstalledVersion: '6.2-0ubuntu2',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'ncurses-base',
+            PackagePath: 'Not Specified',
             InstalledVersion: '6.2-0ubuntu2',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'ncurses-bin',
+            PackagePath: 'Not Specified',
             InstalledVersion: '6.2-0ubuntu2',
             FixedVersion: 'Not Specified'
           }
@@ -239,6 +305,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libpcre2-8-0',
+            PackagePath: 'Not Specified',
             InstalledVersion: '10.34-7',
             FixedVersion: 'Not Specified'
           }
@@ -253,26 +320,31 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libncurses6',
+            PackagePath: 'Not Specified',
             InstalledVersion: '6.2-0ubuntu2',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libncursesw6',
+            PackagePath: 'Not Specified',
             InstalledVersion: '6.2-0ubuntu2',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libtinfo6',
+            PackagePath: 'Not Specified',
             InstalledVersion: '6.2-0ubuntu2',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'ncurses-base',
+            PackagePath: 'Not Specified',
             InstalledVersion: '6.2-0ubuntu2',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'ncurses-bin',
+            PackagePath: 'Not Specified',
             InstalledVersion: '6.2-0ubuntu2',
             FixedVersion: 'Not Specified'
           }
@@ -287,6 +359,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'coreutils',
+            PackagePath: 'Not Specified',
             InstalledVersion: '8.30-3ubuntu2',
             FixedVersion: 'Not Specified'
           }
@@ -301,46 +374,55 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libasn1-8-heimdal',
+            PackagePath: 'Not Specified',
             InstalledVersion: '7.7.0+dfsg-1ubuntu1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libgssapi3-heimdal',
+            PackagePath: 'Not Specified',
             InstalledVersion: '7.7.0+dfsg-1ubuntu1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libhcrypto4-heimdal',
+            PackagePath: 'Not Specified',
             InstalledVersion: '7.7.0+dfsg-1ubuntu1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libheimbase1-heimdal',
+            PackagePath: 'Not Specified',
             InstalledVersion: '7.7.0+dfsg-1ubuntu1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libheimntlm0-heimdal',
+            PackagePath: 'Not Specified',
             InstalledVersion: '7.7.0+dfsg-1ubuntu1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libhx509-5-heimdal',
+            PackagePath: 'Not Specified',
             InstalledVersion: '7.7.0+dfsg-1ubuntu1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libkrb5-26-heimdal',
+            PackagePath: 'Not Specified',
             InstalledVersion: '7.7.0+dfsg-1ubuntu1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libroken18-heimdal',
+            PackagePath: 'Not Specified',
             InstalledVersion: '7.7.0+dfsg-1ubuntu1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libwind0-heimdal',
+            PackagePath: 'Not Specified',
             InstalledVersion: '7.7.0+dfsg-1ubuntu1',
             FixedVersion: 'Not Specified'
           }
@@ -355,11 +437,13 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libc-bin',
+            PackagePath: 'Not Specified',
             InstalledVersion: '2.31-0ubuntu9.9',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libc6',
+            PackagePath: 'Not Specified',
             InstalledVersion: '2.31-0ubuntu9.9',
             FixedVersion: 'Not Specified'
           }
@@ -373,6 +457,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libcurl4',
+            PackagePath: 'Not Specified',
             InstalledVersion: '7.68.0-1ubuntu2.12',
             FixedVersion: '7.68.0-1ubuntu2.13'
           }
@@ -388,26 +473,31 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'krb5-locales',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1.17-6ubuntu4.1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libgssapi-krb5-2',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1.17-6ubuntu4.1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libk5crypto3',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1.17-6ubuntu4.1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libkrb5-3',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1.17-6ubuntu4.1',
             FixedVersion: 'Not Specified'
           },
           {
             Name: 'libkrb5support0',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1.17-6ubuntu4.1',
             FixedVersion: 'Not Specified'
           }
@@ -422,6 +512,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'libsqlite3-0',
+            PackagePath: 'Not Specified',
             InstalledVersion: '3.31.1-4ubuntu0.3',
             FixedVersion: '3.31.1-4ubuntu0.4'
           }
@@ -437,6 +528,7 @@ const mockCVEList = {
         PackageList: [
           {
             Name: 'zlib1g',
+            PackagePath: 'Not Specified',
             InstalledVersion: '1:1.2.11.dfsg-2ubuntu1.3',
             FixedVersion: 'Not Specified'
           }
@@ -665,6 +757,50 @@ describe('Vulnerabilties page', () => {
     await fireEvent.click(loadMoreBtn);
     await waitFor(() => expect(loadMoreBtn).not.toBeInTheDocument());
     expect(await screen.findByText('latest')).toBeInTheDocument();
+  });
+
+  it('should show the list of vulnerable packages for the CVEs', async () => {
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: simpleMockCVEList } })
+    render(<StateVulnerabilitiesWrapper />);
+    const expandListBtn = await screen.findByTestId('expand-list-view-toggle');
+    fireEvent.click(expandListBtn);
+    const packageLists = await screen.findAllByTestId('cve-package-list');
+    expect(packageLists.length).toEqual(2); // Data set has 2 CVEs, so 2 package lists
+
+    const expectedData = [
+        {
+          Name: 'perl-base',
+          PackagePath: 'Not Specified',
+          InstalledVersion: '5.30.0-9ubuntu0.2',
+          FixedVersion: 'Not Specified'
+        },
+        {
+          Name: 'org.springframework:spring-web',
+          PackagePath: 'usr/local/tomcat/webapps/spring4shell.war/WEB-INF/lib/spring-web-5.3.15.jar',
+          InstalledVersion: '5.3.15',
+          FixedVersion: '6.0.0'
+        }
+    ];
+
+    for (let index = 0; index < 2; index++) {
+      const expectedPackageData = expectedData[index];
+      const container = packageLists[index];
+      const pkgName = await within(container).findAllByTestId('cve-info-pkg-name');
+      expect(pkgName).toHaveLength(1);
+      expect(pkgName[0]).toHaveTextContent(expectedPackageData.Name);
+
+      const pkgPath = await within(container).findAllByTestId('cve-info-pkg-path');
+      expect(pkgPath).toHaveLength(1);
+      expect(pkgPath[0]).toHaveTextContent(expectedPackageData.PackagePath);
+
+      const pkgInstalledVer = await within(container).findAllByTestId('cve-info-pkg-install-ver');
+      expect(pkgInstalledVer).toHaveLength(1);
+      expect(pkgInstalledVer[0]).toHaveTextContent(expectedPackageData.InstalledVersion);
+
+      const pkgFixedVer = await within(container).findAllByTestId('cve-info-pkg-fixed-ver');
+      expect(pkgFixedVer).toHaveLength(1);
+      expect(pkgFixedVer[0]).toHaveTextContent(expectedPackageData.FixedVersion);
+    }
   });
 
   it('should allow export of vulnerabilities list', async () => {

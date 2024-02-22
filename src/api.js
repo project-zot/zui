@@ -113,10 +113,10 @@ const endpoints = {
     if (!isEmpty(severity)) {
       query += `, severity: "${severity}"`;
     }
-    return `${query}){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity Reference PackageList {Name InstalledVersion FixedVersion}} Summary {Count UnknownCount LowCount MediumCount HighCount CriticalCount}}}`;
+    return `${query}){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity Reference PackageList {Name PackagePath InstalledVersion FixedVersion}} Summary {Count UnknownCount LowCount MediumCount HighCount CriticalCount}}}`;
   },
   allVulnerabilitiesForRepo: (name) =>
-    `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}"){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity Reference PackageList {Name InstalledVersion FixedVersion}}}}`,
+    `/v2/_zot/ext/search?query={CVEListForImage(image: "${name}"){Tag Page {TotalCount ItemCount} CVEList {Id Title Description Severity Reference PackageList {Name PackagePath InstalledVersion FixedVersion}}}}`,
   imageListWithCVEFixed: (cveId, repoName, { pageNumber = 1, pageSize = 3 }, filter = {}) => {
     let filterParam = '';
     if (filter.Os || filter.Arch) {
