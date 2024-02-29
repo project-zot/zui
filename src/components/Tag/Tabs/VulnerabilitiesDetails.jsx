@@ -411,6 +411,7 @@ function VulnerabilitiesDetails(props) {
             className={classes.view}
             selected={selectedViewMore}
             onChange={() => setSelectedViewMore(true)}
+            data-testid="expand-list-view-toggle"
           >
             <ViewAgendaIcon />
           </ToggleButton>
