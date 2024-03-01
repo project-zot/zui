@@ -132,8 +132,14 @@ function SearchSuggestion({ setSearchCurrentValue = () => {} }) {
 
   const handleSearch = (event) => {
     const { key, type } = event;
+    const name = event.target.value;
     if (key === 'Enter' || type === 'click') {
-      navigate({ pathname: `/explore`, search: createSearchParams({ search: inputValue || '' }).toString() });
+      if (name?.includes(':')) {
+        const splitName = name.split(':');
+        navigate(`/image/${encodeURIComponent(splitName[0])}/tag/${splitName[1]}`);
+      } else {
+        navigate({ pathname: `/explore`, search: createSearchParams({ search: inputValue || '' }).toString() });
+      }
     }
   };
 
