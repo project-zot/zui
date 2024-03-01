@@ -134,13 +134,8 @@ function SearchSuggestion({ setSearchCurrentValue = () => {} }) {
     const { key, type } = event;
     const name = event.target.value;
     if (key === 'Enter' || type === 'click') {
-      const splitName = name.split(':');
-      let inputInSuggestions = false;
-
-      if (splitName.length > 1) {
-        inputInSuggestions = suggestionData.some((sd) => sd.repoName === splitName[0] && sd.tag === splitName[1]);
-      }
-      if (inputInSuggestions) {
+      if (name?.includes(':')) {
+        const splitName = name.split(':');
         navigate(`/image/${encodeURIComponent(splitName[0])}/tag/${splitName[1]}`);
       } else {
         navigate({ pathname: `/explore`, search: createSearchParams({ search: inputValue || '' }).toString() });
