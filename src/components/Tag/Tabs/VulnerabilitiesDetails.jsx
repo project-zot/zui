@@ -250,7 +250,7 @@ function VulnerabilitiesDetails(props) {
     const wb = XLSX.utils.book_new(),
       ws = XLSX.utils.json_to_sheet(allCveData);
 
-    XLSX.utils.book_append_sheet(wb, ws, name.replaceAll('/', '_') + '_' + tag);
+    XLSX.utils.book_append_sheet(wb, ws, 'vulnerabilities');
 
     XLSX.writeFile(wb, `${name}:${tag}-vulnerabilities.xlsx`);
 
