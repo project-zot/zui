@@ -30,6 +30,7 @@ function UserAccountMenu() {
         aria-controls={open ? 'account-menu' : undefined}
         aria-haspopup="true"
         aria-expanded={open ? 'true' : undefined}
+        data-testid="user-icon-header-button"
       >
         <Avatar sx={{ width: 32, height: 32 }} />
       </IconButton>
@@ -43,8 +44,12 @@ function UserAccountMenu() {
       >
         <MenuItem onClick={handleUserClose}>{getLoggedInUser()}</MenuItem>
         <Divider />
-        {isApiKeyEnabled() && <MenuItem onClick={apiKeyManagement}>API Keys</MenuItem>}
-        <Divider />
+        {isApiKeyEnabled() && (
+          <MenuItem onClick={apiKeyManagement} data-testid="api-keys-menu-item">
+            API Keys
+          </MenuItem>
+        )}
+        {isApiKeyEnabled() && <Divider data-testid="api-keys-menu-item-divider" />}
         <MenuItem onClick={logoutUser}>Log out</MenuItem>
       </Menu>
     </>
