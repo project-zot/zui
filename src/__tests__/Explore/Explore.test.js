@@ -1,4 +1,4 @@
-import { render, screen, waitFor } from '@testing-library/react';
+import { render, screen, waitFor, fireEvent } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import Explore from 'components/Explore/Explore';
@@ -38,7 +38,7 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: 'w',
-          IsSigned: false,
+          SignatureInfo: [],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -63,7 +63,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: false,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: false,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -88,7 +99,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -113,7 +135,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -138,7 +171,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -167,7 +211,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: ''
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: ''
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -192,7 +247,18 @@ const mockImageList = {
         NewestImage: {
           Tag: 'latest',
           Description: '',
-          IsSigned: true,
+          SignatureInfo: [
+            {
+              Tool: 'cosign',
+              IsTrusted: true,
+              Author: 'author1'
+            },
+            {
+              Tool: 'notation',
+              IsTrusted: true,
+              Author: 'author2'
+            }
+          ],
           Licenses: '',
           Vendor: '',
           Labels: '',
@@ -225,7 +291,7 @@ const filteredMockImageListWindows = () => {
 };
 
 const filteredMockImageListSigned = () => {
-  const filteredRepos = mockImageList.GlobalSearch.Repos.filter((r) => r.NewestImage.IsSigned);
+  const filteredRepos = mockImageList.GlobalSearch.Repos.filter((r) => r.NewestImage.SignatureInfo?.length > 0);
   return {
     GlobalSearch: {
       Page: { TotalCount: 6, ItemCount: 6 },
@@ -273,7 +339,22 @@ describe('Explore component', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
     expect(await screen.findAllByTestId('unverified-icon')).toHaveLength(1);
-    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(6);
+    expect(await screen.findAllByTestId('untrusted-icon')).toHaveLength(2);
+    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(10);
+
+    const allUntrustedSignaturesIcons = await screen.findAllByTestId("untrusted-icon");
+    fireEvent.mouseOver(allUntrustedSignaturesIcons[0]);
+    expect(await screen.findByText("Signed-by: Unknown")).toBeInTheDocument();
+    const allTrustedSignaturesIcons = await screen.findAllByTestId("verified-icon");
+    fireEvent.mouseOver(allTrustedSignaturesIcons[8]);
+    expect(await screen.findByText("Tool: cosign")).toBeInTheDocument();
+    expect(await screen.findByText("Signed-by: author1")).toBeInTheDocument();
+    fireEvent.mouseOver(allTrustedSignaturesIcons[9]);
+    expect(await screen.findByText("Tool: notation")).toBeInTheDocument();
+    expect(await screen.findByText("Signed-by: author2")).toBeInTheDocument();
+    const allNoSignedIcons = await screen.findAllByTestId("unverified-icon");
+    fireEvent.mouseOver(allNoSignedIcons[0]);
+    expect(await screen.findByText("Not signed")).toBeInTheDocument();
   });
 
   it('renders vulnerability icons', async () => {

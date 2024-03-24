@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { api, endpoints } from '../../api';
 import { host } from '../../host';
 import { mapToImage } from '../../utilities/objectModels';
+import filterConstants from 'utilities/filterConstants';
 import { isEmpty, head } from 'lodash';
 
 // components
@@ -224,6 +225,28 @@ function TagDetails() {
     }
   };
 
+  const getSignatureChips = () => {
+    const cosign = imageDetailData.signatureInfo
+      ?.map((s) => s.tool)
+      .includes(filterConstants.signatureToolConstants.COSIGN)
+      ? imageDetailData.signatureInfo.filter((si) => si.tool == filterConstants.signatureToolConstants.COSIGN)
+      : null;
+    const notation = imageDetailData.signatureInfo
+      ?.map((s) => s.tool)
+      .includes(filterConstants.signatureToolConstants.NOTATION)
+      ? imageDetailData.signatureInfo.filter((si) => si.tool == filterConstants.signatureToolConstants.NOTATION)
+      : null;
+    const sigArray = [];
+    if (cosign) sigArray.push(cosign);
+    if (notation) sigArray.push(notation);
+    if (sigArray.length === 0) return <SignatureIconCheck />;
+    return sigArray.map((sig, index) => (
+      <div className="hide-on-mobile" key={`${name}sig${index}`}>
+        <SignatureIconCheck signatureInfo={sig} />
+      </div>
+    ));
+  };
+
   return (
     <>
       {isLoading ? (
@@ -256,15 +279,12 @@ function TagDetails() {
                         </Typography>
                       </Stack>
 
-                      <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={1}>
+                      <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
                         <VulnerabilityIconCheck
                           vulnerabilitySeverity={imageDetailData.vulnerabiltySeverity}
                           count={imageDetailData.vulnerabilityCount}
                         />
-                        <SignatureIconCheck
-                          isSigned={imageDetailData.isSigned}
-                          signatureInfo={imageDetailData.signatureInfo}
-                        />
+                        {getSignatureChips()}
                       </Stack>
                     </Stack>
                     <Stack direction="row" alignItems="center" spacing="1rem">

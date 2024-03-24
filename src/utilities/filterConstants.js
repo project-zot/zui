@@ -69,6 +69,11 @@ const archFilters = [
   }
 ];
 
-const filterConstants = { osFilters, imageFilters, archFilters };
+const signatureToolConstants = {
+  COSIGN: 'cosign',
+  NOTATION: 'notation'
+};
+
+const filterConstants = { osFilters, imageFilters, archFilters, signatureToolConstants };
 
 export default filterConstants;

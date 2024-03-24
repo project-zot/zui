@@ -221,7 +221,6 @@ function Explore({ searchInputValue }) {
             description={item.description}
             downloads={item.downloads}
             stars={item.stars}
-            isSigned={item.isSigned}
             signatureInfo={item.signatureInfo}
             isBookmarked={item.isBookmarked}
             isStarred={item.isStarred}

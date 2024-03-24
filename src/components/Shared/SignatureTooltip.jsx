@@ -1,19 +1,17 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { Typography, Stack } from '@mui/material';
-
 import { isEmpty } from 'lodash';
+import { getStrongestSignature, getAllAuthorsOfSignatures } from 'utilities/vulnerabilityAndSignatureCheck';
 
-function SignatureTooltip({ isSigned, signatureInfo }) {
-  const { tool, isTrusted, author } = !isEmpty(signatureInfo)
-    ? signatureInfo[0]
-    : { tool: 'Unknown', isTrusted: 'Unknown', author: 'Unknown' };
+function SignatureTooltip({ signatureInfo }) {
+  const strongestSignature = useMemo(() => getStrongestSignature(signatureInfo));
 
-  return (
+  return isEmpty(strongestSignature) ? (
+    <Typography>Not signed</Typography>
+  ) : (
     <Stack direction="column">
-      <Typography>{isSigned ? 'Verified Signature' : 'Unverified Signature'}</Typography>
-      <Typography>Tool: {tool}</Typography>
-      <Typography>Trusted: {!isEmpty(isTrusted) ? isTrusted : 'Unknown'}</Typography>
-      <Typography>Author: {!isEmpty(author) ? author : 'Unknown'}</Typography>
+      <Typography>Tool: {strongestSignature?.tool || 'Unknown'}</Typography>
+      <Typography>Signed-by: {getAllAuthorsOfSignatures(signatureInfo) || 'Unknown'}</Typography>
     </Stack>
   );
 }

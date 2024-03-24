@@ -51,6 +51,18 @@ const mockRepoDetailsData = {
       NewestImage: {
         RepoName: 'mongo',
         IsSigned: true,
+        SignatureInfo: [
+          {
+            Tool: 'cosign',
+            IsTrusted: true,
+            Author: 'author1'
+          },
+          {
+            Tool: 'notation',
+            IsTrusted: true,
+            Author: 'author2'
+          }
+        ],
         Vulnerabilities: {
           MaxSeverity: 'CRITICAL',
           Count: 15
@@ -283,6 +295,20 @@ describe('Repo details component', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsHigh } });
     render(<RepoDetailsThemeWrapper />);
     expect(await screen.findAllByTestId('high-vulnerability-icon')).toHaveLength(1);
+  });
+
+  it('renders signature icons', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsData } });
+    render(<RepoDetailsThemeWrapper />);
+    expect(await screen.findAllByTestId('verified-icon')).toHaveLength(2);
+
+    const allTrustedSignaturesIcons = await screen.findAllByTestId("verified-icon");
+    fireEvent.mouseOver(allTrustedSignaturesIcons[0]);
+    expect(await screen.findByText("Tool: cosign")).toBeInTheDocument();
+    expect(await screen.findByText("Signed-by: author1")).toBeInTheDocument();
+    fireEvent.mouseOver(allTrustedSignaturesIcons[1]);
+    expect(await screen.findByText("Tool: notation")).toBeInTheDocument();
+    expect(await screen.findByText("Signed-by: author2")).toBeInTheDocument();
   });
 
   it("should log error if data can't be fetched", async () => {

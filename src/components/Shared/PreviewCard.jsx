@@ -10,7 +10,7 @@ import repocube3 from '../../assets/repocube-3.png';
 import repocube4 from '../../assets/repocube-4.png';
 
 import { isEmpty } from 'lodash';
-import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
+import { VulnerabilityIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 
 // temporary utility to get image
 const randomIntFromInterval = (min, max) => {
@@ -67,7 +67,7 @@ const useStyles = makeStyles(() => ({
 function PreviewCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { name, isSigned, vulnerabilityData, logo } = props;
+  const { name, vulnerabilityData, logo } = props;
 
   const goToDetails = () => {
     navigate(`/image/${encodeURIComponent(name)}`);
@@ -108,7 +108,6 @@ function PreviewCard(props) {
                 </Tooltip>
                 <Stack direction="row" spacing={0.5} sx={{ marginLeft: 'auto', marginRight: 0 }}>
                   <VulnerabilityIconCheck {...vulnerabilityData} />
-                  <SignatureIconCheck isSigned={isSigned} />
                 </Stack>
               </Stack>
             </Grid>
