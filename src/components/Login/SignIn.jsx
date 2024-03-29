@@ -149,8 +149,8 @@ const useStyles = makeStyles(() => ({
 export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = () => {} }) {
   const [usernameError, setUsernameError] = useState(null);
   const [passwordError, setPasswordError] = useState(null);
-  const [username, setUsername] = useState(null);
-  const [password, setPassword] = useState(null);
+  const [username, setUsername] = useState('');
+  const [password, setPassword] = useState('');
   const [requestProcessing, setRequestProcessing] = useState(false);
   const [requestError, setRequestError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
@@ -228,11 +228,18 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
       });
   };
 
-  const handleClick = (event) => {
-    event.preventDefault();
-    if (Object.keys(authMethods).includes('htpasswd')) {
+  const handleBasicAuthSubmit = () => {
+    setRequestError(false);
+    const isUsernameValid = handleUsernameValidation(username);
+    const isPasswordValid = handlePasswordValidation(password);
+    if (Object.keys(authMethods).includes('htpasswd') && isUsernameValid && isPasswordValid) {
       handleBasicAuth();
     }
+  };
+
+  const handleClick = (event) => {
+    event.preventDefault();
+    handleBasicAuthSubmit();
   };
 
   const handleGuestClick = () => {
@@ -251,32 +258,52 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
     );
   };
 
+  const handleUsernameValidation = (username) => {
+    let isValid = true;
+    if (username === '') {
+      setUsernameError('Please enter a username');
+      isValid = false;
+    } else {
+      setUsernameError(null);
+    }
+    return isValid;
+  };
+
+  const handlePasswordValidation = (password) => {
+    let isValid = true;
+    if (password === '') {
+      setPasswordError('Please enter a password');
+      isValid = false;
+    } else {
+      setPasswordError(null);
+    }
+    return isValid;
+  };
+
   const handleChange = (event, type) => {
     event.preventDefault();
     setRequestError(false);
 
     const val = event.target?.value;
-    const isEmpty = val === '';
 
     switch (type) {
       case 'username':
         setUsername(val);
-        if (isEmpty) {
-          setUsernameError('Please enter a username');
-        } else {
-          setUsernameError(null);
-        }
+        handleUsernameValidation(val);
         break;
       case 'password':
         setPassword(val);
-        if (isEmpty) {
-          setPasswordError('Please enter a password');
-        } else {
-          setPasswordError(null);
-        }
+        handlePasswordValidation(val);
         break;
       default:
         break;
+    }
+  };
+
+  const handleLoginInputFieldKeyDown = (event) => {
+    const keyPressed = event.key;
+    if (keyPressed === 'Enter') {
+      handleBasicAuthSubmit();
     }
   };
 
@@ -315,7 +342,7 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
             {Object.keys(authMethods).length > 1 &&
               Object.keys(authMethods).includes('openid') &&
               Object.keys(authMethods.openid.providers).length > 0 && (
-                <Divider className={classes.divider} data-testId="openid-divider">
+                <Divider className={classes.divider} data-testid="openid-divider">
                   or
                 </Divider>
               )}
@@ -334,6 +361,7 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
                   onInput={(e) => handleChange(e, 'username')}
                   error={usernameError != null}
                   helperText={usernameError}
+                  onKeyDown={(e) => handleLoginInputFieldKeyDown(e)}
                 />
                 <TextField
                   margin="normal"
@@ -349,6 +377,7 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
                   onInput={(e) => handleChange(e, 'password')}
                   error={passwordError != null}
                   helperText={passwordError}
+                  onKeyDown={(e) => handleLoginInputFieldKeyDown(e)}
                 />
                 {requestProcessing && <CircularProgress style={{ marginTop: 20 }} color="secondary" />}
                 {requestError && (
@@ -357,7 +386,13 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
                   </Alert>
                 )}
                 <div>
-                  <Button fullWidth variant="contained" className={classes.continueButton} onClick={handleClick}>
+                  <Button
+                    fullWidth
+                    variant="contained"
+                    className={classes.continueButton}
+                    onClick={handleClick}
+                    data-testid="basic-auth-submit-btn"
+                  >
                     Continue
                   </Button>
                 </div>
