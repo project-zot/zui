@@ -19,7 +19,7 @@ const StateVulnerabilitiesWrapper = () => {
 };
 
 const simpleMockCVEList = {
- CVEListForImage: {
+  CVEListForImage: {
     Tag: '',
     Page: { ItemCount: 2, TotalCount: 2 },
     Summary: {
@@ -28,7 +28,7 @@ const simpleMockCVEList = {
       LowCount: 0,
       MediumCount: 1,
       HighCount: 0,
-      CriticalCount: 1,
+      CriticalCount: 1
     },
     CVEList: [
       {
@@ -48,21 +48,22 @@ const simpleMockCVEList = {
       {
         Id: 'CVE-2016-1000027',
         Title: 'spring: HttpInvokerServiceExporter readRemoteInvocation method untrusted java deserialization',
-        Description: "Pivotal Spring Framework through 5.3.16 suffers from a potential remote code execution (RCE) issue if used for Java deserialization of untrusted data. Depending on how the library is implemented within a product, this issue may or not occur, and authentication may be required. NOTE: the vendor's position is that untrusted data is not an intended use case. The product's behavior will not be changed because some users rely on deserialization of trusted data.",
+        Description:
+          "Pivotal Spring Framework through 5.3.16 suffers from a potential remote code execution (RCE) issue if used for Java deserialization of untrusted data. Depending on how the library is implemented within a product, this issue may or not occur, and authentication may be required. NOTE: the vendor's position is that untrusted data is not an intended use case. The product's behavior will not be changed because some users rely on deserialization of trusted data.",
         Severity: 'CRITICAL',
         Reference: 'https://avd.aquasec.com/nvd/cve-2016-1000027',
         PackageList: [
-            {
-                Name: 'org.springframework:spring-web',
-                PackagePath: 'usr/local/tomcat/webapps/spring4shell.war/WEB-INF/lib/spring-web-5.3.15.jar',
-                InstalledVersion: '5.3.15',
-                FixedVersion: '6.0.0'
-            }
+          {
+            Name: 'org.springframework:spring-web',
+            PackagePath: 'usr/local/tomcat/webapps/spring4shell.war/WEB-INF/lib/spring-web-5.3.15.jar',
+            InstalledVersion: '5.3.15',
+            FixedVersion: '6.0.0'
+          }
         ]
-      },
+      }
     ]
   }
-}
+};
 
 const mockCVEList = {
   CVEListForImage: {
@@ -74,7 +75,7 @@ const mockCVEList = {
       LowCount: 1,
       MediumCount: 1,
       HighCount: 1,
-      CriticalCount: 1,
+      CriticalCount: 1
     },
     CVEList: [
       {
@@ -548,7 +549,7 @@ const mockCVEListFiltered = {
       LowCount: 1,
       MediumCount: 1,
       HighCount: 1,
-      CriticalCount: 1,
+      CriticalCount: 1
     },
     CVEList: mockCVEList.CVEListForImage.CVEList.filter((e) => e.Id.includes('2022'))
   }
@@ -565,7 +566,7 @@ const mockCVEListFilteredBySeverity = (severity) => {
         LowCount: 1,
         MediumCount: 1,
         HighCount: 1,
-        CriticalCount: 1,
+        CriticalCount: 1
       },
       CVEList: mockCVEList.CVEListForImage.CVEList.filter((e) => e.Severity.includes(severity))
     }
@@ -582,7 +583,7 @@ const mockCVEListFilteredExclude = {
       LowCount: 1,
       MediumCount: 1,
       HighCount: 1,
-      CriticalCount: 1,
+      CriticalCount: 1
     },
     CVEList: mockCVEList.CVEListForImage.CVEList.filter((e) => !e.Id.includes('2022'))
   }
@@ -663,7 +664,9 @@ describe('Vulnerabilties page', () => {
     await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(1));
     expect(screen.getByLabelText('Critical')).toBeInTheDocument();
     const criticalSeverity = await screen.getByLabelText('Critical');
-    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('CRITICAL') } });
+    jest
+      .spyOn(api, 'get')
+      .mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('CRITICAL') } });
     fireEvent.click(criticalSeverity);
     await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(1));
     expect(screen.getByLabelText('Low')).toBeInTheDocument();
@@ -690,28 +693,27 @@ describe('Vulnerabilties page', () => {
     const cveSearchInput = screen.getByPlaceholderText(/search/i);
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFiltered } });
     await userEvent.type(cveSearchInput, '2022');
-    expect(cveSearchInput).toHaveValue('2022')
+    expect(cveSearchInput).toHaveValue('2022');
     await waitFor(() => expect(screen.queryAllByText(/2022/i)).toHaveLength(7));
     await waitFor(() => expect(screen.queryAllByText(/2021/i)).toHaveLength(1));
   });
 
   it('should have a collapsable search bar', async () => {
-    jest.spyOn(api, 'get').
-      mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } }).
-      mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredExclude } });
+    jest
+      .spyOn(api, 'get')
+      .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
+      .mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredExclude } });
     render(<StateVulnerabilitiesWrapper />);
     const cveSearchInput = screen.getByPlaceholderText(/search/i);
     const expandSearch = cveSearchInput.parentElement.parentElement.parentElement.parentElement.childNodes[0];
     await fireEvent.click(expandSearch);
-    await waitFor(() => 
-      expect(screen.getAllByPlaceholderText("Exclude")).toHaveLength(1)
-    );
-    const excludeInput = screen.getByPlaceholderText("Exclude");
+    await waitFor(() => expect(screen.getAllByPlaceholderText('Exclude')).toHaveLength(1));
+    const excludeInput = screen.getByPlaceholderText('Exclude');
     userEvent.type(excludeInput, '2022');
-    expect(excludeInput).toHaveValue('2022')
+    expect(excludeInput).toHaveValue('2022');
     await waitFor(() => expect(screen.queryAllByText(/2022/i)).toHaveLength(0));
     await waitFor(() => expect(screen.queryAllByText(/2021/i)).toHaveLength(6));
-  })
+  });
 
   it('renders no vulnerabilities if there are not any', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({
@@ -723,7 +725,9 @@ describe('Vulnerabilties page', () => {
   });
 
   it('should show description for vulnerabilities', async () => {
-    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
+    jest
+      .spyOn(api, 'get')
+      .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
       .mockResolvedValue({ status: 200, data: { data: mockCVEFixed.pageOne } });
     render(<StateVulnerabilitiesWrapper />);
     const expandListBtn = await screen.findAllByTestId('ViewAgendaIcon');
@@ -760,7 +764,7 @@ describe('Vulnerabilties page', () => {
   });
 
   it('should show the list of vulnerable packages for the CVEs', async () => {
-    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: simpleMockCVEList } })
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: simpleMockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
     const expandListBtn = await screen.findByTestId('expand-list-view-toggle');
     fireEvent.click(expandListBtn);
@@ -768,18 +772,18 @@ describe('Vulnerabilties page', () => {
     expect(packageLists.length).toEqual(2); // Data set has 2 CVEs, so 2 package lists
 
     const expectedData = [
-        {
-          Name: 'perl-base',
-          PackagePath: 'Not Specified',
-          InstalledVersion: '5.30.0-9ubuntu0.2',
-          FixedVersion: 'Not Specified'
-        },
-        {
-          Name: 'org.springframework:spring-web',
-          PackagePath: 'usr/local/tomcat/webapps/spring4shell.war/WEB-INF/lib/spring-web-5.3.15.jar',
-          InstalledVersion: '5.3.15',
-          FixedVersion: '6.0.0'
-        }
+      {
+        Name: 'perl-base',
+        PackagePath: 'Not Specified',
+        InstalledVersion: '5.30.0-9ubuntu0.2',
+        FixedVersion: 'Not Specified'
+      },
+      {
+        Name: 'org.springframework:spring-web',
+        PackagePath: 'usr/local/tomcat/webapps/spring4shell.war/WEB-INF/lib/spring-web-5.3.15.jar',
+        InstalledVersion: '5.3.15',
+        FixedVersion: '6.0.0'
+      }
     ];
 
     for (let index = 0; index < 2; index++) {
@@ -830,9 +834,10 @@ describe('Vulnerabilties page', () => {
     const xlsxMock = jest.createMockFromModule('xlsx');
     xlsxMock.writeFile = jest.fn();
 
-    jest.spyOn(api, 'get').
-      mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } }).
-      mockRejectedValue({ status: 500, data: {} });
+    jest
+      .spyOn(api, 'get')
+      .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
+      .mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));

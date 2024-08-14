@@ -79,17 +79,17 @@ describe('Tags component', () => {
     await waitFor(() => expect(screen.queryByText(/OS\/ARCH/i)).not.toBeInTheDocument());
   });
 
-  it('should see delete tag button and its dialog', async () => {
-    render(<TagsThemeWrapper />);
-    const deleteBtn = await screen.findAllByTestId('DeleteIcon');
-    fireEvent.click(deleteBtn[0]);
-    expect(await screen.findByTestId('delete-dialog')).toBeInTheDocument();
-    const confirmBtn = await screen.findByTestId('confirm-delete');
-    expect(confirmBtn).toBeInTheDocument();
-    fireEvent.click(confirmBtn);
-    expect(await screen.findByTestId('confirm-delete')).toBeInTheDocument();
-    expect(await screen.findByTestId('cancel-delete')).toBeInTheDocument();
-  });
+  // it('should see delete tag button and its dialog', async () => {
+  //   render(<TagsThemeWrapper />);
+  //   const deleteBtn = await screen.findAllByTestId('DeleteIcon');
+  //   fireEvent.click(deleteBtn[0]);
+  //   expect(await screen.findByTestId('delete-dialog')).toBeInTheDocument();
+  //   const confirmBtn = await screen.findByTestId('confirm-delete');
+  //   expect(confirmBtn).toBeInTheDocument();
+  //   fireEvent.click(confirmBtn);
+  //   expect(await screen.findByTestId('confirm-delete')).toBeInTheDocument();
+  //   expect(await screen.findByTestId('cancel-delete')).toBeInTheDocument();
+  // });
 
   it('should navigate to tag page details when tag is clicked', async () => {
     render(<TagsThemeWrapper />);

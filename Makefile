@@ -6,7 +6,8 @@ all: install audit build
 
 .PHONY: install
 install:
-	npm install --no-audit
+	npm install --no-audit;\
+	npx update-browserslist-db@latest
 
 .PHONY: build
 build:
