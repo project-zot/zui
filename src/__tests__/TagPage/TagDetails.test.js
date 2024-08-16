@@ -981,13 +981,13 @@ describe('Tags details', () => {
     render(<TagDetailsThemeWrapper />);
     expect(await screen.findAllByTestId('verified-icon')).toHaveLength(2);
 
-    const allTrustedSignaturesIcons = await screen.findAllByTestId("verified-icon");
+    const allTrustedSignaturesIcons = await screen.findAllByTestId('verified-icon');
     fireEvent.mouseOver(allTrustedSignaturesIcons[0]);
-    expect(await screen.findByText("Tool: cosign")).toBeInTheDocument();
-    expect(await screen.findByText("Signed-by: author1")).toBeInTheDocument();
+    expect(await screen.findByText('Tool: cosign')).toBeInTheDocument();
+    expect(await screen.findByText('Signed-by: author1')).toBeInTheDocument();
     fireEvent.mouseOver(allTrustedSignaturesIcons[1]);
-    expect(await screen.findByText("Tool: notation")).toBeInTheDocument();
-    expect(await screen.findByText("Signed-by: author2")).toBeInTheDocument();
+    expect(await screen.findByText('Tool: notation')).toBeInTheDocument();
+    expect(await screen.findByText('Signed-by: author2')).toBeInTheDocument();
   });
 
   it('should copy the docker pull string to clipboard', async () => {

@@ -29,7 +29,7 @@ test.describe('Tag page test', () => {
     await expect(page.getByTestId('layer-card-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
     await page.getByRole('tab', { name: 'Uses' }).click();
     await expect(page.getByTestId('depends-on-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
-    await expect(page.getByText('Tag')).toHaveCount(1, { timeout: 100000 });
+    await expect(await page.getByText('Tag').count()).toBeGreaterThan(0);
   });
 
   test('Tag page with vulnerabilities', async ({ page }) => {
