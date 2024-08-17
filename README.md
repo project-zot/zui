@@ -1,4 +1,5 @@
-# zot UI  [![build-test](https://github.com/project-zot/zui/actions/workflows/build-test.yml/badge.svg?branch=main)](https://github.com/project-zot/zui/actions/workflows/build-test.yml) [![codecov.io](http://codecov.io/github/project-zot/zui/coverage.svg?branch=main)](http://codecov.io/github/project-zot/zui?branch=main) [![CodeQL](https://github.com/project-zot/zui/workflows/CodeQL/badge.svg)](https://github.com/project-zot/zui/actions?query=workflow%3ACodeQL) 
+# zot UI  [![build-test](https://github.com/project-zot/zui/actions/workflows/build-test.yml/badge.svg?branch=main)](https://github.com/project-zot/zui/actions/workflows/build-test.yml) [![codecov.io](http://codecov.io/github/project-zot/zui/coverage.svg?branch=main)](http://codecov.io/github/project-zot/zui?branch=main) [![CodeQL](https://github.com/project-zot/zui/workflows/CodeQL/badge.svg)](https://github.com/project-zot/zui/actions?query=workflow%3ACodeQL) [![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fproject-zot%2Fzui.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Fproject-zot%2Fzui?ref=badge_shield)
+
 A graphical user interface to interact with a [zot](https://github.com/project-zot/zot) server instance.
 
 Built with [React JS](https://reactjs.org/) and [Material UI](https://mui.com/).
@@ -59,3 +60,7 @@ This project was bootstrapped with [Create React App](https://github.com/faceboo
 To learn React, check out the [React documentation](https://reactjs.org/).
 
 To learn Material UI, check out the [Material UI Library](https://mui.com/).
+
+
+## License
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Fproject-zot%2Fzui.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Fproject-zot%2Fzui?ref=badge_large)
