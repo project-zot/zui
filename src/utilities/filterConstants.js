@@ -15,17 +15,17 @@ const osFilters = [
 
 const imageFilters = [
   {
-    label: 'Signed Images',
+    label: 'filterConstants.signedImages',
     value: 'HasToBeSigned',
     type: 'boolean'
   },
   {
-    label: 'Bookmarks',
+    label: 'filterConstants.bookmarks',
     value: 'IsBookmarked',
     type: 'boolean'
   },
   {
-    label: 'Starred Repositories',
+    label: 'filterConstants.starredRepositories',
     value: 'IsStarred',
     type: 'boolean'
   }
