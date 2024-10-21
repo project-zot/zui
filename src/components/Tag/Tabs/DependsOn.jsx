@@ -1,4 +1,5 @@
 import React, { useEffect, useState, useMemo, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 import { isEmpty } from 'lodash';
 
 // utility
@@ -99,6 +100,8 @@ function DependsOn(props) {
     };
   }, [isLoading, isEndOfList]);
 
+  const { t } = useTranslation();
+
   const renderDependencies = () => {
     return !isEmpty(images) ? (
       images.map((dependence, index) => {
@@ -115,7 +118,7 @@ function DependsOn(props) {
         );
       })
     ) : (
-      <div>{!isLoading && <Typography className={classes.none}> Nothing found </Typography>}</div>
+      <div>{!isLoading && <Typography className={classes.none}> {t('main.nothingFound')} </Typography>}</div>
     );
   };
 
@@ -132,7 +135,7 @@ function DependsOn(props) {
   return (
     <div data-testid="depends-on-container">
       <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
-        Uses
+        {t('main.uses')}
       </Typography>
       <Stack direction="column" spacing={2}>
         <Stack direction="column" spacing={2}>

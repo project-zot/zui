@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { IconButton } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 
@@ -38,6 +39,8 @@ export default function DeleteTag(props) {
     deleteTag(repo, tag);
   };
 
+  const { t } = useTranslation();
+
   return (
     <React.Fragment>
       <IconButton onClick={handleClickOpen}>
@@ -46,7 +49,7 @@ export default function DeleteTag(props) {
       <DeleteTagConfirmDialog
         onClose={handleClose}
         open={open}
-        title={`Permanently delete image ${repo}:${tag}?`}
+        title={`${t('deleteTag.deleteImage')} ${repo}:${tag}?`}
         onConfirm={onConfirm}
       />
     </React.Fragment>

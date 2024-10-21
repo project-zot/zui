@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Dialog, DialogContent, DialogTitle, DialogActions, Button, Typography, Grid } from '@mui/material';
 
@@ -30,13 +31,17 @@ function ApiKeyConfirmDialog(props) {
     setOpen(false);
   };
 
+  const { t } = useTranslation();
+
   return (
     <Dialog open={open} onClose={handleClose}>
-      <DialogTitle>Api Key &quot;{apiKey?.label}&quot; Created</DialogTitle>
+      <DialogTitle>
+        {t('apiKeyConfirmDialog.apiKey')} &quot;{apiKey?.label}&quot; {t('main.created')}
+      </DialogTitle>
       <DialogContent className={classes.apiKeyForm}>
         <Grid container className={classes.gridWrapper}>
           <Grid item xs={12}>
-            <Typography>Please copy the api key, you will not be able to see it once the page is refreshed</Typography>
+            <Typography>{t('apiKeyConfirmDialog.plsCopy')}</Typography>
           </Grid>
           <Grid item xs={12}>
             <Typography variant="body1" align="center" className={classes.apiKeyDisplay}>
@@ -47,7 +52,7 @@ function ApiKeyConfirmDialog(props) {
       </DialogContent>
       <DialogActions>
         <Button variant="outlined" onClick={handleClose}>
-          Close
+          {t('main.close')}
         </Button>
       </DialogActions>
     </Dialog>

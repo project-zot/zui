@@ -1,6 +1,7 @@
 // react global
 import React, { useRef, useMemo, useState } from 'react';
 import { useNavigate, createSearchParams } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 // utility
 import { DateTime } from 'luxon';
@@ -259,16 +260,21 @@ function RepoCard(props) {
     ));
   };
 
+  const { t, i18n } = useTranslation();
+  const [selectedLanguage] = useState(i18n.language);
+
   const getVendor = () => {
-    return `${vendor || 'Vendor not available'} •`;
+    return `${vendor || t('main.vendorNA')} •`;
   };
   const getVersion = () => {
-    return `published ${version} •`;
+    return `${t('main.published')} ${version} •`;
   };
   const getLast = () => {
     const lastDate = lastUpdated
-      ? DateTime.fromISO(lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
-      : `Timestamp N/A`;
+      ? DateTime.fromISO(lastUpdated)
+          .setLocale(selectedLanguage)
+          .toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
+      : `${t('main.timestampNA')}`;
     return lastDate;
   };
 
@@ -346,9 +352,9 @@ function RepoCard(props) {
                 </div>
                 {getSignatureChips()}
               </Stack>
-              <Tooltip title={description || 'Description not available'} placement="top">
+              <Tooltip title={description || t('main.descriptionNA')} placement="top">
                 <Typography className={classes.description} pt={1} sx={{ fontSize: 12 }} gutterBottom noWrap>
-                  {description || 'Description not available'}
+                  {description || t('main.descriptionNA')}
                 </Typography>
               </Tooltip>
               <Stack alignItems="center" direction="row" spacing={1} pt={1}>
@@ -375,10 +381,10 @@ function RepoCard(props) {
             <Grid item container xs={2} md={2} className={`hide-on-mobile ${classes.contentRight}`}>
               <Grid item xs={12}>
                 <Typography variant="body2" component="span" className={classes.contentRightLabel}>
-                  Downloads •
+                  {t('repoCard.downloads')} •
                 </Typography>
                 <Typography variant="body2" component="span" className={classes.contentRightValue}>
-                  {!isNaN(downloads) ? downloads : `not available`}
+                  {!isNaN(downloads) ? downloads : `${t('main.NA')}`}
                 </Typography>
               </Grid>
               {/* <Grid item xs={12}>
@@ -392,10 +398,10 @@ function RepoCard(props) {
               <Grid item xs={12}>
                 {renderStar()}
                 <Typography variant="body2" component="span" className={classes.contentRightLabel}>
-                  Stars •
+                  {t('main.stars')} •
                 </Typography>
                 <Typography variant="body2" component="span" className={classes.contentRightValue}>
-                  {!isNaN(currentStarCount) ? currentStarCount : `not available`}
+                  {!isNaN(currentStarCount) ? currentStarCount : `${t('main.NA')}`}
                 </Typography>
               </Grid>
               <Grid container item xs={12} className={classes.contentRightActions}>
