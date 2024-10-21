@@ -1,5 +1,7 @@
 // react global
 import { Link, useLocation, useNavigate } from 'react-router-dom';
+// localization
+import { useTranslation } from 'react-i18next';
 
 // components
 import { Typography, Breadcrumbs } from '@mui/material';
@@ -51,6 +53,7 @@ function ExploreHeader() {
   const pathToBeDisplayed = pathWithoutImage.replace('/image/', '');
   const pathHeader = pathToBeDisplayed.replace('/', ' / ').replace(/%2F/g, '/');
   const pathWithTag = path.substring(0, path.lastIndexOf('/'));
+  const { t } = useTranslation();
 
   return (
     <div className={classes.exploreHeader}>
@@ -58,7 +61,7 @@ function ExploreHeader() {
       <Breadcrumbs separator="/" aria-label="breadcrumb">
         <Link to="/">
           <Typography variant="body1" className={classes.explore}>
-            Home
+            {t('exploreHeader.home')}
           </Typography>
         </Link>
         <Link to={pathWithTag.substring(0, pathWithTag.lastIndexOf('/'))}>

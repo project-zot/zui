@@ -2,6 +2,7 @@ import { Card, CardContent, Checkbox, FormControlLabel, Stack, Tooltip, Typograp
 import { makeStyles } from '@mui/styles';
 import { isArray, isNil } from 'lodash';
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 const useStyles = makeStyles((theme) => ({
   card: {
@@ -70,6 +71,8 @@ function FilterCard(props) {
     return filterValue[filter.value] || false;
   };
 
+  const { t } = useTranslation();
+
   const getFilterRows = () => {
     const filterRows = filters;
     return filterRows.map((filter, index) => {
@@ -79,7 +82,7 @@ function FilterCard(props) {
             className={classes.formControl}
             componentsProps={{ typography: { variant: 'body2', className: classes.cardContentText } }}
             control={<Checkbox sx={{ padding: '0.188rem', color: '#52637A' }} />}
-            label={filter.label}
+            label={t(filter.label)}
             id={title}
             checked={getCheckboxStatus(filter)}
             onChange={() => handleFilterClicked(event, filter.value)}
@@ -93,7 +96,7 @@ function FilterCard(props) {
   return (
     <Card variant="outlined" className={classes.card}>
       <CardContent className={classes.cardContent}>
-        <Typography className={classes.cardTitle}>{title || 'Filter Title'}</Typography>
+        <Typography className={classes.cardTitle}>{title || t('filterCard.filterTitle')}</Typography>
         <Stack direction="column">{getFilterRows()}</Stack>
       </CardContent>
     </Card>
