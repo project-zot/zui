@@ -1,5 +1,6 @@
 // react global
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // components
 import Typography from '@mui/material/Typography';
@@ -82,6 +83,8 @@ export default function Tags(props) {
     setSortFilter(value);
   };
 
+  const { t } = useTranslation();
+
   return (
     <Stack direction="column" spacing="1rem">
       <Stack direction="row" justifyContent="space-between">
@@ -92,19 +95,19 @@ export default function Tags(props) {
           align="left"
           style={{ color: 'rgba(0, 0, 0, 0.87)', fontSize: '1.5rem', fontWeight: '600' }}
         >
-          Tags History
+          {t('tags.tagsHistory')}
         </Typography>
         <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
-          <InputLabel>Sort</InputLabel>
+          <InputLabel>{t('main.sort')}</InputLabel>
           <Select
-            label="Sort"
+            label={t('main.sort')}
             value={sortFilter}
             onChange={handleTagsSortChange}
             MenuProps={{ disableScrollLock: true }}
           >
             {Object.values(tagsSortByCriteria).map((el) => (
               <MenuItem key={el.value} value={el.value}>
-                {el.label}
+                {t(el.label)}
               </MenuItem>
             ))}
           </Select>
@@ -112,7 +115,7 @@ export default function Tags(props) {
       </Stack>
       <Stack className={classes.search}>
         <InputBase
-          placeholder={'Search tags...'}
+          placeholder={t('tags.searchTags')}
           classes={{ root: classes.searchInputBase, input: classes.input }}
           value={tagsFilter}
           onChange={handleTagsFilterChange}

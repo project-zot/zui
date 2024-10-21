@@ -3,55 +3,55 @@ import { DateTime } from 'luxon';
 export const sortByCriteria = {
   relevance: {
     value: 'RELEVANCE',
-    label: 'Relevance'
+    label: 'sortCriteria.relevance'
   },
   updateTime: {
     value: 'UPDATE_TIME',
-    label: 'Recent'
+    label: 'sortCriteria.recent'
   },
   alphabetic: {
     value: 'ALPHABETIC_ASC',
-    label: 'Alphabetical'
+    label: 'sortCriteria.alphabetical'
   },
   alphabeticDesc: {
     value: 'ALPHABETIC_DSC',
-    label: 'Alphabetical desc'
+    label: 'sortCriteria.alphabeticalDesc'
   },
   // stars: {
   //   value: 'STARS',
-  //   label: 'Most starred'
+  //   label: 'sortCriteria.mostStarred'
   // },
   downloads: {
     value: 'DOWNLOADS',
-    label: 'Most downloaded'
+    label: 'sortCriteria.mostDownloaded'
   }
 };
 
 export const tagsSortByCriteria = {
   updateTimeDesc: {
     value: 'UPDATETIME_DESC',
-    label: 'Newest',
+    label: 'sortCriteria.newest',
     func: (a, b) => {
       return DateTime.fromISO(b.lastUpdated).diff(DateTime.fromISO(a.lastUpdated));
     }
   },
   updateTime: {
     value: 'UPDATETIME',
-    label: 'Oldest',
+    label: 'sortCriteria.oldest',
     func: (a, b) => {
       return DateTime.fromISO(a.lastUpdated).diff(DateTime.fromISO(b.lastUpdated));
     }
   },
   alphabetic: {
     value: 'ALPHABETIC',
-    label: 'A - Z',
+    label: 'sortCriteria.AZ',
     func: (a, b) => {
       return a.tag?.localeCompare(b.tag);
     }
   },
   alphabeticDesc: {
     value: 'ALPHABETIC_DESC',
-    label: 'Z - A',
+    label: 'sortCriteria.ZA',
     func: (a, b) => {
       return b.tag?.localeCompare(a.tag);
     }
