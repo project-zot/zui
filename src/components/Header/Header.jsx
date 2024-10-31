@@ -1,11 +1,12 @@
 // react global
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 import { isAuthenticated, isAuthenticationEnabled, logoutUser } from '../../utilities/authUtilities';
 
 // components
-import { AppBar, Toolbar, Grid, Button } from '@mui/material';
+import { AppBar, Toolbar, Grid, Button, FormControl, Select, MenuItem } from '@mui/material';
 import SearchSuggestion from './SearchSuggestion';
 import UserAccountMenu from './UserAccountMenu';
 // styling
@@ -95,6 +96,10 @@ const useStyles = makeStyles((theme) => ({
     fontSize: '1rem',
     textTransform: 'none',
     fontWeight: 600
+  },
+  selectLanguage: {
+    width: 'max-content',
+    backgroundColor: '#ffffff'
   }
 }));
 
@@ -131,6 +136,18 @@ function Header({ setSearchCurrentValue = () => {} }) {
   const classes = useStyles();
   const path = useLocation().pathname;
 
+  const locales = {
+    en: { title: 'English' },
+    ru: { title: 'Русский' }
+  };
+
+  const { t, i18n } = useTranslation();
+  const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
+  const handleLanguageChange = (event) => {
+    i18n.changeLanguage(event.target.value);
+    setSelectedLanguage(event.target.value);
+  };
+
   const handleSignInClick = () => {
     logoutUser();
   };
@@ -150,7 +167,7 @@ function Header({ setSearchCurrentValue = () => {} }) {
             </Grid>
             <Grid item className={classes.headerLinkContainer}>
               <a className={classes.link} href="https://zotregistry.dev" target="_blank" rel="noreferrer">
-                Product
+                {t('header.product')}
               </a>
             </Grid>
             <Grid item className={classes.headerLinkContainer}>
@@ -160,7 +177,7 @@ function Header({ setSearchCurrentValue = () => {} }) {
                 target="_blank"
                 rel="noreferrer"
               >
-                Docs
+                {t('header.docs')}
               </a>
             </Grid>
           </Grid>
@@ -181,10 +198,26 @@ function Header({ setSearchCurrentValue = () => {} }) {
             {!isAuthenticated() && isAuthenticationEnabled() && (
               <Grid item>
                 <Button className={classes.signInBtn} onClick={handleSignInClick}>
-                  Sign in
+                  {t('main.signIn')}
                 </Button>
               </Grid>
             )}
+            <Grid item>
+              <FormControl sx={{ m: '1', width: '80%' }} className={`${classes.sortForm}`} size="small">
+                <Select
+                  className={`${classes.selectLanguage}`}
+                  value={selectedLanguage}
+                  onChange={handleLanguageChange}
+                  MenuProps={{ disableScrollLock: true }}
+                >
+                  {Object.keys(locales).map((locale) => (
+                    <MenuItem key={locale} value={locale}>
+                      {locales[locale].title}
+                    </MenuItem>
+                  ))}
+                </Select>
+              </FormControl>
+            </Grid>
           </Grid>
         </Grid>
       </Toolbar>

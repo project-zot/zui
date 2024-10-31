@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import Button from '@mui/material/Button';
 import SvgIcon from '@mui/material/SvgIcon';
@@ -46,6 +47,7 @@ const useStyles = makeStyles(() => ({
 
 function GithubLoginButton({ handleClick }) {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   return (
     <Button
@@ -55,27 +57,29 @@ function GithubLoginButton({ handleClick }) {
       endIcon={<SvgIcon fontSize="medium">{githubLogo}</SvgIcon>}
       onClick={(e) => handleClick(e, 'github')}
     >
-      <span className={classes.buttonsText}>Continue with Github</span>
+      <span className={classes.buttonsText}>{t('thirdPartyLoginComponents.continueWith')} Github</span>
     </Button>
   );
 }
 
 function GoogleLoginButton({ handleClick }) {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   return (
     <Button fullWidth variant="contained" className={classes.googleButton} onClick={(e) => handleClick(e, 'google')}>
-      <span className={classes.buttonsText}>Continue with Google</span>
+      <span className={classes.buttonsText}>{t('thirdPartyLoginComponents.continueWith')} Google</span>
     </Button>
   );
 }
 
 function GitlabLoginButton({ handleClick }) {
   const classes = useStyles();
+  const { t } = useTranslation();
 
   return (
     <Button fullWidth variant="contained" className={classes.button} onClick={(e) => handleClick(e, 'gitlab')}>
-      Sign in with Gitlab
+      {t('thirdPartyLoginComponents.signInWith')} Gitlab
     </Button>
   );
 }
@@ -83,10 +87,11 @@ function GitlabLoginButton({ handleClick }) {
 function OIDCLoginButton({ handleClick, oidcName }) {
   const classes = useStyles();
   const loginWithName = oidcName || 'OIDC';
+  const { t } = useTranslation();
 
   return (
     <Button fullWidth variant="contained" className={classes.button} onClick={(e) => handleClick(e, 'oidc')}>
-      Sign in with {loginWithName}
+      {t('thirdPartyLoginComponents.signInWith')} {loginWithName}
     </Button>
   );
 }
