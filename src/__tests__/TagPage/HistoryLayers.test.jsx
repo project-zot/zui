@@ -38,7 +38,7 @@ describe('Layers page', () => {
 
   it('renders no layers if there are not any', async () => {
     render(<HistoryLayers name="alpine:latest" history={[]} />);
-    await waitFor(() => expect(screen.getAllByText(/No Layer data available/i)).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText(/historyLayers.noLayers/i)).toHaveLength(1));
   });
 
   it('opens dropdown and renders layer command and digest', async () => {
