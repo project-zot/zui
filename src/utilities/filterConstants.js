@@ -66,6 +66,16 @@ const archFilters = [
     label: 'amd64',
     value: 'amd64',
     tooltip: '64-bit x86'
+  },
+  {
+    label: 'loong64',
+    value: 'loong64',
+    tooltip: '64-bit LoongArch'
+  },
+  {
+    label: 'riscv64',
+    value: 'riscv64',
+    tooltip: '64-bit RISC-V'
   }
 ];
 
