@@ -209,6 +209,7 @@ function Header({ setSearchCurrentValue = () => {} }) {
                   value={selectedLanguage}
                   onChange={handleLanguageChange}
                   MenuProps={{ disableScrollLock: true }}
+                  data-testid="select-language"
                 >
                   {Object.keys(locales).map((locale) => (
                     <MenuItem key={locale} value={locale}>
