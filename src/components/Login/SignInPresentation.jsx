@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Stack, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
@@ -37,6 +38,7 @@ const useStyles = makeStyles((theme) => ({
 
 export default function SigninPresentation() {
   const classes = useStyles();
+  const { t } = useTranslation();
   return (
     <div className={classes.container}>
       <Stack spacing={'3rem'} className={classes.contentContainer} data-testid="presentation-container">
@@ -44,7 +46,7 @@ export default function SigninPresentation() {
           <img src={logoWhite} alt="zot logo" className={classes.logo}></img>
         </div>
         <Typography variant="h2" className={classes.mainText}>
-          OCI-native container image registry, simplified
+          {t('signInPresentation.description')}
         </Typography>
       </Stack>
     </div>

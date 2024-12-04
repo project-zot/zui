@@ -1,6 +1,7 @@
 // react global
 import React, { useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useTranslation } from 'react-i18next';
 
 // utility
 import { api, endpoints } from '../../api';
@@ -324,6 +325,8 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
     );
   };
 
+  const { t } = useTranslation();
+
   return (
     <div className={classes.cardContainer} data-testid="signin-container">
       {isLoading ? (
@@ -333,17 +336,17 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
           <CardContent className={classes.loginCardContent}>
             <CssBaseline />
             <Typography align="left" className={classes.text} component="h1" variant="h4">
-              Sign In
+              {t('main.signIn')}
             </Typography>
             <Typography align="left" className={classes.subtext} variant="body1" gutterBottom>
-              Welcome back! Please login.
+              {t('signIn.welcomeBack')}
             </Typography>
             {renderThirdPartyLoginMethods()}
             {Object.keys(authMethods).length > 1 &&
               Object.keys(authMethods).includes('openid') &&
               Object.keys(authMethods.openid.providers).length > 0 && (
                 <Divider className={classes.divider} data-testid="openid-divider">
-                  or
+                  {t('signIn.or')}
                 </Divider>
               )}
             {Object.keys(authMethods).includes('htpasswd') && (
@@ -353,7 +356,7 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
                   required
                   fullWidth
                   id="username"
-                  label="Username"
+                  label={t('signIn.username')}
                   name="username"
                   className={classes.textField}
                   inputProps={{ className: classes.textColor }}
@@ -368,7 +371,7 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
                   required
                   fullWidth
                   name="password"
-                  label="Enter password"
+                  label={t('signIn.enterPassword')}
                   type="password"
                   id="password"
                   className={classes.textField}
@@ -382,7 +385,7 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
                 {requestProcessing && <CircularProgress style={{ marginTop: 20 }} color="secondary" />}
                 {requestError && (
                   <Alert style={{ marginTop: 20 }} severity="error">
-                    Authentication Failed. Please try again.
+                    {t('signIn.authFailed')}
                   </Alert>
                 )}
                 <div>
@@ -393,7 +396,7 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
                     onClick={handleClick}
                     data-testid="basic-auth-submit-btn"
                   >
-                    Continue
+                    {t('signIn.continue')}
                   </Button>
                 </div>
               </Box>
@@ -405,7 +408,7 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
                 className={classes.continueAsGuestButton}
                 onClick={handleGuestClick}
               >
-                Continue as guest
+                {t('signIn.continueAsGuest')}
               </Button>
             )}
           </CardContent>

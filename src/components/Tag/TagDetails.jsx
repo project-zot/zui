@@ -1,5 +1,6 @@
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import React, { useEffect, useMemo, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // utility
 import { api, endpoints } from '../../api';
@@ -247,6 +248,8 @@ function TagDetails() {
     ));
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       {isLoading ? (
@@ -289,10 +292,10 @@ function TagDetails() {
                     </Stack>
                     <Stack direction="row" alignItems="center" spacing="1rem">
                       <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
-                        <InputLabel>OS/Arch</InputLabel>
+                        <InputLabel>{t('main.osOrArch')}</InputLabel>
                         {!isEmpty(selectedManifest) && (
                           <Select
-                            label="OS/Arch"
+                            label={t('main.osOrArch')}
                             value={selectedManifest}
                             onChange={handleOSArchChange}
                             MenuProps={{ disableScrollLock: true }}
@@ -306,7 +309,7 @@ function TagDetails() {
                         )}
                       </FormControl>
                       <Typography gutterBottom className={classes.digest}>
-                        Digest: {selectedManifest?.digest}
+                        {t('TagDetails.digest')}: {selectedManifest?.digest}
                       </Typography>
                     </Stack>
                   </Grid>
@@ -328,19 +331,19 @@ function TagDetails() {
               disabled={isLoading}
             >
               <ToggleButton value="Layers" role="tab">
-                Layers
+                {t('main.layers')}
               </ToggleButton>
               <ToggleButton value="DependsOn" role="tab" data-testid="dependencies-tab">
-                Uses
+                {t('main.uses')}
               </ToggleButton>
               <ToggleButton value="IsDependentOn" role="tab">
-                Used by
+                {t('main.usedBy')}
               </ToggleButton>
               <ToggleButton value="Vulnerabilities" role="tab">
-                Vulnerabilities
+                {t('main.vulnerabilities')}
               </ToggleButton>
               <ToggleButton value="ReferredBy" role="tab">
-                Referred by
+                {t('main.referredBy')}
               </ToggleButton>
             </ToggleButtonGroup>
           </Grid>

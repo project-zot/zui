@@ -1,5 +1,6 @@
 // react global
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // external
 import { DateTime } from 'luxon';
@@ -248,16 +249,23 @@ function RepoDetails() {
     });
   };
 
+  const { t, i18n } = useTranslation();
+  const [selectedLanguage] = useState(i18n.language);
+
   const getVendor = () => {
-    return `${repoDetailData.newestTag?.Vendor || 'Vendor not available'} •`;
+    return `${repoDetailData.newestTag?.Vendor || t('main.vendorNA')} •`;
   };
   const getVersion = () => {
-    return `published ${repoDetailData.newestTag?.Tag} •`;
+    return `${t('main.published')} ${repoDetailData.newestTag?.Tag} •`;
   };
   const getLast = () => {
     const lastDate = repoDetailData.lastUpdated
-      ? DateTime.fromISO(repoDetailData.lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
-      : `Timestamp N/A`;
+      ? DateTime.fromISO(repoDetailData.lastUpdated)
+          .setLocale(selectedLanguage)
+          .toRelative({
+            unit: ['weeks', 'days', 'hours', 'minutes']
+          })
+      : `${t('main.timestampNA')}`;
     return lastDate;
   };
 
@@ -342,7 +350,7 @@ function RepoDetails() {
                       </Stack>
                     </Stack>
                     <Typography gutterBottom className={classes.repoTitle}>
-                      {repoDetailData?.title || 'Title not available'}
+                      {repoDetailData?.title || t('repoDetails.titleNA')}
                     </Typography>
                     <Stack direction="row" spacing={1} className={classes.platformChipsContainer}>
                       {platformChips()}
