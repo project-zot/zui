@@ -142,7 +142,9 @@ function Header({ setSearchCurrentValue = () => {} }) {
   };
 
   const { t, i18n } = useTranslation();
-  const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
+  const [selectedLanguage, setSelectedLanguage] = useState(
+    Object.keys(locales).includes(i18n.language) ? i18n.language : 'en'
+  );
   const handleLanguageChange = (event) => {
     i18n.changeLanguage(event.target.value);
     setSelectedLanguage(event.target.value);
@@ -209,6 +211,7 @@ function Header({ setSearchCurrentValue = () => {} }) {
                   value={selectedLanguage}
                   onChange={handleLanguageChange}
                   MenuProps={{ disableScrollLock: true }}
+                  data-testid="select-language"
                 >
                   {Object.keys(locales).map((locale) => (
                     <MenuItem key={locale} value={locale}>

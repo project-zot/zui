@@ -955,13 +955,13 @@ describe('Tags details', () => {
   it('should display "Created" label in tag details metadata', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetailsThemeWrapper />);
-    expect(await screen.findByText('Created')).toBeInTheDocument();
+    expect(await screen.findByText('tagDetailsMetadata.created')).toBeInTheDocument();
   });
 
   it('should display "Last Tagged" label and formatted timestamp when TaggedTimestamp is available', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetailsThemeWrapper />);
-    const lastTaggedLabel = await screen.findByText('Last Tagged');
+    const lastTaggedLabel = await screen.findByText('tagDetailsMetadata.lastTagged');
     expect(lastTaggedLabel).toBeInTheDocument();
 
     // Verify the formatted timestamp is displayed (should be relative time like "X weeks ago" or "Timestamp N/A")
@@ -974,19 +974,19 @@ describe('Tags details', () => {
     expect(lastTaggedCard).toBeInTheDocument();
     // The formatted date should not be "Timestamp N/A" since we have a valid timestamp
     const formattedDate = lastTaggedCard?.textContent;
-    expect(formattedDate).not.toContain('Timestamp N/A');
+    expect(formattedDate).not.toContain('main.timestampNA');
   });
 
   it('should display "Timestamp N/A" when TaggedTimestamp is undefined', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageNone } });
     render(<TagDetailsThemeWrapper />);
-    const lastTaggedLabel = await screen.findByText('Last Tagged');
+    const lastTaggedLabel = await screen.findByText('tagDetailsMetadata.lastTagged');
     expect(lastTaggedLabel).toBeInTheDocument();
 
     // Verify the fallback "Timestamp N/A" is displayed when TaggedTimestamp is missing
     const lastTaggedCard = lastTaggedLabel.closest('.MuiCard-root');
     expect(lastTaggedCard).toBeInTheDocument();
-    expect(lastTaggedCard?.textContent).toContain('Timestamp N/A');
+    expect(lastTaggedCard?.textContent).toContain('main.timestampNA');
   });
 
   it('renders vulnerability icons', async () => {
