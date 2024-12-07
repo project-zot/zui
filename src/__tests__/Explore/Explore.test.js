@@ -3,15 +3,15 @@ import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import Explore from 'components/Explore/Explore';
 import React from 'react';
-import { createSearchParams, MemoryRouter } from 'react-router-dom';
+import { createSearchParams, MemoryRouter } from 'react-router';
 import filterConstants from 'utilities/filterConstants.js';
 import { sortByCriteria } from 'utilities/sortCriteria.js';
 import MockThemeProvider from '__mocks__/MockThemeProvider';
 
 // router mock
 const mockedUsedNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: () => mockedUsedNavigate
 }));
 
@@ -342,19 +342,19 @@ describe('Explore component', () => {
     expect(await screen.findAllByTestId('untrusted-icon')).toHaveLength(2);
     expect(await screen.findAllByTestId('verified-icon')).toHaveLength(10);
 
-    const allUntrustedSignaturesIcons = await screen.findAllByTestId("untrusted-icon");
+    const allUntrustedSignaturesIcons = await screen.findAllByTestId('untrusted-icon');
     fireEvent.mouseOver(allUntrustedSignaturesIcons[0]);
-    expect(await screen.findByText("Signed-by: Unknown")).toBeInTheDocument();
-    const allTrustedSignaturesIcons = await screen.findAllByTestId("verified-icon");
+    expect(await screen.findByText('Signed-by: Unknown')).toBeInTheDocument();
+    const allTrustedSignaturesIcons = await screen.findAllByTestId('verified-icon');
     fireEvent.mouseOver(allTrustedSignaturesIcons[8]);
-    expect(await screen.findByText("Tool: cosign")).toBeInTheDocument();
-    expect(await screen.findByText("Signed-by: author1")).toBeInTheDocument();
+    expect(await screen.findByText('Tool: cosign')).toBeInTheDocument();
+    expect(await screen.findByText('Signed-by: author1')).toBeInTheDocument();
     fireEvent.mouseOver(allTrustedSignaturesIcons[9]);
-    expect(await screen.findByText("Tool: notation")).toBeInTheDocument();
-    expect(await screen.findByText("Signed-by: author2")).toBeInTheDocument();
-    const allNoSignedIcons = await screen.findAllByTestId("unverified-icon");
+    expect(await screen.findByText('Tool: notation')).toBeInTheDocument();
+    expect(await screen.findByText('Signed-by: author2')).toBeInTheDocument();
+    const allNoSignedIcons = await screen.findAllByTestId('unverified-icon');
     fireEvent.mouseOver(allNoSignedIcons[0]);
-    expect(await screen.findByText("Not signed")).toBeInTheDocument();
+    expect(await screen.findByText('Not signed')).toBeInTheDocument();
   });
 
   it('renders vulnerability icons', async () => {

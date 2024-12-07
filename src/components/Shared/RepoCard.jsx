@@ -1,6 +1,6 @@
 // react global
 import React, { useRef, useMemo, useState } from 'react';
-import { useNavigate, createSearchParams } from 'react-router-dom';
+import { useNavigate, createSearchParams } from 'react-router';
 
 // utility
 import { DateTime } from 'luxon';

@@ -1,7 +1,7 @@
 import { Card, CardActionArea, CardContent, CardMedia, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 // placeholder images
 import repocube1 from '../../assets/repocube-1.png';

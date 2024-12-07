@@ -6,7 +6,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 import RepoCard from '../Shared/RepoCard';
 import { mapToRepo } from 'utilities/objectModels';
 import Loading from '../Shared/Loading';
-import { useNavigate, createSearchParams } from 'react-router-dom';
+import { useNavigate, createSearchParams } from 'react-router';
 import { sortByCriteria } from 'utilities/sortCriteria';
 import {
   HOME_POPULAR_PAGE_SIZE,

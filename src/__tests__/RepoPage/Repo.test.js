@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import RepoDetails from 'components/Repo/RepoDetails';
 import React from 'react';
 import { api } from 'api';
-import { createSearchParams } from 'react-router-dom';
+import { createSearchParams } from 'react-router';
 import MockThemeProvider from '__mocks__/MockThemeProvider';
 import userEvent from '@testing-library/user-event';
 
@@ -22,8 +22,8 @@ const mockUseLocationValue = {
 
 const mockUseNavigate = jest.fn();
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useParams: () => {
     return { name: 'test' };
   },
@@ -302,13 +302,13 @@ describe('Repo details component', () => {
     render(<RepoDetailsThemeWrapper />);
     expect(await screen.findAllByTestId('verified-icon')).toHaveLength(2);
 
-    const allTrustedSignaturesIcons = await screen.findAllByTestId("verified-icon");
+    const allTrustedSignaturesIcons = await screen.findAllByTestId('verified-icon');
     fireEvent.mouseOver(allTrustedSignaturesIcons[0]);
-    expect(await screen.findByText("Tool: cosign")).toBeInTheDocument();
-    expect(await screen.findByText("Signed-by: author1")).toBeInTheDocument();
+    expect(await screen.findByText('Tool: cosign')).toBeInTheDocument();
+    expect(await screen.findByText('Signed-by: author1')).toBeInTheDocument();
     fireEvent.mouseOver(allTrustedSignaturesIcons[1]);
-    expect(await screen.findByText("Tool: notation")).toBeInTheDocument();
-    expect(await screen.findByText("Signed-by: author2")).toBeInTheDocument();
+    expect(await screen.findByText('Tool: notation')).toBeInTheDocument();
+    expect(await screen.findByText('Signed-by: author2')).toBeInTheDocument();
   });
 
   it("should log error if data can't be fetched", async () => {

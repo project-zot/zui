@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import ExplorePage from 'pages/ExplorePage';
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router';
 
 jest.mock(
   'components/Explore/Explore',

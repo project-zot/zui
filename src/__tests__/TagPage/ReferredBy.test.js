@@ -40,8 +40,8 @@ const mockReferrersList = [
 
 // useNavigate mock
 const mockedUsedNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: () => mockedUsedNavigate
 }));
 
@@ -71,7 +71,7 @@ describe('Referred by tab', () => {
     ).toBeInTheDocument();
     await userEvent.click(firstDigest);
     expect(
-      await screen.findByText(/sha256:be7a3d01c35a2cf53c502e9dc50cdf36b15d9361c81c63bf319f1d5cbe44ab7c/i)
+      await screen.queryByText(/sha256:be7a3d01c35a2cf53c502e9dc50cdf36b15d9361c81c63bf319f1d5cbe44ab7c/i)
     ).not.toBeInTheDocument();
   });
 

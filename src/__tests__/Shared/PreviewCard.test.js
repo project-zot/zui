@@ -5,8 +5,8 @@ import PreviewCard from 'components/Shared/PreviewCard';
 
 // usenavigate mock
 const mockedUsedNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: () => mockedUsedNavigate
 }));
 
@@ -32,7 +32,7 @@ describe('Preview card component', () => {
     render(<PreviewCard name={mockImage.name} lastUpdated={mockImage.lastUpdated} />);
     const cardTitle = await screen.findByText('alpine');
     expect(cardTitle).toBeInTheDocument();
-    userEvent.click(cardTitle);
+    await userEvent.click(cardTitle);
     expect(mockedUsedNavigate).toBeCalledWith(`/image/${mockImage.name}`);
   });
 });

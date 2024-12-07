@@ -13,8 +13,8 @@ const TagsThemeWrapper = () => {
 };
 
 const mockedUsedNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: () => mockedUsedNavigate
 }));
 
@@ -127,9 +127,9 @@ describe('Tags component', () => {
     render(<TagsThemeWrapper />);
     const selectFilter = await screen.findByText('Newest');
     expect(selectFilter).toBeInTheDocument();
-    userEvent.click(selectFilter);
+    await userEvent.click(selectFilter);
     const newOption = await screen.findByText('A - Z');
-    userEvent.click(newOption);
+    await userEvent.click(newOption);
     expect(await screen.findByText('A - Z')).toBeInTheDocument();
     expect(await screen.queryByText('Newest')).not.toBeInTheDocument();
   });
