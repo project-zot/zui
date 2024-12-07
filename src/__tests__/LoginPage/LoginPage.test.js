@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import LoginPage from 'pages/LoginPage';
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router';
 import MockThemeProvider from '__mocks__/MockThemeProvider';
 
 it('renders the signin presentation component and signin components if auth enabled', () => {

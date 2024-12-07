@@ -4,7 +4,7 @@ import MockThemeProvider from '__mocks__/MockThemeProvider';
 import { api } from 'api';
 import VulnerabilitiesDetails from 'components/Tag/Tabs/VulnerabilitiesDetails';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 jest.mock('xlsx');
 

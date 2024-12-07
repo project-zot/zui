@@ -4,7 +4,7 @@ import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import TagDetails from 'components/Tag/TagDetails';
 import MockThemeProvider from '__mocks__/MockThemeProvider';
-import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, useLocation } from 'react-router';
 
 const TagDetailsThemeWrapper = () => {
   return (
@@ -855,8 +855,8 @@ Object.assign(navigator, {
   }
 });
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useParams: () => {
     return { name: 'test', tag: '1.0.1' };
   },

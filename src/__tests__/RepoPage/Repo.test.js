@@ -2,7 +2,7 @@ import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import RepoDetails from 'components/Repo/RepoDetails';
 import React from 'react';
 import { api } from 'api';
-import { createSearchParams } from 'react-router-dom';
+import { createSearchParams } from 'react-router';
 import MockThemeProvider from '__mocks__/MockThemeProvider';
 import userEvent from '@testing-library/user-event';
 
@@ -22,8 +22,8 @@ const mockUseLocationValue = {
 
 const mockUseNavigate = jest.fn();
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useParams: () => {
     return { name: 'test' };
   },
