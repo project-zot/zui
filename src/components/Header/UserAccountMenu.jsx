@@ -3,7 +3,7 @@ import React, { useState } from 'react';
 import { Menu, MenuItem, IconButton, Avatar, Divider } from '@mui/material';
 
 import { getLoggedInUser, logoutUser, isApiKeyEnabled } from '../../utilities/authUtilities';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 
 function UserAccountMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
