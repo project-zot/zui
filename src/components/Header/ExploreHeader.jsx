@@ -1,5 +1,5 @@
 // react global
-import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router';
 
 // components
 import { Typography, Breadcrumbs } from '@mui/material';

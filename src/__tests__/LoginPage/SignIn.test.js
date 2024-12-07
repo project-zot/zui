@@ -12,8 +12,8 @@ const mockMgmtResponse = {
 
 // useNavigate mock
 const mockedUsedNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: () => mockedUsedNavigate
 }));
 
@@ -62,12 +62,12 @@ describe('Sign in form', () => {
     render(<SignIn isLoggedIn={false} setIsLoggedIn={() => {}} />);
     const usernameInput = await screen.findByLabelText(/^Username/i);
     const passwordInput = await screen.findByLabelText(/^Enter Password/i);
-    userEvent.click(usernameInput);
-    userEvent.type(usernameInput, 't');
-    userEvent.type(usernameInput, '{backspace}');
-    userEvent.click(passwordInput);
-    userEvent.type(passwordInput, 't');
-    userEvent.type(passwordInput, '{backspace}');
+    await fireEvent.click(usernameInput);
+    await userEvent.type(usernameInput, 't');
+    await userEvent.type(usernameInput, '{backspace}');
+    await fireEvent.click(passwordInput);
+    await userEvent.type(passwordInput, 't');
+    await userEvent.type(passwordInput, '{backspace}');
     const usernameError = await screen.findByText(/enter a username/i);
     const passwordError = await screen.findByText(/enter a password/i);
     await waitFor(() => expect(usernameError).toBeInTheDocument());
@@ -79,8 +79,8 @@ describe('Sign in form', () => {
 
     const usernameInput = await screen.findByLabelText(/^Username/i);
     const passwordInput = await screen.findByLabelText(/^Enter Password/i);
-    userEvent.type(usernameInput, 'test');
-    userEvent.type(passwordInput, 'test');
+    await userEvent.type(usernameInput, 'test');
+    await userEvent.type(passwordInput, 'test');
 
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: {} } });
     const submitButton = await screen.findByText('Continue');
@@ -94,9 +94,9 @@ describe('Sign in form', () => {
     render(<SignIn isLoggedIn={false} setIsLoggedIn={() => {}} />);
 
     const passwordInput = await screen.findByLabelText(/^Enter Password/i);
-    userEvent.type(passwordInput, 'test');
+    await userEvent.type(passwordInput, 'test');
     const submitButton = await screen.findByTestId('basic-auth-submit-btn');
-    fireEvent.click(submitButton);
+    await fireEvent.click(submitButton);
 
     await waitFor(() => expect(screen.queryByText(/enter a username/i)).toBeInTheDocument());
     await waitFor(() => expect(screen.queryByText(/enter a password/i)).not.toBeInTheDocument());
@@ -138,8 +138,8 @@ describe('Sign in form', () => {
 
     const usernameInput = await screen.findByLabelText(/^Username/i);
     const passwordInput = await screen.findByLabelText(/^Enter Password/i);
-    userEvent.type(usernameInput, 'test');
-    userEvent.type(passwordInput, 'test');
+    await userEvent.type(usernameInput, 'test');
+    await userEvent.type(passwordInput, 'test');
 
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: {} } });
     userEvent.type(usernameInput, '{enter}');
@@ -153,11 +153,11 @@ describe('Sign in form', () => {
 
     const usernameInput = await screen.findByLabelText(/^Username/i);
     const passwordInput = await screen.findByLabelText(/^Enter Password/i);
-    userEvent.type(usernameInput, 'test');
-    userEvent.type(passwordInput, 'test');
+    await userEvent.type(usernameInput, 'test');
+    await userEvent.type(passwordInput, 'test');
 
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: {} } });
-    userEvent.type(passwordInput, '{enter}');
+    await userEvent.type(passwordInput, '{enter}');
     await waitFor(() => {
       expect(mockedUsedNavigate).toHaveBeenCalledWith('/home');
     });
@@ -209,8 +209,8 @@ describe('Sign in form', () => {
 
     const usernameInput = await screen.findByLabelText(/^Username/i);
     const passwordInput = await screen.findByLabelText(/^Enter Password/i);
-    userEvent.type(usernameInput, 'test');
-    userEvent.type(passwordInput, 'test');
+    await userEvent.type(usernameInput, 'test');
+    await userEvent.type(passwordInput, 'test');
 
     jest.spyOn(api, 'get').mockRejectedValue({ status: 401, data: {} });
 

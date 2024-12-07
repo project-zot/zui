@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router';
 import { isEmpty } from 'lodash';
 
 import { getLoggedInUser } from 'utilities/authUtilities.js';

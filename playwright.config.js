@@ -7,7 +7,6 @@ const { devices } = require('@playwright/test');
  */
 // require('dotenv').config();
 
-
 /**
  * @see https://playwright.dev/docs/test-configuration
  * @type {import('@playwright/test').PlaywrightTestConfig}
@@ -53,7 +52,7 @@ const config = {
       use: {
         ...devices['Desktop Chrome'],
         ignoreHTTPSErrors: true
-      },
+      }
     },
 
     {
@@ -61,7 +60,7 @@ const config = {
       use: {
         ...devices['Desktop Firefox'],
         ignoreHTTPSErrors: true
-      },
+      }
     },
 
     {
@@ -69,8 +68,8 @@ const config = {
       use: {
         ...devices['Desktop Safari'],
         ignoreHTTPSErrors: true
-      },
-    },
+      }
+    }
 
     /* Test against mobile viewports. */
     // {
@@ -102,7 +101,7 @@ const config = {
   ],
 
   /* Folder for test artifacts such as screenshots, videos, traces, etc. */
-  outputDir: 'test-results/',
+  outputDir: 'test-results/'
 
   /* Run your local dev server before starting the tests */
   // webServer: {

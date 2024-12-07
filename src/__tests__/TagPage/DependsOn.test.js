@@ -2,7 +2,7 @@ import { render, screen, waitFor } from '@testing-library/react';
 import { api } from 'api';
 import DependsOn from 'components/Tag/Tabs/DependsOn';
 import React from 'react';
-import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import { BrowserRouter, Routes, Route } from 'react-router';
 import MockThemeProvider from '__mocks__/MockThemeProvider';
 
 const mockDependenciesList = {
@@ -65,8 +65,8 @@ const RouterDependsWrapper = () => {
 
 // useNavigate mock
 const mockedUsedNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: () => mockedUsedNavigate
 }));
 

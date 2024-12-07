@@ -15,7 +15,7 @@ import makeStyles from '@mui/styles/makeStyles';
 import { api, endpoints } from '../../api';
 import { host } from '../../host';
 import { mapToRepo } from 'utilities/objectModels.js';
-import { useSearchParams } from 'react-router-dom';
+import { useSearchParams } from 'react-router';
 import FilterCard from '../Shared/FilterCard.jsx';
 import { isEmpty, isNil } from 'lodash';
 import filterConstants from 'utilities/filterConstants.js';

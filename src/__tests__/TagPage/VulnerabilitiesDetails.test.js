@@ -4,7 +4,7 @@ import MockThemeProvider from '__mocks__/MockThemeProvider';
 import { api } from 'api';
 import VulnerabilitiesDetails from 'components/Tag/Tabs/VulnerabilitiesDetails';
 import React from 'react';
-import { MemoryRouter } from 'react-router-dom';
+import { MemoryRouter } from 'react-router';
 
 jest.mock('xlsx');
 
@@ -709,7 +709,7 @@ describe('Vulnerabilties page', () => {
     await fireEvent.click(expandSearch);
     await waitFor(() => expect(screen.getAllByPlaceholderText('Exclude')).toHaveLength(1));
     const excludeInput = screen.getByPlaceholderText('Exclude');
-    userEvent.type(excludeInput, '2022');
+    await userEvent.type(excludeInput, '2022');
     expect(excludeInput).toHaveValue('2022');
     await waitFor(() => expect(screen.queryAllByText(/2022/i)).toHaveLength(0));
     await waitFor(() => expect(screen.queryAllByText(/2021/i)).toHaveLength(6));
@@ -815,19 +815,19 @@ describe('Vulnerabilties page', () => {
     render(<StateVulnerabilitiesWrapper />);
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
     const downloadBtn = await screen.findAllByTestId('DownloadIcon');
-    fireEvent.click(downloadBtn[0]);
+    await fireEvent.click(downloadBtn[0]);
     expect(await screen.findByTestId('export-csv-menuItem')).toBeInTheDocument();
     expect(await screen.findByTestId('export-excel-menuItem')).toBeInTheDocument();
     const exportAsCSVBtn = screen.getByText(/csv/i);
     expect(exportAsCSVBtn).toBeInTheDocument();
     global.URL.createObjectURL = jest.fn();
     await fireEvent.click(exportAsCSVBtn);
-    expect(await screen.findByTestId('export-csv-menuItem')).not.toBeInTheDocument();
-    fireEvent.click(downloadBtn[0]);
+    await waitFor(() => expect(screen.queryByTestId('export-csv-menuItem')).not.toBeInTheDocument());
+    await fireEvent.click(downloadBtn[0]);
     const exportAsExcelBtn = screen.getByText(/xlsx/i);
     expect(exportAsExcelBtn).toBeInTheDocument();
-    await fireEvent.click(exportAsExcelBtn);
-    expect(await screen.findByTestId('export-excel-menuItem')).not.toBeInTheDocument();
+    await userEvent.click(exportAsExcelBtn);
+    expect(await screen.queryByTestId('export-excel-menuItem')).not.toBeInTheDocument();
   });
 
   it("should log an error when data can't be fetched for downloading", async () => {
@@ -854,11 +854,11 @@ describe('Vulnerabilties page', () => {
     await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEFixed.pageOne } });
     const expandListBtn = await screen.findAllByTestId('ViewAgendaIcon');
-    fireEvent.click(expandListBtn[0]);
+    await fireEvent.click(expandListBtn[0]);
     await waitFor(() => expect(screen.getAllByText('Fixed in')).toHaveLength(20));
     const collapseListBtn = await screen.findAllByTestId('ViewHeadlineIcon');
-    fireEvent.click(collapseListBtn[0]);
-    expect(await screen.findByText('Fixed in')).not.toBeVisible();
+    await fireEvent.click(collapseListBtn[0]);
+    await waitFor(() => expect(screen.queryByText('Fixed in')).not.toBeInTheDocument());
   });
 
   it('should handle fixed CVE query errors', async () => {
