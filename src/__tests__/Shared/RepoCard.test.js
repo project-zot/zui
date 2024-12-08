@@ -2,13 +2,13 @@ import { render, screen, fireEvent } from '@testing-library/react';
 import React from 'react';
 import userEvent from '@testing-library/user-event';
 import RepoCard from 'components/Shared/RepoCard';
-import { createSearchParams } from 'react-router-dom';
+import { createSearchParams } from 'react-router';
 import MockThemeProvider from '__mocks__/MockThemeProvider';
 
 // usenavigate mock
 const mockedUsedNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: () => mockedUsedNavigate
 }));
 

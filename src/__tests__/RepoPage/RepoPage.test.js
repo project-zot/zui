@@ -1,11 +1,11 @@
 import { render, screen } from '@testing-library/react';
 import RepoPage from 'pages/RepoPage';
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router';
 import MockThemeProvider from '__mocks__/MockThemeProvider';
 
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useLocation: () => ({
     pathname: 'localhost:3000/image/test',
     state: { lastDate: '' }
