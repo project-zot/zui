@@ -135,7 +135,7 @@ jobs:
         make integration-tests REGISTRY_HOST=$REGISTRY_HOST REGISTRY_PORT=$REGISTRY_PORT
 
     - name: Upload playwright report
-      uses: actions/upload-artifact@v3
+      uses: actions/upload-artifact@v4
       with:
         name: playwright-report
         path: playwright-report/
