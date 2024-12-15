@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import HomePage from 'pages/HomePage';
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router';
 
 jest.mock(
   'components/Home/Home',

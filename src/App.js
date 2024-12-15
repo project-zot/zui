@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router';
 
 import { isAuthenticated, isApiKeyEnabled } from 'utilities/authUtilities';
 import { AuthWrapper } from 'utilities/AuthWrapper';
