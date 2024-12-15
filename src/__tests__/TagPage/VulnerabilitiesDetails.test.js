@@ -822,7 +822,7 @@ describe('Vulnerabilties page', () => {
     expect(exportAsCSVBtn).toBeInTheDocument();
     global.URL.createObjectURL = jest.fn();
     await fireEvent.click(exportAsCSVBtn);
-    expect(await screen.findByTestId('export-csv-menuItem')).not.toBeInTheDocument();
+    await waitFor(() => expect(screen.findByTestId('export-csv-menuItem')).not.toBeInTheDocument());
     fireEvent.click(downloadBtn[0]);
     const exportAsExcelBtn = screen.getByText(/xlsx/i);
     expect(exportAsExcelBtn).toBeInTheDocument();
@@ -858,7 +858,7 @@ describe('Vulnerabilties page', () => {
     await waitFor(() => expect(screen.getAllByText('Fixed in')).toHaveLength(20));
     const collapseListBtn = await screen.findAllByTestId('ViewHeadlineIcon');
     fireEvent.click(collapseListBtn[0]);
-    expect(await screen.findByText('Fixed in')).not.toBeVisible();
+    await waitFor (() => expect(screen.findByText('Fixed in')).not.toBeVisible());
   });
 
   it('should handle fixed CVE query errors', async () => {
