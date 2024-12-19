@@ -3,15 +3,15 @@ import userEvent from '@testing-library/user-event';
 import { api } from 'api';
 import Explore from 'components/Explore/Explore';
 import React from 'react';
-import { createSearchParams, MemoryRouter } from 'react-router-dom';
+import { createSearchParams, MemoryRouter } from 'react-router';
 import filterConstants from 'utilities/filterConstants.js';
 import { sortByCriteria } from 'utilities/sortCriteria.js';
 import MockThemeProvider from '__mocks__/MockThemeProvider';
 
 // router mock
 const mockedUsedNavigate = jest.fn();
-jest.mock('react-router-dom', () => ({
-  ...jest.requireActual('react-router-dom'),
+jest.mock('react-router', () => ({
+  ...jest.requireActual('react-router'),
   useNavigate: () => mockedUsedNavigate
 }));
 

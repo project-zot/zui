@@ -1,7 +1,7 @@
 import { render, screen } from '@testing-library/react';
 import TagPage from 'pages/TagPage';
 import React from 'react';
-import { BrowserRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router';
 
 afterEach(() => {
   // restore the spy created with spyOn

@@ -8,7 +8,7 @@ import { isEmpty, uniq } from 'lodash';
 // utility
 import { api, endpoints } from '../../api';
 import { host } from '../../host';
-import { useParams, useNavigate, createSearchParams } from 'react-router-dom';
+import { useParams, useNavigate, createSearchParams } from 'react-router';
 import { mapToRepoFromRepoInfo } from 'utilities/objectModels';
 import { isAuthenticated } from 'utilities/authUtilities';
 import filterConstants from 'utilities/filterConstants';
