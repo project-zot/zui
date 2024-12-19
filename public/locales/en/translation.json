@@ -1,0 +1,228 @@
+{
+  "main": {
+    "cancel": "Cancel",
+    "close": "Close",
+    "created": "Created",
+    "days": "days",
+    "description": "Description",
+    "descriptionNA": "Description not available",
+    "digest": "DIGEST",
+    "hours": "hours",
+    "layers": "Layers",
+    "license": "License",
+    "licenseNA": "License info not available",
+    "loading": "Loading...",
+    "minutes": "minutes",
+    "NA": "not available",
+    "nothingFound": "Nothing found",
+    "osOrArch": "OS/Arch",
+    "published": "published",
+    "referredBy": "Referred By",
+    "revoke": "Revoke",
+    "signIn": "Sign in",
+    "sort": "Sort",
+    "stars": "Stars",
+    "timestampNA": "Timestamp N/A",
+    "totalSize": "Total size",
+    "unknown": "Unknown",
+    "usedBy": "Used by",
+    "uses": "Uses",
+    "vendorNA": "Vendor not available",
+    "vulnerabilities": "Vulnerabilities",
+    "weeks": "weeks"
+  },
+  "explore": {
+    "OS": "Operating system",
+    "architectures": "Architectures",
+    "additionalFilters": "Additional filters",
+    "showing": "Showing",
+    "resultsOutOf": "results out of",
+    "filterResults": "Filter results",
+    "noResults": "Looks like we don't have anything matching that search. Try searching something else."
+  },
+  "filterDialog": {
+    "filter": "Filter",
+    "sortResults": "Sort results",
+    "confirm": "Confirm"
+  },
+  "header": {
+    "product": "Product",
+    "docs": "Docs"
+  },
+  "exploreHeader": {
+    "home": "Home"
+  },
+  "searchSuggestion": {
+    "search": "Search for content...",
+    "advancedSearch": "Press Enter for advanced search",
+    "useAposChar": "Use the ':' character to search for tags"
+  },
+  "userAccountMenu": {
+    "APIKeys": "API Keys",
+    "logOut": "Log out"
+  },
+  "home": {
+    "noImages": "No images",
+    "viewAll": "View all",
+    "mostPopularImages": "Most popular images",
+    "recentlyUpdatedImages": "Recently updated images",
+    "bookmarks": "Bookmarks"
+  },
+  "signIn": {
+    "welcomeBack": "Welcome back! Please login.",
+    "or": "or",
+    "username": "Username",
+    "enterPassword": "Enter password",
+    "authFailed": "Authentication Failed. Please try again.",
+    "continue": "Continue",
+    "continueAsGuest": "Continue as guest"
+  },
+  "signInPresentation": {
+    "description": "OCI-native container image registry, simplified"
+  },
+  "thirdPartyLoginComponents": {
+    "continueWith": "Continue with",
+    "signInWith": "Sign in with"
+  },
+  "tags": {
+    "tagsHistory": "Tags History",
+    "searchTags": "Search tags..."
+  },
+  "repoDetails": {
+    "titleNA": "Title not available"
+  },
+  "repoDetailsMetadata": {
+    "repository": "Repository",
+    "totalDownloads": "Total downloads",
+    "lastPublish": "Last publish"
+  },
+  "deleteTag": {
+    "deleteImage": "Permanently delete image"
+  },
+  "deleteTagConfirmDialog": {
+    "delete": "Delete"
+  },
+  "filterCard": {
+    "filterTitle": "Filter Title"
+  },
+  "layerCard": {
+    "details": "DETAILS",
+    "command": "Command"
+  },
+  "noData": {
+    "noData": "No Data"
+  },
+  "pullCommandButton": {
+    "copiedPullCommand": "Copied Pull Command",
+    "pull": "Pull"
+  },
+  "referrerCard": {
+    "type": "Type:",
+    "mediaType": "Media type:",
+    "size": "Size:",
+    "annotations": "ANNOTATIONS"
+  },
+  "repoCard": {
+    "downloads": "Downloads"
+  },
+  "signatureTooltip": {
+    "notSigned": "Not signed",
+    "tool": "Tool",
+    "signedBy": "Signed-by"
+  },
+  "tagCard": {
+    "tag": "Tag",
+    "by": "by",
+    "showMore": "Show more",
+    "showLess": "Show less",
+    "compressedSize": "COMPRESSED SIZE"
+  },
+  "vulnerabilityCard": {
+    "notFixed": "Not fixed",
+    "loadMore": "Load more",
+    "externalReference": "External reference",
+    "packages": "Packages",
+    "fixedIn": "Fixed in"
+  },
+  "vulnerabilityCountCard": {
+    "total": "Total",
+    "critical": "Critical",
+    "criticalShort": "C",
+    "high": "High",
+    "highShort": "H",
+    "medium": "Medium",
+    "mediumShort": "M",
+    "low": "Low",
+    "lowShort": "L",
+    "unknown": "Unknown",
+    "unknownShort": "U",
+    "no": "No"
+  },
+  "vulnerabilityPackageSection": {
+    "packagePath": "Package Path",
+    "installedVersion": "Installed Version",
+    "fixedVersion": "Fixed Version"
+  },
+  "dependsOn": {},
+  "historyLayers": {
+    "noLayers": "No Layer data available"
+  },
+  "IsDependentOn": {},
+  "ReferredBy": {},
+  "VulnerabilitiesDetails": {
+    "noVulnerabilities": "No Vulnerabilities",
+    "gettingYourDataReady": "Getting your data ready for export",
+    "collapseListView": "Collapse list view",
+    "expandListView": "Expand list view",
+    "search": "Search",
+    "exclude": "Exclude"
+  },
+  "TagDetails": {
+    "digest": "Digest"
+  },
+  "tagDetailsMetadata": {
+    "lastPublished": "Last Published"
+  },
+  "apiKeyCard": {
+    "key": "KEY"
+  },
+  "apiKeyConfirmDialog": {
+    "apiKey": "Api Key",
+    "plsCopy": "Please copy the api key, you will not be able to see it once the page is refreshed"
+  },
+  "apiKeyDialog": {
+    "createApiKey": "Create Api Key",
+    "expDate": "Expiration date",
+    "expTime": "Expiration time",
+    "custom": "custom",
+    "create": "Create"
+  },
+  "apiKeyRevokeDialog": {
+    "key": "key",
+    "areYouSure": "Are you sure you want to revoke this api key?"
+  },
+  "apiKeys": {
+    "manageYourKeys": "Manage your API Keys",
+    "createNewKey": "Create new API key"
+  },
+  "sortCriteria": {
+    "relevance": "Relevance",
+    "recent": "Recent",
+    "alphabetical": "Alphabetical",
+    "alphabeticalDesc": "Alphabetical desc",
+    "mostStarred": "Most starred",
+    "mostDownloaded": "Most downloaded",
+    "newest": "Newest",
+    "oldest": "Oldest",
+    "AZ": "A - Z",
+    "ZA": "Z - A"
+  },
+  "filterConstants": {
+    "signedImages": "Signed Images",
+    "bookmarks": "Bookmarks",
+    "starredRepositories": "Starred Repositories"
+  },
+  "vulnerabilityAndSignatureComponents": {
+    "failed2scan": "Failed to scan"
+  }
+}

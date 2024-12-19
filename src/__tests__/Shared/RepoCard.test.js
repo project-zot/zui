@@ -87,7 +87,7 @@ describe('Repo card component', () => {
     expect(cardTitle).toBeInTheDocument();
     userEvent.click(cardTitle);
     expect(mockedUsedNavigate).toBeCalledWith(`/image/${mockImage.name}`);
-    expect(await screen.findByText(/timestamp n\/a/i)).toBeInTheDocument();
+    expect(await screen.findByText(/main.timestampNA/i)).toBeInTheDocument();
   });
 
   it('navigates to explore page when platform chip is clicked', async () => {

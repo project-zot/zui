@@ -74,9 +74,9 @@ describe('Tags component', () => {
     render(<TagsThemeWrapper />);
     const openBtn = screen.getAllByText(/show/i);
     fireEvent.click(openBtn[0]);
-    expect(screen.getByText(/OS\/ARCH/i)).toBeInTheDocument();
+    expect(screen.getByText(/main.osOrArch/i)).toBeInTheDocument();
     fireEvent.click(openBtn[0]);
-    await waitFor(() => expect(screen.queryByText(/OS\/ARCH/i)).not.toBeInTheDocument());
+    await waitFor(() => expect(screen.queryByText(/main.osOrArch/i)).not.toBeInTheDocument());
   });
 
   // it('should see delete tag button and its dialog', async () => {
@@ -115,7 +115,7 @@ describe('Tags component', () => {
 
   it('should filter tag list based on user input', async () => {
     render(<TagsThemeWrapper />);
-    const tagFilterInput = await screen.findByPlaceholderText(/Search Tags/i);
+    const tagFilterInput = await screen.findByPlaceholderText(/tags.searchTags/i);
     expect(await screen.findByText(/latest/i)).toBeInTheDocument();
     expect(await screen.findByText(/bullseye/i)).toBeInTheDocument();
     userEvent.type(tagFilterInput, 'bull');
@@ -125,12 +125,12 @@ describe('Tags component', () => {
 
   it('should sort tags based on the picked sort criteria', async () => {
     render(<TagsThemeWrapper />);
-    const selectFilter = await screen.findByText('Newest');
+    const selectFilter = await screen.findByText('sortCriteria.newest');
     expect(selectFilter).toBeInTheDocument();
     userEvent.click(selectFilter);
-    const newOption = await screen.findByText('A - Z');
+    const newOption = await screen.findByText('sortCriteria.AZ');
     userEvent.click(newOption);
-    expect(await screen.findByText('A - Z')).toBeInTheDocument();
-    expect(await screen.queryByText('Newest')).not.toBeInTheDocument();
+    expect(await screen.findByText('sortCriteria.AZ')).toBeInTheDocument();
+    expect(await screen.queryByText('sortCriteria.newest')).not.toBeInTheDocument();
   });
 });

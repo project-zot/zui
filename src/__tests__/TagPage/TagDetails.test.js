@@ -895,14 +895,14 @@ describe('Tags details', () => {
     fireEvent.click(dependenciesTab);
     expect(await screen.findByTestId('depends-on-container')).toBeInTheDocument();
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: mockDependentsList });
-    const dependentsTab = await screen.findByText(/used by/i);
+    const dependentsTab = await screen.findByText(/main.usedBy/i);
     fireEvent.click(dependentsTab);
     expect(await screen.findByTestId('dependents-container')).toBeInTheDocument();
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: mockCVEList });
-    const vulnerabilityTab = await screen.findByText(/vulnerabilities/i);
+    const vulnerabilityTab = await screen.findByText(/main.vulnerabilities/i);
     fireEvent.click(vulnerabilityTab);
     expect(await screen.findByTestId('vulnerability-container')).toBeInTheDocument();
-    const referrersTab = await screen.findByText(/referred by/i);
+    const referrersTab = await screen.findByText(/main.referredBy/i);
     fireEvent.click(referrersTab);
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: [] });
     expect(await screen.findByTestId('referred-by-container')).toBeInTheDocument();
@@ -983,17 +983,17 @@ describe('Tags details', () => {
 
     const allTrustedSignaturesIcons = await screen.findAllByTestId('verified-icon');
     fireEvent.mouseOver(allTrustedSignaturesIcons[0]);
-    expect(await screen.findByText('Tool: cosign')).toBeInTheDocument();
-    expect(await screen.findByText('Signed-by: author1')).toBeInTheDocument();
+    expect(await screen.findByText('signatureTooltip.tool: cosign')).toBeInTheDocument();
+    expect(await screen.findByText('signatureTooltip.signedBy: author1')).toBeInTheDocument();
     fireEvent.mouseOver(allTrustedSignaturesIcons[1]);
-    expect(await screen.findByText('Tool: notation')).toBeInTheDocument();
-    expect(await screen.findByText('Signed-by: author2')).toBeInTheDocument();
+    expect(await screen.findByText('signatureTooltip.tool: notation')).toBeInTheDocument();
+    expect(await screen.findByText('signatureTooltip.signedBy: author2')).toBeInTheDocument();
   });
 
   it('should copy the docker pull string to clipboard', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetailsThemeWrapper />);
-    const dropdown = await screen.findByText(`Pull ${mockImage.Image.RepoName}:${mockImage.Image.Tag}`);
+    const dropdown = await screen.findByText(`pullCommandButton.pull ${mockImage.Image.RepoName}:${mockImage.Image.Tag}`);
     expect(dropdown).toBeInTheDocument();
     userEvent.click(dropdown);
     await waitFor(() => expect(screen.queryAllByTestId('pull-menuItem')).toHaveLength(1));
@@ -1009,7 +1009,7 @@ describe('Tags details', () => {
   it('should copy the podman pull string to clipboard', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetailsThemeWrapper />);
-    const dropdown = await screen.findByText(`Pull ${mockImage.Image.RepoName}:${mockImage.Image.Tag}`);
+    const dropdown = await screen.findByText(`pullCommandButton.pull ${mockImage.Image.RepoName}:${mockImage.Image.Tag}`);
     expect(dropdown).toBeInTheDocument();
     userEvent.click(dropdown);
     await waitFor(() => expect(screen.queryAllByTestId('pull-menuItem')).toHaveLength(1));
@@ -1026,7 +1026,7 @@ describe('Tags details', () => {
   it('should copy the skopeo copy string to clipboard', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetailsThemeWrapper />);
-    const dropdown = await screen.findByText(`Pull ${mockImage.Image.RepoName}:${mockImage.Image.Tag}`);
+    const dropdown = await screen.findByText(`pullCommandButton.pull ${mockImage.Image.RepoName}:${mockImage.Image.Tag}`);
     expect(dropdown).toBeInTheDocument();
     userEvent.click(dropdown);
     await waitFor(() => expect(screen.queryAllByTestId('pull-menuItem')).toHaveLength(1));
@@ -1043,7 +1043,7 @@ describe('Tags details', () => {
   it('should show pull tabs in dropdown and allow nagivation between them', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetailsThemeWrapper />);
-    const dropdown = await screen.findByText(`Pull ${mockImage.Image.RepoName}:${mockImage.Image.Tag}`);
+    const dropdown = await screen.findByText(`pullCommandButton.pull ${mockImage.Image.RepoName}:${mockImage.Image.Tag}`);
     expect(dropdown).toBeInTheDocument();
     userEvent.click(dropdown);
     await waitFor(() => expect(screen.queryAllByTestId('pull-menuItem')).toHaveLength(1));
@@ -1056,7 +1056,7 @@ describe('Tags details', () => {
   it('should show the copied successfully button for 3 seconds', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetailsThemeWrapper />);
-    const dropdown = await screen.findByText(`Pull ${mockImage.Image.RepoName}:${mockImage.Image.Tag}`);
+    const dropdown = await screen.findByText(`pullCommandButton.pull ${mockImage.Image.RepoName}:${mockImage.Image.Tag}`);
     expect(dropdown).toBeInTheDocument();
     await userEvent.click(dropdown);
     await waitFor(() => expect(screen.queryAllByTestId('pull-dropdown')).toHaveLength(1));
