@@ -11,7 +11,7 @@
     "@mui/material": "^5.16.7",
     "@mui/styles": "^5.16.7",
     "@mui/x-date-pickers": "^6.20.2",
-    "@testing-library/jest-dom": "^6.6.2",
+    "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^12.1.2",
     "@testing-library/user-event": "^13.5.0",
     "axios": "^1.7.7",
