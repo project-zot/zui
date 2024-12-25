@@ -270,7 +270,7 @@ describe('Repo details component', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockRepoDetailsWithMissingData } });
     render(<RepoDetailsThemeWrapper />);
     expect(await screen.findByText('test')).toBeInTheDocument();
-    expect((await screen.findAllByText(/timestamp n\/a/i)).length).toBeGreaterThan(0);
+    expect((await screen.findAllByText(/main.timestampNA/i)).length).toBeGreaterThan(0);
   });
 
   it('renders vulnerability icons', async () => {
@@ -302,13 +302,13 @@ describe('Repo details component', () => {
     render(<RepoDetailsThemeWrapper />);
     expect(await screen.findAllByTestId('verified-icon')).toHaveLength(2);
 
-    const allTrustedSignaturesIcons = await screen.findAllByTestId("verified-icon");
+    const allTrustedSignaturesIcons = await screen.findAllByTestId('verified-icon');
     fireEvent.mouseOver(allTrustedSignaturesIcons[0]);
-    expect(await screen.findByText("Tool: cosign")).toBeInTheDocument();
-    expect(await screen.findByText("Signed-by: author1")).toBeInTheDocument();
+    expect(await screen.findByText('signatureTooltip.tool: cosign')).toBeInTheDocument();
+    expect(await screen.findByText('signatureTooltip.signedBy: author1')).toBeInTheDocument();
     fireEvent.mouseOver(allTrustedSignaturesIcons[1]);
-    expect(await screen.findByText("Tool: notation")).toBeInTheDocument();
-    expect(await screen.findByText("Signed-by: author2")).toBeInTheDocument();
+    expect(await screen.findByText('signatureTooltip.tool: notation')).toBeInTheDocument();
+    expect(await screen.findByText('signatureTooltip.signedBy: author2')).toBeInTheDocument();
   });
 
   it("should log error if data can't be fetched", async () => {

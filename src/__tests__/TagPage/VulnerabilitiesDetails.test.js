@@ -641,46 +641,46 @@ describe('Vulnerabilties page', () => {
   it('renders the vulnerabilities if there are any', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
-    await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
-    await waitFor(() => expect(screen.getAllByText('Total 5')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('main.vulnerabilities')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('vulnerabilityCountCard.total 5')).toHaveLength(1));
     await waitFor(() => expect(screen.getAllByText(/CVE/)).toHaveLength(20));
   });
 
   it('renders the vulnerabilities by severity', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
-    await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
-    await waitFor(() => expect(screen.getAllByText('Total 5')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('main.vulnerabilities')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('vulnerabilityCountCard.total 5')).toHaveLength(1));
     await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(20));
-    expect(screen.getByLabelText('Medium')).toBeInTheDocument();
-    const mediumSeverity = await screen.getByLabelText('Medium');
+    expect(screen.getByLabelText('vulnerabilityCountCard.medium')).toBeInTheDocument();
+    const mediumSeverity = await screen.getByLabelText('vulnerabilityCountCard.medium');
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('MEDIUM') } });
     fireEvent.click(mediumSeverity);
     await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(6));
-    expect(screen.getByLabelText('High')).toBeInTheDocument();
-    const highSeverity = await screen.getByLabelText('High');
+    expect(screen.getByLabelText('vulnerabilityCountCard.high')).toBeInTheDocument();
+    const highSeverity = await screen.getByLabelText('vulnerabilityCountCard.high');
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('HIGH') } });
     fireEvent.click(highSeverity);
     await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(1));
-    expect(screen.getByLabelText('Critical')).toBeInTheDocument();
-    const criticalSeverity = await screen.getByLabelText('Critical');
+    expect(screen.getByLabelText('vulnerabilityCountCard.critical')).toBeInTheDocument();
+    const criticalSeverity = await screen.getByLabelText('vulnerabilityCountCard.critical');
     jest
       .spyOn(api, 'get')
       .mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('CRITICAL') } });
     fireEvent.click(criticalSeverity);
     await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(1));
-    expect(screen.getByLabelText('Low')).toBeInTheDocument();
-    const lowSeverity = await screen.getByLabelText('Low');
+    expect(screen.getByLabelText('vulnerabilityCountCard.low')).toBeInTheDocument();
+    const lowSeverity = await screen.getByLabelText('vulnerabilityCountCard.low');
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('LOW') } });
     fireEvent.click(lowSeverity);
     await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(10));
-    expect(screen.getByLabelText('Unknown')).toBeInTheDocument();
-    const unknownSeverity = await screen.getByLabelText('Unknown');
+    expect(screen.getByLabelText('main.unknown')).toBeInTheDocument();
+    const unknownSeverity = await screen.getByLabelText('main.unknown');
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('UNKNOWN') } });
     fireEvent.click(unknownSeverity);
     await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(1));
-    expect(screen.getByText('Total 5')).toBeInTheDocument();
-    const totalSeverity = await screen.getByText('Total 5');
+    expect(screen.getByText('vulnerabilityCountCard.total 5')).toBeInTheDocument();
+    const totalSeverity = await screen.getByText('vulnerabilityCountCard.total 5');
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEListFilteredBySeverity('') } });
     fireEvent.click(totalSeverity);
     await waitFor(() => expect(screen.getAllByText(/CVE-/)).toHaveLength(20));
@@ -707,8 +707,8 @@ describe('Vulnerabilties page', () => {
     const cveSearchInput = screen.getByPlaceholderText(/search/i);
     const expandSearch = cveSearchInput.parentElement.parentElement.parentElement.parentElement.childNodes[0];
     await fireEvent.click(expandSearch);
-    await waitFor(() => expect(screen.getAllByPlaceholderText('Exclude')).toHaveLength(1));
-    const excludeInput = screen.getByPlaceholderText('Exclude');
+    await waitFor(() => expect(screen.getAllByPlaceholderText('VulnerabilitiesDetails.exclude')).toHaveLength(1));
+    const excludeInput = screen.getByPlaceholderText('VulnerabilitiesDetails.exclude');
     userEvent.type(excludeInput, '2022');
     expect(excludeInput).toHaveValue('2022');
     await waitFor(() => expect(screen.queryAllByText(/2022/i)).toHaveLength(0));
@@ -721,7 +721,7 @@ describe('Vulnerabilties page', () => {
       data: { data: { CVEListForImage: { Tag: '', Page: {}, CVEList: [], Summary: {} } } }
     });
     render(<StateVulnerabilitiesWrapper />);
-    await waitFor(() => expect(screen.getAllByText('No Vulnerabilities')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText(/VulnerabilitiesDetails.noVulnerabilities/i)).toHaveLength(1));
   });
 
   it('should show description for vulnerabilities', async () => {
@@ -732,7 +732,7 @@ describe('Vulnerabilties page', () => {
     render(<StateVulnerabilitiesWrapper />);
     const expandListBtn = await screen.findAllByTestId('ViewAgendaIcon');
     fireEvent.click(expandListBtn[0]);
-    await waitFor(() => expect(screen.getAllByText(/Description/)).toHaveLength(20));
+    await waitFor(() => expect(screen.getAllByText(/main.description/)).toHaveLength(20));
     await waitFor(() =>
       expect(screen.getAllByText(/CPAN 2.28 allows Signature Verification Bypass./i)).toHaveLength(1)
     );
@@ -752,12 +752,12 @@ describe('Vulnerabilties page', () => {
       .mockResolvedValueOnce({ status: 200, data: { data: mockCVEFixed.pageOne } })
       .mockResolvedValueOnce({ status: 200, data: { data: mockCVEFixed.pageTwo } });
     render(<StateVulnerabilitiesWrapper />);
-    await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('main.vulnerabilities')).toHaveLength(1));
     const expandListBtn = await screen.findAllByTestId('KeyboardArrowRightIcon');
     fireEvent.click(expandListBtn[1]);
     await waitFor(() => expect(screen.getByText('1.0.16')).toBeInTheDocument());
-    await waitFor(() => expect(screen.getAllByText(/Load more/).length).toBe(1));
-    const loadMoreBtn = screen.getAllByText(/Load more/)[0];
+    await waitFor(() => expect(screen.getAllByText(/vulnerabilityCard.loadMore/).length).toBe(1));
+    const loadMoreBtn = screen.getAllByText(/vulnerabilityCard.loadMore/)[0];
     await fireEvent.click(loadMoreBtn);
     await waitFor(() => expect(loadMoreBtn).not.toBeInTheDocument());
     expect(await screen.findByText('latest')).toBeInTheDocument();
@@ -813,7 +813,7 @@ describe('Vulnerabilties page', () => {
 
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
-    await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('main.vulnerabilities')).toHaveLength(1));
     const downloadBtn = await screen.findAllByTestId('DownloadIcon');
     fireEvent.click(downloadBtn[0]);
     expect(await screen.findByTestId('export-csv-menuItem')).toBeInTheDocument();
@@ -840,7 +840,7 @@ describe('Vulnerabilties page', () => {
       .mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<StateVulnerabilitiesWrapper />);
-    await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('main.vulnerabilities')).toHaveLength(1));
     const downloadBtn = await screen.findAllByTestId('DownloadIcon');
     fireEvent.click(downloadBtn[0]);
     expect(await screen.findByTestId('export-csv-menuItem')).toBeInTheDocument();
@@ -851,14 +851,14 @@ describe('Vulnerabilties page', () => {
   it('should expand/collapse the list of CVEs', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } });
     render(<StateVulnerabilitiesWrapper />);
-    await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('main.vulnerabilities')).toHaveLength(1));
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockCVEFixed.pageOne } });
     const expandListBtn = await screen.findAllByTestId('ViewAgendaIcon');
     fireEvent.click(expandListBtn[0]);
-    await waitFor(() => expect(screen.getAllByText('Fixed in')).toHaveLength(20));
+    await waitFor(() => expect(screen.getAllByText('vulnerabilityCard.fixedIn')).toHaveLength(20));
     const collapseListBtn = await screen.findAllByTestId('ViewHeadlineIcon');
     fireEvent.click(collapseListBtn[0]);
-    expect(await screen.findByText('Fixed in')).not.toBeVisible();
+    expect(await screen.findByText('vulnerabilityCard.fixedIn')).not.toBeVisible();
   });
 
   it('should handle fixed CVE query errors', async () => {
@@ -867,11 +867,11 @@ describe('Vulnerabilties page', () => {
       .mockResolvedValueOnce({ status: 200, data: { data: mockCVEList } })
       .mockRejectedValue({ status: 500, data: {} });
     render(<StateVulnerabilitiesWrapper />);
-    await waitFor(() => expect(screen.getAllByText('Vulnerabilities')).toHaveLength(1));
+    await waitFor(() => expect(screen.getAllByText('main.vulnerabilities')).toHaveLength(1));
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     const expandListBtn = await screen.findAllByTestId('KeyboardArrowRightIcon');
     fireEvent.click(expandListBtn[1]);
-    await waitFor(() => expect(screen.getByText(/not fixed/i)).toBeInTheDocument());
+    await waitFor(() => expect(screen.getByText(/vulnerabilityCard.notFixed/i)).toBeInTheDocument());
     await waitFor(() => expect(error).toBeCalledTimes(1));
   });
 });

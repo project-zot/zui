@@ -332,7 +332,7 @@ describe('Explore component', () => {
   it('displays the no data message if no data is received', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: { GlobalSearch: { Repos: [] } } } });
     render(<StateExploreWrapper />);
-    expect(await screen.findByText(/Looks like/i)).toBeInTheDocument();
+    expect(await screen.findByText(/explore.noResults/i)).toBeInTheDocument();
   });
 
   it('renders signature icons', async () => {
@@ -344,17 +344,17 @@ describe('Explore component', () => {
 
     const allUntrustedSignaturesIcons = await screen.findAllByTestId("untrusted-icon");
     fireEvent.mouseOver(allUntrustedSignaturesIcons[0]);
-    expect(await screen.findByText("Signed-by: Unknown")).toBeInTheDocument();
+    expect(await screen.findByText("signatureTooltip.signedBy: main.unknown")).toBeInTheDocument();
     const allTrustedSignaturesIcons = await screen.findAllByTestId("verified-icon");
     fireEvent.mouseOver(allTrustedSignaturesIcons[8]);
-    expect(await screen.findByText("Tool: cosign")).toBeInTheDocument();
-    expect(await screen.findByText("Signed-by: author1")).toBeInTheDocument();
+    expect(await screen.findByText("signatureTooltip.tool: cosign")).toBeInTheDocument();
+    expect(await screen.findByText("signatureTooltip.signedBy: author1")).toBeInTheDocument();
     fireEvent.mouseOver(allTrustedSignaturesIcons[9]);
-    expect(await screen.findByText("Tool: notation")).toBeInTheDocument();
-    expect(await screen.findByText("Signed-by: author2")).toBeInTheDocument();
+    expect(await screen.findByText("signatureTooltip.tool: notation")).toBeInTheDocument();
+    expect(await screen.findByText("signatureTooltip.signedBy: author2")).toBeInTheDocument();
     const allNoSignedIcons = await screen.findAllByTestId("unverified-icon");
     fireEvent.mouseOver(allNoSignedIcons[0]);
-    expect(await screen.findByText("Not signed")).toBeInTheDocument();
+    expect(await screen.findByText("signatureTooltip.notSigned")).toBeInTheDocument();
   });
 
   it('renders vulnerability icons', async () => {
@@ -379,12 +379,12 @@ describe('Explore component', () => {
   it("should render the sort filter and be able to change it's value", async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
-    const selectFilter = await screen.findByText('Relevance');
+    const selectFilter = await screen.findByText('sortCriteria.relevance');
     expect(selectFilter).toBeInTheDocument();
     userEvent.click(selectFilter);
-    const newOption = await screen.findByText('Alphabetical');
+    const newOption = await screen.findByText('sortCriteria.alphabetical');
     userEvent.click(newOption);
-    expect(await screen.findByText('Alphabetical')).toBeInTheDocument();
+    expect(await screen.findByText('sortCriteria.alphabetical')).toBeInTheDocument();
   });
 
   it('should get preselected filters and sorting order from query params', async () => {
@@ -412,7 +412,7 @@ describe('Explore component', () => {
     await userEvent.click(windowsCheckbox);
     expect(windowsCheckbox).toBeChecked();
     expect(await screen.findAllByTestId('repo-card')).toHaveLength(1);
-    const signedCheckboxLabel = await screen.findByText(/signed images/i);
+    const signedCheckboxLabel = await screen.findByText(/filterConstants.signedImages/i);
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: filteredMockImageListSigned() } });
     await userEvent.click(signedCheckboxLabel);
     expect(await screen.findAllByTestId('repo-card')).toHaveLength(6);
