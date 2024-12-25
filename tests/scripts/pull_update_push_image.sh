@@ -223,7 +223,7 @@ fi
 trivy_out_file=trivy-${image}-${tag}.json
 if [ ! -z "${multiarch}" ]; then
     trivy image --scanners vuln --db-repository ghcr.io/project-zot/trivy-db --format json --input ${local_image_ref_trivy} -o ${trivy_out_file}
-    jq -n --argfile trivy_file ${trivy_out_file}  '.trivy=$trivy_file.Results' > ${trivy_out_file}.tmp
+    jq -n --slurpfile trivy_file ${trivy_out_file}  '.trivy=$trivy_file[0].Results' > ${trivy_out_file}.tmp
     mv ${trivy_out_file}.tmp ${trivy_out_file}
 else
     echo '{"trivy":[]}' > ${trivy_out_file}
