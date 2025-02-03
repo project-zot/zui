@@ -1,4 +1,5 @@
 import React from 'react';
+import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
 import { Card, CardContent, Stack, Tooltip, Typography, Collapse, Box, Grid } from '@mui/material';
 import { KeyboardArrowDown, KeyboardArrowRight } from '@mui/icons-material';
@@ -68,18 +69,19 @@ export default function ReferrerCard(props) {
   const [digestDropdownOpen, setDigestDropdownOpen] = useState(false);
   const [annotationDropdownOpen, setAnnotationDropdownOpen] = useState(false);
   const classes = useStyles();
+  const { t } = useTranslation();
 
   return (
     <Card className={classes.card} raised>
       <CardContent className={classes.content}>
         <Typography variant="body1" align="left" className={classes.cardText}>
-          Type: {artifactType && `${artifactType}`}
+          {t('referrerCard.type')} {artifactType && `${artifactType}`}
         </Typography>
         <Typography variant="body1" align="left" className={classes.cardText}>
-          Media type: {mediaType && `${mediaType}`}
+          {t('referrerCard.mediaType')} {mediaType && `${mediaType}`}
         </Typography>
         <Typography variant="body1" align="left" className={classes.cardText}>
-          Size: {size && `${size}`}
+          {t('referrerCard.size')} {size && `${size}`}
         </Typography>
         <Stack direction="row" onClick={() => setDigestDropdownOpen(!digestDropdownOpen)}>
           {!digestDropdownOpen ? (
@@ -96,7 +98,7 @@ export default function ReferrerCard(props) {
               cursor: 'pointer'
             }}
           >
-            DIGEST
+            {t('main.digest')}
           </Typography>
         </Stack>
         <Collapse in={digestDropdownOpen} timeout="auto" unmountOnExit>
@@ -124,7 +126,7 @@ export default function ReferrerCard(props) {
               cursor: 'pointer'
             }}
           >
-            ANNOTATIONS
+            {t('referrerCard.annotations')}
           </Typography>
         </Stack>
         <Collapse in={annotationDropdownOpen} timeout="auto" unmountOnExit>

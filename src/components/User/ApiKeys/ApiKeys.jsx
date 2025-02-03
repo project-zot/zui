@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { isEmpty, isNil } from 'lodash';
 import { api, endpoints } from 'api';
@@ -98,6 +99,8 @@ function ApiKeys() {
     ));
   };
 
+  const { t } = useTranslation();
+
   return (
     <>
       {isLoading ? (
@@ -111,10 +114,10 @@ function ApiKeys() {
                   <Grid item xs={12}>
                     <Stack direction="row" justifyContent="space-between">
                       <Typography variant="h4" className={classes.pageTitle}>
-                        Manage your API Keys
+                        {t('apiKeys.manageYourKeys')}
                       </Typography>
                       <Button variant="contained" color="success" onClick={handleApiKeyDialogOpen}>
-                        Create new API key
+                        {t('apiKeys.createNewKey')}
                       </Button>
                     </Stack>
                   </Grid>

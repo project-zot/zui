@@ -90,7 +90,7 @@ describe('Dependents tab', () => {
   it('should render the dependents if there are any', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: mockDependentsList });
     render(<RouterDependsWrapper />);
-    expect(await screen.findAllByText(/tag/i)).toHaveLength(8);
+    expect(await screen.findAllByText(/tag/i)).toHaveLength(16);
   });
 
   it('renders no dependents if there are not any', async () => {
@@ -99,7 +99,7 @@ describe('Dependents tab', () => {
       data: { data: { DerivedImageList: { Results: [], Page: {} } } }
     });
     render(<RouterDependsWrapper />);
-    expect(await screen.findByText(/Nothing found/i)).toBeInTheDocument();
+    expect(await screen.findByText(/main.nothingFound/i)).toBeInTheDocument();
   });
 
   it("should log an error when data can't be fetched", async () => {
@@ -113,6 +113,6 @@ describe('Dependents tab', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 500, data: { errors: ['test error'] } });
     jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<RouterDependsWrapper />);
-    expect(await screen.findByText(/Nothing found/i)).toBeInTheDocument();
+    expect(await screen.findByText(/main.nothingFound/i)).toBeInTheDocument();
   });
 });

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { Menu, MenuItem, IconButton, Avatar, Divider } from '@mui/material';
 
@@ -21,6 +22,8 @@ function UserAccountMenu() {
   const handleUserClose = () => {
     setAnchorEl(null);
   };
+
+  const { t } = useTranslation();
 
   return (
     <>
@@ -46,11 +49,11 @@ function UserAccountMenu() {
         <Divider />
         {isApiKeyEnabled() && (
           <MenuItem onClick={apiKeyManagement} data-testid="api-keys-menu-item">
-            API Keys
+            {t('userAccountMenu.APIKeys')}
           </MenuItem>
         )}
         {isApiKeyEnabled() && <Divider data-testid="api-keys-menu-item-divider" />}
-        <MenuItem onClick={logoutUser}>Log out</MenuItem>
+        <MenuItem onClick={logoutUser}>{t('userAccountMenu.logOut')}</MenuItem>
       </Menu>
     </>
   );

@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import transform from '../../utilities/transform';
 import { DateTime } from 'luxon';
@@ -54,9 +55,14 @@ function TagDetailsMetadata(props) {
   const classes = useStyles();
   const { platform, lastUpdated, size, license, imageName } = props;
 
+  const { t, i18n } = useTranslation();
+  const [selectedLanguage] = useState(i18n.language);
+
   const lastDate = lastUpdated
-    ? DateTime.fromISO(lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
-    : `Timestamp N/A`;
+    ? DateTime.fromISO(lastUpdated)
+        .setLocale(selectedLanguage)
+        .toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
+    : `${t('main.timestampNA')}`;
 
   return (
     <Grid container spacing={'1rem'} data-testid="tagDetailsMetadata-container">
@@ -71,7 +77,7 @@ function TagDetailsMetadata(props) {
         <Card variant="outlined" className={classes.card}>
           <CardContent className={classes.cardContent}>
             <Typography variant="body2" align="left" className={classes.metadataHeader}>
-              OS/Arch
+              {t('main.osOrArch')}
             </Typography>
             <Typography variant="body1" className={classes.metadataBody}>
               {platform?.Os || `----`} / {platform?.Arch || `----`}
@@ -83,7 +89,7 @@ function TagDetailsMetadata(props) {
         <Card variant="outlined" className={classes.card}>
           <CardContent className={classes.cardContent}>
             <Typography variant="body2" align="left" className={classes.metadataHeader}>
-              Total Size
+              {t('main.totalSize')}
             </Typography>
             <Typography variant="body1" align="left" className={classes.metadataBody}>
               {transform.formatBytes(size) || `----`}
@@ -96,7 +102,7 @@ function TagDetailsMetadata(props) {
           <Card variant="outlined" className={classes.card}>
             <CardContent className={classes.cardContent}>
               <Typography variant="body2" align="left" className={classes.metadataHeader}>
-                Last Published
+                {t('tagDetailsMetadata.lastPublished')}
               </Typography>
               <Tooltip title={lastUpdated?.slice(0, 16) || ' '} placement="top">
                 <Typography variant="body1" align="left" className={classes.metadataBody}>
@@ -112,11 +118,11 @@ function TagDetailsMetadata(props) {
           <Card variant="outlined" className={classes.card}>
             <CardContent className={classes.cardContent}>
               <Typography variant="body2" align="left" className={classes.metadataHeader}>
-                License
+                {t('main.license')}
               </Typography>
               <Tooltip title={license || ' '} placement="top">
                 <Typography variant="body1" align="left" className={classes.metadataBody}>
-                  {license ? <Markdown>{license}</Markdown> : `License info not available`}
+                  {license ? <Markdown>{license}</Markdown> : `${t('main.licenseNA')}`}
                 </Typography>
               </Tooltip>
             </CardContent>

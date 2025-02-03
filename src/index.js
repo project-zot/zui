@@ -2,6 +2,7 @@ import React from 'react';
 import './index.css';
 import App from './App';
 import reportWebVitals from './reportWebVitals';
+import './utilities/i18n';
 
 import { createTheme, ThemeProvider, StyledEngineProvider, adaptV4Theme } from '@mui/material/styles';
 import { LocalizationProvider } from '@mui/x-date-pickers';

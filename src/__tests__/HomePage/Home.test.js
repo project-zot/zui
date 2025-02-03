@@ -288,7 +288,7 @@ describe('Home component', () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListBookmarks } });
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageListStars } });
     render(<HomeWrapper />);
-    const viewAllButtons = await screen.findAllByText(/view all/i);
+    const viewAllButtons = await screen.findAllByText(/home.viewAll/i);
     expect(viewAllButtons).toHaveLength(4);
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: [] } });
     fireEvent.click(viewAllButtons[0]);

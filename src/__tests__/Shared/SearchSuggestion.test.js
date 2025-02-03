@@ -82,7 +82,7 @@ describe('Search component', () => {
   it('should display suggestions when user searches', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<RouterSearchWrapper />);
-    const searchInput = screen.getByPlaceholderText(/search for content/i);
+    const searchInput = screen.getByPlaceholderText(/searchSuggestion.search/i);
     expect(searchInput).toBeInTheDocument();
     userEvent.type(searchInput, 'test');
     expect(await screen.findByText(/alpine/i)).toBeInTheDocument();
@@ -91,7 +91,7 @@ describe('Search component', () => {
   it('should navigate to repo page when a repo suggestion is clicked', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<RouterSearchWrapper />);
-    const searchInput = screen.getByPlaceholderText(/search for content/i);
+    const searchInput = screen.getByPlaceholderText(/searchSuggestion.search/i);
     userEvent.type(searchInput, 'test');
     const suggestionItemRepo = await screen.findByText(/alpine/i);
     userEvent.click(suggestionItemRepo);
@@ -101,7 +101,7 @@ describe('Search component', () => {
   it('should navigate to repo page when a image suggestion is clicked', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageList } });
     render(<RouterSearchWrapper />);
-    const searchInput = screen.getByPlaceholderText(/search for content/i);
+    const searchInput = screen.getByPlaceholderText(/searchSuggestion.search/i);
     userEvent.type(searchInput, 'debian:test');
     const suggestionItemImage = await screen.findByText(/debian:testTag/i);
     userEvent.click(suggestionItemImage);
@@ -112,7 +112,7 @@ describe('Search component', () => {
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<RouterSearchWrapper />);
-    const searchInput = screen.getByPlaceholderText(/search for content/i);
+    const searchInput = screen.getByPlaceholderText(/searchSuggestion.search/i);
     userEvent.type(searchInput, 'debian');
     await waitFor(() => expect(error).toBeCalledTimes(1));
   });
@@ -121,7 +121,7 @@ describe('Search component', () => {
     jest.spyOn(api, 'get').mockRejectedValue({ status: 500, data: {} });
     const error = jest.spyOn(console, 'error').mockImplementation(() => {});
     render(<RouterSearchWrapper />);
-    const searchInput = screen.getByPlaceholderText(/search for content/i);
+    const searchInput = screen.getByPlaceholderText(/searchSuggestion.search/i);
     userEvent.type(searchInput, 'debian:test');
     await waitFor(() => expect(error).toBeCalledTimes(1));
   });

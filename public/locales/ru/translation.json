@@ -1,0 +1,229 @@
+{
+  "main": {
+    "cancel": "Закрыть",
+    "close": "Закрыть",
+    "created": "Создано",
+    "days": "дней",
+    "description": "Описание",
+    "descriptionNA": "Описание недоступно",
+    "digest": "ДАЙДЖЕСТ",
+    "hours": "часов",
+    "layers": "Слои",
+    "license": "Лицензия",
+    "licenseNA": "Информация о лицензии недоступна",
+    "loading": "Загрузка...",
+    "minutes": "минут",
+    "NA": "недоступно",
+    "nothingFound": "Ничего не найдено",
+    "osOrArch": "ОС/Архитектура",
+    "published": "опубликовано",
+    "referredBy": "Упомянутый в",
+    "revoke": "Отозвать",
+    "signIn": "Войти",
+    "sort": "Сортировать по",
+    "stars": "Звезд",
+    "timestampNA": "Время НД",
+    "totalSize": "Общий размер",
+    "unknown": "Неизвестен",
+    "usedBy": "Используется",
+    "uses": "Использует",
+    "vendorNA": "Автор неизвестен",
+    "vulnerabilities": "Уязвимости",
+    "weeks": "недель"
+  },
+  "explore": {
+    "OS": "Операционная система",
+    "architectures": "Архитектуры",
+    "additionalFilters": "Дополнительные фильтры",
+    "showing": "Показано",
+    "resultsOutOf": "результатов из",
+    "filterResults": "Отфильтровать результаты",
+    "noResults": "Похоже, у нас нет ничего подходящего для этого поиска. Попробуйте поискать что-нибудь еще."
+  },
+  "filterDialog": {
+    "filter": "Фильтр",
+    "sortResults": "Сортировать результаты",
+    "confirm": "Подтвердить"
+  },
+  "header": {
+    "product": "Проект",
+    "docs": "Документация"
+  },
+  "exploreHeader": {
+    "home": "Домой"
+  },
+  "searchSuggestion": {
+    "search": "Поиск по содержимому сайта...",
+    "advancedSearch": "Нажмите Enter для продвинутого поиска",
+    "useAposChar": "Используйте символ ':' для поиска по тегам"
+  },
+  "userAccountMenu": {
+    "APIKeys": "API Ключи",
+    "logOut": "Выйти"
+  },
+  "home": {
+    "noImages": "Нет образов",
+    "viewAll": "Посмотреть все",
+    "mostPopularImages": "Наиболее популярные образы",
+    "recentlyUpdatedImages": "Недавно обновленные образы",
+    "bookmarks": "Закладки"
+  },
+  "signIn": {
+    "welcomeBack": "Добро пожаловать! Пожалуйста, войдите в систему.",
+    "or": "или",
+    "username": "Имя пользователя",
+    "enterPassword": "Введите пароль",
+    "authFailed": "Не удалось выполнить аутентификацию. Пожалуйста, попробуйте снова.",
+    "continue": "Продолжить",
+    "continueAsGuest": "Продолжить как гость"
+  },
+  "signInPresentation": {
+    "description": "OCI-native реестр образов контейнеров, упрощенный"
+  },
+  "thirdPartyLoginComponents": {
+    "continueWith": "Продолжить с",
+    "signInWith": "Войти при помощи"
+  },
+  "tags": {
+    "tagsHistory": "История тегов",
+    "searchTags": "Поиск тегов..."
+  },
+  "repoDetails": {
+    "titleNA": "Название недоступно"
+  },
+  "repoDetailsMetadata": {
+    "repository": "Репозиторий",
+    "totalDownloads": "Количество скачиваний",
+    "lastPublish": "Последняя публикация"
+  },
+  "deleteTag": {
+    "deleteImage": "Безвозвратно удалить изображение"
+  },
+  "deleteTagConfirmDialog": {
+    "delete": "Удалить"
+  },
+  "filterCard": {
+    "filterTitle": "Название фильтра"
+  },
+  "layerCard": {
+    "details": "ДЕТАЛИ",
+    "command": "Команда"
+  },
+  "noData": {
+    "noData": "Нет информации"
+  },
+  "pullCommandButton": {
+    "copiedPullCommand": "Команда Pull скопирована",
+    "pull": "Pull"
+  },
+  "referrerCard": {
+    "type": "Тип:",
+    "mediaType": "Тип медиа:",
+    "size": "Размер:",
+    "annotations": "АННОТАЦИИ"
+  },
+  "repoCard": {
+    "downloads": "Скачиваний"
+  },
+  "signatureTooltip": {
+    "notSigned": "Не подписан",
+    "tool": "Инструмент",
+    "signedBy": "Подписан"
+  },
+  "tagCard": {
+    "tag": "Тег",
+    "by": "",
+    "showMore": "Показать больше",
+    "showLess": "Скрыть",
+    "compressedSize": "РАЗМЕР СЖАТОГО"
+  },
+  "vulnerabilityCard": {
+    "notFixed": "Не исправлено",
+    "loadMore": "Показать больше",
+    "externalReference": "Внешняя ссылка",
+    "packages": "Пакеты",
+    "fixedIn": "Исправлено в"
+  },
+  "vulnerabilityCountCard": {
+    "total": "Всего",
+    "critical": "Критическая",
+    "criticalShort": "К",
+    "high": "Высокая",
+    "highShort": "В",
+    "medium": "Средняя",
+    "mediumShort": "С",
+    "low": "Низкая",
+    "lowShort": "Н",
+    "unknown": "Неизвестная",
+    "unknownShort": "НИ",
+    "no": "Нет",
+    "none": "Отсутствует"
+  },
+  "vulnerabilityPackageSection": {
+    "packagePath": "Путь пакета",
+    "installedVersion": "Установленная версия",
+    "fixedVersion": "Исправленная версия"
+  },
+  "dependsOn": {},
+  "historyLayers": {
+    "noLayers": "Нет информаци о слое"
+  },
+  "IsDependentOn": {},
+  "ReferredBy": {},
+  "VulnerabilitiesDetails": {
+    "noVulnerabilities": "Никаких уязвимостей",
+    "gettingYourDataReady": "Подготовка ваших данных к экспорту",
+    "collapseListView": "Свернуть представление списка",
+    "expandListView": "Развернуть представление списка",
+    "search": "Поиск",
+    "exclude": "Исключить"
+  },
+  "TagDetails": {
+    "digest": "Дайджест"
+  },
+  "tagDetailsMetadata": {
+    "lastPublished": "Последняя публикация"
+  },
+  "apiKeyCard": {
+    "key": "КЛЮЧ"
+  },
+  "apiKeyConfirmDialog": {
+    "apiKey": "Api Ключ",
+    "plsCopy": "Пожалуйста, скопируйте данный API ключ, вы не сможете увидеть его после обновления страницы"
+  },
+  "apiKeyDialog": {
+    "createApiKey": "Создать API ключ",
+    "expDate": "Дата окончания",
+    "expTime": "Время окончания",
+    "custom": "пользовательский",
+    "create": "Создать"
+  },
+  "apiKeyRevokeDialog": {
+    "key": "ключ",
+    "areYouSure": "Вы уверены, что хотите отозвать этот API-ключ?"
+  },
+  "apiKeys": {
+    "manageYourKeys": "Управление вашими API ключами",
+    "createNewKey": "Создать новый API ключ"
+  },
+  "sortCriteria": {
+    "relevance": "По релевантности",
+    "recent": "Последние",
+    "alphabetical": "По алфавиту (А - Я)",
+    "alphabeticalDesc": "По алфавиту (Я - А)",
+    "mostStarred": "Наиболее любимые",
+    "mostDownloaded": "Наиболее скачиваемые",
+    "newest": "От новых к старым",
+    "oldest": "От старых к новым",
+    "AZ": "А- Я",
+    "ZA": "Я - А"
+  },
+  "filterConstants": {
+    "signedImages": "Подписанные образы",
+    "bookmarks": "Закладки",
+    "starredRepositories": "Понравившиеся"
+  },
+  "vulnerabilityAndSignatureComponents": {
+    "failed2scan": "Не удалось выполнить сканирование"
+  }
+}
