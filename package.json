@@ -11,7 +11,7 @@
     "@mui/material": "^6.1.10",
     "@mui/styles": "^6.1.10",
     "@mui/x-date-pickers": "^7.23.1",
-    "axios": "^1.7.8",
+    "axios": "^1.8.2",
     "downshift": "^6.1.12",
     "export-from-json": "^1.7.4",
     "lodash": "^4.17.21",
