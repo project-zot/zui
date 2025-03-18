@@ -191,7 +191,7 @@ function TagDetails() {
   }, [reponame, tag]);
 
   const getPlatform = () => {
-    return selectedManifest.platform ? selectedManifest.platform : '--/--';
+    return selectedManifest?.platform ? selectedManifest.platform : '--/--';
   };
 
   const handleTabChange = (event, newValue) => {
@@ -206,42 +206,42 @@ function TagDetails() {
   const renderTabContent = () => {
     switch (selectedTab) {
       case 'DependsOn':
-        return <DependsOn name={imageDetailData.name} digest={selectedManifest.digest} />;
+        return <DependsOn name={imageDetailData?.name} digest={selectedManifest?.digest} />;
       case 'IsDependentOn':
-        return <IsDependentOn name={imageDetailData.name} digest={selectedManifest.digest} />;
+        return <IsDependentOn name={imageDetailData?.name} digest={selectedManifest?.digest} />;
       case 'Vulnerabilities':
         return (
           <VulnerabilitiesDetails
             name={reponame}
             tag={tag}
             digest={selectedManifest?.digest}
-            platform={selectedManifest.platform}
+            platform={selectedManifest?.platform}
           />
         );
       case 'ReferredBy':
-        return <ReferredBy referrers={imageDetailData.referrers} />;
+        return <ReferredBy referrers={imageDetailData?.referrers} />;
       default:
-        return <HistoryLayers name={imageDetailData.name} history={selectedManifest.history} />;
+        return <HistoryLayers name={imageDetailData?.name} history={selectedManifest?.history || []} />;
     }
   };
 
   const getSignatureChips = () => {
-    const cosign = imageDetailData.signatureInfo
+    const cosign = imageDetailData?.signatureInfo
       ?.map((s) => s.tool)
-      .includes(filterConstants.signatureToolConstants.COSIGN)
-      ? imageDetailData.signatureInfo.filter((si) => si.tool == filterConstants.signatureToolConstants.COSIGN)
+      ?.includes(filterConstants.signatureToolConstants.COSIGN)
+      ? imageDetailData?.signatureInfo?.filter((si) => si.tool == filterConstants.signatureToolConstants.COSIGN)
       : null;
-    const notation = imageDetailData.signatureInfo
+    const notation = imageDetailData?.signatureInfo
       ?.map((s) => s.tool)
-      .includes(filterConstants.signatureToolConstants.NOTATION)
-      ? imageDetailData.signatureInfo.filter((si) => si.tool == filterConstants.signatureToolConstants.NOTATION)
+      ?.includes(filterConstants.signatureToolConstants.NOTATION)
+      ? imageDetailData?.signatureInfo?.filter((si) => si.tool == filterConstants.signatureToolConstants.NOTATION)
       : null;
     const sigArray = [];
     if (cosign) sigArray.push(cosign);
     if (notation) sigArray.push(notation);
     if (sigArray.length === 0) return <SignatureIconCheck />;
     return sigArray.map((sig, index) => (
-      <div className="hide-on-mobile" key={`${name}sig${index}`}>
+      <div className="hide-on-mobile" key={`${imageDetailData?.name || ''}sig${index}`}>
         <SignatureIconCheck signatureInfo={sig} />
       </div>
     ));
@@ -281,34 +281,36 @@ function TagDetails() {
 
                       <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
                         <VulnerabilityIconCheck
-                          vulnerabilitySeverity={imageDetailData.vulnerabiltySeverity}
-                          count={imageDetailData.vulnerabilityCount}
+                          vulnerabilitySeverity={imageDetailData?.vulnerabiltySeverity}
+                          count={imageDetailData?.vulnerabilityCount}
                         />
                         {getSignatureChips()}
                       </Stack>
                     </Stack>
-                    <Stack direction="row" alignItems="center" spacing="1rem">
-                      <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
-                        <InputLabel>OS/Arch</InputLabel>
-                        {!isEmpty(selectedManifest) && (
-                          <Select
-                            label="OS/Arch"
-                            value={selectedManifest}
-                            onChange={handleOSArchChange}
-                            MenuProps={{ disableScrollLock: true }}
-                          >
-                            {imageDetailData.manifests.map((el) => (
-                              <MenuItem key={el.digest} value={el}>
-                                {`${el.platform?.Os}/${el.platform?.Arch}`}
-                              </MenuItem>
-                            ))}
-                          </Select>
-                        )}
-                      </FormControl>
-                      <Typography gutterBottom className={classes.digest}>
-                        Digest: {selectedManifest?.digest}
-                      </Typography>
-                    </Stack>
+                    {imageDetailData?.manifests && imageDetailData.manifests.length > 0 && (
+                      <Stack direction="row" alignItems="center" spacing="1rem">
+                        <FormControl sx={{ m: '1', minWidth: '4.6875rem' }} className={classes.sortForm} size="small">
+                          <InputLabel>OS/Arch</InputLabel>
+                          {!isEmpty(selectedManifest) && (
+                            <Select
+                              label="OS/Arch"
+                              value={selectedManifest}
+                              onChange={handleOSArchChange}
+                              MenuProps={{ disableScrollLock: true }}
+                            >
+                              {imageDetailData?.manifests?.map((el) => (
+                                <MenuItem key={el.digest} value={el}>
+                                  {`${el.platform?.Os || '----'}/${el.platform?.Arch || '----'}`}
+                                </MenuItem>
+                              ))}
+                            </Select>
+                          )}
+                        </FormControl>
+                        <Typography gutterBottom className={classes.digest}>
+                          Digest: {selectedManifest?.digest}
+                        </Typography>
+                      </Stack>
+                    )}
                   </Grid>
                 </Grid>
               </CardContent>

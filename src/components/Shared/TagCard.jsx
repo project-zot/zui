@@ -167,7 +167,7 @@ export default function TagCard(props) {
                 </Grid>
                 <Grid item xs={6} md={3}>
                   <Typography variant="body1" color="primary">
-                    {el.platform?.Os}/{el.platform?.Arch}
+                    {el.platform?.Os || '----'}/{el.platform?.Arch || '----'}
                   </Typography>
                 </Grid>
                 <Grid
