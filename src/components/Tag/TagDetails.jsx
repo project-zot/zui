@@ -6,7 +6,7 @@ import { api, endpoints } from '../../api';
 import { host } from '../../host';
 import { mapToImage } from '../../utilities/objectModels';
 import filterConstants from 'utilities/filterConstants';
-import { isEmpty, head } from 'lodash';
+import { isEmpty, head, uniqBy } from 'lodash';
 
 // components
 import {
@@ -219,7 +219,12 @@ function TagDetails() {
           />
         );
       case 'ReferredBy':
-        return <ReferredBy referrers={imageDetailData?.referrers} />;
+        const allReferrers = uniqBy(
+          [...(selectedManifest?.referrers || []), ...(imageDetailData?.referrers || [])],
+          'digest'
+        );
+
+        return <ReferredBy referrers={allReferrers} />;
       default:
         return <HistoryLayers name={imageDetailData?.name} history={selectedManifest?.history || []} />;
     }

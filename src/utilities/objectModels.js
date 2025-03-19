@@ -86,7 +86,8 @@ const mapToManifest = (responseManifest) => {
     starCount: responseManifest.StarCount,
     layers: responseManifest.Layers,
     history: responseManifest.History,
-    vulnerabilities: responseManifest.Vulnerabilities
+    vulnerabilities: responseManifest.Vulnerabilities,
+    referrers: responseManifest.Referrers
   };
 };
 
