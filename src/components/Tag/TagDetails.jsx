@@ -353,7 +353,12 @@ function TagDetails() {
           </Grid>
           <Grid item xs={12} md={8}>
             <Card className={classes.cardRoot}>
-              <CardContent className={classes.tabCardContent}>{renderTabContent()}</CardContent>
+              <CardContent
+                key={`card_content_manifest_key_${selectedManifest?.digest}`}
+                className={classes.tabCardContent}
+              >
+                {renderTabContent()}
+              </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} md={4} className={classes.metadata}>
