@@ -6,7 +6,7 @@ import { api, endpoints } from '../../api';
 import { host } from '../../host';
 import { mapToImage } from '../../utilities/objectModels';
 import filterConstants from 'utilities/filterConstants';
-import { isEmpty, head } from 'lodash';
+import { isEmpty, head, uniqBy } from 'lodash';
 
 // components
 import {
@@ -219,7 +219,12 @@ function TagDetails() {
           />
         );
       case 'ReferredBy':
-        return <ReferredBy referrers={imageDetailData?.referrers} />;
+        const allReferrers = uniqBy(
+          [...(selectedManifest?.referrers || []), ...(imageDetailData?.referrers || [])],
+          'digest'
+        );
+
+        return <ReferredBy referrers={allReferrers} />;
       default:
         return <HistoryLayers name={imageDetailData?.name} history={selectedManifest?.history || []} />;
     }
@@ -348,7 +353,12 @@ function TagDetails() {
           </Grid>
           <Grid item xs={12} md={8}>
             <Card className={classes.cardRoot}>
-              <CardContent className={classes.tabCardContent}>{renderTabContent()}</CardContent>
+              <CardContent
+                key={`card_content_manifest_key_${selectedManifest?.digest}`}
+                className={classes.tabCardContent}
+              >
+                {renderTabContent()}
+              </CardContent>
             </Card>
           </Grid>
           <Grid item xs={12} md={4} className={classes.metadata}>
