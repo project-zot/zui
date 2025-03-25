@@ -8,7 +8,7 @@
     "@emotion/styled": "^11.13.5",
     "@mui/icons-material": "^6.1.10",
     "@mui/lab": "^6.0.0-beta.18",
-    "@mui/material": "^6.1.10",
+    "@mui/material": "^6.3.0",
     "@mui/styles": "^6.1.10",
     "@mui/x-date-pickers": "^7.23.1",
     "axios": "^1.7.8",
