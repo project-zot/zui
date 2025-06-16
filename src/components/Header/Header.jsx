@@ -10,7 +10,7 @@ import SearchSuggestion from './SearchSuggestion';
 import UserAccountMenu from './UserAccountMenu';
 // styling
 import makeStyles from '@mui/styles/makeStyles';
-import logo from '../../assets/Zot-white.svg';
+import logo from '../../assets/zotLogoWhite.svg';
 import logoxs from '../../assets/zotLogoWhiteSmall.svg';
 import githubLogo from '../../assets/Git.png';
 
