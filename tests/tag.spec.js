@@ -27,8 +27,18 @@ test.describe('Tag page test', () => {
     await expect(page.getByRole('tab', { name: 'Layers' })).toBeVisible({ timeout: 100000 });
     await page.getByRole('tab', { name: 'Layers' }).click();
     await expect(page.getByTestId('layer-card-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
+
+    // Set up network interception to wait for the API call
+    const apiResponse = page.waitForResponse(
+      (response) => response.url().includes('BaseImageList') && response.status() === 200
+    );
+
     await page.getByRole('tab', { name: 'Uses' }).click();
     await expect(page.getByTestId('depends-on-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
+
+    // Wait for the API call to complete before checking for Tag elements
+    await apiResponse;
+
     await expect(await page.getByText('Tag').count()).toBeGreaterThan(0);
   });
 
