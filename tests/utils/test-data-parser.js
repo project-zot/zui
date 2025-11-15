@@ -64,9 +64,9 @@ const getManifestDependencies = (manifestValue, repoName) => {
 };
 
 const getMultiTagRepo = () => {
-  const multiTagImage = Object.entries(rawData)
-    .find(([, value]) => Object.keys(value).length > 1)
-    .filter((e) => !isNil(e));
+  const multiTagImage = Object.entries(rawData).find(
+    ([key, value]) => key !== 'default' && Object.keys(value).length > 1
+  );
   return rawDataToRepo(multiTagImage);
 };
 

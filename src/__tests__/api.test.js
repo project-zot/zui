@@ -2,6 +2,10 @@ import { api } from '../api';
 
 describe('api module', () => {
   it('should redirect to login if a 401 error is received', () => {
+    Object.defineProperty(window, 'location', {
+      writable: true,
+      value: { ...window.location, replace: jest.fn() }
+    });
     const location = new URL('https://www.test.com');
     location.replace = jest.fn();
     delete window.location;
