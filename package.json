@@ -26,9 +26,9 @@
   },
   "devDependencies": {
     "@babel/plugin-proposal-private-property-in-object": "^7.21.11",
-    "@babel/preset-env": "^7.27.2",
-    "@babel/preset-react": "^7.27.1",
-    "@babel/runtime": "^7.26.0",
+    "@babel/preset-env": "^7.28.5",
+    "@babel/preset-react": "^7.28.5",
+    "@babel/runtime": "^7.28.4",
     "@playwright/test": "^1.56.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/jest-dom": "^6.9.1",
