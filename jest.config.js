@@ -16,7 +16,7 @@ export const moduleNameMapper = {
   '^session$': '<rootDir>/src/session.js',
   '\\.(css|less|scss|sass)$': 'identity-obj-proxy',
   '\\.(jpg|jpeg|png|gif|eot|otf|webp|ttf|woff|woff2|mp4|webm|wav|mp3|m4a|aac|oga)$': 'jest-transform-stub',
-  '\\.svg$': '<rootDir>/src/__mocks__/svgMock.js'
+  '\\.svg$': '<rootDir>/src/__mocks__/svgMock.jsx'
 };
 export const transform = {
   '^.+\\.(js|jsx)$': 'babel-jest'
@@ -24,7 +24,7 @@ export const transform = {
 export const transformIgnorePatterns = ['node_modules/(?!(axios|react-router|react-router-dom|@mui|@emotion)/)'];
 export const collectCoverageFrom = [
   'src/**/*.{js,jsx}',
-  '!src/index.js',
+  '!src/index.jsx',
   '!src/serviceWorker.js',
   '!src/**/*.test.{js,jsx}',
   '!src/**/node_modules/**'
