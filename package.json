@@ -28,7 +28,7 @@
     "@babel/plugin-proposal-private-property-in-object": "^7.16.7",
     "@babel/preset-env": "^7.27.2",
     "@babel/preset-react": "^7.27.1",
-    "@babel/runtime": "^7.26.0",
+    "@babel/runtime": "^7.28.4",
     "@playwright/test": "^1.46.0",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
