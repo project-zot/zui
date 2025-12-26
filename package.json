@@ -19,7 +19,7 @@
     "markdown-to-jsx": "^8.0.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-router-dom": "^7.9.6",
+    "react-router-dom": "^7.10.1",
     "react-sticky-el": "^2.1.1",
     "web-vitals": "^5.1.0",
     "xlsx": "^0.18.5"
