@@ -52,10 +52,14 @@ const useStyles = makeStyles((theme) => ({
 
 function TagDetailsMetadata(props) {
   const classes = useStyles();
-  const { platform, lastUpdated, size, license, imageName } = props;
+  const { platform, lastUpdated, lastTagged, size, license, imageName } = props;
 
   const lastDate = lastUpdated
     ? DateTime.fromISO(lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
+    : `Timestamp N/A`;
+
+  const lastTaggedDate = lastTagged
+    ? DateTime.fromISO(lastTagged).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
     : `Timestamp N/A`;
 
   return (
@@ -96,11 +100,25 @@ function TagDetailsMetadata(props) {
           <Card variant="outlined" className={classes.card}>
             <CardContent className={classes.cardContent}>
               <Typography variant="body2" align="left" className={classes.metadataHeader}>
-                Last Published
+                Created
               </Typography>
               <Tooltip title={lastUpdated?.slice(0, 16) || ' '} placement="top">
                 <Typography variant="body1" align="left" className={classes.metadataBody}>
                   {lastDate}
+                </Typography>
+              </Tooltip>
+            </CardContent>
+          </Card>
+        </Grid>
+        <Grid item xs={12}>
+          <Card variant="outlined" className={classes.card}>
+            <CardContent className={classes.cardContent}>
+              <Typography variant="body2" align="left" className={classes.metadataHeader}>
+                Last Tagged
+              </Typography>
+              <Tooltip title={lastTagged?.slice(0, 16) || ' '} placement="top">
+                <Typography variant="body1" align="left" className={classes.metadataBody}>
+                  {lastTaggedDate}
                 </Typography>
               </Tooltip>
             </CardContent>
