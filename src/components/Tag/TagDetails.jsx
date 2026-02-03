@@ -366,6 +366,7 @@ function TagDetails() {
               platform={getPlatform()}
               size={selectedManifest?.size}
               lastUpdated={selectedManifest?.lastUpdated}
+              lastTagged={imageDetailData?.lastTagged}
               license={imageDetailData?.license}
               imageName={imageDetailData?.name}
             />

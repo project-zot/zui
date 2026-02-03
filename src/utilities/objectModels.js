@@ -57,6 +57,7 @@ const mapToImage = (responseImage) => {
     downloadCount: responseImage.DownloadCount,
     starCount: responseImage.StarCount,
     lastUpdated: responseImage.LastUpdated,
+    lastTagged: responseImage.TaggedTimestamp,
     description: responseImage.Description,
     isSigned: responseImage.IsSigned,
     signatureInfo: responseImage.SignatureInfo?.map((sigInfo) => mapSignatureInfo(sigInfo)),

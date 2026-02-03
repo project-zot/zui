@@ -24,6 +24,7 @@ const mockImage = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
+    TaggedTimestamp: '2020-12-10T00:22:52.526672082Z',
     Manifests: [
       {
         Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
@@ -219,6 +220,7 @@ const mockImageUnknown = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
+    TaggedTimestamp: '2020-12-10T00:22:52.526672082Z',
     Manifests: [
       {
         Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
@@ -243,6 +245,7 @@ const mockImageFailed = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
+    TaggedTimestamp: '2020-12-10T00:22:52.526672082Z',
     Manifests: [
       {
         Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
@@ -267,6 +270,7 @@ const mockImageLow = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
+    TaggedTimestamp: '2020-12-10T00:22:52.526672082Z',
     Manifests: [
       {
         Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
@@ -291,6 +295,7 @@ const mockImageMedium = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
+    TaggedTimestamp: '2020-12-10T00:22:52.526672082Z',
     Manifests: [
       {
         Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
@@ -315,6 +320,7 @@ const mockImageHigh = {
   Image: {
     RepoName: 'centos',
     Tag: '8',
+    TaggedTimestamp: '2020-12-10T00:22:52.526672082Z',
     Manifests: [
       {
         Digest: 'sha256:63a795ca90aa6e7cca60941e826810a4cd0a2e73ea02bf458241df2a5c973e29',
@@ -944,6 +950,43 @@ describe('Tags details', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
     render(<TagDetailsThemeWrapper />);
     expect(await screen.findByTestId('tagDetailsMetadata-container')).toBeInTheDocument();
+  });
+
+  it('should display "Created" label in tag details metadata', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
+    render(<TagDetailsThemeWrapper />);
+    expect(await screen.findByText('Created')).toBeInTheDocument();
+  });
+
+  it('should display "Last Tagged" label and formatted timestamp when TaggedTimestamp is available', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImage } });
+    render(<TagDetailsThemeWrapper />);
+    const lastTaggedLabel = await screen.findByText('Last Tagged');
+    expect(lastTaggedLabel).toBeInTheDocument();
+
+    // Verify the formatted timestamp is displayed (should be relative time like "X weeks ago" or "Timestamp N/A")
+    // The timestamp from mockImage is '2020-12-10T00:22:52.526672082Z' which should be formatted
+    const metadataContainer = await screen.findByTestId('tagDetailsMetadata-container');
+    expect(metadataContainer).toBeInTheDocument();
+    // Check that the formatted date text is present (not just the label)
+    // The formatted date should be in the same card as "Last Tagged"
+    const lastTaggedCard = lastTaggedLabel.closest('.MuiCard-root');
+    expect(lastTaggedCard).toBeInTheDocument();
+    // The formatted date should not be "Timestamp N/A" since we have a valid timestamp
+    const formattedDate = lastTaggedCard?.textContent;
+    expect(formattedDate).not.toContain('Timestamp N/A');
+  });
+
+  it('should display "Timestamp N/A" when TaggedTimestamp is undefined', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockImageNone } });
+    render(<TagDetailsThemeWrapper />);
+    const lastTaggedLabel = await screen.findByText('Last Tagged');
+    expect(lastTaggedLabel).toBeInTheDocument();
+
+    // Verify the fallback "Timestamp N/A" is displayed when TaggedTimestamp is missing
+    const lastTaggedCard = lastTaggedLabel.closest('.MuiCard-root');
+    expect(lastTaggedCard).toBeInTheDocument();
+    expect(lastTaggedCard?.textContent).toContain('Timestamp N/A');
   });
 
   it('renders vulnerability icons', async () => {

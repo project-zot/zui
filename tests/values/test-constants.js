@@ -25,7 +25,7 @@ const endpoints = {
       10 * (pageNumber - 1)
     }%20sortBy:%20${sortCriteria}}%20)%20{Page%20{TotalCount%20ItemCount}%20Repos%20{Name%20LastUpdated%20Size%20Platforms%20{%20Os%20Arch%20}%20IsStarred%20IsBookmarked%20NewestImage%20{%20Tag%20Vulnerabilities%20{MaxSeverity%20Count}%20Description%20IsSigned%20SignatureInfo%20{%20Tool%20IsTrusted%20Author%20}%20Licenses%20Vendor%20Labels%20}%20StarCount%20DownloadCount}}}`,
   image: (name) =>
-    `/v2/_zot/ext/search?query={Image(image:%20%22${name}%22){RepoName%20IsSigned%20SignatureInfo%20{%20Tool%20IsTrusted%20Author%20}%20Vulnerabilities%20{MaxSeverity%20Count}%20%20Referrers%20{MediaType%20ArtifactType%20Size%20Digest%20Annotations{Key%20Value}}%20Tag%20Manifests%20{History%20{Layer%20{Size%20Digest}%20HistoryDescription%20{CreatedBy%20EmptyLayer}}%20Digest%20ConfigDigest%20LastUpdated%20Size%20Platform%20{Os%20Arch}%20Referrers%20{MediaType%20ArtifactType%20Size%20Digest%20Annotations{Key%20Value}}}%20Vendor%20Licenses%20}}`
+    `/v2/_zot/ext/search?query={Image(image:%20%22${name}%22){RepoName%20IsSigned%20SignatureInfo%20{%20Tool%20IsTrusted%20Author%20}%20Vulnerabilities%20{MaxSeverity%20Count}%20%20Referrers%20{MediaType%20ArtifactType%20Size%20Digest%20Annotations{Key%20Value}}%20Tag%20TaggedTimestamp%20Manifests%20{History%20{Layer%20{Size%20Digest}%20HistoryDescription%20{CreatedBy%20EmptyLayer}}%20Digest%20ConfigDigest%20LastUpdated%20Size%20Platform%20{Os%20Arch}%20Referrers%20{MediaType%20ArtifactType%20Size%20Digest%20Annotations{Key%20Value}}}%20Vendor%20Licenses%20}}`
 };
 
 export { hosts, endpoints, sortCriteria, pageSizes };
