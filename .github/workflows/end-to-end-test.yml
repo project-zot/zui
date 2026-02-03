@@ -53,7 +53,7 @@ jobs:
         cd $GITHUB_WORKSPACE
         sudo apt-get update
         sudo apt-get install libgpgme-dev libassuan-dev libbtrfs-dev libdevmapper-dev pkg-config rpm snapd jq
-        git clone https://github.com/containers/skopeo -b v1.9.0 $GITHUB_WORKSPACE/src/github.com/containers/skopeo
+        git clone https://github.com/containers/skopeo -b v1.20.0 $GITHUB_WORKSPACE/src/github.com/containers/skopeo
         cd $GITHUB_WORKSPACE/src/github.com/containers/skopeo && make bin/skopeo
         chmod +x bin/skopeo
         sudo mv bin/skopeo /usr/local/bin/skopeo
@@ -81,7 +81,7 @@ jobs:
     - name: Install go
       uses: actions/setup-go@v3
       with:
-        go-version: 1.22.x
+        go-version: 1.25.x
 
     - name: Checkout zot repo
       uses: actions/checkout@v3
