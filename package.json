@@ -14,7 +14,7 @@
     "axios": "^1.13.5",
     "downshift": "^6.1.12",
     "export-from-json": "^1.7.4",
-    "lodash": "^4.17.23",
+    "lodash": "^4.18.1",
     "luxon": "^3.7.2",
     "markdown-to-jsx": "^8.0.0",
     "npm-check-updates": "^19.3.2",
