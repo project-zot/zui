@@ -70,7 +70,7 @@ jobs:
         which cosign
         cosign version
         pushd $(mktemp -d)
-        curl -L https://github.com/aquasecurity/trivy/releases/download/v0.38.3/trivy_0.38.3_Linux-64bit.tar.gz -o trivy.tar.gz
+        curl -L https://github.com/aquasecurity/trivy/releases/download/v0.69.3/trivy_0.69.3_Linux-64bit.tar.gz -o trivy.tar.gz
         tar -xzvf trivy.tar.gz
         sudo mv trivy /usr/local/bin/trivy
         popd
