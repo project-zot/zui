@@ -16,10 +16,10 @@ const deleteCookie = (name, path, domain) => {
 };
 
 const logoutUser = () => {
-  localStorage.clear();
   api
     .post(`${host()}${endpoints.logout}`)
     .then(() => {
+      localStorage.clear();
       deleteCookie('user');
       window.location.replace('/login');
     })
