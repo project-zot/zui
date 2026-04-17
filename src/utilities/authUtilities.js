@@ -15,16 +15,37 @@ const deleteCookie = (name, path, domain) => {
   }
 };
 
+// Extract endSessionUrl from the logout response and validate it is a
+// well-formed URL, so a malformed value from a misconfigured backend
+// falls through to the /login redirect instead of navigating to garbage.
+/** @param {{ data?: { endSessionUrl?: string } }} response */
+const extractEndSessionUrl = (response) => {
+  const endSessionUrl = response?.data?.endSessionUrl;
+  if (!endSessionUrl) return null;
+  try {
+    const parsed = new URL(endSessionUrl);
+    if (parsed.protocol !== 'https:' && parsed.protocol !== 'http:') return null;
+    return endSessionUrl;
+  } catch {
+    return null;
+  }
+};
+
 const logoutUser = () => {
-  localStorage.clear();
-  api
+  const finishLogout = (endSessionUrl) => {
+    deleteCookie('user');
+    localStorage.clear();
+    window.location.replace(endSessionUrl || '/login');
+  };
+
+  return api
     .post(`${host()}${endpoints.logout}`)
-    .then(() => {
-      deleteCookie('user');
-      window.location.replace('/login');
+    .then((response) => {
+      finishLogout(extractEndSessionUrl(response));
     })
     .catch((err) => {
-      console.error(err);
+      console.warn(err);
+      finishLogout(null);
     });
 };
 

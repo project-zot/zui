@@ -1,7 +1,7 @@
-import { api } from '../api';
+import { api, endpoints } from '../api';
 
 describe('api module', () => {
-  it('should redirect to login if a 401 error is received', () => {
+  const setupLocation = () => {
     Object.defineProperty(window, 'location', {
       writable: true,
       value: { ...window.location, replace: jest.fn() }
@@ -10,8 +10,18 @@ describe('api module', () => {
     location.replace = jest.fn();
     delete window.location;
     window.location = location;
+    return location;
+  };
+
+  afterEach(() => {
+    jest.restoreAllMocks();
+  });
+
+  it('should redirect to login if a 401 error is received', async () => {
+    const location = setupLocation();
+    jest.spyOn(api, 'post').mockResolvedValue({ data: {} });
     const axiosInstance = api.getAxiosInstance();
-    expect(
+    await expect(
       axiosInstance.interceptors.response.handlers[0].rejected({
         response: { statusText: 'Unauthorized', status: 401 }
       })
@@ -19,5 +29,20 @@ describe('api module', () => {
       response: { statusText: 'Unauthorized', status: 401 }
     });
     expect(location.replace).toHaveBeenCalledWith('/login');
+  });
+
+  it('should not recurse when the 401 originates from the logout endpoint itself', async () => {
+    setupLocation();
+    const postSpy = jest.spyOn(api, 'post').mockResolvedValue({ data: {} });
+    const axiosInstance = api.getAxiosInstance();
+    await expect(
+      axiosInstance.interceptors.response.handlers[0].rejected({
+        config: { url: `https://www.test.com${endpoints.logout}` },
+        response: { statusText: 'Unauthorized', status: 401 }
+      })
+    ).rejects.toMatchObject({
+      response: { statusText: 'Unauthorized', status: 401 }
+    });
+    expect(postSpy).not.toHaveBeenCalled();
   });
 });

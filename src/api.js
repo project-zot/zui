@@ -20,9 +20,8 @@ axios.interceptors.response.use(
   (error) => {
     if (error?.response?.status === 401) {
       if (window.location.pathname.includes('/login')) return Promise.reject(error);
-      logoutUser();
-      window.location.replace('/login');
-      return Promise.reject(error);
+      if (error.config?.url && new URL(error.config.url).pathname === endpoints.logout) return Promise.reject(error);
+      return logoutUser().then(() => Promise.reject(error));
     }
   }
 );
