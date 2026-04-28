@@ -1,0 +1,160 @@
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+  workflow_dispatch:
+
+name: test-data-generation
+
+permissions:
+  contents: read
+
+jobs:
+  create-test-data:
+    name: Test Create test data
+    env:
+      CI: ""
+      REGISTRY_HOST: "127.0.0.1"
+      REGISTRY_PORT: "8080"
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        build-tool: [buildah, podman, docker]
+      fail-fast: false
+
+    steps:
+    - name: Cleanup disk space
+      run: |
+        # To free up ~15 GB of disk space
+        sudo rm -rf /opt/ghc
+        sudo rm -rf /usr/local/share/boost
+        sudo rm -rf /usr/local/lib/android
+        sudo rm -rf /usr/share/dotnet
+
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 2
+
+    - name: Install container image tooling
+      run: |
+        cd $GITHUB_WORKSPACE
+        sudo apt-get update
+        sudo apt-get install -y libgpgme-dev libassuan-dev libbtrfs-dev libdevmapper-dev pkg-config rpm snapd jq
+        
+        # Install skopeo
+        git clone https://github.com/containers/skopeo -b v1.20.0 $GITHUB_WORKSPACE/src/github.com/containers/skopeo
+        cd $GITHUB_WORKSPACE/src/github.com/containers/skopeo && make bin/skopeo
+        chmod +x bin/skopeo
+        sudo mv bin/skopeo /usr/local/bin/skopeo
+        which skopeo
+        skopeo -v
+        
+        # Install regctl
+        curl -L https://github.com/regclient/regclient/releases/download/v0.4.7/regctl-linux-amd64 -o regctl
+        chmod +x regctl
+        sudo mv regctl /usr/local/bin/regctl
+        which regctl
+        regctl version
+        
+        # Install cosign
+        curl -L https://github.com/sigstore/cosign/releases/download/v1.13.0/cosign-linux-amd64 -o cosign
+        chmod +x cosign
+        sudo mv cosign /usr/local/bin/cosign
+        which cosign
+        cosign version
+        
+        # Install trivy
+        pushd $(mktemp -d)
+        curl -L https://github.com/aquasecurity/trivy/releases/download/v0.38.3/trivy_0.38.3_Linux-64bit.tar.gz -o trivy.tar.gz
+        tar -xzvf trivy.tar.gz
+        sudo mv trivy /usr/local/bin/trivy
+        popd
+        which trivy
+        trivy version
+        
+        cd $GITHUB_WORKSPACE
+
+    - name: Install build tools
+      run: |
+        # Install the specific build tool from matrix
+        if [ "${{ matrix.build-tool }}" = "buildah" ]; then
+          if ! command -v buildah &> /dev/null; then
+            sudo apt-get install -y buildah
+          fi
+        elif [ "${{ matrix.build-tool }}" = "podman" ]; then
+          if ! command -v podman &> /dev/null; then
+            sudo apt-get install -y podman
+          fi
+        elif [ "${{ matrix.build-tool }}" = "docker" ]; then
+          if ! command -v docker &> /dev/null; then
+            # Install Docker using official Docker repository
+            sudo apt-get update
+            sudo apt-get install -y ca-certificates curl gnupg lsb-release
+            sudo mkdir -p /etc/apt/keyrings
+            curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /etc/apt/keyrings/docker.gpg
+            echo "deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.gpg] https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null
+            sudo apt-get update
+            sudo apt-get install -y docker-ce docker-ce-cli containerd.io docker-buildx-plugin docker-compose-plugin
+          fi
+          # Start Docker service if not running
+          sudo systemctl start docker || true
+          sudo usermod -aG docker $USER || true
+          # Create buildx builder if it doesn't exist
+          docker buildx create --name mybuilder --use || true
+          docker buildx inspect --bootstrap || true
+        fi
+        
+        # Verify tool is installed
+        ${{ matrix.build-tool }} --version || true
+
+    - name: Install go
+      uses: actions/setup-go@v3
+      with:
+        go-version: 1.25.x
+
+    - name: Checkout zot repo
+      uses: actions/checkout@v3
+      with:
+        fetch-depth: 2
+        repository: project-zot/zot
+        ref: main
+        path: zot
+
+    - name: Build zot
+      run: |
+        cd $GITHUB_WORKSPACE/zot
+        make binary
+        ls -l bin/
+
+    - name: Bringup zot server
+      run: |
+        cd $GITHUB_WORKSPACE/zot
+        mkdir /tmp/zot
+        ./bin/zot-linux-amd64 serve examples/config-ui.json &
+        while true; do x=0; curl -f http://$REGISTRY_HOST:$REGISTRY_PORT/v2/ || x=1; if [ $x -eq 0 ]; then break; fi; sleep 1; done
+
+    - name: Create test data with ${{ matrix.build-tool }}
+      run: |
+        cd $GITHUB_WORKSPACE
+        make create-test-data REGISTRY_HOST=$REGISTRY_HOST REGISTRY_PORT=$REGISTRY_PORT BUILD_TOOL=${{ matrix.build-tool }}
+
+    - name: Verify test data
+      run: |
+        cd $GITHUB_WORKSPACE
+        if [ ! -f tests/data/image_metadata.json ]; then
+          echo "Error: image_metadata.json was not created"
+          exit 1
+        else   
+          cat tests/data/image_metadata.json | jq
+        fi
+        if [ ! -d tests/data/images ]; then
+          echo "Error: images directory was not created"
+          exit 1
+        fi
+        echo "Test data created successfully with ${{ matrix.build-tool }}"
+
