@@ -32,12 +32,12 @@ jobs:
         sudo rm -rf /usr/share/dotnet
 
     - name: Checkout zui repository
-      uses: actions/checkout@v4
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         fetch-depth: 2
 
     - name: Set up Node.js
-      uses: actions/setup-node@v4
+      uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6.4.0
       with:
         node-version: '24.x'
         cache: 'npm'
@@ -52,11 +52,7 @@ jobs:
       run: |
         cd $GITHUB_WORKSPACE
         sudo apt-get update
-        sudo apt-get install libgpgme-dev libassuan-dev libbtrfs-dev libdevmapper-dev pkg-config rpm snapd jq
-        git clone https://github.com/containers/skopeo -b v1.9.0 $GITHUB_WORKSPACE/src/github.com/containers/skopeo
-        cd $GITHUB_WORKSPACE/src/github.com/containers/skopeo && make bin/skopeo
-        chmod +x bin/skopeo
-        sudo mv bin/skopeo /usr/local/bin/skopeo
+        sudo apt-get install -y skopeo jq
         which skopeo
         skopeo -v
         curl -L https://github.com/regclient/regclient/releases/download/v0.4.7/regctl-linux-amd64 -o regctl
@@ -78,18 +74,20 @@ jobs:
         trivy version
         cd $GITHUB_WORKSPACE
 
-    - name: Install go
-      uses: actions/setup-go@v3
-      with:
-        go-version: 1.22.x
-
     - name: Checkout zot repo
-      uses: actions/checkout@v3
+      uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       with:
         fetch-depth: 2
         repository: project-zot/zot
         ref: main
         path: zot
+
+    - name: Set up Go (module + build cache for zot)
+      uses: actions/setup-go@4a3601121dd01d1626a1e23e37211e3254c1c06c # v6.4.0
+      with:
+        go-version-file: zot/go.mod
+        cache: true
+        cache-dependency-path: zot/go.sum
 
     - name: Build zot
       run: |
@@ -106,7 +104,7 @@ jobs:
 
     - name: Load image test data from cache into a local folder
       id: restore-cache
-      uses: actions/cache@v3
+      uses: actions/cache@668228422ae6a00e4ad889ee87cd7109ec5666a7 # v5.0.4
       with:
         path: tests/data/images
         key: image-config-${{ hashFiles('**/tests/data/config.yaml') }}
@@ -135,7 +133,7 @@ jobs:
         make integration-tests REGISTRY_HOST=$REGISTRY_HOST REGISTRY_PORT=$REGISTRY_PORT
 
     - name: Upload playwright report
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       if: always()
       with:
         name: playwright-report
@@ -144,7 +142,7 @@ jobs:
 
     - name: Upload zot server log (on failure)
       if: failure()
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@bbbca2ddaa5d8feaa63e36b76fdaad77386f024f # v7.0.0
       with:
         name: zot-server-log
         path: tests/zot-server.log
