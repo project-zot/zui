@@ -135,6 +135,11 @@ const randomImage = () => {
   return imageArray[randomIntFromInterval(0, 3)];
 };
 
+const NON_ARTIFACT_CONFIG_MEDIA_TYPES = new Set([
+  'application/vnd.oci.image.config.v1+json',
+  'application/vnd.docker.container.image.v1+json'
+]);
+
 function TagDetails() {
   const [imageDetailData, setImageDetailData] = useState({});
   const [selectedManifest, setSelectedManifest] = useState({});
@@ -203,6 +208,9 @@ function TagDetails() {
     setSelectedManifest(value);
   };
 
+  const artifactType = imageDetailData?.artifactType || selectedManifest?.artifactType;
+  const isArtifact = Boolean(artifactType && !NON_ARTIFACT_CONFIG_MEDIA_TYPES.has(artifactType));
+
   const renderTabContent = () => {
     switch (selectedTab) {
       case 'DependsOn':
@@ -218,15 +226,23 @@ function TagDetails() {
             platform={selectedManifest?.platform}
           />
         );
-      case 'ReferredBy':
+      case 'ReferredBy': {
         const allReferrers = uniqBy(
           [...(selectedManifest?.referrers || []), ...(imageDetailData?.referrers || [])],
           'digest'
         );
 
         return <ReferredBy referrers={allReferrers} />;
+      }
       default:
-        return <HistoryLayers name={imageDetailData?.name} history={selectedManifest?.history || []} />;
+        return (
+          <HistoryLayers
+            name={imageDetailData?.name}
+            history={selectedManifest?.history || []}
+            isArtifact={isArtifact}
+            layers={selectedManifest?.layers || []}
+          />
+        );
     }
   };
 
@@ -314,6 +330,11 @@ function TagDetails() {
                         <Typography gutterBottom className={classes.digest}>
                           Digest: {selectedManifest?.digest}
                         </Typography>
+                        {isArtifact && (
+                          <Typography gutterBottom className={classes.digest} data-testid="artifact-type-inline">
+                            Artifact Type: {artifactType}
+                          </Typography>
+                        )}
                       </Stack>
                     )}
                   </Grid>
@@ -369,6 +390,7 @@ function TagDetails() {
               lastTagged={imageDetailData?.lastTagged}
               license={imageDetailData?.license}
               imageName={imageDetailData?.name}
+              isArtifact={isArtifact}
             />
           </Grid>
         </Grid>
