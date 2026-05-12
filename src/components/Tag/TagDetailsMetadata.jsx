@@ -52,7 +52,9 @@ const useStyles = makeStyles((theme) => ({
 
 function TagDetailsMetadata(props) {
   const classes = useStyles();
-  const { platform, lastUpdated, lastTagged, size, license, imageName } = props;
+  const { platform, lastUpdated, lastTagged, size, license, imageName, artifactType } = props;
+
+  const isArtifact = Boolean(artifactType);
 
   const lastDate = lastUpdated
     ? DateTime.fromISO(lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
@@ -67,7 +69,7 @@ function TagDetailsMetadata(props) {
       <Grid item xs={12} className={`hide-on-mobile`}>
         <Card variant="outlined" className={classes.card}>
           <CardContent className={`${classes.cardContent} ${classes.pullImageContent}`}>
-            <PullCommandButton imageName={imageName || ''} />
+            <PullCommandButton imageName={imageName || ''} isArtifact={isArtifact} />
           </CardContent>
         </Card>
       </Grid>
@@ -83,6 +85,22 @@ function TagDetailsMetadata(props) {
           </CardContent>
         </Card>
       </Grid>
+      {isArtifact && (
+        <Grid item xs={12}>
+          <Card variant="outlined" className={classes.card}>
+            <CardContent className={classes.cardContent}>
+              <Typography variant="body2" align="left" className={classes.metadataHeader}>
+                Artifact Type
+              </Typography>
+              <Tooltip title={artifactType || ' '} placement="top">
+                <Typography variant="body1" align="left" className={classes.metadataBody} data-testid="artifact-type">
+                  {artifactType}
+                </Typography>
+              </Tooltip>
+            </CardContent>
+          </Card>
+        </Grid>
+      )}
       <Grid item xs={12}>
         <Card variant="outlined" className={classes.card}>
           <CardContent className={classes.cardContent}>
