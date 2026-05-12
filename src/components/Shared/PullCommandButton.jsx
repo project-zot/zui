@@ -3,7 +3,7 @@ import React, { useState, useEffect, useRef } from 'react';
 import makeStyles from '@mui/styles/makeStyles';
 import { Grid, Button, FormControl, Menu, MenuItem, Box, Tab, InputBase, IconButton, ButtonBase } from '@mui/material';
 import { TabContext, TabList, TabPanel } from '@mui/lab';
-import { dockerPull, podmanPull, skopeoPull } from 'utilities/pullStrings';
+import { dockerPull, podmanPull, skopeoPull, orasPull } from 'utilities/pullStrings';
 
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
@@ -111,13 +111,14 @@ const useStyles = makeStyles((theme) => ({
 function PullCommandButton(props) {
   const classes = useStyles();
 
-  const { imageName } = props;
+  const { imageName, isArtifact } = props;
 
+  const defaultPull = isArtifact ? orasPull(imageName) : dockerPull(imageName);
   const [anchor, setAnchor] = useState();
   const open = Boolean(anchor);
-  const [pullString, setPullString] = useState(dockerPull(imageName));
+  const [pullString, setPullString] = useState(defaultPull);
   const [isCopied, setIsCopied] = useState(false);
-  const [selectedPullTab, setSelectedPullTab] = useState(dockerPull(imageName));
+  const [selectedPullTab, setSelectedPullTab] = useState(defaultPull);
 
   const mounted = useRef(false);
 
@@ -193,12 +194,35 @@ function PullCommandButton(props) {
                 TabIndicatorProps={{ className: classes.selectedPullTab }}
                 sx={{ '& button.Mui-selected': { color: '#14191F', fontWeight: '600' } }}
               >
+                {isArtifact && <Tab value={orasPull(imageName)} label="ORAS" className={classes.tabContent} />}
                 <Tab value={dockerPull(imageName)} label="Docker" className={classes.tabContent} />
                 <Tab value={podmanPull(imageName)} label="Podman" className={classes.tabContent} />
                 <Tab value={skopeoPull(imageName)} label="Skopeo" className={classes.tabContent} />
               </TabList>
               <Grid container>
                 <Grid item xs={12}>
+                  {isArtifact && (
+                    <TabPanel value={orasPull(imageName)} className={classes.tabPanel}>
+                      <Box className={classes.tabBox}>
+                        <Grid container item xs={12} className={classes.pullStringBox}>
+                          <Grid item xs={10}>
+                            <InputBase
+                              classes={{ input: classes.pullText }}
+                              onKeyDownCapture={(e) => e.preventDefault()}
+                              className={classes.textEllipsis}
+                              defaultValue={orasPull(imageName)}
+                              data-testid="oras-input"
+                            />
+                          </Grid>
+                          <Grid item xs={2} onClick={handleCopyClick} className={classes.copyButtonContainer}>
+                            <IconButton aria-label="copy" data-testid="orasPullcopy-btn">
+                              <ContentCopyIcon sx={{ fontSize: '1rem' }} />
+                            </IconButton>
+                          </Grid>
+                        </Grid>
+                      </Box>
+                    </TabPanel>
+                  )}
                   <TabPanel value={dockerPull(imageName)} className={classes.tabPanel}>
                     <Box className={classes.tabBox}>
                       <Grid container item xs={12} className={classes.pullStringBox}>

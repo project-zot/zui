@@ -226,7 +226,14 @@ function TagDetails() {
 
         return <ReferredBy referrers={allReferrers} />;
       default:
-        return <HistoryLayers name={imageDetailData?.name} history={selectedManifest?.history || []} />;
+        return (
+          <HistoryLayers
+            name={imageDetailData?.name}
+            history={selectedManifest?.history || []}
+            artifactType={selectedManifest?.artifactType}
+            layers={selectedManifest?.layers || []}
+          />
+        );
     }
   };
 
@@ -369,6 +376,7 @@ function TagDetails() {
               lastTagged={imageDetailData?.lastTagged}
               license={imageDetailData?.license}
               imageName={imageDetailData?.name}
+              artifactType={selectedManifest?.artifactType}
             />
           </Grid>
         </Grid>
