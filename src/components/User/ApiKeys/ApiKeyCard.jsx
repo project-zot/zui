@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import { DateTime } from 'luxon';
 import { isNil } from 'lodash';
@@ -105,6 +106,8 @@ function ApiKeyCard(props) {
     setApiKeyRevokeOpen(true);
   };
 
+  const { t } = useTranslation();
+
   return (
     <Card variant="outlined" className={classes.card}>
       <CardContent className={classes.content}>
@@ -121,7 +124,7 @@ function ApiKeyCard(props) {
           </Grid>
           <Grid item xs={2} className={classes.revokeButton}>
             <Button color="error" variant="contained" onClick={handleApiKeyRevokeDialogOpen}>
-              Revoke
+              {t('main.revoke')}
             </Button>
           </Grid>
           {!isNil(apiKey.apiKey) && (
@@ -136,7 +139,7 @@ function ApiKeyCard(props) {
                   ) : (
                     <KeyboardArrowDown className={classes.dropdownText} />
                   )}
-                  <Typography className={classes.dropdownButton}>KEY</Typography>
+                  <Typography className={classes.dropdownButton}>{t('apiKeyCard.key')}</Typography>
                 </Stack>
                 <Collapse in={openDropdown} timeout="auto" unmountOnExit sx={{ marginTop: '1rem' }}>
                   <Stack direction="column" spacing="1.2rem">

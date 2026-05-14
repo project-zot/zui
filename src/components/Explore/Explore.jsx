@@ -1,5 +1,6 @@
 // react global
 import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // components
 import RepoCard from '../Shared/RepoCard.jsx';
@@ -210,6 +211,8 @@ function Explore({ searchInputValue }) {
     setFilterDialogOpen(true);
   };
 
+  const { t } = useTranslation();
+
   const renderRepoCards = () => {
     return (
       exploreData &&
@@ -243,21 +246,21 @@ function Explore({ searchInputValue }) {
     return (
       <Stack spacing={2}>
         <FilterCard
-          title="Operating system"
+          title={t('explore.OS')}
           filters={filterConstants.osFilters}
           filterValue={osFilters}
           updateFilters={setOSFilters}
           wrapperLoading={isLoading}
         />
         <FilterCard
-          title="Architectures"
+          title={t('explore.architectures')}
           filters={filterConstants.archFilters}
           filterValue={archFilters}
           updateFilters={setArchFilters}
           wrapperLoading={isLoading}
         />
         <FilterCard
-          title="Additional filters"
+          title={t('explore.additionalFilters')}
           filters={filterConstants.imageFilters}
           filterValue={imageFilters}
           updateFilters={setImageFilters}
@@ -285,11 +288,11 @@ function Explore({ searchInputValue }) {
           <Grid item xs={12} md={9}>
             <Stack direction="row" className={classes.resultsRow}>
               <Typography variant="body2" className={`${classes.results} hide-on-mobile`}>
-                Showing {exploreData?.length} results out of {totalItems}
+                {t('explore.showing')} {exploreData?.length} {t('explore.resultsOutOf')} {totalItems}
               </Typography>
               {!isLoading && (
                 <Button variant="contained" onClick={handleFilterDialogOpen} className={`${classes.filterButton}`}>
-                  Filter results
+                  {t('explore.filterResults')}
                 </Button>
               )}
               <FormControl
@@ -298,16 +301,16 @@ function Explore({ searchInputValue }) {
                 className={`${classes.sortForm} hide-on-mobile`}
                 size="small"
               >
-                <InputLabel>Sort</InputLabel>
+                <InputLabel>{t('main.sort')}</InputLabel>
                 <Select
-                  label="Sort"
+                  label={t('main.sort')}
                   value={sortFilter}
                   onChange={handleSortChange}
                   MenuProps={{ disableScrollLock: true }}
                 >
                   {Object.values(sortByCriteria).map((el) => (
                     <MenuItem key={el.value} value={el.value}>
-                      {el.label}
+                      {t(el.label)}
                     </MenuItem>
                   ))}
                 </Select>
@@ -324,7 +327,7 @@ function Explore({ searchInputValue }) {
               <Grid container className={classes.nodataWrapper}>
                 <div style={{ marginTop: 20 }}>
                   <Alert style={{ marginTop: 10 }} variant="outlined" severity="warning">
-                    Looks like we don&apos;t have anything matching that search. Try searching something else.
+                    {t('explore.noResults')}
                   </Alert>
                 </div>
               </Grid>

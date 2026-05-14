@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 import { makeStyles } from '@mui/styles';
 import { isEmpty } from 'lodash';
 import { Typography, Stack } from '@mui/material';
@@ -36,6 +37,8 @@ function ReferredBy(props) {
     setIsLoading(false);
   }, []);
 
+  const { t } = useTranslation();
+
   const renderReferrers = () => {
     return !isEmpty(referrersData) ? (
       referrersData.map((referrer, index) => {
@@ -51,14 +54,14 @@ function ReferredBy(props) {
         );
       })
     ) : (
-      <div>{!isLoading && <Typography className={classes.none}> Nothing found </Typography>}</div>
+      <div>{!isLoading && <Typography className={classes.none}> {t('main.nothingFound')} </Typography>}</div>
     );
   };
 
   return (
     <div data-testid="referred-by-container">
       <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
-        Referred By
+        {t('main.referredBy')}
       </Typography>
       <Stack direction="column" spacing={2}>
         <Stack direction="column" spacing={2}>

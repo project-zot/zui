@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // components
 import { Stack, Typography } from '@mui/material';
@@ -35,10 +36,12 @@ function HistoryLayers(props) {
     };
   }, [name, history]);
 
+  const { t } = useTranslation();
+
   return (
     <>
       <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
-        Layers
+        {t('main.layers')}
       </Typography>
       {isLoading ? (
         <Loading />
@@ -57,7 +60,7 @@ function HistoryLayers(props) {
             })
           ) : (
             <div>
-              <Typography className={classes.none}> No Layer data available </Typography>
+              <Typography className={classes.none}> {t('historyLayers.noLayers')} </Typography>
             </div>
           )}
         </Stack>
