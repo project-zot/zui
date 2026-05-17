@@ -1,6 +1,6 @@
 {
-  "short_name": "React App",
-  "name": "Create React App Sample",
+  "short_name": "Zot Registry",
+  "name": "A graphical user interface to interact with a zot server instance",
   "icons": [
     {
       "src": "favicon.ico",
