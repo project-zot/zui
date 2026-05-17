@@ -3,6 +3,7 @@ import React, { useEffect, useMemo, useState } from 'react';
 // components
 import { Stack, Typography } from '@mui/material';
 import LayerCard from '../../Shared/LayerCard.jsx';
+import ArtifactFileCard from '../../Shared/ArtifactFileCard.jsx';
 import makeStyles from '@mui/styles/makeStyles';
 import Loading from '../../Shared/Loading';
 
@@ -25,7 +26,8 @@ function HistoryLayers(props) {
   const [historyData, setHistoryData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const abortController = useMemo(() => new AbortController(), []);
-  const { name, history } = props;
+  const { name, history, artifactType, layers } = props;
+  const isArtifact = Boolean(artifactType);
 
   useEffect(() => {
     setHistoryData(history);
@@ -38,10 +40,22 @@ function HistoryLayers(props) {
   return (
     <>
       <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
-        Layers
+        {isArtifact ? 'Artifact Files' : 'Layers'}
       </Typography>
       {isLoading ? (
         <Loading />
+      ) : isArtifact ? (
+        <Stack direction="column" spacing={2} sx={{ marginTop: '1.7rem' }} data-testid="artifact-files-container">
+          {layers?.length > 0 ? (
+            layers.map((layer, index) => (
+              <ArtifactFileCard key={`${layer?.digest}${index}`} layer={layer} />
+            ))
+          ) : (
+            <div>
+              <Typography className={classes.none}> No artifact files available </Typography>
+            </div>
+          )}
+        </Stack>
       ) : (
         <Stack direction="column" spacing={2} sx={{ marginTop: '1.7rem' }} data-testid="layer-card-container">
           {historyData?.length > 0 ? (
