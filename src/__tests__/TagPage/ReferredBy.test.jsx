@@ -53,12 +53,12 @@ afterEach(() => {
 describe('Referred by tab', () => {
   it('should render referrers if there are any', async () => {
     render(<ReferredBy referrers={mockReferrersList} />);
-    expect(await screen.findAllByText('Media type: application/vnd.oci.artifact.manifest.v1+json')).toHaveLength(2);
+    expect(await screen.findAllByText('referrerCard.mediaType application/vnd.oci.artifact.manifest.v1+json')).toHaveLength(2);
   });
 
   it("renders no referrers if there aren't any", async () => {
     render(<ReferredBy referrers={[]} />);
-    expect(await screen.findByText(/Nothing found/i)).toBeInTheDocument();
+    expect(await screen.findByText(/main.nothingFound/i)).toBeInTheDocument();
   });
 
   it('should display the digest when clicking the dropdowns', async () => {

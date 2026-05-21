@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useTranslation } from 'react-i18next';
 
 import transform from 'utilities/transform';
 
@@ -99,6 +100,8 @@ function LayerCard(props) {
     else return layer.Size;
   };
 
+  const { t } = useTranslation();
+
   return (
     <Card variant="outlined" className={classes.card}>
       <CardContent className={classes.content}>
@@ -123,17 +126,17 @@ function LayerCard(props) {
               ) : (
                 <KeyboardArrowDown className={classes.dropdownText} />
               )}
-              <Typography className={classes.dropdownButton}>DETAILS</Typography>
+              <Typography className={classes.dropdownButton}>{t('layerCard.details')}</Typography>
             </Stack>
             <Collapse in={open} timeout="auto" unmountOnExit sx={{ marginTop: '1rem' }}>
               <Stack direction="column" spacing="1.2rem">
-                <Typography variant="body1">Command</Typography>
+                <Typography variant="body1">{t('layerCard.command')}</Typography>
                 <Typography variant="body1" align="left" className={classes.dropdownContentBox}>
                   {historyDescription.CreatedBy}
                 </Typography>
                 {!historyDescription.EmptyLayer && (
                   <>
-                    <Typography variant="body1">DIGEST</Typography>
+                    <Typography variant="body1">{t('main.digest')}</Typography>
                     <Typography variant="body1" align="left" className={classes.dropdownContentBox}>
                       {layer.Digest}
                     </Typography>

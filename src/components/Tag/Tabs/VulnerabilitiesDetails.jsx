@@ -1,4 +1,5 @@
 import React, { useEffect, useMemo, useState, useRef } from 'react';
+import { useTranslation } from 'react-i18next';
 
 // utility
 import { api, endpoints } from '../../../api';
@@ -339,13 +340,19 @@ function VulnerabilitiesDetails(props) {
     }
   }, [openExport]);
 
+  const { t } = useTranslation();
+
   const renderCVEs = () => {
     return !isEmpty(cveData) ? (
       cveData.map((cve, index) => {
         return <VulnerabilitiyCard key={index} cve={cve} name={name} platform={platform} expand={selectedViewMore} />;
       })
     ) : (
-      <div>{!isLoading && <Typography className={classes.none}> No Vulnerabilities </Typography>}</div>
+      <div>
+        {!isLoading && (
+          <Typography className={classes.none}> {t('VulnerabilitiesDetails.noVulnerabilities')} </Typography>
+        )}
+      </div>
     );
   };
 
@@ -383,7 +390,7 @@ function VulnerabilitiesDetails(props) {
     <Stack direction="column" spacing="1rem" data-testid="vulnerability-container">
       <Stack className={classes.vulnerabilities}>
         <Typography variant="h4" gutterBottom component="div" align="left" className={classes.title}>
-          Vulnerabilities
+          {t('main.vulnerabilities')}
         </Typography>
         <Stack direction="row" spacing="1rem" className={classes.viewModes}>
           <IconButton disableRipple onClick={handleClickExport}>
@@ -391,12 +398,12 @@ function VulnerabilitiesDetails(props) {
           </IconButton>
           <Snackbar
             open={openExport && isLoadingAllCve}
-            message="Getting your data ready for export"
+            message={t('VulnerabilitiesDetails.gettingYourDataReady')}
             action={<CircularProgress size="2rem" sx={{ color: '#FFFFFF' }} />}
           />
           <ToggleButton
             value="viewLess"
-            title="Collapse list view"
+            title={t('VulnerabilitiesDetails.collapseListView')}
             size="small"
             className={classes.view}
             selected={!selectedViewMore}
@@ -406,7 +413,7 @@ function VulnerabilitiesDetails(props) {
           </ToggleButton>
           <ToggleButton
             value="viewMore"
-            title="Expand list view"
+            title={t('VulnerabilitiesDetails.expandListView')}
             size="small"
             className={classes.view}
             selected={selectedViewMore}
@@ -463,7 +470,7 @@ function VulnerabilitiesDetails(props) {
         <Stack className={classes.test} direction="column" spacing="0.25em">
           <Stack className={classes.search}>
             <InputBase
-              placeholder={'Search'}
+              placeholder={t('VulnerabilitiesDetails.search')}
               classes={{ root: classes.searchInputBase, input: classes.input }}
               onChange={debouncedChangeHandler}
             />
@@ -475,7 +482,7 @@ function VulnerabilitiesDetails(props) {
           <Collapse in={openExcludeSearch} timeout="auto" unmountOnExit>
             <Stack className={classes.search}>
               <InputBase
-                placeholder={'Exclude'}
+                placeholder={t('VulnerabilitiesDetails.exclude')}
                 classes={{ root: classes.searchInputBase, input: classes.input }}
                 onChange={debouncedExcludeFilterChangeHandler}
               />
