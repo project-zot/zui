@@ -1,5 +1,5 @@
 import { test, expect } from '@playwright/test';
-import { hosts, endpoints } from './values/test-constants';
+import { hosts } from './values/test-constants';
 import { getMultiTagRepo } from './utils/test-data-parser';
 import { head } from 'lodash';
 
@@ -34,10 +34,12 @@ test.describe('Repository page test', () => {
 
   test('Repository page navigation', async ({ page }) => {
     await expect(page.getByText(testRepo.tags[0].tag, { exact: true })).toBeVisible({ timeout: 100000 });
+    const selectedTag = `${testRepo.repo}:${testRepo.tags[0].tag}`;
     const tagPageRequest = page.waitForRequest(
       (request) =>
-        request.url() === `${hosts.api}${endpoints.image(`${testRepo.repo}:${testRepo.tags[0].tag}`)}` &&
-        request.method() === 'GET'
+        request.method() === 'GET' &&
+        request.url().includes(`${hosts.api}/v2/_zot/ext/search?query=`) &&
+        decodeURIComponent(request.url()).includes(`Image(image: "${selectedTag}")`)
     );
     await page.getByText(testRepo.tags[0].tag, { exact: true }).click();
     await expect(tagPageRequest).toBeDefined();
