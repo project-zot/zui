@@ -5,6 +5,11 @@ import { head } from 'lodash';
 
 const testRepo = getMultiTagRepo();
 const searchEndpointPath = '/v2/_zot/ext/search';
+const buildImageQueryPattern = (imageReference) => {
+  const escapedImageReference = imageReference.replace(/[.*+?^${}()|[\]\\]/g, (match) => `\\${match}`);
+
+  return new RegExp(`Image\\s*\\(\\s*image\\s*:\\s*"${escapedImageReference}"\\s*\\)`);
+};
 
 test.describe('Repository page test', () => {
   test.beforeEach(async ({ page }) => {
@@ -51,11 +56,7 @@ test.describe('Repository page test', () => {
         return false;
       }
 
-      const escapedExpectedImageReference = expectedImageReference.replace(
-        /[.*+?^${}()|[\]\\]/g,
-        (value) => `\\${value}`
-      );
-      const imageQueryPattern = new RegExp(`Image\\s*\\(\\s*image\\s*:\\s*"${escapedExpectedImageReference}"\\s*\\)`);
+      const imageQueryPattern = buildImageQueryPattern(expectedImageReference);
 
       return imageQueryPattern.test(query);
     });
