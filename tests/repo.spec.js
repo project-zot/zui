@@ -35,12 +35,24 @@ test.describe('Repository page test', () => {
   test('Repository page navigation', async ({ page }) => {
     await expect(page.getByText(testRepo.tags[0].tag, { exact: true })).toBeVisible({ timeout: 100000 });
     const expectedImageReference = `${testRepo.repo}:${testRepo.tags[0].tag}`;
-    const tagPageRequest = page.waitForRequest(
-      (request) =>
-        request.method() === 'GET' &&
-        request.url().includes(`${hosts.api}/v2/_zot/ext/search?query=`) &&
-        decodeURIComponent(request.url()).includes(`Image(image: "${expectedImageReference}")`)
-    );
+    const tagPageRequest = page.waitForRequest((request) => {
+      if (request.method() !== 'GET') {
+        return false;
+      }
+
+      const requestUrl = new URL(request.url());
+      if (`${requestUrl.origin}${requestUrl.pathname}` !== `${hosts.api}/v2/_zot/ext/search`) {
+        return false;
+      }
+
+      const query = requestUrl.searchParams.get('query');
+      if (!query) {
+        return false;
+      }
+
+      const normalizedQuery = query.replaceAll(/\s+/g, '');
+      return normalizedQuery.includes(`Image(image:"${expectedImageReference}")`);
+    });
     await page.getByText(testRepo.tags[0].tag, { exact: true }).click();
     await expect(tagPageRequest).toBeDefined();
     const tagPageResponse = await tagPageRequest;

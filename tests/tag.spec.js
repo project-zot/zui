@@ -3,7 +3,13 @@ import { getTagWithDependencies, getTagWithDependents, getTagWithVulnerabilities
 import { hosts, pageSizes } from './values/test-constants';
 
 test.describe('Tag page test', () => {
-  const getEncodedRepoName = (tagData) => encodeURIComponent(tagData.repoName || tagData.title);
+  const getEncodedRepoName = (tagData) => {
+    if (!tagData.repoName) {
+      throw new Error(`Missing repoName for tag ${tagData.tag}`);
+    }
+
+    return encodeURIComponent(tagData.repoName);
+  };
 
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
