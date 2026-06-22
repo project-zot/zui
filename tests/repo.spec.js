@@ -50,7 +50,7 @@ test.describe('Repository page test', () => {
         return false;
       }
 
-      const escapedExpectedImageReference = expectedImageReference.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const escapedExpectedImageReference = expectedImageReference.replace(/[-/\\^$*+?.()|[\]{}]/g, '\\$&');
       const imageQueryPattern = new RegExp(
         `\\bImage\\s*\\(\\s*image\\s*:\\s*"${escapedExpectedImageReference}"\\s*\\)`
       );
