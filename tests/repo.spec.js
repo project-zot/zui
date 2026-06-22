@@ -50,8 +50,12 @@ test.describe('Repository page test', () => {
         return false;
       }
 
-      const normalizedQuery = query.replaceAll(/\s+/g, '');
-      return normalizedQuery.includes(`Image(image:"${expectedImageReference}")`);
+      const escapedExpectedImageReference = expectedImageReference.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+      const imageQueryPattern = new RegExp(
+        `\\bImage\\s*\\(\\s*image\\s*:\\s*"${escapedExpectedImageReference}"\\s*\\)`
+      );
+
+      return imageQueryPattern.test(query);
     });
     await page.getByText(testRepo.tags[0].tag, { exact: true }).click();
     await expect(tagPageRequest).toBeDefined();
