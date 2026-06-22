@@ -34,12 +34,12 @@ test.describe('Repository page test', () => {
 
   test('Repository page navigation', async ({ page }) => {
     await expect(page.getByText(testRepo.tags[0].tag, { exact: true })).toBeVisible({ timeout: 100000 });
-    const selectedTag = `${testRepo.repo}:${testRepo.tags[0].tag}`;
+    const expectedImageReference = `${testRepo.repo}:${testRepo.tags[0].tag}`;
     const tagPageRequest = page.waitForRequest(
       (request) =>
         request.method() === 'GET' &&
         request.url().includes(`${hosts.api}/v2/_zot/ext/search?query=`) &&
-        decodeURIComponent(request.url()).includes(`Image(image: "${selectedTag}")`)
+        decodeURIComponent(request.url()).includes(`Image(image: "${expectedImageReference}")`)
     );
     await page.getByText(testRepo.tags[0].tag, { exact: true }).click();
     await expect(tagPageRequest).toBeDefined();

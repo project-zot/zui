@@ -3,7 +3,7 @@ import { getTagWithDependencies, getTagWithDependents, getTagWithVulnerabilities
 import { hosts, pageSizes } from './values/test-constants';
 
 test.describe('Tag page test', () => {
-  const getRepoPathSegment = (tagData) => encodeURIComponent(tagData.repoName || tagData.title);
+  const getEncodedRepoName = (tagData) => encodeURIComponent(tagData.repoName || tagData.title);
 
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
@@ -13,7 +13,7 @@ test.describe('Tag page test', () => {
 
   test('Tag page with dependents', async ({ page }) => {
     const tagWithDependents = getTagWithDependents();
-    await page.goto(`${hosts.ui}/image/${getRepoPathSegment(tagWithDependents)}/tag/${tagWithDependents.tag}`);
+    await page.goto(`${hosts.ui}/image/${getEncodedRepoName(tagWithDependents)}/tag/${tagWithDependents.tag}`);
     await expect(page.getByRole('tab', { name: 'Layers' })).toBeVisible({ timeout: 100000 });
     await page.getByRole('tab', { name: 'Layers' }).click();
     await expect(page.getByTestId('layer-card-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
@@ -25,7 +25,7 @@ test.describe('Tag page test', () => {
 
   test('Tag page with dependencies', async ({ page }) => {
     const tagWithDependencies = getTagWithDependencies();
-    await page.goto(`${hosts.ui}/image/${getRepoPathSegment(tagWithDependencies)}/tag/${tagWithDependencies.tag}`);
+    await page.goto(`${hosts.ui}/image/${getEncodedRepoName(tagWithDependencies)}/tag/${tagWithDependencies.tag}`);
     await expect(page.getByRole('tab', { name: 'Layers' })).toBeVisible({ timeout: 100000 });
     await page.getByRole('tab', { name: 'Layers' }).click();
     await expect(page.getByTestId('layer-card-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
@@ -47,7 +47,7 @@ test.describe('Tag page test', () => {
   test('Tag page with vulnerabilities', async ({ page }) => {
     const tagWithVulnerabilities = getTagWithVulnerabilities();
     await page.goto(
-      `${hosts.ui}/image/${getRepoPathSegment(tagWithVulnerabilities)}/tag/${tagWithVulnerabilities.tag}`
+      `${hosts.ui}/image/${getEncodedRepoName(tagWithVulnerabilities)}/tag/${tagWithVulnerabilities.tag}`
     );
     await page.getByRole('tab', { name: 'Vulnerabilities' }).click();
     await expect(page.getByTestId('vulnerability-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
