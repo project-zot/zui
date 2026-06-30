@@ -34,7 +34,6 @@ describe('objectModels', () => {
       expect(result.tag).toBe('latest');
       expect(result.lastUpdated).toBe('2020-12-08T00:22:52.526672082Z');
     });
-
     it('should handle missing TaggedTimestamp', () => {
       const responseImage = {
         RepoName: 'test-repo',
@@ -97,4 +96,3 @@ describe('objectModels', () => {
     });
   });
 });
-

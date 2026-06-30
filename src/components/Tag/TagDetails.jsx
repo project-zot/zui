@@ -218,13 +218,14 @@ function TagDetails() {
             platform={selectedManifest?.platform}
           />
         );
-      case 'ReferredBy':
+      case 'ReferredBy': {
         const allReferrers = uniqBy(
           [...(selectedManifest?.referrers || []), ...(imageDetailData?.referrers || [])],
           'digest'
         );
 
         return <ReferredBy referrers={allReferrers} />;
+      }
       default:
         return <HistoryLayers name={imageDetailData?.name} history={selectedManifest?.history || []} />;
     }
