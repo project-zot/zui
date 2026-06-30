@@ -203,6 +203,8 @@ function TagDetails() {
     setSelectedManifest(value);
   };
 
+  const layersTabLabel = selectedManifest?.artifactType ? 'Artifact Files' : 'Layers';
+
   const renderTabContent = () => {
     switch (selectedTab) {
       case 'DependsOn':
@@ -218,16 +220,22 @@ function TagDetails() {
             platform={selectedManifest?.platform}
           />
         );
-      case 'ReferredBy': {
+      case 'ReferredBy':
         const allReferrers = uniqBy(
           [...(selectedManifest?.referrers || []), ...(imageDetailData?.referrers || [])],
           'digest'
         );
 
         return <ReferredBy referrers={allReferrers} />;
-      }
       default:
-        return <HistoryLayers name={imageDetailData?.name} history={selectedManifest?.history || []} />;
+        return (
+          <HistoryLayers
+            name={imageDetailData?.name}
+            history={selectedManifest?.history || []}
+            artifactType={selectedManifest?.artifactType}
+            layers={selectedManifest?.layers || []}
+          />
+        );
     }
   };
 
@@ -336,7 +344,7 @@ function TagDetails() {
               disabled={isLoading}
             >
               <ToggleButton value="Layers" role="tab">
-                Layers
+                {layersTabLabel}
               </ToggleButton>
               <ToggleButton value="DependsOn" role="tab" data-testid="dependencies-tab">
                 Uses
@@ -370,6 +378,7 @@ function TagDetails() {
               lastTagged={imageDetailData?.lastTagged}
               license={imageDetailData?.license}
               imageName={imageDetailData?.name}
+              artifactType={selectedManifest?.artifactType}
             />
           </Grid>
         </Grid>
