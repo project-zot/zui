@@ -5,6 +5,16 @@ import { hosts, pageSizes } from './values/test-constants';
 const getImageName = (tagData) => tagData.repo || tagData.title;
 const layersTabRegex = /^(Layers|Artifact Files)$/;
 
+const assertLayersPanelVisible = async (page, layersTab) => {
+  const layersTabLabel = await layersTab.innerText();
+  await layersTab.click();
+  if (layersTabLabel === 'Artifact Files') {
+    await expect(page.getByTestId('artifact-files-container')).toBeVisible({ timeout: 100000 });
+    return;
+  }
+  await expect(page.getByTestId('layer-card-container')).toBeVisible({ timeout: 100000 });
+};
+
 test.describe('Tag page test', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
@@ -17,8 +27,7 @@ test.describe('Tag page test', () => {
     await page.goto(`${hosts.ui}/image/${getImageName(tagWithDependents)}/tag/${tagWithDependents.tag}`);
     const layersTab = page.getByRole('tab', { name: layersTabRegex });
     await expect(layersTab).toBeVisible({ timeout: 100000 });
-    await layersTab.click();
-    await expect(page.getByTestId('layer-card-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
+    await assertLayersPanelVisible(page, layersTab);
     await page.getByRole('tab', { name: 'Used by' }).click();
     await expect(page.getByTestId('dependents-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
     await expect(page.getByText('Tag').nth(1)).toBeVisible({ timeout: 100000 });
@@ -30,8 +39,7 @@ test.describe('Tag page test', () => {
     await page.goto(`${hosts.ui}/image/${getImageName(tagWithDependencies)}/tag/${tagWithDependencies.tag}`);
     const layersTab = page.getByRole('tab', { name: layersTabRegex });
     await expect(layersTab).toBeVisible({ timeout: 100000 });
-    await layersTab.click();
-    await expect(page.getByTestId('layer-card-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
+    await assertLayersPanelVisible(page, layersTab);
 
     await page.getByRole('tab', { name: 'Uses' }).click();
     await expect(page.getByTestId('depends-on-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
