@@ -28,6 +28,18 @@ afterEach(() => {
 });
 
 describe('PullCommandButton', () => {
+  it('closes menu without copying when Escape is pressed', async () => {
+    const imageName = 'hello-world:latest';
+    render(<PullCommandButtonWrapper imageName={imageName} isArtifact={false} />);
+
+    await userEvent.click(await screen.findByText(`Pull ${imageName}`));
+    await screen.findByTestId('pull-dropdown');
+
+    await userEvent.keyboard('{Escape}');
+    await waitFor(() => expect(screen.queryByTestId('pull-dropdown')).not.toBeInTheDocument());
+    expect(screen.queryByTestId('successPulled-buton')).not.toBeInTheDocument();
+  });
+
   it('resets selected pull command when artifact mode changes', async () => {
     const imageName = 'hello-artifact:v1';
 
@@ -36,9 +48,8 @@ describe('PullCommandButton', () => {
     await userEvent.click(await screen.findByText(`Pull ${imageName}`));
     await waitFor(() => expect(screen.queryAllByTestId('pull-menuItem')).toHaveLength(1));
 
-    await userEvent.click(await screen.findByText('Podman'));
-    await userEvent.click(await screen.findByTestId('podmanPullcopy-btn'));
-    expect(mockCopyToClipboard).toHaveBeenCalledWith(`podman pull localhost/${imageName}`);
+    await userEvent.click(await screen.findByTestId('orasPullcopy-btn'));
+    expect(mockCopyToClipboard).toHaveBeenCalledWith(`oras pull localhost/${imageName}`);
 
     await waitFor(() => expect(screen.queryAllByTestId('successPulled-buton')).toHaveLength(0), { timeout: 3000 });
 
