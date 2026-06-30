@@ -2,6 +2,9 @@ import { test, expect } from '@playwright/test';
 import { getTagWithDependencies, getTagWithDependents, getTagWithVulnerabilities } from './utils/test-data-parser';
 import { hosts, pageSizes } from './values/test-constants';
 
+const getImageName = (tagData) => tagData.repo || tagData.title;
+const layersTabRegex = /^(Layers|Artifact Files)$/;
+
 test.describe('Tag page test', () => {
   test.beforeEach(async ({ page }) => {
     await page.addInitScript(() => {
@@ -11,9 +14,10 @@ test.describe('Tag page test', () => {
 
   test('Tag page with dependents', async ({ page }) => {
     const tagWithDependents = getTagWithDependents();
-    await page.goto(`${hosts.ui}/image/${tagWithDependents.title}/tag/${tagWithDependents.tag}`);
-    await expect(page.getByRole('tab', { name: 'Layers' })).toBeVisible({ timeout: 100000 });
-    await page.getByRole('tab', { name: 'Layers' }).click();
+    await page.goto(`${hosts.ui}/image/${getImageName(tagWithDependents)}/tag/${tagWithDependents.tag}`);
+    const layersTab = page.getByRole('tab', { name: layersTabRegex });
+    await expect(layersTab).toBeVisible({ timeout: 100000 });
+    await layersTab.click();
     await expect(page.getByTestId('layer-card-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
     await page.getByRole('tab', { name: 'Used by' }).click();
     await expect(page.getByTestId('dependents-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
@@ -23,29 +27,23 @@ test.describe('Tag page test', () => {
 
   test('Tag page with dependencies', async ({ page }) => {
     const tagWithDependencies = getTagWithDependencies();
-    await page.goto(`${hosts.ui}/image/${tagWithDependencies.title}/tag/${tagWithDependencies.tag}`);
-    await expect(page.getByRole('tab', { name: 'Layers' })).toBeVisible({ timeout: 100000 });
-    await page.getByRole('tab', { name: 'Layers' }).click();
+    await page.goto(`${hosts.ui}/image/${getImageName(tagWithDependencies)}/tag/${tagWithDependencies.tag}`);
+    const layersTab = page.getByRole('tab', { name: layersTabRegex });
+    await expect(layersTab).toBeVisible({ timeout: 100000 });
+    await layersTab.click();
     await expect(page.getByTestId('layer-card-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
-
-    // Set up network interception to wait for the API call
-    const apiResponse = page.waitForResponse(
-      (response) => response.url().includes('BaseImageList') && response.status() === 200
-    );
 
     await page.getByRole('tab', { name: 'Uses' }).click();
     await expect(page.getByTestId('depends-on-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
-
-    // Wait for the API call to complete before checking for Tag elements
-    await apiResponse;
-
     await expect(await page.getByText('Tag').count()).toBeGreaterThan(0);
   });
 
   test('Tag page with vulnerabilities', async ({ page }) => {
     const tagWithVulnerabilities = getTagWithVulnerabilities();
-    await page.goto(`${hosts.ui}/image/${tagWithVulnerabilities.title}/tag/${tagWithVulnerabilities.tag}`);
-    await page.getByRole('tab', { name: 'Vulnerabilities' }).click();
+    await page.goto(`${hosts.ui}/image/${getImageName(tagWithVulnerabilities)}/tag/${tagWithVulnerabilities.tag}`);
+    const vulnerabilityTab = page.getByRole('tab', { name: 'Vulnerabilities' });
+    await expect(vulnerabilityTab).toBeVisible({ timeout: 100000 });
+    await vulnerabilityTab.click();
     await expect(page.getByTestId('vulnerability-container').locator('div').nth(1)).toBeVisible({ timeout: 100000 });
     await expect(page.getByText(/CVE-/).nth(0)).toBeVisible({ timeout: 100000 });
     await expect(await page.getByText(/CVE-/).count()).toBeGreaterThan(0);

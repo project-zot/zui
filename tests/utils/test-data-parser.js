@@ -8,6 +8,7 @@ const rawDataToRepo = ([rawDataRepoKey, rawDataRepoValue]) => {
     repo: rawDataRepoKey,
     tags: Object.entries(rawDataRepoValue).map(([key, value]) => ({
       tag: key,
+      repo: rawDataRepoKey,
       title: value['org.opencontainers.image.title'],
       description: value['org.opencontainers.image.description'],
       url: value['org.opencontainers.image.url'],
