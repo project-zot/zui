@@ -45,4 +45,12 @@ describe('api module', () => {
     });
     expect(postSpy).not.toHaveBeenCalled();
   });
+
+  it('should request artifact type details for image pages', () => {
+    const query = endpoints.detailedImageInfo('repo', 'tag');
+
+    expect(query).toContain('Image(image: "repo:tag")');
+    expect(query).toContain('Tag TaggedTimestamp ArtifactType Manifests {ArtifactType Layers');
+    expect(query).toContain('Referrers {MediaType ArtifactType Size Digest Annotations{Key Value}}');
+  });
 });
