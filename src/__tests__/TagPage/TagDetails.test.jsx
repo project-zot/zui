@@ -1173,6 +1173,9 @@ describe('Artifact tag details', () => {
     userEvent.click(dropdown);
     await waitFor(() => expect(screen.queryAllByTestId('pull-menuItem')).toHaveLength(1));
     expect(await screen.findByText('ORAS')).toBeInTheDocument();
+    expect(await screen.findByText('Podman')).toBeInTheDocument();
+    expect(screen.queryByText('Docker')).not.toBeInTheDocument();
+    expect(screen.queryByText('Skopeo')).not.toBeInTheDocument();
   });
 
   it('should copy the oras pull string to clipboard for artifact manifests', async () => {
@@ -1185,6 +1188,21 @@ describe('Artifact tag details', () => {
     await waitFor(() =>
       expect(mockCopyToClipboard).toHaveBeenCalledWith(
         `oras pull localhost/${mockArtifactImage.Image.RepoName}:${mockArtifactImage.Image.Tag}`
+      )
+    );
+  });
+
+  it('should copy the podman artifact pull string to clipboard for artifact manifests', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockArtifactImage } });
+    render(<TagDetailsThemeWrapper />);
+    const dropdown = await screen.findByText(`Pull ${mockArtifactImage.Image.RepoName}:${mockArtifactImage.Image.Tag}`);
+    userEvent.click(dropdown);
+    await waitFor(() => expect(screen.queryAllByTestId('pull-menuItem')).toHaveLength(1));
+    userEvent.click(await screen.findByText('Podman'));
+    fireEvent.click(await screen.findByTestId('podmanPullcopy-btn'));
+    await waitFor(() =>
+      expect(mockCopyToClipboard).toHaveBeenCalledWith(
+        `podman artifact pull localhost/${mockArtifactImage.Image.RepoName}:${mockArtifactImage.Image.Tag}`
       )
     );
   });
