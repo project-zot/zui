@@ -23,6 +23,7 @@ describe('objectModels', () => {
         Documentation: 'Test docs',
         Vendor: 'Test Vendor',
         Authors: [],
+        ArtifactType: 'application/vnd.acme.rocket.config',
         Vulnerabilities: { MaxSeverity: 'NONE', Count: 0 },
         IsDeletable: true
       };
@@ -32,6 +33,7 @@ describe('objectModels', () => {
       expect(result.lastTagged).toBe('2020-12-10T00:22:52.526672082Z');
       expect(result.repoName).toBe('test-repo');
       expect(result.tag).toBe('latest');
+      expect(result.artifactType).toBe('application/vnd.acme.rocket.config');
       expect(result.lastUpdated).toBe('2020-12-08T00:22:52.526672082Z');
     });
 
@@ -97,4 +99,3 @@ describe('objectModels', () => {
     });
   });
 });
-

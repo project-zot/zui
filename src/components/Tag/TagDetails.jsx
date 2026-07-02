@@ -203,7 +203,8 @@ function TagDetails() {
     setSelectedManifest(value);
   };
 
-  const layersTabLabel = selectedManifest?.artifactType ? 'Artifact Files' : 'Layers';
+  const artifactType = imageDetailData?.artifactType || selectedManifest?.artifactType;
+  const layersTabLabel = artifactType ? 'Artifact Files' : 'Layers';
 
   const renderTabContent = () => {
     switch (selectedTab) {
@@ -220,19 +221,20 @@ function TagDetails() {
             platform={selectedManifest?.platform}
           />
         );
-      case 'ReferredBy':
+      case 'ReferredBy': {
         const allReferrers = uniqBy(
           [...(selectedManifest?.referrers || []), ...(imageDetailData?.referrers || [])],
           'digest'
         );
 
         return <ReferredBy referrers={allReferrers} />;
+      }
       default:
         return (
           <HistoryLayers
             name={imageDetailData?.name}
             history={selectedManifest?.history || []}
-            artifactType={selectedManifest?.artifactType}
+            artifactType={artifactType}
             layers={selectedManifest?.layers || []}
           />
         );
@@ -378,7 +380,7 @@ function TagDetails() {
               lastTagged={imageDetailData?.lastTagged}
               license={imageDetailData?.license}
               imageName={imageDetailData?.name}
-              artifactType={selectedManifest?.artifactType}
+              artifactType={artifactType}
             />
           </Grid>
         </Grid>

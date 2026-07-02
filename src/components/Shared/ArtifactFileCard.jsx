@@ -125,11 +125,7 @@ function ArtifactFileCard(props) {
             <Divider className={classes.divider} />
           </Grid>
           <Grid item xs={12}>
-            <ButtonBase
-              onClick={() => setOpen((prev) => !prev)}
-              aria-expanded={open}
-              aria-controls={detailsId}
-            >
+            <ButtonBase onClick={() => setOpen((prev) => !prev)} aria-expanded={open} aria-controls={detailsId}>
               <Stack direction="row">
                 {!open ? (
                   <KeyboardArrowRight className={classes.dropdownText} />

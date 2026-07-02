@@ -47,9 +47,7 @@ function HistoryLayers(props) {
       ) : isArtifact ? (
         <Stack direction="column" spacing={2} sx={{ marginTop: '1.7rem' }} data-testid="artifact-files-container">
           {layers?.length > 0 ? (
-            layers.map((layer, index) => (
-              <ArtifactFileCard key={`${layer?.digest}${index}`} layer={layer} />
-            ))
+            layers.map((layer, index) => <ArtifactFileCard key={`${layer?.digest}${index}`} layer={layer} />)
           ) : (
             <div>
               <Typography className={classes.none}> No artifact files available </Typography>

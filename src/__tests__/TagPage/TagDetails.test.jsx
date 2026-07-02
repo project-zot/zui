@@ -1117,12 +1117,12 @@ const mockArtifactImage = {
     RepoName: 'hello-artifact',
     Tag: 'v1',
     TaggedTimestamp: '2026-05-05T16:40:57Z',
+    ArtifactType: 'application/vnd.acme.rocket.config',
     Manifests: [
       {
         Digest: 'sha256:3f41230db4272fb8909e21c431d8e589682e3d743ed47d98e76a3925cff06976',
         LastUpdated: '2026-05-05T16:40:57Z',
         Size: '574',
-        ArtifactType: 'application/vnd.acme.rocket.config',
         Platform: {},
         Layers: [
           {
@@ -1149,9 +1149,7 @@ describe('Artifact tag details', () => {
   it('should show ORAS tab in pull dropdown for artifact manifests', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockArtifactImage } });
     render(<TagDetailsThemeWrapper />);
-    const dropdown = await screen.findByText(
-      `Pull ${mockArtifactImage.Image.RepoName}:${mockArtifactImage.Image.Tag}`
-    );
+    const dropdown = await screen.findByText(`Pull ${mockArtifactImage.Image.RepoName}:${mockArtifactImage.Image.Tag}`);
     userEvent.click(dropdown);
     await waitFor(() => expect(screen.queryAllByTestId('pull-menuItem')).toHaveLength(1));
     expect(await screen.findByText('ORAS')).toBeInTheDocument();
@@ -1160,9 +1158,7 @@ describe('Artifact tag details', () => {
   it('should copy the oras pull string to clipboard for artifact manifests', async () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockArtifactImage } });
     render(<TagDetailsThemeWrapper />);
-    const dropdown = await screen.findByText(
-      `Pull ${mockArtifactImage.Image.RepoName}:${mockArtifactImage.Image.Tag}`
-    );
+    const dropdown = await screen.findByText(`Pull ${mockArtifactImage.Image.RepoName}:${mockArtifactImage.Image.Tag}`);
     userEvent.click(dropdown);
     await waitFor(() => expect(screen.queryAllByTestId('pull-menuItem')).toHaveLength(1));
     fireEvent.click(await screen.findByTestId('orasPullcopy-btn'));
@@ -1177,9 +1173,7 @@ describe('Artifact tag details', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockArtifactImage } });
     render(<TagDetailsThemeWrapper />);
     expect(await screen.findByText('Artifact Type')).toBeInTheDocument();
-    expect(await screen.findByTestId('artifact-type')).toHaveTextContent(
-      'application/vnd.acme.rocket.config'
-    );
+    expect(await screen.findByTestId('artifact-type')).toHaveTextContent('application/vnd.acme.rocket.config');
   });
 
   it('should show "Artifact Files" tab content for artifact manifests', async () => {
@@ -1189,4 +1183,3 @@ describe('Artifact tag details', () => {
     expect(await screen.findByText('artifact.txt')).toBeInTheDocument();
   });
 });
-
