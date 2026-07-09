@@ -47,12 +47,6 @@ const useStyles = makeStyles(() => ({
     overflow: 'hidden',
     textOverflow: 'ellipsis'
   },
-  mediaType: {
-    fontSize: '0.875rem',
-    fontWeight: '400',
-    paddingBottom: '0.25rem',
-    color: '#52637A'
-  },
   values: {
     fontSize: '1rem',
     fontWeight: '400',
@@ -90,14 +84,12 @@ const useStyles = makeStyles(() => ({
   }
 }));
 
-const TITLE_ANNOTATION = 'org.opencontainers.image.title';
-
 function ArtifactFileCard(props) {
   const classes = useStyles();
   const { layer } = props;
   const [open, setOpen] = useState(false);
 
-  const title = layer?.annotations?.find((a) => a.key === TITLE_ANNOTATION)?.value || layer?.digest || '';
+  const title = layer?.digest || '';
   const detailsId = `artifact-file-details-${(layer?.digest || 'unknown').replace(/[^a-zA-Z0-9_-]/g, '-')}`;
 
   return (
@@ -110,11 +102,6 @@ function ArtifactFileCard(props) {
                 {title}
               </Typography>
             </Tooltip>
-            {layer?.mediaType && (
-              <Typography variant="body2" className={classes.mediaType}>
-                {layer.mediaType}
-              </Typography>
-            )}
           </Grid>
           <Grid item xs={2}>
             <Typography variant="body1" className={classes.values}>

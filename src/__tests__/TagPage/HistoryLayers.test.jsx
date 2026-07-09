@@ -27,16 +27,12 @@ const mockLayersList = [
 
 const mockArtifactLayers = [
   {
-    mediaType: 'text/plain',
     size: 12,
-    digest: 'sha256:a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447',
-    annotations: [{ key: 'org.opencontainers.image.title', value: 'artifact.txt' }]
+    digest: 'sha256:a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447'
   },
   {
-    mediaType: 'application/octet-stream',
     size: 1024,
-    digest: 'sha256:b948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a448',
-    annotations: []
+    digest: 'sha256:b948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a448'
   }
 ];
 
@@ -90,7 +86,7 @@ describe('Artifact files display', () => {
     expect(await screen.findAllByTestId('artifact-file-card')).toHaveLength(2);
   });
 
-  it('shows artifact file title from org.opencontainers.image.title annotation', async () => {
+  it('shows digest as the artifact file title', async () => {
     render(
       <HistoryLayers
         name="hello-artifact:v1"
@@ -99,19 +95,9 @@ describe('Artifact files display', () => {
         layers={mockArtifactLayers}
       />
     );
-    expect(await screen.findByText('artifact.txt')).toBeInTheDocument();
-  });
-
-  it('shows media type for each artifact file', async () => {
-    render(
-      <HistoryLayers
-        name="hello-artifact:v1"
-        history={[]}
-        isArtifact
-        layers={mockArtifactLayers}
-      />
-    );
-    expect(await screen.findByText('text/plain')).toBeInTheDocument();
+    expect(
+      await screen.findByText('sha256:a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447')
+    ).toBeInTheDocument();
   });
 
   it('toggles artifact file details with accessible button semantics', async () => {

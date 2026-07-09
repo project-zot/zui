@@ -1126,10 +1126,8 @@ const mockArtifactImage = {
         Platform: {},
         Layers: [
           {
-            MediaType: 'text/plain',
             Size: '12',
-            Digest: 'sha256:a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447',
-            Annotations: [{ Key: 'org.opencontainers.image.title', Value: 'artifact.txt' }]
+            Digest: 'sha256:a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447'
           }
         ],
         History: []
@@ -1219,7 +1217,9 @@ describe('Artifact tag details', () => {
     jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: mockArtifactImage } });
     render(<TagDetailsThemeWrapper />);
     expect(await screen.findByTestId('artifact-files-container')).toBeInTheDocument();
-    expect(await screen.findByText('artifact.txt')).toBeInTheDocument();
+    expect(
+      await screen.findByText('sha256:a948904f2f0f479b8f8197694b30184b0d2ed1c1cd2a1ec0fb85d299a192a447')
+    ).toBeInTheDocument();
   });
 
   it('should not mark regular images as artifacts when artifactType is an image config media type', async () => {

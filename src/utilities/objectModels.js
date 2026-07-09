@@ -88,10 +88,8 @@ const mapToManifest = (responseManifest) => {
     starCount: responseManifest.StarCount,
     artifactType: responseManifest.ArtifactType,
     layers: responseManifest.Layers?.map((layer) => ({
-      mediaType: layer.MediaType,
       size: layer.Size,
-      digest: layer.Digest,
-      annotations: layer.Annotations?.map((a) => ({ key: a.Key, value: a.Value }))
+      digest: layer.Digest
     })),
     history: responseManifest.History,
     vulnerabilities: responseManifest.Vulnerabilities,
