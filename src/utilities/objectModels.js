@@ -87,10 +87,13 @@ const mapToManifest = (responseManifest) => {
     downloadCount: responseManifest.DownloadCount,
     starCount: responseManifest.StarCount,
     artifactType: responseManifest.ArtifactType,
-    layers: responseManifest.Layers?.map((layer) => ({
-      size: layer.Size,
-      digest: layer.Digest
-    })),
+    layers:
+      responseManifest.Layers?.map((layer) => ({
+        mediaType: layer.MediaType,
+        size: layer.Size,
+        digest: layer.Digest,
+        annotations: layer.Annotations?.map((annotation) => ({ key: annotation.Key, value: annotation.Value })) || []
+      })) || [],
     history: responseManifest.History,
     vulnerabilities: responseManifest.Vulnerabilities,
     referrers: responseManifest.Referrers

@@ -53,6 +53,6 @@ describe('api module', () => {
     expect(query).toContain('Tag TaggedTimestamp ArtifactType Manifests {ArtifactType Layers');
     expect(query).toContain('Layers {Size Digest}');
     expect(query).not.toContain('Layers {MediaType');
-    expect(query).toContain('Referrers {MediaType Size Digest}');
+    expect(query).toContain('Referrers {MediaType ArtifactType Size Digest Annotations{Key Value}}');
   });
 });

@@ -208,7 +208,7 @@ function TagDetails() {
     setSelectedManifest(value);
   };
 
-  const artifactType = imageDetailData?.artifactType || selectedManifest?.artifactType;
+  const artifactType = selectedManifest?.artifactType || imageDetailData?.artifactType;
   const isArtifact = Boolean(artifactType && !NON_ARTIFACT_CONFIG_MEDIA_TYPES.has(artifactType));
 
   const renderTabContent = () => {

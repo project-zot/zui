@@ -97,5 +97,75 @@ describe('objectModels', () => {
       // Verify lastTagged is not included in manifest mapping
       expect(result.lastTagged).toBeUndefined();
     });
+
+    it('should default layers to an empty array when missing', () => {
+      const responseManifest = {
+        Digest: 'sha256:abc123',
+        ConfigDigest: 'sha256:def456',
+        LastUpdated: '2020-12-08T00:22:52.526672082Z',
+        Size: '75183423',
+        Platform: {
+          Os: 'linux',
+          Arch: 'amd64'
+        },
+        DownloadCount: 10,
+        StarCount: 5,
+        History: [],
+        Vulnerabilities: { MaxSeverity: 'NONE', Count: 0 },
+        Referrers: []
+      };
+
+      const result = mapToManifest(responseManifest);
+
+      expect(result.layers).toEqual([]);
+    });
+
+    it('should map layer details and default annotations to an empty array', () => {
+      const responseManifest = {
+        Digest: 'sha256:abc123',
+        ConfigDigest: 'sha256:def456',
+        LastUpdated: '2020-12-08T00:22:52.526672082Z',
+        Size: '75183423',
+        Platform: {
+          Os: 'linux',
+          Arch: 'amd64'
+        },
+        DownloadCount: 10,
+        StarCount: 5,
+        Layers: [
+          {
+            MediaType: 'application/vnd.oci.image.layer.v1.tar+gzip',
+            Size: 12345,
+            Digest: 'sha256:layer1'
+          },
+          {
+            MediaType: 'application/vnd.oci.image.layer.v1.tar+gzip',
+            Size: 67890,
+            Digest: 'sha256:layer2',
+            Annotations: [{ Key: 'org.opencontainers.image.title', Value: 'layer2.tar.gz' }]
+          }
+        ],
+        History: [],
+        Vulnerabilities: { MaxSeverity: 'NONE', Count: 0 },
+        Referrers: []
+      };
+
+      const result = mapToManifest(responseManifest);
+
+      expect(result.layers).toEqual([
+        {
+          mediaType: 'application/vnd.oci.image.layer.v1.tar+gzip',
+          size: 12345,
+          digest: 'sha256:layer1',
+          annotations: []
+        },
+        {
+          mediaType: 'application/vnd.oci.image.layer.v1.tar+gzip',
+          size: 67890,
+          digest: 'sha256:layer2',
+          annotations: [{ key: 'org.opencontainers.image.title', value: 'layer2.tar.gz' }]
+        }
+      ]);
+    });
   });
 });
