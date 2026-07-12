@@ -52,7 +52,7 @@ const useStyles = makeStyles((theme) => ({
 
 function TagDetailsMetadata(props) {
   const classes = useStyles();
-  const { platform, lastUpdated, lastTagged, size, license, imageName } = props;
+  const { platform, lastUpdated, lastTagged, size, license, imageName, isArtifact } = props;
 
   const lastDate = lastUpdated
     ? DateTime.fromISO(lastUpdated).toRelative({ unit: ['weeks', 'days', 'hours', 'minutes'] })
@@ -67,7 +67,7 @@ function TagDetailsMetadata(props) {
       <Grid item xs={12} className={`hide-on-mobile`}>
         <Card variant="outlined" className={classes.card}>
           <CardContent className={`${classes.cardContent} ${classes.pullImageContent}`}>
-            <PullCommandButton imageName={imageName || ''} />
+            <PullCommandButton imageName={imageName || ''} isArtifact={isArtifact} />
           </CardContent>
         </Card>
       </Grid>

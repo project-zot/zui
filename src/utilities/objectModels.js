@@ -52,6 +52,7 @@ const mapToImage = (responseImage) => {
     repoName: responseImage.RepoName,
     tag: responseImage.Tag,
     manifests: responseImage.Manifests?.map((manifest) => mapToManifest(manifest)) || [],
+    artifactType: responseImage.ArtifactType,
     referrers: responseImage.Referrers,
     size: responseImage.Size,
     downloadCount: responseImage.DownloadCount,
@@ -85,7 +86,14 @@ const mapToManifest = (responseManifest) => {
     platform: responseManifest.Platform,
     downloadCount: responseManifest.DownloadCount,
     starCount: responseManifest.StarCount,
-    layers: responseManifest.Layers,
+    artifactType: responseManifest.ArtifactType,
+    layers:
+      responseManifest.Layers?.map((layer) => ({
+        mediaType: layer.MediaType,
+        size: layer.Size,
+        digest: layer.Digest,
+        annotations: layer.Annotations?.map((annotation) => ({ key: annotation.Key, value: annotation.Value })) || []
+      })) || [],
     history: responseManifest.History,
     vulnerabilities: responseManifest.Vulnerabilities,
     referrers: responseManifest.Referrers
