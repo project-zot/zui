@@ -49,7 +49,7 @@ function ExploreHeader() {
   const path = location.pathname;
   const pathWithoutImage = path.replace('tag/', '');
   const pathToBeDisplayed = pathWithoutImage.replace('/image/', '');
-  const pathHeader = pathToBeDisplayed.replace('/', ' / ').replace(/%2F/g, '/');
+  const pathHeader = decodeURIComponent(pathToBeDisplayed).replace('/', ' / ').replace(/%2F/g, '/');
   const pathWithTag = path.substring(0, path.lastIndexOf('/'));
 
   return (
