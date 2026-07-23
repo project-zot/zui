@@ -90,8 +90,11 @@ export default function TagCard(props) {
   const navigate = useNavigate();
 
   const goToTags = (digest = null) => {
-    if (repoName) {
-      navigate(`/image/${encodeURIComponent(repoName)}/tag/${tag}`, { state: { digest } });
+    // Relative navigation double-encodes repo names containing "/" (%2F becomes
+    // %252F in the URL), so build an absolute path whenever the name is known
+    const targetRepo = repoName || repo;
+    if (targetRepo) {
+      navigate(`/image/${encodeURIComponent(targetRepo)}/tag/${tag}`, { state: { digest } });
     } else {
       navigate(`tag/${tag}`, { state: { digest } });
     }

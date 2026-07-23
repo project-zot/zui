@@ -4,10 +4,10 @@ import Tags from 'components/Repo/Tabs/Tags';
 import React from 'react';
 import MockThemeProvider from '__mocks__/MockThemeProvider';
 
-const TagsThemeWrapper = () => {
+const TagsThemeWrapper = (props) => {
   return (
     <MockThemeProvider>
-      <Tags tags={mockedTagsData} />
+      <Tags tags={mockedTagsData} {...props} />
     </MockThemeProvider>
   );
 };
@@ -97,6 +97,15 @@ describe('Tags component', () => {
     fireEvent.click(tagLink);
     await waitFor(() => {
       expect(mockedUsedNavigate).toHaveBeenCalledWith('tag/latest', { state: { digest: null } });
+    });
+  });
+
+  it('should navigate with an absolute encoded path when the repo name contains a slash', async () => {
+    render(<TagsThemeWrapper repoName="foo/bar" />);
+    const tagLink = await screen.findByText('latest');
+    fireEvent.click(tagLink);
+    await waitFor(() => {
+      expect(mockedUsedNavigate).toHaveBeenCalledWith('/image/foo%2Fbar/tag/latest', { state: { digest: null } });
     });
   });
 
