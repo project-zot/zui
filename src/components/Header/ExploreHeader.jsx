@@ -1,5 +1,5 @@
 // react global
-import { Link, useLocation, useNavigate, useParams } from 'react-router';
+import { Link, useNavigate, useParams } from 'react-router';
 
 // components
 import { Typography, Breadcrumbs } from '@mui/material';
@@ -46,9 +46,7 @@ const useStyles = makeStyles((theme) => {
 function ExploreHeader() {
   const classes = useStyles();
   const navigate = useNavigate();
-  const location = useLocation();
   const { name, reponame, tag } = useParams();
-  const path = location.pathname;
   const repoName = decodeRouteParam(reponame || name);
   const pathHeader = tag ? `${repoName} / ${decodeRouteParam(tag)}` : repoName;
   // rebuild the link from the decoded name instead of slicing location.pathname,
@@ -65,7 +63,7 @@ function ExploreHeader() {
           </Typography>
         </Link>
         <Link to={repoLink}>
-          {path.includes('/image/') && (
+          {repoName && (
             <Typography className={classes.explore} variant="body1">
               {pathHeader}
             </Typography>
