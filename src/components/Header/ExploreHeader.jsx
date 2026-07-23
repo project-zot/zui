@@ -1,5 +1,5 @@
 // react global
-import { Link, useLocation, useNavigate } from 'react-router';
+import { Link, useLocation, useNavigate, useParams } from 'react-router';
 
 // components
 import { Typography, Breadcrumbs } from '@mui/material';
@@ -9,6 +9,7 @@ import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 
 import makeStyles from '@mui/styles/makeStyles';
 import React from 'react';
+import { decodeRouteParam } from '../../utilities/urlUtilities';
 
 const useStyles = makeStyles((theme) => {
   return {
@@ -46,11 +47,13 @@ function ExploreHeader() {
   const classes = useStyles();
   const navigate = useNavigate();
   const location = useLocation();
+  const { name, reponame, tag } = useParams();
   const path = location.pathname;
-  const pathWithoutImage = path.replace('tag/', '');
-  const pathToBeDisplayed = pathWithoutImage.replace('/image/', '');
-  const pathHeader = decodeURIComponent(pathToBeDisplayed).replace('/', ' / ').replace(/%2F/g, '/');
-  const pathWithTag = path.substring(0, path.lastIndexOf('/'));
+  const repoName = decodeRouteParam(reponame || name);
+  const pathHeader = tag ? `${repoName} / ${decodeRouteParam(tag)}` : repoName;
+  // rebuild the link from the decoded name instead of slicing location.pathname,
+  // which may still carry an extra %25-encoding layer added by the router history
+  const repoLink = repoName ? `/image/${encodeURIComponent(repoName)}` : '/';
 
   return (
     <div className={classes.exploreHeader}>
@@ -61,7 +64,7 @@ function ExploreHeader() {
             Home
           </Typography>
         </Link>
-        <Link to={pathWithTag.substring(0, pathWithTag.lastIndexOf('/'))}>
+        <Link to={repoLink}>
           {path.includes('/image/') && (
             <Typography className={classes.explore} variant="body1">
               {pathHeader}

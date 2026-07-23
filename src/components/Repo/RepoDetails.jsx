@@ -10,6 +10,7 @@ import { api, endpoints } from '../../api';
 import { host } from '../../host';
 import { useParams, useNavigate, createSearchParams } from 'react-router';
 import { mapToRepoFromRepoInfo } from 'utilities/objectModels';
+import { decodeRouteParam } from 'utilities/urlUtilities';
 import { isAuthenticated } from 'utilities/authUtilities';
 import filterConstants from 'utilities/filterConstants';
 
@@ -167,7 +168,8 @@ function RepoDetails() {
   const placeholderImage = useRef(randomImage());
   const [isLoading, setIsLoading] = useState(true);
   // get url param from <Route here (i.e. image name)
-  const { name } = useParams();
+  const { name: rawName } = useParams();
+  const name = decodeRouteParam(rawName);
   const navigate = useNavigate();
   const abortController = useMemo(() => new AbortController(), []);
   const classes = useStyles();

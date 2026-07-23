@@ -100,6 +100,21 @@ describe('Tags component', () => {
     });
   });
 
+  it('should navigate with an absolute, encoded path when a repoName is provided, avoiding relative navigation that double-encodes nested repo names', async () => {
+    render(
+      <MockThemeProvider>
+        <Tags tags={mockedTagsData} repoName="company/users/foobar/myapp" />
+      </MockThemeProvider>
+    );
+    const tagLink = await screen.findByText('company/users/foobar/myapp:latest');
+    fireEvent.click(tagLink);
+    await waitFor(() => {
+      expect(mockedUsedNavigate).toHaveBeenCalledWith('/image/company%2Fusers%2Ffoobar%2Fmyapp/tag/latest', {
+        state: { digest: null }
+      });
+    });
+  });
+
   it('should navigate to specific manifest when clicking the digest', async () => {
     render(<TagsThemeWrapper />);
     const openBtn = screen.getAllByText(/show/i);
