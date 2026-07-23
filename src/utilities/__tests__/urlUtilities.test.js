@@ -25,6 +25,16 @@ describe('urlUtilities', () => {
       expect(decodeRouteParam('company%252Fusers%252Ffoobar%252Fmyapp')).toBe('company/users/foobar/myapp');
     });
 
+    it('only resolves up to one extra %25 layer beyond what the router already handles, not arbitrary depth', () => {
+      // React Router's own param matching already collapses a %2F/%252F name down to a
+      // real slash on its own, so this single pass only needs to catch one further layer
+      // (e.g. a lowercase escape the router's case-sensitive match misses). A third layer
+      // is not something any current code path in this app produces.
+      expect(decodeRouteParam('company%25252Fusers%25252Ffoobar%25252Fmyapp')).toBe(
+        'company%252Fusers%252Ffoobar%252Fmyapp'
+      );
+    });
+
     it('decodes lowercase percent-escapes the same as uppercase (percent-encoding is case-insensitive)', () => {
       expect(decodeRouteParam('company%2fusers%2ffoobar%2fmyapp')).toBe('company/users/foobar/myapp');
       expect(decodeRouteParam('company%252fusers%252ffoobar%252fmyapp')).toBe('company/users/foobar/myapp');
