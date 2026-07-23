@@ -25,6 +25,11 @@ describe('urlUtilities', () => {
       expect(decodeRouteParam('company%252Fusers%252Ffoobar%252Fmyapp')).toBe('company/users/foobar/myapp');
     });
 
+    it('decodes lowercase percent-escapes the same as uppercase (percent-encoding is case-insensitive)', () => {
+      expect(decodeRouteParam('company%2fusers%2ffoobar%2fmyapp')).toBe('company/users/foobar/myapp');
+      expect(decodeRouteParam('company%252fusers%252ffoobar%252fmyapp')).toBe('company/users/foobar/myapp');
+    });
+
     it('does not throw on malformed percent sequences and returns the best-effort decode', () => {
       expect(() => decodeRouteParam('myapp%')).not.toThrow();
       expect(decodeRouteParam('myapp%')).toBe('myapp%');

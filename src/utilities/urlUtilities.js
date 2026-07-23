@@ -13,8 +13,8 @@
 export function decodeRouteParam(value) {
   if (typeof value !== 'string') return value;
   let decoded = value;
-  for (let i = 0; i < 5 && (decoded.includes('%25') || decoded.includes('%2F')); i++) {
-    const next = decoded.replace(/%25/g, '%').replace(/%2F/g, '/');
+  for (let i = 0; i < 5 && (/%25/i.test(decoded) || /%2f/i.test(decoded)); i++) {
+    const next = decoded.replace(/%25/gi, '%').replace(/%2f/gi, '/');
     if (next === decoded) break;
     decoded = next;
   }
