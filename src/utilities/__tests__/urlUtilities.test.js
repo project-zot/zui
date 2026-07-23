@@ -29,5 +29,15 @@ describe('urlUtilities', () => {
       expect(() => decodeRouteParam('myapp%')).not.toThrow();
       expect(decodeRouteParam('myapp%')).toBe('myapp%');
     });
+
+    it('never decodes escape sequences other than %25 and %2F, since params are interpolated unescaped into GraphQL query strings', () => {
+      // %22 is a single-encoded double quote; a generic decode would turn it into a
+      // literal '"' and let the value break out of the quoted GraphQL string in api.js.
+      expect(decodeRouteParam('my%22app')).toBe('my%22app');
+      // %2522 is a double-encoded double quote: only the extra '%25' layer should
+      // collapse (to the harmless literal text '%22'), never all the way to '"'.
+      expect(decodeRouteParam('my%2522app')).toBe('my%22app');
+      expect(decodeRouteParam('my%2522app')).not.toContain('"');
+    });
   });
 });

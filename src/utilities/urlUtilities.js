@@ -1,19 +1,20 @@
-// React Router route params are decoded once by the router itself. When a
-// path segment has been percent-encoded more than once (e.g. a repo name
-// containing '/' that went through an extra encoding pass in the browser's
-// history layer), a single decode still leaves escaped sequences behind
-// (%2F, %252F, ...). Keep decoding until the value stabilizes so any depth
-// of encoding collapses back to the original name.
+// React Router already decodes route params for us, including collapsing one
+// extra layer of '%25' re-encoding and turning '%2F' into a literal slash
+// (see matchRoutesImpl/matchPathImpl in the router package). This only mops
+// up additional layers of that same re-encoding (e.g. a bookmarked link from
+// before this bug was fixed, or a future relative navigation elsewhere in
+// the app reintroducing it).
+//
+// It intentionally only ever touches the '%25' and '%2F' escape sequences
+// and never runs a generic decodeURIComponent: route params are interpolated
+// unescaped into GraphQL query strings (see src/api.js), so decoding
+// arbitrary percent-encoded characters (e.g. %22 -> ") would let a crafted
+// URL break out of the quoted string.
 export function decodeRouteParam(value) {
   if (typeof value !== 'string') return value;
   let decoded = value;
-  for (let i = 0; i < 5 && decoded.includes('%'); i++) {
-    let next;
-    try {
-      next = decodeURIComponent(decoded);
-    } catch {
-      break;
-    }
+  for (let i = 0; i < 5 && (decoded.includes('%25') || decoded.includes('%2F')); i++) {
+    const next = decoded.replace(/%25/g, '%').replace(/%2F/g, '/');
     if (next === decoded) break;
     decoded = next;
   }
