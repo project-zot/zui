@@ -45,13 +45,19 @@ describe('urlUtilities', () => {
       expect(decodeRouteParam('myapp%')).toBe('myapp%');
     });
 
-    it('never decodes escape sequences other than %25 and %2F, since params are interpolated unescaped into GraphQL query strings', () => {
+    it('never decodes escape sequences other than %25 and %2F, since params are interpolated unencoded into GraphQL query URLs', () => {
       // %22 is a single-encoded double quote; a generic decode would turn it into a
       // literal '"' and let the value break out of the quoted GraphQL string in api.js.
       expect(decodeRouteParam('my%22app')).toBe('my%22app');
-      // %2522 is a double-encoded double quote: only the extra '%25' layer should
-      // collapse (to the harmless literal text '%22'), never all the way to '"'.
-      expect(decodeRouteParam('my%2522app')).toBe('my%22app');
+    });
+
+    it('only collapses a %25 that is part of a slash-escape chain, never one leading to another escape', () => {
+      // %2522 is a double-encoded double quote. These query params are embedded
+      // unencoded into a URL (see src/api.js), which the server unescapes once when
+      // parsing it -- so even collapsing this to the harmless-looking '%22' would still
+      // decode to a literal '"' server-side and break out of the quoted GraphQL string.
+      // The '%25' here must be left untouched, since it isn't followed by a '2f'/'2F'.
+      expect(decodeRouteParam('my%2522app')).toBe('my%2522app');
       expect(decodeRouteParam('my%2522app')).not.toContain('"');
     });
   });
