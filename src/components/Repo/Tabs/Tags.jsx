@@ -65,6 +65,7 @@ export default function Tags(props) {
             manifests={tag.manifests}
             repo={repoName}
             repoName={repoName}
+            showRepoName={false}
             onTagDelete={onTagDelete}
             isDeletable={tag.isDeletable}
           />

@@ -79,7 +79,7 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 export default function TagCard(props) {
-  const { repoName, tag, lastUpdated, vendor, manifests, repo, onTagDelete, isDeletable } = props;
+  const { repoName, showRepoName = true, tag, lastUpdated, vendor, manifests, repo, onTagDelete, isDeletable } = props;
   const [open, setOpen] = useState(false);
 
   const classes = useStyles();
@@ -89,12 +89,11 @@ export default function TagCard(props) {
     : `Timestamp N/A`;
   const navigate = useNavigate();
 
+  // Always navigate with the absolute, encoded path -- a relative navigate('tag/...')
+  // here resolves against the current (already %2F-encoded) location and gets
+  // re-escaped by the router into %252F. Every caller must supply repoName.
   const goToTags = (digest = null) => {
-    if (repoName) {
-      navigate(`/image/${encodeURIComponent(repoName)}/tag/${tag}`, { state: { digest } });
-    } else {
-      navigate(`tag/${tag}`, { state: { digest } });
-    }
+    navigate(`/image/${encodeURIComponent(repoName)}/tag/${tag}`, { state: { digest } });
   };
 
   return (
@@ -107,7 +106,7 @@ export default function TagCard(props) {
           {isDeletable && <DeleteTag repo={repo} tag={tag} onTagDelete={onTagDelete} />}
         </Stack>
         <Typography variant="body1" align="left" className={classes.tagName} onClick={() => goToTags()}>
-          {repoName && `${repoName}:`}
+          {showRepoName && `${repoName}:`}
           {tag}
         </Typography>
 
