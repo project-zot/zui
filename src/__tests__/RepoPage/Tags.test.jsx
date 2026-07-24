@@ -7,7 +7,7 @@ import MockThemeProvider from '__mocks__/MockThemeProvider';
 const TagsThemeWrapper = () => {
   return (
     <MockThemeProvider>
-      <Tags tags={mockedTagsData} />
+      <Tags tags={mockedTagsData} repoName="myapp" />
     </MockThemeProvider>
   );
 };
@@ -96,7 +96,28 @@ describe('Tags component', () => {
     const tagLink = await screen.findByText('latest');
     fireEvent.click(tagLink);
     await waitFor(() => {
-      expect(mockedUsedNavigate).toHaveBeenCalledWith('tag/latest', { state: { digest: null } });
+      expect(mockedUsedNavigate).toHaveBeenCalledWith('/image/myapp/tag/latest', { state: { digest: null } });
+    });
+  });
+
+  it('should not prefix the tag name with the repo name in its own tag list', async () => {
+    render(<TagsThemeWrapper />);
+    expect(await screen.findByText('latest')).toBeInTheDocument();
+    expect(screen.queryByText('myapp:latest')).not.toBeInTheDocument();
+  });
+
+  it('should navigate with an absolute, encoded path for a nested repo name, avoiding relative navigation that double-encodes it', async () => {
+    render(
+      <MockThemeProvider>
+        <Tags tags={mockedTagsData} repoName="company/users/foobar/myapp" />
+      </MockThemeProvider>
+    );
+    const tagLink = await screen.findByText('latest');
+    fireEvent.click(tagLink);
+    await waitFor(() => {
+      expect(mockedUsedNavigate).toHaveBeenCalledWith('/image/company%2Fusers%2Ffoobar%2Fmyapp/tag/latest', {
+        state: { digest: null }
+      });
     });
   });
 
@@ -107,7 +128,7 @@ describe('Tags component', () => {
     const tagLink = await screen.findByText(/sha256:adca4/i);
     fireEvent.click(tagLink);
     await waitFor(() => {
-      expect(mockedUsedNavigate).toHaveBeenCalledWith('tag/latest', {
+      expect(mockedUsedNavigate).toHaveBeenCalledWith('/image/myapp/tag/latest', {
         state: { digest: 'sha256:adca4815c494becc1bf053af0c4640b2d81ab1a779e6d649e1b8b92a75f1d559' }
       });
     });

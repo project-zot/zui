@@ -5,6 +5,7 @@ import React, { useEffect, useMemo, useState, useRef } from 'react';
 import { api, endpoints } from '../../api';
 import { host } from '../../host';
 import { mapToImage } from '../../utilities/objectModels';
+import { decodeRouteParam } from '../../utilities/urlUtilities';
 import filterConstants from 'utilities/filterConstants';
 import { isEmpty, head, uniqBy } from 'lodash';
 
@@ -154,7 +155,9 @@ function TagDetails() {
   const { digest } = state || '';
 
   // get url param from <Route here (i.e. image name)
-  const { reponame, tag } = useParams();
+  const { reponame: rawReponame, tag: rawTag } = useParams();
+  const reponame = decodeRouteParam(rawReponame);
+  const tag = decodeRouteParam(rawTag);
 
   const classes = useStyles();
 
