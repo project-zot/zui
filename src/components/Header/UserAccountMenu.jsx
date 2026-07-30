@@ -1,14 +1,25 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { Menu, MenuItem, IconButton, Avatar, Divider } from '@mui/material';
+import { Menu, MenuItem, IconButton, Avatar, Divider, Box, Typography } from '@mui/material';
+import ContentCopyIcon from '@mui/icons-material/ContentCopy';
+import CheckIcon from '@mui/icons-material/Check';
 
 import { getLoggedInUser, logoutUser, isApiKeyEnabled } from '../../utilities/authUtilities';
+import { getServerVersionInfo } from '../../utilities/serverInfo';
 import { useNavigate } from 'react-router';
 
 function UserAccountMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
+  const [versionInfo, setVersionInfo] = useState(null);
+  const [isCopied, setIsCopied] = useState(false);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    getServerVersionInfo()
+      .then(setVersionInfo)
+      .catch(() => console.warn('could not obtain server version info'));
+  }, []);
 
   const apiKeyManagement = () => {
     navigate('/user/apikey');
@@ -20,6 +31,14 @@ function UserAccountMenu() {
 
   const handleUserClose = () => {
     setAnchorEl(null);
+  };
+
+  const handleVersionCopy = (event) => {
+    event.stopPropagation();
+    const { releaseTag, commit } = versionInfo;
+    navigator.clipboard.writeText(`zot ${releaseTag} (commit: ${commit})`);
+    setIsCopied(true);
+    setTimeout(() => setIsCopied(false), 2000);
   };
 
   return (
@@ -51,6 +70,26 @@ function UserAccountMenu() {
         )}
         {isApiKeyEnabled() && <Divider data-testid="api-keys-menu-item-divider" />}
         <MenuItem onClick={logoutUser}>Log out</MenuItem>
+        {versionInfo?.releaseTag && (
+          <>
+            <Divider />
+            <MenuItem disableRipple onClick={(event) => event.stopPropagation()} data-testid="version-menu-item">
+              <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
+                <Typography variant="caption" color="text.secondary">
+                  zot {versionInfo.releaseTag} ({versionInfo.commit?.slice(0, 7)})
+                </Typography>
+                <IconButton
+                  size="small"
+                  aria-label="copy version"
+                  onClick={handleVersionCopy}
+                  data-testid="version-copy-button"
+                >
+                  {isCopied ? <CheckIcon fontSize="inherit" /> : <ContentCopyIcon fontSize="inherit" />}
+                </IconButton>
+              </Box>
+            </MenuItem>
+          </>
+        )}
       </Menu>
     </>
   );
