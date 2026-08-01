@@ -8,6 +8,14 @@ import { getLoggedInUser, logoutUser, isApiKeyEnabled } from '../../utilities/au
 import { getServerVersionInfo } from '../../utilities/serverInfo';
 import { useNavigate } from 'react-router';
 
+// zot's commit field is `git describe` output, e.g. "v2.1.18-31-g3ff2b93c",
+// not a raw SHA, so the short hash has to be pulled from after the "-g".
+const getShortCommit = (commit) => {
+  if (!commit) return commit;
+  const match = commit.match(/-g([0-9a-f]+)$/i);
+  return (match ? match[1] : commit).slice(0, 7);
+};
+
 function UserAccountMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
@@ -76,7 +84,7 @@ function UserAccountMenu() {
             <MenuItem disableRipple onClick={(event) => event.stopPropagation()} data-testid="version-menu-item">
               <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', width: '100%' }}>
                 <Typography variant="caption" color="text.secondary">
-                  zot {versionInfo.releaseTag} ({versionInfo.commit?.slice(0, 7)})
+                  zot {versionInfo.releaseTag} ({getShortCommit(versionInfo.commit)})
                 </Typography>
                 <IconButton
                   size="small"

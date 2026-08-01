@@ -72,4 +72,26 @@ describe('Account Menu', () => {
     fireEvent.click(screen.getByTestId('version-copy-button'));
     expect(writeText).toHaveBeenCalledWith('zot v2.1.0 (commit: abcdef1234567)');
   });
+
+  it('extracts the short hash from a git-describe style commit value', async () => {
+    mockGetServerVersionInfo.mockResolvedValue({ releaseTag: 'v2.1.18', commit: 'v2.1.18-31-g3ff2b93c' });
+
+    render(<UserAccountMenu />);
+    const userIconButton = await screen.findByTestId('user-icon-header-button');
+    fireEvent.click(userIconButton);
+
+    await waitFor(() => expect(screen.getByTestId('version-menu-item')).toBeInTheDocument());
+    expect(screen.getByText('zot v2.1.18 (3ff2b93)')).toBeInTheDocument();
+  });
+
+  it('does not blow up when the commit field is missing', async () => {
+    mockGetServerVersionInfo.mockResolvedValue({ releaseTag: 'v2.1.18' });
+
+    render(<UserAccountMenu />);
+    const userIconButton = await screen.findByTestId('user-icon-header-button');
+    fireEvent.click(userIconButton);
+
+    await waitFor(() => expect(screen.getByTestId('version-menu-item')).toBeInTheDocument());
+    expect(screen.getByText('zot v2.1.18 ()')).toBeInTheDocument();
+  });
 });
