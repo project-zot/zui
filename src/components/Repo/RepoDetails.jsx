@@ -1,5 +1,5 @@
 // react global
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // external
 import { DateTime } from 'luxon';
@@ -15,7 +15,7 @@ import { isAuthenticated } from 'utilities/authUtilities';
 import filterConstants from 'utilities/filterConstants';
 
 // components
-import { Card, CardContent, CardMedia, Chip, Grid, Stack, Tooltip, Typography, IconButton } from '@mui/material';
+import { Card, CardContent, Chip, Grid, Stack, Tooltip, Typography, IconButton } from '@mui/material';
 import BookmarkIcon from '@mui/icons-material/Bookmark';
 import BookmarkBorderIcon from '@mui/icons-material/BookmarkBorder';
 import StarIcon from '@mui/icons-material/Star';
@@ -26,11 +26,7 @@ import Loading from '../Shared/Loading';
 import { Markdown } from 'utilities/MarkdowntojsxWrapper';
 import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
 
-// placeholder images
-import repocube1 from '../../assets/repocube-1.png';
-import repocube2 from '../../assets/repocube-2.png';
-import repocube3 from '../../assets/repocube-3.png';
-import repocube4 from '../../assets/repocube-4.png';
+import OciImage from '../Shared/OciImage';
 
 import makeStyles from '@mui/styles/makeStyles';
 
@@ -152,20 +148,9 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// temporary utility to get image
-const randomIntFromInterval = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-const randomImage = () => {
-  const imageArray = [repocube1, repocube2, repocube3, repocube4];
-  return imageArray[randomIntFromInterval(0, 3)];
-};
-
 function RepoDetails() {
   const [repoDetailData, setRepoDetailData] = useState({});
   const [tags, setTags] = useState([]);
-  const placeholderImage = useRef(randomImage());
   const [isLoading, setIsLoading] = useState(true);
   // get url param from <Route here (i.e. image name)
   const { name: rawName } = useParams();
@@ -298,14 +283,14 @@ function RepoDetails() {
                   <Grid item xs={12} md={8}>
                     <Stack alignItems="center" direction={{ xs: 'column', md: 'row' }} spacing={2}>
                       <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={2}>
-                        <CardMedia
+                        <OciImage
                           classes={{
                             root: classes.media,
                             img: classes.avatar
                           }}
-                          component="img"
-                          image={placeholderImage.current}
-                          alt="icon"
+                          digest={repoDetailData?.digest}
+                          name={name}
+                          logo={repoDetailData?.logo}
                         />
                         <Typography variant="h4" className={classes.repoName}>
                           {name}
