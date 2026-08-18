@@ -1,5 +1,5 @@
 import { useLocation, useNavigate, useParams } from 'react-router';
-import React, { useEffect, useMemo, useState, useRef } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 // utility
 import { api, endpoints } from '../../api';
@@ -13,7 +13,6 @@ import { isEmpty, head, uniqBy } from 'lodash';
 import {
   Card,
   CardContent,
-  CardMedia,
   Grid,
   FormControl,
   Stack,
@@ -34,11 +33,7 @@ import { VulnerabilityIconCheck, SignatureIconCheck } from 'utilities/vulnerabil
 import ReferredBy from './Tabs/ReferredBy';
 import makeStyles from '@mui/styles/makeStyles';
 
-// placeholder images
-import repocube1 from '../../assets/repocube-1.png';
-import repocube2 from '../../assets/repocube-2.png';
-import repocube3 from '../../assets/repocube-3.png';
-import repocube4 from '../../assets/repocube-4.png';
+import OciImage from '../Shared/OciImage';
 
 const useStyles = makeStyles((theme) => ({
   pageWrapper: {
@@ -126,16 +121,6 @@ const useStyles = makeStyles((theme) => ({
   }
 }));
 
-// temporary utility to get image
-const randomIntFromInterval = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-const randomImage = () => {
-  const imageArray = [repocube1, repocube2, repocube3, repocube4];
-  return imageArray[randomIntFromInterval(0, 3)];
-};
-
 const NON_ARTIFACT_CONFIG_MEDIA_TYPES = new Set([
   'application/vnd.oci.image.config.v1+json',
   'application/vnd.docker.container.image.v1+json'
@@ -146,7 +131,6 @@ function TagDetails() {
   const [selectedManifest, setSelectedManifest] = useState({});
   const [isLoading, setIsLoading] = useState(true);
   const [selectedTab, setSelectedTab] = useState('Layers');
-  const placeholderImage = useRef(randomImage());
   const abortController = useMemo(() => new AbortController(), []);
   const navigate = useNavigate();
 
@@ -289,14 +273,14 @@ function TagDetails() {
                       spacing={1}
                     >
                       <Stack alignItems="center" sx={{ width: { xs: '100%', md: 'auto' } }} direction="row" spacing={1}>
-                        <CardMedia
+                        <OciImage
                           classes={{
                             root: classes.media,
                             img: classes.avatar
                           }}
-                          component="img"
-                          image={placeholderImage.current}
-                          alt="icon"
+                          digest={imageDetailData?.digest}
+                          name={imageDetailData?.name}
+                          logo={imageDetailData?.logo}
                         />
                         <Typography variant="h4" className={classes.repoName}>
                           <span className="hide-on-mobile">{reponame}</span>:{tag}

@@ -1,26 +1,11 @@
-import { Card, CardActionArea, CardContent, CardMedia, Grid, Stack, Tooltip, Typography } from '@mui/material';
+import { Card, CardActionArea, CardContent, Grid, Stack, Tooltip, Typography } from '@mui/material';
 import { makeStyles } from '@mui/styles';
 import React from 'react';
 import { useNavigate } from 'react-router';
 
-// placeholder images
-import repocube1 from '../../assets/repocube-1.png';
-import repocube2 from '../../assets/repocube-2.png';
-import repocube3 from '../../assets/repocube-3.png';
-import repocube4 from '../../assets/repocube-4.png';
+import OciImage from './OciImage';
 
-import { isEmpty } from 'lodash';
 import { VulnerabilityIconCheck } from 'utilities/vulnerabilityAndSignatureCheck';
-
-// temporary utility to get image
-const randomIntFromInterval = (min, max) => {
-  return Math.floor(Math.random() * (max - min + 1) + min);
-};
-
-const randomImage = () => {
-  const imageArray = [repocube1, repocube2, repocube3, repocube4];
-  return imageArray[randomIntFromInterval(0, 3)];
-};
 
 const useStyles = makeStyles(() => ({
   card: {
@@ -67,7 +52,7 @@ const useStyles = makeStyles(() => ({
 function PreviewCard(props) {
   const classes = useStyles();
   const navigate = useNavigate();
-  const { name, vulnerabilityData, logo } = props;
+  const { name, vulnerabilityData, logo, digest } = props;
 
   const goToDetails = () => {
     navigate(`/image/${encodeURIComponent(name)}`);
@@ -80,14 +65,14 @@ function PreviewCard(props) {
           <Grid container spacing={1}>
             <Grid container item xs={12}>
               <Stack direction="row" spacing={4} sx={{ display: 'flex', alignItems: 'left', flexWrap: 'wrap' }}>
-                <CardMedia
+                <OciImage
                   classes={{
                     root: classes.media,
                     img: classes.avatar
                   }}
-                  component="img"
-                  image={!isEmpty(logo) ? `data:image/png;base64, ${logo}` : randomImage()}
-                  alt="icon"
+                  digest={digest}
+                  name={name}
+                  logo={logo}
                 />
                 <Tooltip title={name} placement="top">
                   <Typography

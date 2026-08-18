@@ -233,6 +233,7 @@ function Explore({ searchInputValue }) {
             }}
             lastUpdated={item.lastUpdated}
             logo={item.logo}
+            digest={item.digest}
           />
         );
       })
