@@ -226,7 +226,7 @@ describe('Sign in form', () => {
   });
 
   it('shows continue as guest when mgmt reports anonymous access', async () => {
-    jest.spyOn(api, 'get').mockResolvedValue({
+    const getSpy = jest.spyOn(api, 'get').mockResolvedValue({
       status: 200,
       data: {
         ...mockMgmtResponse,
@@ -242,11 +242,43 @@ describe('Sign in form', () => {
     await waitFor(() => {
       expect(screen.getByText('Continue as guest')).toBeInTheDocument();
     });
+    expect(getSpy).toHaveBeenCalledTimes(1);
+    expect(getSpy).toHaveBeenCalledWith(expect.stringContaining('/v2/_zot/ext/mgmt'), expect.any(AbortSignal));
   });
 
   it('does not show continue as guest without anonymous access', async () => {
     render(<SignIn isLoggedIn={false} setIsLoggedIn={() => {}} />);
     await screen.findByLabelText(/^Username/i);
     expect(screen.queryByText('Continue as guest')).not.toBeInTheDocument();
+    expect(api.get).toHaveBeenCalledTimes(1);
+    expect(api.get).toHaveBeenCalledWith(expect.stringContaining('/v2/_zot/ext/mgmt'), expect.any(AbortSignal));
+  });
+
+  it('does not submit a second login while the first is in flight', async () => {
+    render(<SignIn isLoggedIn={false} setIsLoggedIn={() => {}} />);
+
+    const usernameInput = await screen.findByLabelText(/^Username/i);
+    const passwordInput = await screen.findByLabelText(/^Enter Password/i);
+    await userEvent.type(usernameInput, 'test');
+    await userEvent.type(passwordInput, 'test');
+
+    const getSpy = jest.spyOn(api, 'get').mockReturnValue(new Promise(() => {}));
+    getSpy.mockClear();
+    const submitButton = await screen.findByTestId('basic-auth-submit-btn');
+    fireEvent.click(submitButton);
+    fireEvent.click(submitButton);
+    fireEvent.keyDown(passwordInput, { key: 'Enter' });
+
+    await waitFor(() => {
+      expect(submitButton).toBeDisabled();
+    });
+    expect(getSpy).toHaveBeenCalledTimes(1);
+    expect(getSpy).toHaveBeenCalledWith(
+      expect.stringMatching(/\/v2\/$/),
+      expect.any(AbortSignal),
+      expect.objectContaining({
+        headers: expect.objectContaining({ Authorization: expect.stringMatching(/^Basic /) })
+      })
+    );
   });
 });
