@@ -1,5 +1,5 @@
 // react global
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useNavigate } from 'react-router';
 
 // utility
@@ -152,6 +152,7 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
   const [requestProcessing, setRequestProcessing] = useState(false);
+  const requestProcessingRef = useRef(false);
   const [requestError, setRequestError] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [authMethods, setAuthMethods] = useState({});
@@ -177,16 +178,9 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
           } else if (response.data?.http?.auth) {
             setAuthMethods(response.data?.http?.auth);
             localStorage.setItem('authConfig', JSON.stringify(response.data?.http?.auth));
+            setIsGuestLoginEnabled(response.data?.http?.auth?.allowAnonymousAccess === true);
             setIsLoading(false);
             wrapperSetLoading(false);
-            api
-              .get(`${host()}${endpoints.status}`)
-              .then((response) => {
-                if (response.status === 200) {
-                  setIsGuestLoginEnabled(true);
-                }
-              })
-              .catch(() => console.log('could not obtain guest login status'));
           }
           setIsLoading(false);
           wrapperSetLoading(false);
@@ -203,6 +197,7 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
   }, []);
 
   const handleBasicAuth = () => {
+    requestProcessingRef.current = true;
     setRequestProcessing(true);
     let cfg = {};
     const token = btoa(username + ':' + password);
@@ -213,9 +208,10 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
       withCredentials: host() !== window?.location?.origin
     };
     api
-      .get(`${host()}/v2/`, abortController.signal, cfg)
+      .get(`${host()}${endpoints.status}`, abortController.signal, cfg)
       .then((response) => {
         if (response.status === 200) {
+          requestProcessingRef.current = false;
           setRequestProcessing(false);
           setRequestError(false);
           setIsLoggedIn(true);
@@ -223,12 +219,16 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
         }
       })
       .catch(() => {
+        requestProcessingRef.current = false;
         setRequestError(true);
         setRequestProcessing(false);
       });
   };
 
   const handleBasicAuthSubmit = () => {
+    if (requestProcessingRef.current) {
+      return;
+    }
     setRequestError(false);
     const isUsernameValid = handleUsernameValidation(username);
     const isPasswordValid = handlePasswordValidation(password);
@@ -388,9 +388,11 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
                 <div>
                   <Button
                     fullWidth
+                    type="button"
                     variant="contained"
                     className={classes.continueButton}
                     onClick={handleClick}
+                    disabled={requestProcessing}
                     data-testid="basic-auth-submit-btn"
                   >
                     Continue
@@ -401,6 +403,7 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
             {isGuestLoginEnabled && (
               <Button
                 fullWidth
+                type="button"
                 variant="contained"
                 className={classes.continueAsGuestButton}
                 onClick={handleGuestClick}
