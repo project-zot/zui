@@ -224,4 +224,29 @@ describe('Sign in form', () => {
       expect(mockedUsedNavigate).not.toHaveBeenCalled();
     });
   });
+
+  it('shows continue as guest when mgmt reports anonymous access', async () => {
+    jest.spyOn(api, 'get').mockResolvedValue({
+      status: 200,
+      data: {
+        ...mockMgmtResponse,
+        http: {
+          auth: {
+            ...mockMgmtResponse.http.auth,
+            allowAnonymousAccess: true
+          }
+        }
+      }
+    });
+    render(<SignIn isLoggedIn={false} setIsLoggedIn={() => {}} />);
+    await waitFor(() => {
+      expect(screen.getByText('Continue as guest')).toBeInTheDocument();
+    });
+  });
+
+  it('does not show continue as guest without anonymous access', async () => {
+    render(<SignIn isLoggedIn={false} setIsLoggedIn={() => {}} />);
+    await screen.findByLabelText(/^Username/i);
+    expect(screen.queryByText('Continue as guest')).not.toBeInTheDocument();
+  });
 });

@@ -177,16 +177,9 @@ export default function SignIn({ isLoggedIn, setIsLoggedIn, wrapperSetLoading = 
           } else if (response.data?.http?.auth) {
             setAuthMethods(response.data?.http?.auth);
             localStorage.setItem('authConfig', JSON.stringify(response.data?.http?.auth));
+            setIsGuestLoginEnabled(response.data?.http?.auth?.allowAnonymousAccess === true);
             setIsLoading(false);
             wrapperSetLoading(false);
-            api
-              .get(`${host()}${endpoints.status}`)
-              .then((response) => {
-                if (response.status === 200) {
-                  setIsGuestLoginEnabled(true);
-                }
-              })
-              .catch(() => console.log('could not obtain guest login status'));
           }
           setIsLoading(false);
           wrapperSetLoading(false);
