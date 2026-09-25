@@ -21,6 +21,7 @@ export default defineConfig({
       pages: path.resolve(__dirname, './src/pages'),
       assets: path.resolve(__dirname, './src/assets'),
       __mocks__: path.resolve(__dirname, './src/__mocks__'),
+      contexts: path.resolve(__dirname, './src/contexts'),
       host: path.resolve(__dirname, './src/host.js'),
       session: path.resolve(__dirname, './src/session.js')
     }

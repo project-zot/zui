@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 
-import { Menu, MenuItem, IconButton, Avatar, Divider } from '@mui/material';
+import { Menu, MenuItem, IconButton, Avatar, Divider, ListItemIcon, ListItemText } from '@mui/material';
+import Brightness4Icon from '@mui/icons-material/Brightness4';
+import Brightness7Icon from '@mui/icons-material/Brightness7';
 
 import { getLoggedInUser, logoutUser, isApiKeyEnabled } from '../../utilities/authUtilities';
+import { useThemeContext } from 'contexts/ThemeContext';
 import { useNavigate } from 'react-router';
 
 function UserAccountMenu() {
   const [anchorEl, setAnchorEl] = useState(null);
   const openMenu = Boolean(anchorEl);
   const navigate = useNavigate();
+  const { themeMode, toggleTheme } = useThemeContext();
 
   const apiKeyManagement = () => {
     navigate('/user/apikey');
@@ -50,6 +54,13 @@ function UserAccountMenu() {
           </MenuItem>
         )}
         {isApiKeyEnabled() && <Divider data-testid="api-keys-menu-item-divider" />}
+        <MenuItem onClick={toggleTheme} data-testid="theme-toggle-menu-item">
+          <ListItemIcon>
+            {themeMode === 'light' ? <Brightness4Icon fontSize="small" /> : <Brightness7Icon fontSize="small" />}
+          </ListItemIcon>
+          <ListItemText>{themeMode === 'light' ? 'Dark mode' : 'Light mode'}</ListItemText>
+        </MenuItem>
+        <Divider />
         <MenuItem onClick={logoutUser}>Log out</MenuItem>
       </Menu>
     </>

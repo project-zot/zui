@@ -12,6 +12,8 @@ export const moduleNameMapper = {
   '^assets$': '<rootDir>/src/assets',
   '^__mocks__/(.*)$': '<rootDir>/src/__mocks__/$1',
   '^__mocks__$': '<rootDir>/src/__mocks__',
+  '^contexts/(.*)$': '<rootDir>/src/contexts/$1',
+  '^contexts$': '<rootDir>/src/contexts',
   '^host$': '<rootDir>/src/host.js',
   '^session$': '<rootDir>/src/session.js',
   '\\.(css|less|scss|sass)$': 'identity-obj-proxy',

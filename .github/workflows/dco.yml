@@ -19,6 +19,9 @@ jobs:
     - name: Check DCO
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        # Exclude the Copilot automated bot from DCO sign-off requirement.
+        # Bot-authored commits are overseen by human reviewers before merging.
+        DCO_CHECK_EXCLUDE_EMAILS: '198982749+Copilot@users.noreply.github.com'
       run: |
         pip3 install -U dco-check
         dco-check
