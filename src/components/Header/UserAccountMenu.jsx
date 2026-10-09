@@ -10,7 +10,7 @@ import { useNavigate } from 'react-router';
 
 // zot's commit field is `git describe` output, e.g. "v2.1.18-31-g3ff2b93c",
 // not a raw SHA, so the short hash has to be pulled from after the "-g".
-// Also an optional -dirty suffix, e.g. /-g([0-9a-f]+)(?:-dirty)?$/i allowed.
+// Also an optional `-dirty` suffix (e.g. /-g([0-9a-f]+)(?:-dirty)?$/i) allowed.
 const getShortCommit = (commit) => {
   if (!commit) return commit;
   const match = commit.match(/-g([0-9a-f]+)(?:-dirty)?$/i);
