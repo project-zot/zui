@@ -84,6 +84,17 @@ describe('Account Menu', () => {
     expect(screen.getByText('zot v2.1.18 (3ff2b93)')).toBeInTheDocument();
   });
 
+  it('extracts the short hash from a git-describe commit value with a -dirty suffix', async () => {
+    mockGetServerVersionInfo.mockResolvedValue({ releaseTag: 'v2.1.18', commit: 'v2.1.18-31-g3ff2b93c-dirty' });
+
+    render(<UserAccountMenu />);
+    const userIconButton = await screen.findByTestId('user-icon-header-button');
+    fireEvent.click(userIconButton);
+
+    await waitFor(() => expect(screen.getByTestId('version-menu-item')).toBeInTheDocument());
+    expect(screen.getByText('zot v2.1.18 (3ff2b93)')).toBeInTheDocument();
+  });
+
   it('does not blow up when the commit field is missing', async () => {
     mockGetServerVersionInfo.mockResolvedValue({ releaseTag: 'v2.1.18' });
 
