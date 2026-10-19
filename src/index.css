@@ -60,7 +60,7 @@ body {
   min-height: 100vh;
   overflow-x: hidden;
 
-  background-color: #f6f7f9 !important;
+  background-color: var(--mui-palette-background-default, #f6f7f9);
 }
 
 code {

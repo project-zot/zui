@@ -10,6 +10,8 @@ export const moduleNameMapper = {
   '^pages$': '<rootDir>/src/pages',
   '^assets/(.*)$': '<rootDir>/src/assets/$1',
   '^assets$': '<rootDir>/src/assets',
+  '^theme$': '<rootDir>/src/theme',
+  '^theme/(.*)$': '<rootDir>/src/theme/$1',
   '^__mocks__/(.*)$': '<rootDir>/src/__mocks__/$1',
   '^__mocks__$': '<rootDir>/src/__mocks__',
   '^host$': '<rootDir>/src/host.js',

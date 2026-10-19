@@ -20,6 +20,7 @@ export default defineConfig({
       components: path.resolve(__dirname, './src/components'),
       pages: path.resolve(__dirname, './src/pages'),
       assets: path.resolve(__dirname, './src/assets'),
+      theme: path.resolve(__dirname, './src/theme'),
       __mocks__: path.resolve(__dirname, './src/__mocks__'),
       host: path.resolve(__dirname, './src/host.js'),
       session: path.resolve(__dirname, './src/session.js')
