@@ -51,6 +51,31 @@ describe('PullCommandButton', () => {
     expect(mockCopyToClipboard).toHaveBeenLastCalledWith(`docker pull localhost/${imageName}`);
   });
 
+  it('copies the pull string when the clipboard API is unavailable', async () => {
+    const imageName = 'nginx:latest';
+    const clipboard = navigator.clipboard;
+    let copied;
+    document.execCommand = jest.fn(() => {
+      copied = document.querySelector('textarea[readonly]').value;
+      return true;
+    });
+    Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+
+    try {
+      render(<PullCommandButtonWrapper imageName={imageName} isArtifact={false} />);
+
+      await userEvent.click(await screen.findByText(`Pull ${imageName}`));
+      await userEvent.click(await screen.findByTestId('pullcopy-btn'));
+
+      expect(document.execCommand).toHaveBeenCalledWith('copy');
+      expect(copied).toBe(`docker pull localhost/${imageName}`);
+      expect(document.querySelector('textarea[readonly]')).toBeNull();
+    } finally {
+      Object.defineProperty(navigator, 'clipboard', { value: clipboard, configurable: true });
+      delete document.execCommand;
+    }
+  });
+
   it('shows only ORAS and Podman options for artifacts', async () => {
     const imageName = 'hello-artifact:v1';
 

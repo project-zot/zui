@@ -132,8 +132,20 @@ function PullCommandButton(props) {
     setAnchor(event.currentTarget);
   };
 
-  const handleCopyClick = () => {
-    navigator.clipboard.writeText(pullString);
+  const handleCopyClick = (event) => {
+    if (navigator.clipboard?.writeText) {
+      navigator.clipboard.writeText(pullString);
+    } else {
+      const textArea = document.createElement('textarea');
+      textArea.value = pullString;
+      textArea.setAttribute('readonly', '');
+      textArea.style.position = 'fixed';
+      textArea.style.opacity = '0';
+      event.currentTarget.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      textArea.remove();
+    }
     setIsCopied(true);
     setAnchor(null);
   };
