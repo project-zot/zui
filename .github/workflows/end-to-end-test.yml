@@ -20,7 +20,8 @@ jobs:
       CI: ""
       REGISTRY_HOST: "127.0.0.1"
       REGISTRY_PORT: "8080"
-    runs-on: ubuntu-latest
+    # ubuntu-latest is Ubuntu 26.04. Playwright 1.58 has no browser builds for it.
+    runs-on: ubuntu-24.04
 
     steps:
     - name: Cleanup disk space
