@@ -76,6 +76,27 @@ describe('PullCommandButton', () => {
     }
   });
 
+  it('does not report success when the fallback copy fails', async () => {
+    const imageName = 'nginx:latest';
+    const clipboard = navigator.clipboard;
+    document.execCommand = jest.fn(() => false);
+    Object.defineProperty(navigator, 'clipboard', { value: undefined, configurable: true });
+
+    try {
+      render(<PullCommandButtonWrapper imageName={imageName} isArtifact={false} />);
+
+      await userEvent.click(await screen.findByText(`Pull ${imageName}`));
+      await userEvent.click(await screen.findByTestId('pullcopy-btn'));
+
+      expect(document.execCommand).toHaveBeenCalledWith('copy');
+      expect(screen.queryByTestId('successPulled-buton')).not.toBeInTheDocument();
+      expect(screen.getByTestId('pullcopy-btn')).toBeInTheDocument();
+    } finally {
+      Object.defineProperty(navigator, 'clipboard', { value: clipboard, configurable: true });
+      delete document.execCommand;
+    }
+  });
+
   it('shows only ORAS and Podman options for artifacts', async () => {
     const imageName = 'hello-artifact:v1';
 

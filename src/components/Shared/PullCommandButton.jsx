@@ -143,8 +143,9 @@ function PullCommandButton(props) {
       textArea.style.opacity = '0';
       event.currentTarget.appendChild(textArea);
       textArea.select();
-      document.execCommand('copy');
+      const copied = document.execCommand('copy');
       textArea.remove();
+      if (!copied) return;
     }
     setIsCopied(true);
     setAnchor(null);
