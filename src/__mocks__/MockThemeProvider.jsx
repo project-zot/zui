@@ -1,7 +1,7 @@
 import React from 'react';
-import { createTheme, ThemeProvider } from '@mui/material/styles';
+import { ThemeProvider } from '@mui/material/styles';
 
-const theme = createTheme();
+import theme from 'theme';
 
 function MockThemeProvider({ children }) {
   return <ThemeProvider theme={theme}>{children}</ThemeProvider>;
