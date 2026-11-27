@@ -1,4 +1,4 @@
-import { isNil } from 'lodash';
+import { isEmpty, isEqual, isNil } from 'lodash';
 import { host } from '../host';
 import { api, endpoints } from '../api';
 
@@ -73,4 +73,31 @@ const getLoggedInUser = () => {
   return userCookie;
 };
 
-export { isAuthenticated, isAuthenticationEnabled, isApiKeyEnabled, getLoggedInUser, logoutUser };
+// The auth config is cached in localStorage by the login page and is otherwise
+// never re-read, so a server whose auth settings changed since the last visit
+// (auth enabled or disabled) would keep being treated with the old settings.
+// Re-check it against the public mgmt endpoint and update the cache if it is
+// stale. Resolves to true when the cached config was changed.
+const refreshAuthConfig = () => {
+  const cached = localStorage.getItem('authConfig');
+  // Nothing cached yet: the login page fetches and stores it on first visit.
+  if (isNil(cached)) return Promise.resolve(false);
+
+  return api
+    .get(`${host()}${endpoints.authConfig}`)
+    .then((response) => {
+      if (!response?.data?.http) return false;
+      const current = isEmpty(response.data.http.auth) ? {} : response.data.http.auth;
+      if (isEqual(JSON.parse(cached), current)) return false;
+
+      localStorage.setItem('authConfig', JSON.stringify(current));
+      if (isEmpty(current)) {
+        // Auth was disabled: a session cookie from before is no longer meaningful.
+        deleteCookie('user', '/');
+      }
+      return true;
+    })
+    .catch(() => false);
+};
+
+export { isAuthenticated, isAuthenticationEnabled, isApiKeyEnabled, getLoggedInUser, logoutUser, refreshAuthConfig };
