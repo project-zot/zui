@@ -88,7 +88,9 @@ const refreshAuthConfig = () => {
     .then((response) => {
       if (!response?.data?.http) return false;
       const current = isEmpty(response.data.http.auth) ? {} : response.data.http.auth;
-      if (isEqual(JSON.parse(cached), current)) return false;
+      // Re-read: the login page may have updated the cache while this request was pending.
+      const latest = localStorage.getItem('authConfig');
+      if (!isNil(latest) && isEqual(JSON.parse(latest), current)) return false;
 
       localStorage.setItem('authConfig', JSON.stringify(current));
       if (isEmpty(current)) {

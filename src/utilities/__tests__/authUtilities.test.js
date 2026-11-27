@@ -75,6 +75,16 @@ describe('authUtilities', () => {
       expect(JSON.parse(localStorage.getItem('authConfig'))).toEqual(htpasswdAuth);
     });
 
+    it('reports no change when the cache was updated while the request was pending', async () => {
+      localStorage.setItem('authConfig', '{}');
+      jest.spyOn(api, 'get').mockImplementation(() => {
+        localStorage.setItem('authConfig', JSON.stringify(htpasswdAuth));
+        return Promise.resolve(mgmtResponse(htpasswdAuth));
+      });
+
+      await expect(refreshAuthConfig()).resolves.toBe(false);
+    });
+
     it('updates a stale cache when auth was enabled on the server', async () => {
       localStorage.setItem('authConfig', '{}');
       jest.spyOn(api, 'get').mockResolvedValue(mgmtResponse(htpasswdAuth));
