@@ -1,7 +1,7 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router';
 
-import { isAuthenticated, isApiKeyEnabled } from 'utilities/authUtilities';
+import { isAuthenticated, isApiKeyEnabled, refreshAuthConfig } from 'utilities/authUtilities';
 import { AuthWrapper } from 'utilities/AuthWrapper';
 
 import HomePage from './pages/HomePage';
@@ -15,10 +15,34 @@ import './App.css';
 
 function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(isAuthenticated());
+  // Bumped when the cached auth config turns out to be stale, to re-render
+  // routes and header against the server's current auth settings.
+  const [authConfigRevision, setAuthConfigRevision] = useState(0);
+
+  useEffect(() => {
+    refreshAuthConfig().then((changed) => {
+      if (!changed) return;
+      setIsLoggedIn(isAuthenticated());
+      setAuthConfigRevision((revision) => revision + 1);
+    });
+  }, []);
+
+  // Another tab may update the shared auth config (e.g. its own refresh or login
+  // page) before this tab's refresh finishes, which would then report no change.
+  // Storage events only fire for other tabs, so same-tab guest sessions are unaffected.
+  useEffect(() => {
+    const onStorage = (event) => {
+      if (event.key !== 'authConfig' && event.key !== null) return;
+      setIsLoggedIn(isAuthenticated());
+      setAuthConfigRevision((revision) => revision + 1);
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
 
   return (
     <div className="App" data-testid="app-container">
-      <Router>
+      <Router key={authConfigRevision}>
         <Routes>
           <Route element={<AuthWrapper isLoggedIn={isLoggedIn} hasHeader redirect="/login" />}>
             <Route path="/" element={<Navigate to="/home" />} />
