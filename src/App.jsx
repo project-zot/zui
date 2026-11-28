@@ -27,6 +27,19 @@ function App() {
     });
   }, []);
 
+  // Another tab may update the shared auth config (e.g. its own refresh or login
+  // page) before this tab's refresh finishes, which would then report no change.
+  // Storage events only fire for other tabs, so same-tab guest sessions are unaffected.
+  useEffect(() => {
+    const onStorage = (event) => {
+      if (event.key !== 'authConfig' && event.key !== null) return;
+      setIsLoggedIn(isAuthenticated());
+      setAuthConfigRevision((revision) => revision + 1);
+    };
+    window.addEventListener('storage', onStorage);
+    return () => window.removeEventListener('storage', onStorage);
+  }, []);
+
   return (
     <div className="App" data-testid="app-container">
       <Router key={authConfigRevision}>
