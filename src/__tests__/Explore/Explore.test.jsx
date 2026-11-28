@@ -423,6 +423,19 @@ describe('Explore component', () => {
     expect(await screen.findAllByTestId('repo-card')).toHaveLength(6);
   });
 
+  it('should request combined platform and signed filters together', async () => {
+    const emptyList = { GlobalSearch: { Page: { TotalCount: 0, ItemCount: 0 }, Repos: [] } };
+    const getSpy = jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: emptyList } });
+    render(<StateExploreWrapper />);
+    fireEvent.click((await screen.findAllByRole('checkbox'))[0]);
+    fireEvent.click(await screen.findByText(/signed images/i));
+    await waitFor(() => {
+      const lastUrl = getSpy.mock.calls[getSpy.mock.calls.length - 1][0];
+      expect(lastUrl).toContain('Os:["windows"]');
+      expect(lastUrl).toContain('HasToBeSigned: true');
+    });
+  });
+
   it('should bookmark a repo if bookmark button is clicked', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
