@@ -403,7 +403,7 @@ describe('Explore component', () => {
     expect(filterCheckboxes[0]).toBeChecked();
   });
 
-  it('should filter the images based on filter cards', async () => {
+  it('should filter the images by platform', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
     expect(await screen.findAllByTestId('repo-card')).toHaveLength(mockImageList.GlobalSearch.Repos.length);
@@ -412,6 +412,11 @@ describe('Explore component', () => {
     await userEvent.click(windowsCheckbox);
     expect(windowsCheckbox).toBeChecked();
     expect(await screen.findAllByTestId('repo-card')).toHaveLength(1);
+  });
+
+  it('should filter the images by signed status', async () => {
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
+    render(<StateExploreWrapper />);
     const signedCheckboxLabel = await screen.findByText(/signed images/i);
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: filteredMockImageListSigned() } });
     await userEvent.click(signedCheckboxLabel);
