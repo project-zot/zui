@@ -403,7 +403,7 @@ describe('Explore component', () => {
     expect(filterCheckboxes[0]).toBeChecked();
   });
 
-  it('should filter the images based on filter cards', async () => {
+  it('should filter the images by platform', async () => {
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
     render(<StateExploreWrapper />);
     expect(await screen.findAllByTestId('repo-card')).toHaveLength(mockImageList.GlobalSearch.Repos.length);
@@ -412,10 +412,28 @@ describe('Explore component', () => {
     await userEvent.click(windowsCheckbox);
     expect(windowsCheckbox).toBeChecked();
     expect(await screen.findAllByTestId('repo-card')).toHaveLength(1);
+  });
+
+  it('should filter the images by signed status', async () => {
+    jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: mockImageList } });
+    render(<StateExploreWrapper />);
     const signedCheckboxLabel = await screen.findByText(/signed images/i);
     jest.spyOn(api, 'get').mockResolvedValueOnce({ status: 200, data: { data: filteredMockImageListSigned() } });
     await userEvent.click(signedCheckboxLabel);
     expect(await screen.findAllByTestId('repo-card')).toHaveLength(6);
+  });
+
+  it('should request combined platform and signed filters together', async () => {
+    const emptyList = { GlobalSearch: { Page: { TotalCount: 0, ItemCount: 0 }, Repos: [] } };
+    const getSpy = jest.spyOn(api, 'get').mockResolvedValue({ status: 200, data: { data: emptyList } });
+    render(<StateExploreWrapper />);
+    fireEvent.click((await screen.findAllByRole('checkbox'))[0]);
+    fireEvent.click(await screen.findByText(/signed images/i));
+    await waitFor(() => {
+      const lastUrl = getSpy.mock.calls[getSpy.mock.calls.length - 1][0];
+      expect(lastUrl).toContain('Os:["windows"]');
+      expect(lastUrl).toContain('HasToBeSigned: true');
+    });
   });
 
   it('should bookmark a repo if bookmark button is clicked', async () => {
